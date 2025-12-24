@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V13.0 LAYOUT FIX</title>
+    <title>TKP NEWS - V13.0 HOLIDAY EDITION</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600;700&family=Roboto+Condensed:wght@300;400;700&family=Chakra+Petch:wght@400;500;600;700&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600;700&family=Roboto+Condensed:wght@300;400;700&family=Chakra+Petch:wght@400;500;600;700&family=Roboto+Mono:wght@500;700&family=Great+Vibes&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -21,6 +21,7 @@
             --font-data: 'Roboto Condensed', sans-serif;
             --font-tech: 'Chakra Petch', sans-serif;
             --font-mono: 'Roboto Mono', monospace;
+            --font-script: 'Great Vibes', cursive;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; outline: none; }
@@ -63,18 +64,83 @@
         .search-form:focus-within { border-color: var(--accent); background: #000; box-shadow: 0 0 15px rgba(255,204,0,0.2); }
         .search-form input { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-size: 0.9rem; }
 
-        /* LOGO & CLOCK */
-        @keyframes logoReveal { 0% { transform: translateY(-30px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
-        .logo-box { 
-            position: absolute; top: 3vh; left: 3.5vw; display: flex; flex-direction: column; align-items: center; z-index: 50; pointer-events: auto; cursor: pointer;
-            opacity: 0.85; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8)); animation: logoReveal 1.2s ease-out 0.2s both;
+        /* Legacy Link */
+        .legacy-btn {
+            background: #222; border: 1px solid #444; color: #aaa; padding: 5px 15px; margin-left: 15px; margin-right: 15px;
+            font-family: var(--font-condensed); font-weight: bold; cursor: pointer; text-decoration: none; display: flex; align-items: center;
+            font-size: 0.8rem; transition: 0.2s; white-space: nowrap; height: 3.5vh;
         }
-        .logo-box svg { width: 55px; height: 55px; fill: var(--primary); margin-bottom: 2px; }
+        .legacy-btn:hover { background: #fff; color: #000; border-color: #fff; }
+
+        /* LOGO & CLOCK WRAPPER (3D CONTEXT) */
+        @keyframes logoReveal { 0% { transform: translateY(-30px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+        
+        .logo-box { 
+            position: absolute; top: 3vh; left: 3.5vw; 
+            width: 160px; height: 160px; 
+            z-index: 50; pointer-events: auto; cursor: pointer;
+            perspective: 1000px; 
+            animation: logoReveal 1.2s ease-out 0.2s both;
+        }
+
+        .logo-inner {
+            position: relative; width: 100%; height: 100%; text-align: center;
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+        .logo-box.flipped .logo-inner { transform: rotateY(180deg); }
+
+        /* FRONT & BACK FACES */
+        .logo-front, .logo-back {
+            position: absolute; width: 100%; height: 100%;
+            -webkit-backface-visibility: hidden; backface-visibility: hidden;
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+        }
+
+        .logo-front { opacity: 0.85; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8)); }
+        .logo-front svg { width: 55px; height: 55px; fill: var(--primary); margin-bottom: 2px; }
         .logo-text { font-family: var(--font-main); font-weight: 800; font-size: 1.4rem; letter-spacing: 2px; color: #fff; line-height: 1; text-shadow: 0 2px 5px rgba(0,0,0,0.9); }
+        
         .mini-clock { display: flex; flex-direction: column; align-items: center; width: 100%; margin-top: 12px; }
         .mc-time { font-family: var(--font-tech); font-weight: 700; font-size: 1.3rem; color: #f0f0f0; line-height: 1; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,1); }
         .mc-sec { font-size: 0.7em; color: var(--accent); margin-left: 1px; vertical-align: top; font-weight: 400; }
         .mc-date { font-family: var(--font-condensed); font-weight: 700; font-size: 0.7rem; color: #ccc; text-transform: uppercase; margin-top: 2px; letter-spacing: 0.5px; text-shadow: 0 1px 3px rgba(0,0,0,1); }
+
+        /* BACK FACE GENERAL */
+        .logo-back {
+            transform: rotateY(180deg);
+            border-radius: 10px;
+            justify-content: center;
+            padding: 5px;
+            overflow: hidden;
+        }
+
+        /* CHRISTMAS MODE STYLE */
+        .logo-back.mode-xmas {
+            background: linear-gradient(145deg, #4a0000, #800000);
+            border: 2px solid #ffcc00;
+            box-shadow: 0 0 20px rgba(255, 204, 0, 0.2);
+        }
+        .logo-back.mode-xmas .holiday-icon { filter: drop-shadow(0 0 10px #ffea00); animation: bellSwing 3s ease-in-out infinite; }
+        .logo-back.mode-xmas .holiday-title { color: #ffd700; }
+
+        /* NEW YEAR MODE STYLE */
+        .logo-back.mode-ny {
+            background: linear-gradient(145deg, #001a4d, #000);
+            border: 2px solid #e0e0e0;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+        .logo-back.mode-ny .holiday-icon { filter: drop-shadow(0 0 10px #fff); animation: bellSwing 2s ease-in-out infinite; }
+        .logo-back.mode-ny .holiday-title { color: #fff; text-shadow: 0 0 5px #00d4ff; }
+        
+        /* Holiday Elements */
+        .holiday-icon { font-size: 2.5rem; margin-bottom: 5px; }
+        .holiday-title { font-family: var(--font-script); font-size: 1.4rem; line-height: 1.1; text-shadow: 0 2px 4px rgba(0,0,0,0.8); margin-bottom: 2px; }
+        .holiday-sub { font-family: var(--font-main); font-size: 0.75rem; color: #fff; text-transform: uppercase; letter-spacing: 1px; font-weight: 300; }
+
+        .sparkle { position: absolute; width: 100%; height: 100%; top: 0; left: 0; background-image: radial-gradient(white 1px, transparent 1px); background-size: 30px 30px; opacity: 0.3; pointer-events: none; }
+
+        @keyframes bellSwing { 0% { transform: rotate(0deg); } 20% { transform: rotate(15deg); } 40% { transform: rotate(-10deg); } 60% { transform: rotate(5deg); } 80% { transform: rotate(-5deg); } 100% { transform: rotate(0deg); } }
 
         /* SIDEBAR */
         .sidebar { position: absolute; top: 15vh; right: 2vw; width: clamp(280px, 22vw, 420px); display: flex; flex-direction: column; gap: 1.5vh; pointer-events: auto; }
@@ -300,6 +366,10 @@
                     NEXT 1H: <span id="dev-sch-60" style="color:#aaa;">--:--</span>
                 </div>
                 <button class="btn" onclick="triggerCurrentSummaryTest()">[►] TEST CURRENT BLOCK</button>
+                <div class="dev-h" style="margin-top:20px;">HOLIDAY TEST</div>
+                <button class="btn" onclick="forceHoliday('XMAS')">[🎄] FORCE CHRISTMAS</button>
+                <button class="btn" onclick="forceHoliday('NY')">[🎉] FORCE NEW YEAR</button>
+                
                 <div class="dev-h" style="margin-top:20px;">MANUAL OVERRIDES</div>
                 <button class="btn" onclick="triggerBigClock()">[⏰] TEST BIG CLOCK</button>
                 <button class="btn" onclick="closeAllOverlays()">[X] CLEAR OVERLAYS</button>
@@ -386,17 +456,28 @@
                     </form>
                 </div>
                 
+                <a href="https://klikk.hu" target="_blank" class="legacy-btn">
+                    RÉGI OLDAL (KLIKK.HU) &#10138;
+                </a>
+                
                 <div style="font-family:var(--font-tech); font-weight:bold; color:var(--accent); font-size:0.8rem; letter-spacing:1px;">V13.0</div>
             </div>
         </div>
 
-        <!-- LOGO & CLOCK -->
-        <div class="logo-box" onclick="openAuth()">
-            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-            <div class="logo-text">TKP NEWS</div>
-            <div class="mini-clock">
-                <div class="mc-time" id="clock-time">00:00<span class="mc-sec">00</span></div>
-                <div class="mc-date" id="clock-date">----. --. --.</div>
+        <!-- LOGO & CLOCK & HOLIDAY FLIP -->
+        <div class="logo-box" id="logo-box" onclick="openAuth()">
+            <div class="logo-inner">
+                <!-- FRONT: NORMAL MODE -->
+                <div class="logo-front">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    <div class="logo-text">TKP NEWS</div>
+                    <div class="mini-clock">
+                        <div class="mc-time" id="clock-time">00:00<span class="mc-sec">00</span></div>
+                        <div class="mc-date" id="clock-date">----. --. --.</div>
+                    </div>
+                </div>
+                <!-- BACK: HOLIDAY MODE (Injected via JS) -->
+                <div class="logo-back" id="logo-back-face"></div>
             </div>
         </div>
 
@@ -448,7 +529,7 @@
 
     <script>
         /**
-         * TKP NEWS V13.0 - LAYOUT FIX
+         * TKP NEWS V13.0 - HOLIDAY UPDATE
          */
 
         const RSS_FEEDS = [
@@ -479,16 +560,7 @@
 
         const WU_KEY = 'e1f10a1e78da46f5b10a1e78da96f525';
         const WU_STATIONS = ['INYREG42', 'INYREG51', 'INYREG26', 'INYREG47', 'INYREG30'];
-        const FX_KEY = '8258c9489622103635e16227fd9dadd7b8d1';
-
-        const COUNTY_STATIONS = [
-            { name: "Nyíregyháza", lat: 47.95, lon: 21.71 }, { name: "Mátészalka", lat: 47.94, lon: 22.32 },
-            { name: "Kisvárda", lat: 48.22, lon: 22.08 }, { name: "Tiszavasvári", lat: 47.95, lon: 21.35 },
-            { name: "Újfehértó", lat: 47.81, lon: 21.68 }, { name: "Nyírbátor", lat: 47.83, lon: 22.13 },
-            { name: "Vásárosnamény", lat: 48.12, lon: 22.31 }, { name: "Fehérgyarmat", lat: 47.98, lon: 22.51 },
-            { name: "Gávavencsellő", lat: 48.16, lon: 21.59 }, { name: "Ibrány", lat: 48.13, lon: 21.71 },
-            { name: "Balkány", lat: 47.77, lon: 21.85 }
-        ];
+        const FX_KEYS = ['8258c9489622103635e16227fd9dadd7b8d1', '426709d24c8d4420f140ac7c451db300edfa'];
 
         const HU_MAJOR_STATIONS = [
             { name: "Budapest", lat: 47.49, lon: 19.04, flag: "🇭🇺" }, { name: "Debrecen", lat: 47.53, lon: 21.62, flag: "🇭🇺" },
@@ -572,7 +644,9 @@
             summaryPageIdx: 0, summaryInterval: null,
             lastWxUpdate: 0, currentWxSource: '--',
             lastTickerUpdate: Date.now(),
-            specialMeteoInterval: null
+            specialMeteoInterval: null,
+            holidayMode: null, // 'XMAS', 'NY', or null
+            flipperTimer: null
         };
 
         const DOM = {
@@ -587,7 +661,8 @@
             feedLog: document.getElementById('feed-log-table'), auth: document.getElementById('auth-overlay'), pin: document.getElementById('pin-input'), dev: document.getElementById('dev-panel'),
             summary: document.getElementById('summary-overlay'), sumContent: document.getElementById('sum-content'), sumClock: document.getElementById('sum-clock'), sumMainTitle: document.getElementById('sum-main-title'), sumSubTitle: document.getElementById('sum-sub-title'),
             bigClock: document.getElementById('big-clock-overlay'), bcTime: document.getElementById('bc-time'),
-            devWxNext: document.getElementById('dev-wx-next'), devWxSrc: document.getElementById('dev-wx-src'), devSch30: document.getElementById('dev-sch-30'), devSch60: document.getElementById('dev-sch-60')
+            devWxNext: document.getElementById('dev-wx-next'), devWxSrc: document.getElementById('dev-wx-src'), devSch30: document.getElementById('dev-sch-30'), devSch60: document.getElementById('dev-sch-60'),
+            logoBox: document.getElementById('logo-box'), logoBack: document.getElementById('logo-back-face')
         };
 
         // --- UTILS & HELPERS ---
@@ -1003,11 +1078,16 @@
         }
 
         async function fetchCurrency() {
-            try {
-                const res = await fetch(`https://currencyapi.net/api/v1/rates?key=${FX_KEY}&output=JSON`);
-                const data = await res.json();
-                if(data.valid) { renderCurrency(data.rates, 'CURRENCYAPI.NET'); return; }
-            } catch(e) {}
+            for (const key of FX_KEYS) {
+                try {
+                    const res = await fetch(`https://currencyapi.net/api/v1/rates?key=${key}&output=JSON`);
+                    if(res.ok) {
+                        const data = await res.json();
+                        if(data.valid) { renderCurrency(data.rates, 'CURRENCYAPI.NET'); return; }
+                    }
+                } catch(e) { console.log("FX Key fail, trying next..."); }
+            }
+
             try {
                 const res = await fetch("https://open.er-api.com/v6/latest/HUF");
                 const data = await res.json();
@@ -1123,6 +1203,79 @@
             state.wxIdx = (state.wxIdx + 1) % state.weatherData.length;
         }
 
+        // --- HOLIDAY LOGIC & FLIPPER ---
+        
+        function checkHolidayMode() {
+            const now = new Date();
+            
+            // Christmas: 2025-12-24 00:00 to 2025-12-27 00:00
+            const xmasStart = new Date('2025-12-24T00:00:00');
+            const xmasEnd = new Date('2025-12-27T00:00:00');
+            
+            // New Year: 2025-12-30 00:00 to 2026-01-02 00:00
+            const nyStart = new Date('2025-12-30T00:00:00');
+            const nyEnd = new Date('2026-01-02T00:00:00');
+            
+            if (now >= xmasStart && now < xmasEnd) {
+                state.holidayMode = 'XMAS';
+            } else if (now >= nyStart && now < nyEnd) {
+                state.holidayMode = 'NY';
+            } else {
+                state.holidayMode = null;
+            }
+        }
+        
+        function forceHoliday(mode) {
+            state.holidayMode = mode;
+            clearTimeout(state.flipperTimer);
+            DOM.logoBox.classList.remove('flipped'); // Reset
+            alert("HOLIDAY MODE SET TO: " + mode);
+            startHolidayFlipper(); // Restart loop
+        }
+
+        function startHolidayFlipper() {
+            const flip = () => {
+                // Only flip if a mode is active
+                if (!state.holidayMode) return;
+                
+                // Set content based on mode
+                if (state.holidayMode === 'XMAS') {
+                    DOM.logoBack.className = 'logo-back mode-xmas';
+                    DOM.logoBack.innerHTML = `
+                        <div class="sparkle"></div>
+                        <div class="holiday-icon">🎄</div>
+                        <div class="holiday-title">Áldott,<br>Békés</div>
+                        <div class="holiday-sub">Karácsonyt</div>
+                    `;
+                } else if (state.holidayMode === 'NY') {
+                    DOM.logoBack.className = 'logo-back mode-ny';
+                    DOM.logoBack.innerHTML = `
+                        <div class="sparkle"></div>
+                        <div class="holiday-icon">🥂</div>
+                        <div class="holiday-title">Békés<br>Boldog</div>
+                        <div class="holiday-sub">Új Évet!</div>
+                    `;
+                }
+                
+                // Do the flip
+                DOM.logoBox.classList.add('flipped');
+                
+                // Stay flipped for 5 seconds
+                setTimeout(() => {
+                    DOM.logoBox.classList.remove('flipped');
+                }, 5000);
+                
+                // Schedule next flip (random between 15s and 25s)
+                const nextFlip = Math.floor(Math.random() * 10000) + 15000; 
+                state.flipperTimer = setTimeout(flip, nextFlip);
+            };
+            
+            // Initial trigger
+            if(state.holidayMode) {
+                 state.flipperTimer = setTimeout(flip, 5000);
+            }
+        }
+
         function startClock() {
             setInterval(() => {
                 const now = new Date();
@@ -1183,6 +1336,9 @@
 
         function init() {
             startClock();
+            checkHolidayMode(); // Check date on startup
+            startHolidayFlipper(); // Initialize flipper based on date
+            
             const d = document.createElement('div'); d.className='term-line'; d.innerText = ">> SYSTEM READY"; DOM.term.appendChild(d);
             DOM.fill.style.width = "100%";
             crawlNews(false); fetchCurrency(); fetchOther(); fetchWunderground();
