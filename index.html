@@ -113,7 +113,6 @@
             justify-content: center;
             padding: 5px;
             overflow: hidden;
-            /* REMOVED LAYER: No background, no border, no box-shadow */
             background: transparent;
             border: none;
             box-shadow: none;
@@ -122,19 +121,17 @@
         /* Holiday Content Styling */
         .holiday-msg {
             font-family: var(--font-script);
-            font-size: 1.6rem; /* Slightly larger for readability */
+            font-size: 1.6rem;
             color: #fff;
             text-align: center;
             line-height: 1.1;
             margin-bottom: 10px;
-            /* Strong shadow to stand out without background */
             text-shadow: 0 0 5px #000, 0 0 10px #000, 0 0 15px rgba(0,0,0,0.8);
         }
         .holiday-logo-row {
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* Subtle separator */
             border-top: 1px solid rgba(255,255,255,0.4);
             padding-top: 5px;
             width: 70%;
@@ -144,7 +141,6 @@
             width: 35px;
             height: 35px;
             fill: var(--primary);
-            /* Outline effect using drop-shadow */
             filter: drop-shadow(0 0 2px rgba(255,255,255,0.8));
         }
         .holiday-logo-text {
@@ -748,6 +744,9 @@
             tickerTimer: null, mainTimer: null,
             isBreaking: false, isSpecial: false, isSummary: false,
             seenBreaking: new Set(),
+            breakingQueue: [], // NEW: Queue for fresh items
+            breakingHistory: new Set(), // NEW: Avoid re-queuing
+            isBreakingActive: false, // NEW: Track if overlay is active
             feedStatus: {}, startTime: Date.now(),
             currentMainLink: null, currentBreakingLink: null, currentBreakingItem: null,
             summaryPageIdx: 0, summaryInterval: null, summaryTimerInterval: null,
@@ -757,7 +756,8 @@
             meteoPhaseTimer: null,
             holidayMode: null, // 'XMAS', 'NY', or null
             flipperTimer: null,
-            nextHolidayFlip: 0 // New variable for countdown
+            nextHolidayFlip: 0,
+            initialLoadComplete: false // NEW FLAG TO PREVENT BREAKING SPAM ON START
         };
 
         const DOM = {
@@ -886,12 +886,19 @@
 
         function forceRefreshAll() { crawlNews(true); fetchCurrency(); fetchWunderground(); alert("FRISSÍTÉS ELKÜLDVE"); }
         function testBreaking() { 
-            triggerBreaking({ 
-                title: "RENDKÍVÜLI HÍR: EZ EGY HOSSZÚ TESZT ÜZENET, HOGY ELLENŐRIZZÜK A GÖRGETŐ FUNKCIÓT A MOST ÉRKEZETT SÁVBAN.", 
+            // Simulate adding a fresh item to queue
+            const now = new Date();
+            const fakeItem = { 
+                title: "RENDKÍVÜLI HÍR: EZ EGY TESZT ÜZENET A SORBAN ÁLLÁS ELLENŐRZÉSÉRE.", 
                 source: "TESZT", 
-                date: new Date(), 
-                link: "https://klikk.hu" 
-            }); 
+                date: now, 
+                link: "https://klikk.hu/" + now.getTime() // Unique link
+            };
+            state.breakingQueue.push(fakeItem);
+            
+            if (!state.isBreakingActive) {
+                processBreakingQueue();
+            }
         }
 
         // --- FETCHERS ---
@@ -917,7 +924,6 @@
             if(isReset) {
                 DOM.tickerWindow.innerHTML = '<div class="ticker-item active"><div class="ticker-content"><span class="ticker-refresh-msg">ADATBÁZIS FRISSÍTÉSE... KÉRJÜK VÁRJON, AMÍG A RENDSZER LEKÉRI AZ ELMÚLT 2 ÓRÁBÓL A HÍREKET</span></div></div>';
                 clearTimeout(state.tickerTimer);
-                // Force show on Main too
                 DOM.mainTitle.innerText = "ADATBÁZIS FRISSÍTÉSE...";
                 DOM.mainDesc.innerText = "KÉRJÜK VÁRJON, AMÍG A RENDSZER LEKÉRI AZ ELMÚLT 2 ÓRÁBÓL A HÍREKET.";
             }
@@ -950,6 +956,11 @@
                     }
                     if (title && link && !state.allNews.find(n => n.link === link)) {
                         state.allNews.push({ title, link, date: pubDate, desc, source: sourceName, img: img });
+                        
+                        // IF INITIAL LOAD IS NOT COMPLETE, MARK AS SEEN IMMEDIATELY TO AVOID SPAM
+                        if(!state.initialLoadComplete) {
+                            state.seenBreaking.add(link);
+                        }
                     }
                 });
             } catch(e) {}
@@ -957,93 +968,118 @@
 
         function updateLists() {
             const now = new Date();
-            // INCREASED TIME WINDOW TO 4 HOURS FOR MORE CONTENT (14400000 ms)
-            const timeLimit = 14400000; 
+            // Ticker maradhat bővebb (pl 4 óra), hogy legyen tartalom
+            const tickerLimit = 14400000; // 4 hours
+            // Main News szigorúan 2 óra (7 200 000 ms)
+            const mainLimit = 7200000; 
             
-            const newTicker = state.allNews.filter(n => (now - n.date) < timeLimit).sort((a,b) => b.date - a.date);
+            const newTicker = state.allNews.filter(n => (now - n.date) < tickerLimit).sort((a,b) => b.date - a.date);
             if (newTicker.length > 5) state.tickerItems = newTicker;
             else state.tickerItems = [...state.allNews].sort((a,b) => b.date - a.date).slice(0, 50);
             
-            const newMain = state.allNews.filter(n => (now - n.date) < timeLimit && n.img).sort(() => Math.random() - 0.5);
-            if(newMain.length > 3) state.mainItems = newMain;
-            else state.mainItems = state.allNews.filter(n => n.img).slice(0, 30);
+            // MAIN: 2 hours, Random order
+            const newMain = state.allNews.filter(n => (now - n.date) < mainLimit && n.img).sort(() => Math.random() - 0.5);
+            
+            if(newMain.length > 0) {
+                 state.mainItems = newMain;
+            } else {
+                // Fallback only if absolutely empty (to prevent crash), but try to keep it fresh
+                state.mainItems = state.allNews.filter(n => n.img).slice(0, 10); 
+            }
         }
 
-        // --- BREAKING NEWS SYSTEM ---
+        // --- NEW BREAKING NEWS SYSTEM (QUEUE BASED) ---
+        
         async function checkBreaking() {
-            if (state.isBreaking || state.isSpecial || state.isSummary) return; // Don't interrupt
+            if (state.isSpecial || state.isSummary) return; // Don't interrupt full screen overlays
             
             const now = Date.now();
-            const twoMinutesAgo = now - (120 * 1000); 
-            let breakingFound = null;
+            // STRICT 3 MINUTE WINDOW
+            const threshold = 3 * 60 * 1000; 
 
-            // Fetch feeds again quickly for breaking only
-            for (const feed of RSS_FEEDS) {
-                // Only check major news sources for breaking to save bandwidth/time
-                if (!['TELEX','INDEX','24.HU','ORIGO','HVG','HIRADO'].includes(feed.name)) continue; 
+            // Check existing allNews array for items younger than 3 minutes
+            // that we haven't added to the history queue yet.
+            const freshItems = state.allNews.filter(n => {
+                const age = now - n.date.getTime();
+                return age <= threshold && age >= 0;
+            });
 
-                try {
-                    // Optimized fetching could be here, currently reusing parsing logic
-                } catch(e) {}
-            }
-            
-            // Check existing array for very fresh items we haven't shown as breaking
-            const freshItems = state.allNews.filter(n => n.date.getTime() > twoMinutesAgo);
-            
-            for (const item of freshItems) {
-                if (!state.seenBreaking.has(item.link)) {
-                    breakingFound = item;
-                    state.seenBreaking.add(item.link);
-                    break; // Handle one at a time
+            // Add new findings to queue
+            let addedCount = 0;
+            // Sort by oldest first within the fresh batch to play in order
+            freshItems.sort((a,b) => a.date - b.date).forEach(item => {
+                if (!state.breakingHistory.has(item.link)) {
+                    state.breakingHistory.add(item.link);
+                    state.breakingQueue.push(item);
+                    addedCount++;
                 }
-            }
+            });
 
-            if (breakingFound) {
-                triggerBreaking(breakingFound);
+            // Start playing if not already playing and initial load is done
+            if (addedCount > 0 && !state.isBreakingActive && state.initialLoadComplete) {
+                processBreakingQueue();
             }
         }
 
-        function triggerBreaking(item) {
-            state.isBreaking = true;
+        function processBreakingQueue() {
+            // Recursive function to play all items in queue
+            if (state.breakingQueue.length === 0) {
+                closeBreaking();
+                return;
+            }
+
+            state.isBreakingActive = true;
+            const item = state.breakingQueue.shift(); // Get next item
+            
+            // Set Link
             state.currentBreakingLink = item.link;
-            state.currentBreakingItem = item; // Store for later
-            
+
+            // Display Logic
             const timeStr = item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'});
-            
-            // Construct Content
             DOM.breakingContent.innerHTML = `
                 <span class="bk-meta">${timeStr}</span>
                 <span class="bk-meta" style="color:#fff; font-weight:900;">${item.source}</span>
                 <span class="bk-sep">///</span>
                 <span>${item.title}</span>
             `;
-            
-            // Open Overlay
-            DOM.breaking.classList.add('active');
-            DOM.tickerBar.style.opacity = '0'; // Hide ticker behind
 
-            // Logic for timing/scrolling
+            // Activate Bar
+            DOM.breaking.classList.add('active');
+            DOM.tickerBar.style.opacity = '0';
+
+            // Calculate Duration based on text length
+            // Wait a moment for rendering
             setTimeout(() => {
-                const containerWidth = DOM.breaking.clientWidth - 250; // Approx padding/tag width
+                const containerWidth = DOM.breaking.clientWidth - 250; 
                 const textWidth = DOM.breakingContent.clientWidth;
-                
+                let duration = 15000; // Minimum 15s
+
                 if (textWidth > containerWidth) {
-                    // Scroll required
                     const dist = textWidth - containerWidth + 50;
-                    const duration = dist / 50; // Speed factor (pixels per sec)
+                    const scrollTime = (dist / 50) * 1000; // 50px/s speed
+                    duration = scrollTime + 4000; // Buffer
+
+                    // Reset position first
+                    DOM.breakingContent.style.transition = 'none';
+                    DOM.breakingContent.style.transform = 'translateX(0)';
                     
+                    // Trigger scroll
                     setTimeout(() => {
-                        DOM.breakingContent.style.transition = `transform ${duration}s linear`;
+                        DOM.breakingContent.style.transition = `transform ${scrollTime/1000}s linear`;
                         DOM.breakingContent.style.transform = `translateX(-${dist}px)`;
-                        
-                        // Close after scroll finishes
-                        setTimeout(closeBreaking, duration * 1000 + 2000);
-                    }, 3000); // 3s initial delay
+                    }, 2000);
                 } else {
-                    // Fits: 15s fixed
-                    setTimeout(closeBreaking, 15000);
+                    // Reset if fitting
+                    DOM.breakingContent.style.transition = 'none';
+                    DOM.breakingContent.style.transform = 'translateX(0)';
                 }
-            }, 500); // Wait for open anim
+
+                // Schedule next item
+                setTimeout(() => {
+                    processBreakingQueue();
+                }, duration);
+
+            }, 100);
         }
 
         function closeBreaking() {
@@ -1051,23 +1087,9 @@
             DOM.tickerBar.style.opacity = '1';
             
             setTimeout(() => {
-                // Reset styles
                 DOM.breakingContent.style.transition = 'none';
                 DOM.breakingContent.style.transform = 'translateX(0)';
-                state.isBreaking = false;
-                
-                // Add to lists silently WITHOUT RESETTING TICKER
-                if (state.currentBreakingItem) {
-                    // Check if already in
-                    if(!state.tickerItems.find(i => i.link === state.currentBreakingItem.link)){
-                        state.tickerItems.unshift(state.currentBreakingItem);
-                        // Also add to main items if image exists
-                        if(state.currentBreakingItem.img && !state.mainItems.find(i => i.link === state.currentBreakingItem.link)) {
-                            state.mainItems.unshift(state.currentBreakingItem);
-                        }
-                    }
-                }
-                // No manualTicker(1) call here - let the natural cycle continue
+                state.isBreakingActive = false;
             }, 600);
         }
 
@@ -1080,7 +1102,7 @@
             DOM.special.style.display = 'flex';
             setTimeout(() => DOM.special.classList.add('active'), 50);
 
-            // Define the sequence: 4 themes, 15 seconds each (Total 60s)
+            // Define the sequence: 4 themes, 25 seconds each (Total 100s)
             const sequence = [
                 { title: "SZABOLCS-SZATMÁR-BEREG", list: SZSZB_STATIONS },
                 { title: "MAGYARORSZÁG NAGYVÁROSAI", list: shuffle([...HU_MAJOR_STATIONS]).slice(0, 12) },
@@ -1103,19 +1125,19 @@
                 }, 300);
 
                 phase++;
-                // Schedule next phase in 15 seconds
+                // Schedule next phase in 25 seconds (CHANGED FROM 15s)
                 if(phase < sequence.length) {
-                    state.meteoPhaseTimer = setTimeout(runPhase, 15000);
+                    state.meteoPhaseTimer = setTimeout(runPhase, 25000);
                 }
             };
 
             // Start first phase
             runPhase();
 
-            // End (60s)
+            // End (100s + buffer)
             state.specialMeteoInterval = setTimeout(() => {
                 closeAllOverlays();
-            }, 60000); 
+            }, 102000); 
         }
 
         async function renderSpecialBatch(stations, title) {
@@ -1624,6 +1646,10 @@
             const d = document.createElement('div'); d.className='term-line'; d.innerText = ">> RENDSZER KÉSZ"; DOM.term.appendChild(d);
             DOM.fill.style.width = "100%";
             crawlNews(false); fetchCurrency(); fetchOther(); fetchWunderground();
+            
+            // Set flag after 5 seconds to allow initial news to load without triggering breaking
+            setTimeout(() => { state.initialLoadComplete = true; }, 5000);
+
             setTimeout(() => { DOM.loader.style.opacity = 0; setTimeout(() => DOM.loader.remove(), 1000); }, 500);
             
             setInterval(() => { if(!state.isSpecial && !state.isSummary) cycleMain(); }, 15000);
