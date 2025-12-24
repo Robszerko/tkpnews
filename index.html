@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V13.0 HOLIDAY EDITION</title>
+    <title>TKP NEWS - V13.0 FINAL BREAKING SYSTEM</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -224,7 +224,7 @@
         .progress-bar { position: absolute; bottom: 0; left: 0; height: 6px; background: var(--accent); width: 0%; }
 
         /* TICKER BAR */
-        .ticker-bar { position: absolute; bottom: 0; left: 0; width: 100%; height: var(--footer-h); background: #000; border-top: 5px solid var(--primary); display: flex; z-index: 40; box-shadow: 0 -10px 40px rgba(0,0,0,0.8); }
+        .ticker-bar { position: absolute; bottom: 0; left: 0; width: 100%; height: var(--footer-h); background: #000; border-top: 5px solid var(--primary); display: flex; z-index: 40; box-shadow: 0 -10px 40px rgba(0,0,0,0.8); transition: opacity 0.3s; }
         .ticker-label { background: var(--primary); height: 100%; display: flex; align-items: center; padding: 0 2.5vw; font-family: var(--font-main); font-weight: 700; font-size: clamp(1.2rem, 3vh, 2rem); flex-shrink: 0; z-index: 50; }
         .ticker-nav { display: flex; align-items: center; background: #0a0a0a; padding: 0 10px; border-right: 1px solid #333; z-index: 50; gap: 8px; pointer-events: auto; }
         .nav-btn { background: #1a1a1a; border: 1px solid #444; color: #fff; padding: 6px 15px; cursor: pointer; font-family: var(--font-tech); font-weight: bold; transition: 0.2s; }
@@ -238,11 +238,22 @@
         .ticker-meta { font-family: var(--font-tech); color: var(--accent); font-weight: 700; background: rgba(255,255,255,0.08); padding: 4px 12px; border-radius: 4px; margin-right: 15px; font-size: 0.85em; flex-shrink: 0; }
         .ticker-refresh-msg { color: var(--accent); font-weight: bold; animation: blink 0.5s infinite; letter-spacing: 2px; }
 
-        /* BREAKING BAR */
-        .breaking-bar { position: absolute; bottom: 0; left: 0; width: 100%; height: var(--footer-h); background: #cc0000; border-top: 4px solid #ff4444; display: flex; align-items: center; transform: translateY(100%); opacity: 0; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); z-index: 100; padding: 0 2vw; box-shadow: 0 -10px 40px rgba(0,0,0,0.9); cursor: pointer; pointer-events: auto; }
+        /* MOST ÉRKEZETT (BREAKING) OVERLAY BAR */
+        .breaking-bar { 
+            position: absolute; bottom: 0; left: 0; width: 100%; height: var(--footer-h); 
+            background: #cc0000; border-top: 4px solid #ff4444; 
+            display: flex; align-items: center; 
+            transform: translateY(100%); opacity: 0; 
+            transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.3s; 
+            z-index: 100; padding: 0 2vw; box-shadow: 0 -10px 40px rgba(0,0,0,0.9); 
+            cursor: pointer; pointer-events: auto; 
+        }
         .breaking-bar.active { transform: translateY(0); opacity: 1; }
         .breaking-tag { background: #fff; color: #cc0000; font-family: var(--font-main); font-weight: 900; font-size: 1.4rem; padding: 5px 20px; margin-right: 25px; letter-spacing: 1px; flex-shrink: 0; }
-        .breaking-msg { font-family: var(--font-data); font-weight: 700; font-size: 1.6rem; color: #fff; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .breaking-window { flex-grow: 1; height: 100%; position: relative; overflow: hidden; display: flex; align-items: center; }
+        .breaking-content { font-family: var(--font-data); font-weight: 700; font-size: 1.6rem; color: #fff; text-transform: uppercase; white-space: nowrap; display: flex; align-items: center; width: auto; position: absolute; left: 0; transition: transform 0s linear; }
+        .bk-meta { font-family: var(--font-mono); font-size: 0.8em; margin-right: 15px; opacity: 0.9; color: #ffd700; }
+        .bk-sep { margin: 0 10px; opacity: 0.5; }
 
         /* SPECIAL METEO (GRID) */
         #special-meteo { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle at center, #001a4d 0%, #000510 100%); z-index: 200; display: none; flex-direction: column; align-items: center; padding-top: 3vh; opacity: 0; transition: opacity 0.8s; }
@@ -374,6 +385,7 @@
                 <button class="btn" onclick="triggerBigClock()">[⏰] TEST BIG CLOCK</button>
                 <button class="btn" onclick="closeAllOverlays()">[X] CLEAR OVERLAYS</button>
                 <button class="btn" onclick="forceRefreshAll()">[⚡] FORCE REFRESH</button>
+                <button class="btn" onclick="testBreaking()">[🔥] TEST BREAKING NEWS</button>
                 <button class="btn" onclick="triggerSpecialMeteoSequence()">[☁] SPECIAL METEO SEQ</button>
             </div>
             <div class="dev-section" style="display:flex; flex-direction:column;">
@@ -511,7 +523,11 @@
         <!-- BREAKING BAR -->
         <div class="breaking-bar" id="breaking">
             <div class="breaking-tag">MOST ÉRKEZETT</div>
-            <div class="breaking-msg" id="breaking-msg">BETÖLTÉS...</div>
+            <div class="breaking-window">
+                <div class="breaking-content" id="breaking-content">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
         </div>
 
         <!-- TICKER BAR -->
@@ -529,24 +545,44 @@
 
     <script>
         /**
-         * TKP NEWS V13.0 - HOLIDAY UPDATE
+         * TKP NEWS V13.0 - ULTIMATE CONTENT + BREAKING FIX
          */
 
         const RSS_FEEDS = [
-            { url: "https://telex.hu/rss", name: "TELEX" },
-            { url: "https://index.hu/24ora/rss/", name: "INDEX" },
-            { url: "https://24.hu/feed/", name: "24.HU" },
-            { url: "https://hvg.hu/rss", name: "HVG" },
-            { url: "https://444.hu/feed", name: "444.HU" },
-            { url: "https://www.portfolio.hu/rss/all.xml", name: "PORTFOLIO" },
-            { url: "https://infostart.hu/rss", name: "INFOSTART" },
-            { url: "https://www.blikk.hu/rss", name: "BLIKK" },
-            { url: "https://economx.hu/rss", name: "ECONOMX" },
-            { url: "https://nepszava.hu/rss", name: "NÉPSZAVA" },
-            { url: "https://mandiner.hu/feed", name: "MANDINER" },
-            { url: "https://www.hwsw.hu/xml/latest_news_rss.xml", name: "HWSW" },
-            { url: "https://www.pcwplus.hu/site/rss/rss.xml", name: "PC WORLD" },
-            { url: "https://ng.24.hu/feed/", name: "NATGEO" }
+            { name: "TELEX", url: "https://telex.hu/rss" },
+            { name: "INDEX", url: "https://index.hu/24ora/rss/" },
+            { name: "24.HU", url: "https://24.hu/feed/" },
+            { name: "ORIGO", url: "https://www.origo.hu/contentpartner/rss/hir-cent/origo.xml" },
+            { name: "HVG", url: "https://hvg.hu/rss" },
+            { name: "444", url: "https://444.hu/feed" },
+            { name: "INFOSTART", url: "https://infostart.hu/rss" },
+            { name: "PORTFOLIO", url: "https://www.portfolio.hu/rss/all.xml" },
+            { name: "PÉNZCENTRUM", url: "https://www.penzcentrum.hu/rss/all.xml" },
+            { name: "NÉPSZAVA", url: "https://nepszava.hu/rss" },
+            { name: "MNEMZET", url: "https://magyarnemzet.hu/feed" },
+            { name: "MANDINER", url: "https://mandiner.hu/feed" },
+            { name: "BLIKK", url: "https://www.blikk.hu/rss" },
+            { name: "HIRADO", url: "https://hirado.hu/feed/" },
+            { name: "ATV", url: "https://www.atv.hu/feed" },
+            { name: "RTL", url: "https://rtl.hu/rss" },
+            { name: "ECONOMX", url: "https://economx.hu/rss" },
+            { name: "NAPI", url: "https://www.napi.hu/rss" },
+            { name: "MHIRLAP", url: "https://www.magyarhirlap.hu/rss" },
+            { name: "PESTISRACOK", url: "https://pestisracok.hu/feed/" },
+            { name: "NEMZETISPORT", url: "https://www.nemzetisport.hu/feed" },
+            { name: "M4SPORT", url: "https://m4sport.hu/feed" },
+            { name: "HIRTV", url: "https://hirtv.hu/rss" },
+            { name: "PRIVATBANKAR", url: "https://www.privatbankar.hu/rss/all.xml" },
+            { name: "POLICE", url: "http://www.police.hu/hu/rss/balesetek-torlodasok" },
+            { name: "BKK", url: "https://bkk.hu/apps/bkk-info/rss.php" },
+            { name: "PECSIUJSAG", url: "https://feeds.feedburner.com/pecsiujsag" },
+            { name: "DEHIR", url: "https://dehir.hu/rss.php" },
+            { name: "ROADSTER", url: "https://roadster.hu/feed/" },
+            { name: "NATGEO", url: "https://ng.24.hu/feed/" },
+            { name: "PLAYER", url: "https://player.hu/feed" },
+            { name: "QUBIT", url: "https://qubit.hu/feed" },
+            { name: "PCWORLD", url: "https://www.pcwplus.hu/site/rss/rss.xml" },
+            { name: "GAMESTAR", url: "https://www.gsplus.hu/site/rss/rss.xml" }
         ];
 
         const PROXIES = [
@@ -563,71 +599,71 @@
         const FX_KEYS = ['8258c9489622103635e16227fd9dadd7b8d1', '426709d24c8d4420f140ac7c451db300edfa'];
 
         const HU_MAJOR_STATIONS = [
-            { name: "Budapest", lat: 47.49, lon: 19.04, flag: "🇭🇺" }, { name: "Debrecen", lat: 47.53, lon: 21.62, flag: "🇭🇺" },
-            { name: "Szeged", lat: 46.25, lon: 20.15, flag: "🇭🇺" }, { name: "Miskolc", lat: 48.10, lon: 20.78, flag: "🇭🇺" },
-            { name: "Pécs", lat: 46.07, lon: 18.23, flag: "🇭🇺" }, { name: "Győr", lat: 47.68, lon: 17.63, flag: "🇭🇺" },
-            { name: "Sopron", lat: 47.68, lon: 16.58, flag: "🇭🇺" }, { name: "Veszprém", lat: 47.09, lon: 17.91, flag: "🇭🇺" },
-            { name: "Eger", lat: 47.90, lon: 20.37, flag: "🇭🇺" }, { name: "Szentes", lat: 46.65, lon: 20.26, flag: "🇭🇺" },
-            { name: "Baja", lat: 46.18, lon: 18.95, flag: "🇭🇺" }, { name: "Esztergom", lat: 47.79, lon: 18.74, flag: "🇭🇺" },
-            { name: "Siófok", lat: 46.90, lon: 18.05, flag: "🇭🇺" }, { name: "Keszthely", lat: 46.76, lon: 17.24, flag: "🇭🇺" },
-            { name: "Pápa", lat: 47.33, lon: 17.46, flag: "🇭🇺" }, { name: "Gyula", lat: 46.65, lon: 21.28, flag: "🇭🇺" },
-            { name: "Hajdúszoboszló", lat: 47.45, lon: 21.40, flag: "🇭🇺" }, { name: "Szekszárd", lat: 46.35, lon: 18.70, flag: "🇭🇺" },
-            { name: "Gödöllő", lat: 47.60, lon: 19.35, flag: "🇭🇺" }, { name: "Vác", lat: 47.77, lon: 19.13, flag: "🇭🇺" },
-            { name: "Székesfehérvár", lat: 47.19, lon: 18.41, flag: "🇭🇺" }, { name: "Kecskemét", lat: 46.88, lon: 19.69, flag: "🇭🇺" },
-            { name: "Szarvas", lat: 46.86, lon: 20.55, flag: "🇭🇺" }, { name: "Karcag", lat: 47.31, lon: 20.92, flag: "🇭🇺" },
-            { name: "Mezőtúr", lat: 47.00, lon: 20.62, flag: "🇭🇺" }, { name: "Sátoraljaújhely", lat: 48.40, lon: 21.66, flag: "🇭🇺" },
-            { name: "Sárospatak", lat: 48.32, lon: 21.57, flag: "🇭🇺" }, { name: "Balatonfüred", lat: 46.96, lon: 17.89, flag: "🇭🇺" },
-            { name: "Komárom", lat: 47.74, lon: 18.12, flag: "🇭🇺" }, { name: "Paks", lat: 46.61, lon: 18.86, flag: "🇭🇺" },
-            { name: "Kalocsa", lat: 46.52, lon: 18.98, flag: "🇭🇺" }, { name: "Szigetvár", lat: 46.05, lon: 17.80, flag: "🇭🇺" },
-            { name: "Tapolca", lat: 46.88, lon: 17.44, flag: "🇭🇺" }, { name: "Hatvan", lat: 47.67, lon: 19.68, flag: "🇭🇺" },
-            { name: "Dombóvár", lat: 46.38, lon: 18.13, flag: "🇭🇺" },
-            { name: "Mosonmagyaróvár", lat: 47.87, lon: 17.27, flag: "🇭🇺" }, { name: "Jászberény", lat: 47.50, lon: 19.91, flag: "🇭🇺" },
-            { name: "Orosháza", lat: 46.57, lon: 20.66, flag: "🇭🇺" }, { name: "Kiskunfélegyháza", lat: 46.71, lon: 19.85, flag: "🇭🇺" },
-            { name: "Ajka", lat: 47.10, lon: 17.56, flag: "🇭🇺" }, { name: "Várpalota", lat: 47.20, lon: 18.14, flag: "🇭🇺" },
-            { name: "Törökszentmiklós", lat: 47.17, lon: 20.41, flag: "🇭🇺" }, { name: "Makó", lat: 46.21, lon: 20.48, flag: "🇭🇺" },
-            { name: "Tata", lat: 47.65, lon: 18.32, flag: "🇭🇺" }, { name: "Komló", lat: 46.19, lon: 18.26, flag: "🇭🇺" },
-            { name: "Hajdúböszörmény", lat: 47.67, lon: 21.51, flag: "🇭🇺" }, { name: "Nyergesújfalu", lat: 47.76, lon: 18.56, flag: "🇭🇺" },
-            { name: "Százhalombatta", lat: 47.31, lon: 18.91, flag: "🇭🇺" }, { name: "Göd", lat: 47.69, lon: 19.14, flag: "🇭🇺" },
-            { name: "Fót", lat: 47.61, lon: 19.19, flag: "🇭🇺" },
-            { name: "Sárvár", lat: 47.25, lon: 16.93, flag: "🇭🇺" }, { name: "Kőszeg", lat: 47.38, lon: 16.54, flag: "🇭🇺" },
-            { name: "Szentgotthárd", lat: 46.95, lon: 16.27, flag: "🇭🇺" }, { name: "Lenti", lat: 46.62, lon: 16.53, flag: "🇭🇺" },
-            { name: "Marcali", lat: 46.58, lon: 17.41, flag: "🇭🇺" }, { name: "Nagyatád", lat: 46.23, lon: 17.36, flag: "🇭🇺" },
-            { name: "Siklós", lat: 45.85, lon: 18.29, flag: "🇭🇺" }, { name: "Dunaföldvár", lat: 46.80, lon: 18.91, flag: "🇭🇺" },
-            { name: "Kiskőrös", lat: 46.62, lon: 19.28, flag: "🇭🇺" }, { name: "Kiskunhalas", lat: 46.43, lon: 19.48, flag: "🇭🇺" },
-            { name: "Csongrád", lat: 46.71, lon: 20.14, flag: "🇭🇺" }, { name: "Mezőkövesd", lat: 47.81, lon: 20.57, flag: "🇭🇺" },
-            { name: "Tiszaújváros", lat: 47.92, lon: 21.05, flag: "🇭🇺" }, { name: "Szerencs", lat: 48.16, lon: 21.20, flag: "🇭🇺" },
-            { name: "Berettyóújfalu", lat: 47.22, lon: 21.54, flag: "🇭🇺" }, { name: "Püspökladány", lat: 47.32, lon: 21.11, flag: "🇭🇺" },
-            { name: "Hajdúnánás", lat: 47.84, lon: 21.43, flag: "🇭🇺" }, { name: "Kisbér", lat: 47.50, lon: 18.03, flag: "🇭🇺" },
-            { name: "Mór", lat: 47.37, lon: 18.21, flag: "🇭🇺" }, { name: "Nagykáta", lat: 47.41, lon: 19.74, flag: "🇭🇺" }
+            { name: "Budapest", lat: 47.49, lon: 19.04, code: "hu" }, { name: "Debrecen", lat: 47.53, lon: 21.62, code: "hu" },
+            { name: "Szeged", lat: 46.25, lon: 20.15, code: "hu" }, { name: "Miskolc", lat: 48.10, lon: 20.78, code: "hu" },
+            { name: "Pécs", lat: 46.07, lon: 18.23, code: "hu" }, { name: "Győr", lat: 47.68, lon: 17.63, code: "hu" },
+            { name: "Sopron", lat: 47.68, lon: 16.58, code: "hu" }, { name: "Veszprém", lat: 47.09, lon: 17.91, code: "hu" },
+            { name: "Eger", lat: 47.90, lon: 20.37, code: "hu" }, { name: "Szentes", lat: 46.65, lon: 20.26, code: "hu" },
+            { name: "Baja", lat: 46.18, lon: 18.95, code: "hu" }, { name: "Esztergom", lat: 47.79, lon: 18.74, code: "hu" },
+            { name: "Siófok", lat: 46.90, lon: 18.05, code: "hu" }, { name: "Keszthely", lat: 46.76, lon: 17.24, code: "hu" },
+            { name: "Pápa", lat: 47.33, lon: 17.46, code: "hu" }, { name: "Gyula", lat: 46.65, lon: 21.28, code: "hu" },
+            { name: "Hajdúszoboszló", lat: 47.45, lon: 21.40, code: "hu" }, { name: "Szekszárd", lat: 46.35, lon: 18.70, code: "hu" },
+            { name: "Gödöllő", lat: 47.60, lon: 19.35, code: "hu" }, { name: "Vác", lat: 47.77, lon: 19.13, code: "hu" },
+            { name: "Székesfehérvár", lat: 47.19, lon: 18.41, code: "hu" }, { name: "Kecskemét", lat: 46.88, lon: 19.69, code: "hu" },
+            { name: "Szarvas", lat: 46.86, lon: 20.55, code: "hu" }, { name: "Karcag", lat: 47.31, lon: 20.92, code: "hu" },
+            { name: "Mezőtúr", lat: 47.00, lon: 20.62, code: "hu" }, { name: "Sátoraljaújhely", lat: 48.40, lon: 21.66, code: "hu" },
+            { name: "Sárospatak", lat: 48.32, lon: 21.57, code: "hu" }, { name: "Balatonfüred", lat: 46.96, lon: 17.89, code: "hu" },
+            { name: "Komárom", lat: 47.74, lon: 18.12, code: "hu" }, { name: "Paks", lat: 46.61, lon: 18.86, code: "hu" },
+            { name: "Kalocsa", lat: 46.52, lon: 18.98, code: "hu" }, { name: "Szigetvár", lat: 46.05, lon: 17.80, code: "hu" },
+            { name: "Tapolca", lat: 46.88, lon: 17.44, code: "hu" }, { name: "Hatvan", lat: 47.67, lon: 19.68, code: "hu" },
+            { name: "Dombóvár", lat: 46.38, lon: 18.13, code: "hu" },
+            { name: "Mosonmagyaróvár", lat: 47.87, lon: 17.27, code: "hu" }, { name: "Jászberény", lat: 47.50, lon: 19.91, code: "hu" },
+            { name: "Orosháza", lat: 46.57, lon: 20.66, code: "hu" }, { name: "Kiskunfélegyháza", lat: 46.71, lon: 19.85, code: "hu" },
+            { name: "Ajka", lat: 47.10, lon: 17.56, code: "hu" }, { name: "Várpalota", lat: 47.20, lon: 18.14, code: "hu" },
+            { name: "Törökszentmiklós", lat: 47.17, lon: 20.41, code: "hu" }, { name: "Makó", lat: 46.21, lon: 20.48, code: "hu" },
+            { name: "Tata", lat: 47.65, lon: 18.32, code: "hu" }, { name: "Komló", lat: 46.19, lon: 18.26, code: "hu" },
+            { name: "Hajdúböszörmény", lat: 47.67, lon: 21.51, code: "hu" }, { name: "Nyergesújfalu", lat: 47.76, lon: 18.56, code: "hu" },
+            { name: "Százhalombatta", lat: 47.31, lon: 18.91, code: "hu" }, { name: "Göd", lat: 47.69, lon: 19.14, code: "hu" },
+            { name: "Fót", lat: 47.61, lon: 19.19, code: "hu" },
+            { name: "Sárvár", lat: 47.25, lon: 16.93, code: "hu" }, { name: "Kőszeg", lat: 47.38, lon: 16.54, code: "hu" },
+            { name: "Szentgotthárd", lat: 46.95, lon: 16.27, code: "hu" }, { name: "Lenti", lat: 46.62, lon: 16.53, code: "hu" },
+            { name: "Marcali", lat: 46.58, lon: 17.41, code: "hu" }, { name: "Nagyatád", lat: 46.23, lon: 17.36, code: "hu" },
+            { name: "Siklós", lat: 45.85, lon: 18.29, code: "hu" }, { name: "Dunaföldvár", lat: 46.80, lon: 18.91, code: "hu" },
+            { name: "Kiskőrös", lat: 46.62, lon: 19.28, code: "hu" }, { name: "Kiskunhalas", lat: 46.43, lon: 19.48, code: "hu" },
+            { name: "Csongrád", lat: 46.71, lon: 20.14, code: "hu" }, { name: "Mezőkövesd", lat: 47.81, lon: 20.57, code: "hu" },
+            { name: "Tiszaújváros", lat: 47.92, lon: 21.05, code: "hu" }, { name: "Szerencs", lat: 48.16, lon: 21.20, code: "hu" },
+            { name: "Berettyóújfalu", lat: 47.22, lon: 21.54, code: "hu" }, { name: "Püspökladány", lat: 47.32, lon: 21.11, code: "hu" },
+            { name: "Hajdúnánás", lat: 47.84, lon: 21.43, code: "hu" }, { name: "Kisbér", lat: 47.50, lon: 18.03, code: "hu" },
+            { name: "Mór", lat: 47.37, lon: 18.21, code: "hu" }, { name: "Nagykáta", lat: 47.41, lon: 19.74, code: "hu" }
         ];
 
         const WORLD_MAJOR_STATIONS = [
-            { name: "London", lat: 51.50, lon: -0.12, flag: "🇬🇧" }, { name: "New York", lat: 40.71, lon: -74.00, flag: "🇺🇸" },
-            { name: "Barcelona", lat: 41.38, lon: 2.17, flag: "🇪🇸" }, { name: "Milánó", lat: 45.46, lon: 9.19, flag: "🇮🇹" },
-            { name: "München", lat: 48.13, lon: 11.58, flag: "🇩🇪" }, { name: "Amszterdam", lat: 52.36, lon: 4.90, flag: "🇳🇱" },
-            { name: "Brüsszel", lat: 50.85, lon: 4.35, flag: "🇧🇪" }, { name: "Zürich", lat: 47.37, lon: 8.54, flag: "🇨🇭" },
-            { name: "Koppenhága", lat: 55.67, lon: 12.56, flag: "🇩🇰" }, { name: "Stockholm", lat: 59.32, lon: 18.06, flag: "🇸🇪" },
-            { name: "Oslo", lat: 59.91, lon: 10.75, flag: "🇳🇴" }, { name: "Helsinki", lat: 60.16, lon: 24.93, flag: "🇫🇮" },
-            { name: "Dublin", lat: 53.34, lon: -6.26, flag: "🇮🇪" }, { name: "Lisszabon", lat: 38.72, lon: -9.13, flag: "🇵🇹" },
-            { name: "Athén", lat: 37.98, lon: 23.72, flag: "🇬🇷" }, { name: "Isztambul", lat: 41.00, lon: 28.97, flag: "🇹🇷" },
-            { name: "Dubai", lat: 25.20, lon: 55.27, flag: "🇦🇪" }, { name: "Szingapúr", lat: 1.35, lon: 103.81, flag: "🇸🇬" },
-            { name: "Hong Kong", lat: 22.31, lon: 114.16, flag: "🇭🇰" }, { name: "Kairó", lat: 30.04, lon: 31.23, flag: "🇪🇬" },
-            { name: "Szöul", lat: 37.56, lon: 126.97, flag: "🇰🇷" }, { name: "Bangkok", lat: 13.75, lon: 100.50, flag: "🇹🇭" },
-            { name: "Delhi", lat: 28.61, lon: 77.20, flag: "🇮🇳" }, { name: "Sanghaj", lat: 31.23, lon: 121.47, flag: "🇨🇳" },
-            { name: "Chicago", lat: 41.87, lon: -87.62, flag: "🇺🇸" }, { name: "San Francisco", lat: 37.77, lon: -122.41, flag: "🇺🇸" },
-            { name: "Miami", lat: 25.76, lon: -80.19, flag: "🇺🇸" }, { name: "Buenos Aires", lat: -34.60, lon: -58.38, flag: "🇦🇷" },
-            { name: "Mexikóváros", lat: 19.43, lon: -99.13, flag: "🇲🇽" }, { name: "Lima", lat: -12.04, lon: -77.04, flag: "🇵🇪" },
-            { name: "Lagos", lat: 6.52, lon: 3.37, flag: "🇳🇬" }, { name: "Casablanca", lat: 33.57, lon: -7.58, flag: "🇲🇦" },
-            { name: "Tel Aviv", lat: 32.08, lon: 34.78, flag: "🇮🇱" }, { name: "Jakarta", lat: -6.20, lon: 106.84, flag: "🇮🇩" },
-            { name: "Manila", lat: 14.59, lon: 120.98, flag: "🇵🇭" },
-            { name: "Reykjavík", lat: 64.14, lon: -21.94, flag: "🇮🇸" }, { name: "Las Vegas", lat: 36.17, lon: -115.14, flag: "🇺🇸" },
-            { name: "Honolulu", lat: 21.30, lon: -157.85, flag: "🇺🇸" }, { name: "Montreal", lat: 45.50, lon: -73.56, flag: "🇨🇦" },
-            { name: "Sao Paulo", lat: -23.55, lon: -46.63, flag: "🇧🇷" }, { name: "Bogota", lat: 4.71, lon: -74.07, flag: "🇨🇴" },
-            { name: "Santiago", lat: -33.44, lon: -70.66, flag: "🇨🇱" }, { name: "Mumbai", lat: 19.07, lon: 72.87, flag: "🇮🇳" },
-            { name: "Kuala Lumpur", lat: 3.13, lon: 101.68, flag: "🇲🇾" }, { name: "Taipei", lat: 25.03, lon: 121.56, flag: "🇹🇼" },
-            { name: "Melbourne", lat: -37.81, lon: 144.96, flag: "🇦🇺" }, { name: "Auckland", lat: -36.84, lon: 174.76, flag: "🇳🇿" },
-            { name: "Nairobi", lat: -1.29, lon: 36.82, flag: "🇰🇪" }, { name: "Dakar", lat: 14.71, lon: -17.46, flag: "🇸🇳" },
-            { name: "Tunisz", lat: 36.80, lon: 10.18, flag: "🇹🇳" }
+            { name: "London", lat: 51.50, lon: -0.12, code: "gb" }, { name: "New York", lat: 40.71, lon: -74.00, code: "us" },
+            { name: "Barcelona", lat: 41.38, lon: 2.17, code: "es" }, { name: "Milánó", lat: 45.46, lon: 9.19, code: "it" },
+            { name: "München", lat: 48.13, lon: 11.58, code: "de" }, { name: "Amszterdam", lat: 52.36, lon: 4.90, code: "nl" },
+            { name: "Brüsszel", lat: 50.85, lon: 4.35, code: "be" }, { name: "Zürich", lat: 47.37, lon: 8.54, code: "ch" },
+            { name: "Koppenhága", lat: 55.67, lon: 12.56, code: "dk" }, { name: "Stockholm", lat: 59.32, lon: 18.06, code: "se" },
+            { name: "Oslo", lat: 59.91, lon: 10.75, code: "no" }, { name: "Helsinki", lat: 60.16, lon: 24.93, code: "fi" },
+            { name: "Dublin", lat: 53.34, lon: -6.26, code: "ie" }, { name: "Lisszabon", lat: 38.72, lon: -9.13, code: "pt" },
+            { name: "Athén", lat: 37.98, lon: 23.72, code: "gr" }, { name: "Isztambul", lat: 41.00, lon: 28.97, code: "tr" },
+            { name: "Dubai", lat: 25.20, lon: 55.27, code: "ae" }, { name: "Szingapúr", lat: 1.35, lon: 103.81, code: "sg" },
+            { name: "Hong Kong", lat: 22.31, lon: 114.16, code: "hk" }, { name: "Kairó", lat: 30.04, lon: 31.23, code: "eg" },
+            { name: "Szöul", lat: 37.56, lon: 126.97, code: "kr" }, { name: "Bangkok", lat: 13.75, lon: 100.50, code: "th" },
+            { name: "Delhi", lat: 28.61, lon: 77.20, code: "in" }, { name: "Sanghaj", lat: 31.23, lon: 121.47, code: "cn" },
+            { name: "Chicago", lat: 41.87, lon: -87.62, code: "us" }, { name: "San Francisco", lat: 37.77, lon: -122.41, code: "us" },
+            { name: "Miami", lat: 25.76, lon: -80.19, code: "us" }, { name: "Buenos Aires", lat: -34.60, lon: -58.38, code: "ar" },
+            { name: "Mexikóváros", lat: 19.43, lon: -99.13, code: "mx" }, { name: "Lima", lat: -12.04, lon: -77.04, code: "pe" },
+            { name: "Lagos", lat: 6.52, lon: 3.37, code: "ng" }, { name: "Casablanca", lat: 33.57, lon: -7.58, code: "ma" },
+            { name: "Tel Aviv", lat: 32.08, lon: 34.78, code: "il" }, { name: "Jakarta", lat: -6.20, lon: 106.84, code: "id" },
+            { name: "Manila", lat: 14.59, lon: 120.98, code: "ph" },
+            { name: "Reykjavík", lat: 64.14, lon: -21.94, code: "is" }, { name: "Las Vegas", lat: 36.17, lon: -115.14, code: "us" },
+            { name: "Honolulu", lat: 21.30, lon: -157.85, code: "us" }, { name: "Montreal", lat: 45.50, lon: -73.56, code: "ca" },
+            { name: "Sao Paulo", lat: -23.55, lon: -46.63, code: "br" }, { name: "Bogota", lat: 4.71, lon: -74.07, code: "co" },
+            { name: "Santiago", lat: -33.44, lon: -70.66, code: "cl" }, { name: "Mumbai", lat: 19.07, lon: 72.87, code: "in" },
+            { name: "Kuala Lumpur", lat: 3.13, lon: 101.68, code: "my" }, { name: "Taipei", lat: 25.03, lon: 121.56, code: "tw" },
+            { name: "Melbourne", lat: -37.81, lon: 144.96, code: "au" }, { name: "Auckland", lat: -36.84, lon: 174.76, code: "nz" },
+            { name: "Nairobi", lat: -1.29, lon: 36.82, code: "ke" }, { name: "Dakar", lat: 14.71, lon: -17.46, code: "sn" },
+            { name: "Tunisz", lat: 36.80, lon: 10.18, code: "tn" }
         ];
 
         // SHUFFLE COMBINED LIST FOR VARIETY
@@ -651,13 +687,13 @@
 
         const DOM = {
             loader: document.getElementById('loader'), term: document.getElementById('term'), fill: document.getElementById('load-fill'),
-            stage: document.getElementById('stage'), tickerWindow: document.getElementById('ticker-window'),
+            stage: document.getElementById('stage'), tickerWindow: document.getElementById('ticker-window'), tickerBar: document.getElementById('ui-bottom'),
             mainTitle: document.getElementById('m-title'), mainDesc: document.getElementById('m-desc'),
             mainCat: document.getElementById('m-cat'), mainPrg: document.getElementById('m-prg'),
             cTime: document.getElementById('clock-time'), cDate: document.getElementById('clock-date'),
             nyWidget: document.getElementById('ny-widget'), nyTemp: document.getElementById('ny-temp'), nyWind: document.getElementById('ny-wind'), nyTime: document.getElementById('ny-time-badge'), nyFeel: document.getElementById('ny-feel'),
             special: document.getElementById('special-meteo'), smGrid: document.getElementById('sm-grid'), smTitle: document.getElementById('sm-main-title'),
-            breaking: document.getElementById('breaking'), breakingMsg: document.getElementById('breaking-msg'),
+            breaking: document.getElementById('breaking'), breakingContent: document.getElementById('breaking-content'),
             feedLog: document.getElementById('feed-log-table'), auth: document.getElementById('auth-overlay'), pin: document.getElementById('pin-input'), dev: document.getElementById('dev-panel'),
             summary: document.getElementById('summary-overlay'), sumContent: document.getElementById('sum-content'), sumClock: document.getElementById('sum-clock'), sumMainTitle: document.getElementById('sum-main-title'), sumSubTitle: document.getElementById('sum-sub-title'),
             bigClock: document.getElementById('big-clock-overlay'), bcTime: document.getElementById('bc-time'),
@@ -761,10 +797,12 @@
 
         function forceRefreshAll() { crawlNews(true); fetchCurrency(); fetchWunderground(); alert("REFRESH SENT"); }
         function testBreaking() { 
-            DOM.breakingMsg.innerText = "TEST RIASZTÁS"; 
-            state.currentBreakingLink = "https://google.com";
-            DOM.breaking.classList.add('active'); 
-            setTimeout(() => DOM.breaking.classList.remove('active'), 10000); 
+            triggerBreaking({ 
+                title: "RENDKÍVÜLI HÍR: EZ EGY HOSSZÚ TESZT ÜZENET, HOGY ELLENŐRIZZÜK A GÖRGETŐ FUNKCIÓT A MOST ÉRKEZETT SÁVBAN.", 
+                source: "TESZT", 
+                date: new Date(), 
+                link: "https://klikk.hu" 
+            }); 
         }
 
         // --- FETCHERS ---
@@ -830,8 +868,8 @@
 
         function updateLists() {
             const now = new Date();
-            // 2 Hours = 7200000 ms
-            const timeLimit = 7200000;
+            // INCREASED TIME WINDOW TO 4 HOURS FOR MORE CONTENT (14400000 ms)
+            const timeLimit = 14400000; 
             
             const newTicker = state.allNews.filter(n => (now - n.date) < timeLimit).sort((a,b) => b.date - a.date);
             if (newTicker.length > 5) state.tickerItems = newTicker;
@@ -840,6 +878,103 @@
             const newMain = state.allNews.filter(n => (now - n.date) < timeLimit && n.img).sort(() => Math.random() - 0.5);
             if(newMain.length > 3) state.mainItems = newMain;
             else state.mainItems = state.allNews.filter(n => n.img).slice(0, 30);
+        }
+
+        // --- BREAKING NEWS SYSTEM ---
+        async function checkBreaking() {
+            if (state.isBreaking || state.isSpecial || state.isSummary) return; // Don't interrupt
+            
+            const now = Date.now();
+            const twoMinutesAgo = now - (120 * 1000); 
+            let breakingFound = null;
+
+            // Fetch feeds again quickly for breaking only
+            for (const feed of RSS_FEEDS) {
+                // Only check major news sources for breaking to save bandwidth/time
+                if (!['TELEX','INDEX','24.HU','ORIGO','HVG','HIRADO'].includes(feed.name)) continue; 
+
+                try {
+                    // Simple fetch, no full parse needed if possible, but we reuse parse logic
+                    // In a real optimized system we might use HEAD or lightweight checks
+                    // Here we rely on the main fetch loop updating `state.allNews` mostly, 
+                    // BUT for "Most érkezett" (Just arrived), we scan the `state.allNews` first
+                    // to see if anything NEW appeared since last check.
+                } catch(e) {}
+            }
+            
+            // Check existing array for very fresh items we haven't shown as breaking
+            const freshItems = state.allNews.filter(n => n.date.getTime() > twoMinutesAgo);
+            
+            for (const item of freshItems) {
+                if (!state.seenBreaking.has(item.link)) {
+                    breakingFound = item;
+                    state.seenBreaking.add(item.link);
+                    break; // Handle one at a time
+                }
+            }
+
+            if (breakingFound) {
+                triggerBreaking(breakingFound);
+            }
+        }
+
+        function triggerBreaking(item) {
+            state.isBreaking = true;
+            state.currentBreakingLink = item.link;
+            
+            const timeStr = item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'});
+            
+            // Construct Content
+            DOM.breakingContent.innerHTML = `
+                <span class="bk-meta">${timeStr}</span>
+                <span class="bk-meta" style="color:#fff; font-weight:900;">${item.source}</span>
+                <span class="bk-sep">///</span>
+                <span>${item.title}</span>
+            `;
+            
+            // Open Overlay
+            DOM.breaking.classList.add('active');
+            DOM.tickerBar.style.opacity = '0'; // Hide ticker behind
+
+            // Logic for timing/scrolling
+            setTimeout(() => {
+                const containerWidth = DOM.breaking.clientWidth - 250; // Approx padding/tag width
+                const textWidth = DOM.breakingContent.clientWidth;
+                
+                if (textWidth > containerWidth) {
+                    // Scroll required
+                    const dist = textWidth - containerWidth + 50;
+                    const duration = dist / 50; // Speed factor (pixels per sec)
+                    
+                    setTimeout(() => {
+                        DOM.breakingContent.style.transition = `transform ${duration}s linear`;
+                        DOM.breakingContent.style.transform = `translateX(-${dist}px)`;
+                        
+                        // Close after scroll finishes
+                        setTimeout(closeBreaking, duration * 1000 + 2000);
+                    }, 3000); // 3s initial delay
+                } else {
+                    // Fits: 15s fixed
+                    setTimeout(closeBreaking, 15000);
+                }
+            }, 500); // Wait for open anim
+        }
+
+        function closeBreaking() {
+            DOM.breaking.classList.remove('active');
+            DOM.tickerBar.style.opacity = '1';
+            
+            setTimeout(() => {
+                // Reset styles
+                DOM.breakingContent.style.transition = 'none';
+                DOM.breakingContent.style.transform = 'translateX(0)';
+                state.isBreaking = false;
+                
+                // Force update lists to ensure this item appears in normal rotation
+                updateLists();
+                state.tickerIdx = -1; // Restart ticker from fresh
+                manualTicker(1);
+            }, 600);
         }
 
         // --- SEQUENCER & OVERLAYS ---
@@ -883,7 +1018,10 @@
                     
                     div.innerHTML = `
                         <div class="sm-top">
-                            <div class="sm-name">${c.flag} ${c.name}</div>
+                            <div class="sm-name">
+                                <img src="https://flagcdn.com/24x18/${c.code}.png" style="margin-right:8px; border-radius:2px;">
+                                ${c.name}
+                            </div>
                             <div class="sm-cond">${wmo.i} ${wmo.t}</div>
                         </div>
                         <div class="sm-body">
@@ -973,7 +1111,8 @@
             uis.forEach(ui => document.getElementById(ui.id).classList.remove(`hide-${ui.t}`));
             
             cycleMain();
-            cycleTicker(1);
+            state.tickerIdx = -1; // Reset ticker
+            manualTicker(1);
         }
 
         // --- LOOPS & PWS ---
@@ -1129,7 +1268,7 @@
                     state.weatherData = data.map((d, i) => {
                         return {
                             name: SIDEBAR_STATIONS[i].name,
-                            flag: SIDEBAR_STATIONS[i].flag,
+                            flagCode: SIDEBAR_STATIONS[i].code,
                             t: d.current.temperature_2m,
                             f: d.current.apparent_temperature,
                             h: d.current.relative_humidity_2m,
@@ -1150,8 +1289,8 @@
             if (!state.weatherData.length) return;
             const w = state.weatherData[state.wxIdx];
             
-            // Set Title (Flag + City Name)
-            document.getElementById('city-wx-name').innerHTML = `<span style="margin-right:10px;">${w.flag}</span>${w.name.toUpperCase()}`;
+            // Set Title (Flag Image + City Name) - FIXED FOR ALL DEVICES
+            document.getElementById('city-wx-name').innerHTML = `<img src="https://flagcdn.com/24x18/${w.flagCode}.png" style="margin-right:10px; border-radius:2px;">${w.name.toUpperCase()}`;
             
             // Format Visibility (km or m)
             let vis = w.v >= 1000 ? (w.v/1000).toFixed(1) + " KM" : w.v + " M";
@@ -1265,8 +1404,8 @@
                     DOM.logoBox.classList.remove('flipped');
                 }, 5000);
                 
-                // Schedule next flip (random between 15s and 25s)
-                const nextFlip = Math.floor(Math.random() * 10000) + 15000; 
+                // Schedule next flip (random between 30s and 60s - LESS FREQUENT)
+                const nextFlip = Math.floor(Math.random() * 30000) + 30000; 
                 state.flipperTimer = setTimeout(flip, nextFlip);
             };
             
@@ -1347,6 +1486,8 @@
             setInterval(() => { if(!state.isSpecial && !state.isSummary) cycleMain(); }, 15000);
             setInterval(updateWeatherCard, 6000);
             setInterval(fetchWunderground, 30000);
+            
+            // Breaking News Check Loop (45s)
             setInterval(checkBreaking, 45000);
 
             cycleMain(); cycleTicker();
