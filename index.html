@@ -1414,12 +1414,12 @@
             setTimeout(() => {
                 const containerWidth = DOM.breaking.clientWidth - 250; 
                 const textWidth = DOM.breakingContent.clientWidth;
-                let duration = 15000; // Minimum 15s
+                let duration = 20000; // Minimum 20s
 
                 if (textWidth > containerWidth) {
                     const dist = textWidth - containerWidth + 50;
                     const scrollTime = (dist / 50) * 1000; // 50px/s speed
-                    duration = scrollTime + 4000; // Buffer
+                    duration = scrollTime + 7000; // Buffer
 
                     // Reset position first
                     DOM.breakingContent.style.transition = 'none';
@@ -1745,7 +1745,7 @@
             const fullWidth = content.scrollWidth;
             const containerWidth = DOM.tickerWindow.clientWidth;
             
-            let delay = 8000; // Alap 8mp
+            let delay = 15000; // Alap 15mp
 
             if (fullWidth > containerWidth) {
                 // If text is longer than screen, scroll it completely off to the left
@@ -1778,7 +1778,7 @@
                 DOM.mainCat.innerText = `${item.source} • ${item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'})}`;
                 const img = document.createElement('img'); img.src = item.img; img.className = 'bg-img'; DOM.stage.appendChild(img);
                 img.onload = () => { img.classList.add('active'); const imgs = DOM.stage.querySelectorAll('.bg-img'); if (imgs.length > 2) imgs[0].remove(); };
-                DOM.mainPrg.style.transition = 'width 14.8s linear'; DOM.mainPrg.style.width = '100%';
+                DOM.mainPrg.style.transition = 'width 19.8s linear'; DOM.mainPrg.style.width = '100%';
             }, 200);
             state.mainIdx++;
         }
@@ -2303,7 +2303,7 @@
 
             setTimeout(() => { DOM.loader.style.opacity = 0; setTimeout(() => DOM.loader.remove(), 1000); }, 500);
             
-            setInterval(() => { if(!state.isSpecial && !state.isSummary) cycleMain(); }, 15000);
+            setInterval(() => { if(!state.isSpecial && !state.isSummary) cycleMain(); }, 20000);
             setInterval(updateWeatherCard, 6000);
             setInterval(fetchWunderground, 30000);
             
