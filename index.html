@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V13.0 FINAL PRODUCTION</title>
+    <title>TKP NEWS - V13.6 EXTREMES & UI UPDATE</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,18 +46,61 @@
         /* TOP BAR */
         .top-bar {
             position: absolute; top: 2vh; right: 2vw; left: clamp(320px, 25vw, 480px);
-            background: var(--glass); height: 7.5vh; min-height: 60px;
+            background: var(--glass); height: 8.5vh; min-height: 70px;
             border-bottom: 4px solid var(--primary); transform: skewX(-15deg);
-            display: flex; align-items: center; padding: 0 1.5vw; box-shadow: 0 15px 35px rgba(0,0,0,0.6); pointer-events: auto;
+            display: flex; align-items: flex-start; padding: 0 1.5vw; box-shadow: 0 15px 35px rgba(0,0,0,0.6); pointer-events: auto;
+            overflow: visible;
         }
         .tb-inner { transform: skewX(15deg); display: flex; align-items: center; width: 100%; justify-content: space-between; height: 100%; }
         
-        .ny-widget { display: flex; align-items: center; gap: 0; background: rgba(0,0,0,0.6); padding: 5px 15px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); }
+        /* GROUP WRAPPER FOR WIDGET */
+        .ny-group { display: flex; flex-direction: column; align-items: flex-start; position: relative; height: 100%; justify-content: center; }
+
+        .ny-widget { display: flex; align-items: center; gap: 0; background: rgba(0,0,0,0.6); padding: 5px 15px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); z-index: 20; position: relative; }
         .ny-text-col { display: flex; flex-direction: column; align-items: flex-end; margin-right: 15px; }
         .ny-info { font-family: var(--font-tech); font-weight: 700; color: #fff; font-size: clamp(0.8rem, 1.2vh, 1rem); line-height: 1; margin-bottom: 2px; }
         .ny-update-badge { font-family: var(--font-mono); font-size: 0.65rem; color: #aaa; letter-spacing: 0.5px; }
         .ny-temp-box { display: flex; align-items: center; gap: 8px; border-left: 1px solid rgba(255,255,255,0.2); padding-left: 12px; font-family: var(--font-tech); font-weight: bold;}
         .wind-badge { font-size: 0.75rem; padding-left: 10px; border-left: 1px solid rgba(255,255,255,0.2); font-weight: 700; font-family: var(--font-tech); color: #00d4ff; text-transform: uppercase; white-space: nowrap; }
+
+        /* --- UPDATED CAPSULE STYLES (BOTTOM RIGHT) --- */
+        .next-capsule {
+            position: absolute;
+            /* Bottom position: Footer Height + padding to avoid touching the blue line */
+            bottom: calc(var(--footer-h) + 2px); 
+            right: 2vw; /* Aligned with sidebar right edge */
+            
+            display: flex; align-items: center; justify-content: flex-end;
+            
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            
+            /* Right border accent instead of left */
+            border-right: 4px solid var(--accent);
+            padding: 0 10px 0 0; 
+            
+            opacity: 0; transform: translateX(20px); /* Slide in from right */
+            transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+            pointer-events: none;
+            z-index: 45; /* Above BG, below Ticker/Breaking */
+            
+            text-shadow: 2px 2px 0 #000, 0 0 10px rgba(0,0,0,0.8);
+        }
+        .next-capsule.visible { opacity: 1; transform: translateX(0); }
+        
+        .nc-content {
+            font-family: var(--font-tech);
+            color: #fff;
+            font-size: 0.8rem; 
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            text-align: right;
+        }
+        
+        .nc-time-hlt { color: var(--accent); margin-left: 5px; margin-right: 5px; }
 
         .search-container { flex-grow: 1; display: flex; justify-content: center; padding: 0 2vw; }
         .search-form { display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 350px; height: 3.5vh; padding: 0 15px; transition: 0.3s; }
@@ -72,7 +115,7 @@
         }
         .legacy-btn:hover { background: #fff; color: #000; border-color: #fff; }
 
-        /* LOGO & CLOCK WRAPPER (3D CONTEXT) */
+        /* LOGO & CLOCK WRAPPER */
         @keyframes logoReveal { 0% { transform: translateY(-30px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
         
         .logo-box { 
@@ -97,9 +140,76 @@
             display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
         }
 
-        .logo-front { opacity: 0.85; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8)); }
-        .logo-front svg { width: 55px; height: 55px; fill: var(--primary); margin-bottom: 2px; }
-        .logo-text { font-family: var(--font-main); font-weight: 800; font-size: 1.4rem; letter-spacing: 2px; color: #fff; line-height: 1; text-shadow: 0 2px 5px rgba(0,0,0,0.9); }
+        .logo-front { opacity: 0.9; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8)); z-index: 2; }
+        
+        /* HOLIDAY DECORATIONS (ON FRONT FACE) */
+        .logo-wrapper-front { position: relative; display: flex; justify-content: center; align-items: center; width: 100%; }
+        .logo-main-svg { width: 55px; height: 55px; fill: var(--primary); margin-bottom: 2px; position: relative; z-index: 5; }
+        
+        .holiday-deco { position: absolute; z-index: 4; pointer-events: none; opacity: 0; transition: opacity 0.5s; }
+        .logo-front.xmas .deco-tree { opacity: 1; }
+        .logo-front.val .deco-val-static { opacity: 1; }
+
+        /* LOGO FX CONTAINER */
+        .logo-fx-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 3; overflow: hidden;
+            border-radius: 10px; 
+        }
+
+        /* Container for Dynamic Transition Effects (FullScreen) */
+        #effect-container {
+            position: absolute; width: 200px; height: 200px;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 1; pointer-events: none; overflow: visible;
+        }
+
+        /* REALISTIC CHRISTMAS TREE */
+        .deco-tree { 
+            width: 45px; height: 55px; /* Increased size slightly */
+            right: 30px; bottom: -8px; 
+            filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.6));
+        }
+        .tree-layer { fill: #0f5c0f; } /* Dark Green */
+        .tree-layer-2 { fill: #1a7a1a; } /* Medium Green */
+        .tree-layer-3 { fill: #2e8b2e; } /* Light Green */
+        .tree-trunk { fill: #5c4033; }
+        .tree-star { fill: #ffd700; animation: starTwinkle 2s infinite alternate; }
+        
+        .tree-light { animation: blinkLights 1.2s infinite alternate; }
+        .tree-light.l1 { fill: #ff3333; animation-delay: 0s; }
+        .tree-light.l2 { fill: #33cc33; animation-delay: 0.4s; }
+        .tree-light.l3 { fill: #3366ff; animation-delay: 0.8s; }
+        .tree-light.l4 { fill: #ffff00; animation-delay: 1.2s; }
+
+        @keyframes blinkLights { 0% { opacity: 0.4; filter: brightness(0.8); } 100% { opacity: 1; filter: brightness(1.5); } }
+        @keyframes starTwinkle { 0% { opacity: 0.7; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1.1); } }
+
+        /* VALENTINE HEART (Static) */
+        .deco-val-static { width: 30px; height: 30px; right: 35px; bottom: 0; fill: #ff3366; animation: heartbeat 1.5s infinite; filter: drop-shadow(0 0 5px #ff0033); }
+
+        /* DYNAMIC FIREWORK PARTICLES */
+        .firework-particle {
+            position: absolute; width: 3px; height: 3px; border-radius: 50%;
+            animation: explode 1.2s ease-out forwards;
+        }
+        @keyframes explode {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+        }
+
+        /* DYNAMIC FLOATING HEARTS */
+        .floating-heart {
+            position: absolute; font-size: 1.2rem; color: #ff3366;
+            animation: floatUp 1.5s ease-out forwards; text-shadow: 0 0 5px #fff;
+        }
+        @keyframes floatUp {
+            0% { transform: translate(0, 0) scale(0); opacity: 0; }
+            20% { transform: translate(0, -10px) scale(1.2); opacity: 1; }
+            100% { transform: translate(var(--hx), -60px) scale(1); opacity: 0; }
+        }
+
+        .logo-text { font-family: var(--font-main); font-weight: 800; font-size: 1.4rem; letter-spacing: 2px; color: #fff; line-height: 1; text-shadow: 0 2px 5px rgba(0,0,0,0.9); z-index: 5; position: relative; }
         
         .mini-clock { display: flex; flex-direction: column; align-items: center; width: 100%; margin-top: 12px; }
         .mc-time { font-family: var(--font-tech); font-weight: 700; font-size: 1.3rem; color: #f0f0f0; line-height: 1; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,1); }
@@ -119,6 +229,18 @@
         }
 
         /* Holiday Content Styling */
+        .holiday-main-icon {
+            margin-bottom: 5px;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.6));
+        }
+        .icon-tree-anim { animation: sway 3s ease-in-out infinite; }
+        .icon-champagne { animation: tilt 3s ease-in-out infinite; fill: #ffd700; }
+        .icon-heart-anim { animation: heartbeat 1.5s ease-in-out infinite; fill: #ff3366; filter: drop-shadow(0 0 10px #ff0033); }
+
+        @keyframes sway { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(5deg); } }
+        @keyframes tilt { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-10deg); } }
+        @keyframes heartbeat { 0% { transform: scale(1); } 15% { transform: scale(1.2); } 30% { transform: scale(1); } 45% { transform: scale(1.1); } 60% { transform: scale(1); } }
+
         .holiday-msg {
             font-family: var(--font-script);
             font-size: 1.6rem;
@@ -128,6 +250,9 @@
             margin-bottom: 10px;
             text-shadow: 0 0 5px #000, 0 0 10px #000, 0 0 15px rgba(0,0,0,0.8);
         }
+        
+        .mode-val .holiday-msg { color: #ffccdd; text-shadow: 0 0 5px #ff0066, 0 0 10px #000; }
+
         .holiday-logo-row {
             display: flex;
             flex-direction: column;
@@ -137,32 +262,42 @@
             width: 70%;
             filter: drop-shadow(0 0 5px #000);
         }
-        .holiday-logo-row svg {
-            width: 35px;
-            height: 35px;
-            fill: var(--primary);
-            filter: drop-shadow(0 0 2px rgba(255,255,255,0.8));
-        }
-        .holiday-logo-text {
-            font-family: var(--font-main);
-            font-size: 0.9rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-            margin-top: 2px;
-            text-shadow: 0 2px 4px #000;
-        }
+        .holiday-logo-row svg { width: 35px; height: 35px; fill: var(--primary); filter: drop-shadow(0 0 2px rgba(255,255,255,0.8)); }
+        .holiday-logo-text { font-family: var(--font-main); font-size: 0.9rem; font-weight: 800; letter-spacing: 1px; margin-top: 2px; text-shadow: 0 2px 4px #000; }
 
         .sparkle { position: absolute; width: 100%; height: 100%; top: 0; left: 0; background-image: radial-gradient(white 1px, transparent 1px); background-size: 30px 30px; opacity: 0.5; pointer-events: none; }
 
-        /* SIDEBAR */
-        .sidebar { position: absolute; top: 15vh; right: 2vw; width: clamp(280px, 22vw, 420px); display: flex; flex-direction: column; gap: 1.5vh; pointer-events: auto; }
-        .card { background: var(--glass); border-right: 6px solid var(--accent); padding: 1.5vh 1.5vw 4vh 1.5vw; border-top: 1px solid rgba(255,255,255,0.1); box-shadow: -10px 10px 30px rgba(0,0,0,0.5); position: relative; }
-        .card-title { font-family: var(--font-main); font-size: 1.1rem; color: var(--accent); border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 6px; margin-bottom: 1.2vh; font-weight: 700; text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
+        /* SIDEBAR UPDATED - GLASSMORPHISM & WATERMARK */
+        .sidebar { position: absolute; top: 15vh; right: 2vw; width: clamp(280px, 22vw, 420px); display: flex; flex-direction: column; gap: 1.5vh; pointer-events: auto; z-index: 40; }
         
-        .data-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
-        .data-label { font-family: var(--font-tech); font-size: 0.7rem; color: #aaa; text-transform: uppercase; }
-        .data-val { font-family: var(--font-mono); font-weight: 700; font-size: 1rem; color: #fff; }
+        .card { 
+            background: linear-gradient(135deg, rgba(0,20,50,0.6), rgba(0,10,30,0.75));
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.15); 
+            border-right: 4px solid var(--accent); /* Thinner accent */
+            padding: 15px 20px 25px 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+            position: relative; 
+            border-radius: 4px;
+        }
         
+        .card-title { font-family: var(--font-main); font-size: 1.1rem; color: var(--accent); border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 6px; margin-bottom: 10px; font-weight: 700; text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
+        
+        .data-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .data-label { font-family: var(--font-tech); font-size: 0.7rem; color: #bbb; text-transform: uppercase; }
+        .data-val { font-family: var(--font-mono); font-weight: 700; font-size: 1rem; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+        
+        /* NEW WATERMARK FOOTER */
+        .watermark-footer {
+            position: absolute; bottom: 4px; right: 8px; width: 100%;
+            display: flex; justify-content: flex-end; align-items: center; gap: 10px;
+            opacity: 0.6;
+        }
+        .stamp { font-family: var(--font-tech); font-size: 0.55rem; color: #ccc; display: flex; align-items: center; gap: 4px; }
+        .stamp::before { content: ''; width: 4px; height: 4px; background: var(--primary); border-radius: 50%; display: inline-block; animation: blink 2s infinite; }
+        .source-tag { font-family: var(--font-mono); font-size: 0.5rem; color: #aaa; text-transform: uppercase; }
+
         /* NEW SIDEBAR METEO DESIGN - V13 */
         .wx-dashboard { display: flex; flex-direction: column; gap: 5px; padding-top: 5px; }
         
@@ -184,6 +319,7 @@
             line-height: 0.9; 
             letter-spacing: -2px; 
             white-space: nowrap;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
         .wx-right-col { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; overflow: hidden; }
         .wx-cond-text { 
@@ -207,24 +343,20 @@
             justify-content: space-between;
             align-items: center;
             background: rgba(255,255,255,0.03);
-            border-top: 1px solid rgba(255,255,255,0.15);
-            border-bottom: 1px solid rgba(255,255,255,0.15);
-            padding: 8px 10px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 6px 10px;
             margin-bottom: 8px;
         }
-        .wx-wind-label { font-family: var(--font-mono); font-size: 0.7rem; color: #888; text-transform: uppercase; }
+        .wx-wind-label { font-family: var(--font-mono); font-size: 0.7rem; color: #999; text-transform: uppercase; }
         .wx-wind-val { font-family: var(--font-tech); font-size: 1rem; color: #00d4ff; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
 
         /* Grid for other data */
         .wx-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 15px; }
         .wx-cell { display: flex; flex-direction: column; overflow: hidden; }
-        .wx-c-label { font-family: var(--font-mono); font-size: 0.6rem; color: #777; text-transform: uppercase; margin-bottom: 2px; white-space: nowrap; }
+        .wx-c-label { font-family: var(--font-mono); font-size: 0.6rem; color: #888; text-transform: uppercase; margin-bottom: 2px; white-space: nowrap; }
         .wx-c-val { font-family: var(--font-tech); font-size: 0.95rem; color: #e0e0e0; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        .stamp { position: absolute; bottom: 8px; right: 12px; font-family: var(--font-tech); font-size: 0.6rem; color: #ccc; display: flex; align-items: center; gap: 5px; text-shadow: none; opacity: 0.8; }
-        .stamp::before { content: ''; width: 6px; height: 6px; background: var(--primary); border-radius: 50%; display: inline-block; animation: blink 2s infinite; }
-        .source-tag { position: absolute; bottom: 8px; left: 12px; font-family: var(--font-mono); font-size: 0.55rem; color: #666; text-transform: uppercase; }
-
         /* MAIN NEWS */
         .main-news { position: absolute; bottom: 13vh; left: 4vw; width: clamp(400px, 60vw, 1300px); pointer-events: auto; cursor: pointer; z-index: 20; transition: transform 0.2s; }
         .main-news:hover { transform: scale(1.01); }
@@ -294,6 +426,18 @@
             opacity: 0;
             animation: slideInCard 0.6s forwards;
         }
+
+        /* NEW CARD STYLE FOR EXTREMES */
+        .sm-card-extreme {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(0,0,0,0.5));
+            border: 1px solid rgba(255,255,255,0.3);
+            border-left-width: 8px;
+            padding: 15px 25px;
+            opacity: 0; animation: slideInCard 0.6s forwards;
+        }
+        .ext-hot { border-left-color: #ff3333; }
+        .ext-cold { border-left-color: #00d4ff; }
+        .ext-wind { border-left-color: #cc00cc; }
         
         .sm-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; margin-bottom: 5px; }
         .sm-name { font-family: var(--font-main); font-size: 1.3rem; color: #fff; font-weight: 700; display: flex; align-items: center; gap: 10px; }
@@ -390,34 +534,47 @@
         </div>
         <div class="dev-body">
             <div class="dev-section">
+                <!-- NEW SCHEDULE SECTION -->
+                <div class="dev-h">AKTUÁLIS ÓRA ADÁSMENETE</div>
+                <div id="dev-schedule-list" style="font-size:0.75rem; color:#bbb; line-height:1.6; font-family:var(--font-mono);">
+                    <!-- Schedule generated via JS -->
+                </div>
+                <br>
+
                 <div class="dev-h">IDŐJÁRÁS FIGYELŐ</div>
                 <div style="font-size:0.8rem; margin-bottom:10px;">
                     KÖV. FRISSÍTÉS: <span id="dev-wx-next" style="color:var(--accent);">--:--</span><br>
                     JELENLEGI FORRÁS: <span id="dev-wx-src" style="color:#0f0;">--</span>
                 </div>
-                <div class="dev-h">ADÁSREND FIGYELŐ</div>
-                <div style="font-size:0.8rem; margin-bottom:10px;">
-                    KÖV. 30p: <span id="dev-sch-30" style="color:#aaa;">--:--</span><br>
-                    KÖV. ÓRA: <span id="dev-sch-60" style="color:#aaa;">--:--</span>
-                </div>
-                <button class="btn" onclick="triggerCurrentSummaryTest()">[►] BLOKK TESZTELÉSE</button>
                 
                 <div class="dev-h" style="margin-top:20px;">ÜNNEPI ÜZEMMÓD</div>
                 <div style="font-size:0.8rem; margin-bottom:10px;">
-                    KÖVETKEZŐ MEGJELENÉS: <span id="dev-hol-timer" style="color:var(--accent);">--:--</span>
+                    KÖVETKEZŐ: <span id="dev-hol-timer" style="color:var(--accent);">--:--</span><br>
+                    ÁLLAPOT: <span id="dev-hol-status" style="color:#aaa;">VÁRAKOZÁS</span>
                 </div>
-                <button class="btn" onclick="forceHoliday('XMAS')">[🎄] KARÁCSONY KÉNYSZERÍTÉS</button>
-                <button class="btn" onclick="forceHoliday('NY')">[🎉] ÚJÉV KÉNYSZERÍTÉS</button>
                 
                 <div class="dev-h" style="margin-top:20px;">MANUÁLIS VEZÉRLÉS</div>
+                <button class="btn" onclick="triggerCurrentSummaryTest()">[►] BLOKK TESZTELÉSE</button>
                 <button class="btn" onclick="triggerBigClock()">[⏰] NAGY ÓRA TESZT</button>
                 <button class="btn" onclick="closeAllOverlays()">[X] MINDEN ABLAK BEZÁRÁSA</button>
                 <button class="btn" onclick="forceRefreshAll()">[⚡] AZONNALI FRISSÍTÉS</button>
                 <button class="btn" onclick="testBreaking()">[🔥] BREAKING NEWS TESZT</button>
                 <button class="btn" onclick="triggerSpecialMeteoSequence()">[☁] SPEC. METEO SORREND</button>
+                <button class="btn" onclick="forceHoliday('XMAS')">[🎄] KARÁCSONY KÉNYSZERÍTÉS</button>
+                <button class="btn" onclick="forceHoliday('NY')">[🎉] ÚJÉV KÉNYSZERÍTÉS</button>
             </div>
             <div class="dev-section" style="display:flex; flex-direction:column;">
-                <div class="dev-h">PROXY ÁLLAPOT</div>
+                <div class="dev-h">ADÁSREND FIGYELŐ</div>
+                <div style="font-size:0.8rem; margin-bottom:10px;">
+                    KÖV. 30p: <span id="dev-sch-30" style="color:#aaa;">--:--</span><br>
+                    KÖV. ÓRA: <span id="dev-sch-60" style="color:#aaa;">--:--</span><br>
+                    KÖV. METEO BLOKK: <span id="dev-next-meteo" style="color:#00d4ff; font-weight:bold;">--:--</span>
+                </div>
+                <div class="dev-h">BREAKING NEWS SOR</div>
+                <div style="font-size:0.8rem; margin-bottom:5px;">
+                    SORBAN ÁLL: <span id="dev-bk-queue" style="color:var(--alert); font-weight:bold;">0</span> DB
+                </div>
+                <div class="dev-h" style="margin-top:10px;">PROXY ÁLLAPOT</div>
                 <div style="font-size:0.8rem; margin-bottom:5px;">
                     FORRÁSOK: <span id="sys-feeds">0</span> | ÜZEMIDŐ: <span id="sys-uptime">0</span>
                 </div>
@@ -479,16 +636,19 @@
         <!-- TOP COMMAND BAR -->
         <div class="top-bar ui-element" id="ui-top">
             <div class="tb-inner">
-                <div class="ny-widget" id="ny-widget">
-                    <div class="ny-text-col">
-                        <div class="ny-info">NYÍREGYHÁZA</div>
-                        <div id="ny-time-badge" class="ny-update-badge">--:--:--</div>
+                <!-- WRAPPED WIDGET -->
+                <div class="ny-group">
+                    <div class="ny-widget" id="ny-widget">
+                        <div class="ny-text-col">
+                            <div class="ny-info">NYÍREGYHÁZA</div>
+                            <div id="ny-time-badge" class="ny-update-badge">--:--:--</div>
+                        </div>
+                        <div class="ny-temp-box">
+                            <span style="color:#aaa; font-size:0.6rem;">MÉRT:</span> <span id="ny-temp" style="color:var(--accent);">--.-°C</span>
+                            <span style="color:#aaa; font-size:0.6rem; margin-left:5px;">ÉRZET:</span> <span id="ny-feel" style="color:#00d4ff;">--.-°C</span>
+                        </div>
+                        <div id="ny-wind" class="wind-badge">SZÉL: --</div>
                     </div>
-                    <div class="ny-temp-box">
-                        <span style="color:#aaa; font-size:0.6rem;">MÉRT:</span> <span id="ny-temp" style="color:var(--accent);">--.-°C</span>
-                        <span style="color:#aaa; font-size:0.6rem; margin-left:5px;">ÉRZET:</span> <span id="ny-feel" style="color:#00d4ff;">--.-°C</span>
-                    </div>
-                    <div id="ny-wind" class="wind-badge">SZÉL: --</div>
                 </div>
 
                 <div class="search-container">
@@ -501,7 +661,14 @@
                     RÉGI OLDAL (KLIKK.HU) &#10138;
                 </a>
                 
-                <div style="font-family:var(--font-tech); font-weight:bold; color:var(--accent); font-size:0.8rem; letter-spacing:1px;">V13.0</div>
+                <div style="font-family:var(--font-tech); font-weight:bold; color:var(--accent); font-size:0.8rem; letter-spacing:1px;">V13.6</div>
+            </div>
+        </div>
+
+        <!-- NEW: NEXT EVENT CAPSULE (BOTTOM RIGHT) -->
+        <div id="next-event-capsule" class="next-capsule">
+            <div class="nc-content">
+                KÖVETKEZIK:<span class="nc-time-hlt" id="nc-time">--:--</span><span id="nc-title">--</span>
             </div>
         </div>
 
@@ -509,8 +676,41 @@
         <div class="logo-box" id="logo-box" onclick="openAuth()">
             <div class="logo-inner">
                 <!-- FRONT: NORMAL MODE -->
-                <div class="logo-front">
-                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                <div class="logo-front" id="logo-front">
+                    <!-- NEW: FX CONTAINER FOR LIVE FIREWORKS -->
+                    <div class="logo-fx-container" id="logo-fx-container"></div>
+
+                    <div class="logo-wrapper-front">
+                        <svg class="logo-main-svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                        
+                        <!-- XMAS DECO: Realistic Tree -->
+                        <svg class="holiday-deco deco-tree" viewBox="0 0 50 60">
+                            <!-- Trunk -->
+                            <rect x="22" y="50" width="6" height="10" class="tree-trunk"/>
+                            <!-- Layers -->
+                            <path d="M5,50 L25,20 L45,50 Z" class="tree-layer"/>
+                            <path d="M10,35 L25,10 L40,35 Z" class="tree-layer-2"/>
+                            <path d="M15,20 L25,0 L35,20 Z" class="tree-layer-3"/>
+                            <!-- Star -->
+                            <polygon points="25,0 26,3 29,3 27,5 28,8 25,6 22,8 23,5 21,3 24,3" class="tree-star"/>
+                            <!-- Lights (Ornaments) -->
+                            <circle cx="15" cy="45" r="2" class="tree-light l1"/>
+                            <circle cx="35" cy="45" r="2" class="tree-light l2"/>
+                            <circle cx="25" cy="40" r="2" class="tree-light l3"/>
+                            <circle cx="20" cy="30" r="2" class="tree-light l4"/>
+                            <circle cx="30" cy="30" r="2" class="tree-light l1"/>
+                            <circle cx="25" cy="15" r="2" class="tree-light l2"/>
+                        </svg>
+
+                        <!-- VAL DECO -->
+                        <svg class="holiday-deco deco-val-static" viewBox="0 0 24 24">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                        </svg>
+                    </div>
+
+                    <!-- Container for Pre/Post Flip Effects -->
+                    <div id="effect-container"></div>
+
                     <div class="logo-text">TKP NEWS</div>
                     <div class="mini-clock">
                         <div class="mc-time" id="clock-time">00:00<span class="mc-sec">00</span></div>
@@ -527,13 +727,17 @@
             <div class="card">
                 <div class="card-title">DEVIZA ÁRFOLYAMOK</div>
                 <div id="finance-rows"></div>
-                <div class="stamp">FRISSÍTVE: <span id="fin-stamp" style="color:#fff; margin-left:4px;">00:00:00</span></div>
-                <div class="source-tag" id="fx-source">SOURCE: --</div>
+                <div class="watermark-footer">
+                    <div class="source-tag" id="fx-source">SOURCE: --</div>
+                    <div class="stamp">FRISSÍTVE: <span id="fin-stamp">00:00:00</span></div>
+                </div>
             </div>
             <div class="card">
                 <div class="card-title" id="city-wx-name">BUDAPEST</div>
                 <div id="wx-rows"></div>
-                <div class="stamp">FRISSÍTVE: <span id="wx-stamp" style="color:#fff; margin-left:4px;">00:00:00</span></div>
+                <div class="watermark-footer">
+                    <div class="stamp">FRISSÍTVE: <span id="wx-stamp">00:00:00</span></div>
+                </div>
             </div>
         </div>
 
@@ -574,7 +778,7 @@
 
     <script>
         /**
-         * TKP NEWS V13.0 - ULTIMATE CONTENT + BREAKING FIX + FINAL POLISH
+         * TKP NEWS V13.6 - EXTREMES & UI UPDATE
          */
 
         const RSS_FEEDS = [
@@ -754,9 +958,12 @@
             lastTickerUpdate: Date.now(),
             specialMeteoInterval: null,
             meteoPhaseTimer: null,
-            holidayMode: null, // 'XMAS', 'NY', or null
-            flipperTimer: null,
-            nextHolidayFlip: 0,
+            nextMeteoTime: 0, 
+            schedule: [], // NEW: Stores the definitive hourly schedule
+            holidayMode: null, // 'XMAS', 'NY', 'VAL' or null
+            holidaySequenceTimer: null,
+            particleInterval: null,
+            logoFxInterval: null, // NEW FOR CONTINUOUS LOGO FX
             initialLoadComplete: false // NEW FLAG TO PREVENT BREAKING SPAM ON START
         };
 
@@ -773,7 +980,12 @@
             summary: document.getElementById('summary-overlay'), sumContent: document.getElementById('sum-content'), sumClock: document.getElementById('sum-clock'), sumMainTitle: document.getElementById('sum-main-title'), sumSubTitle: document.getElementById('sum-sub-title'),
             bigClock: document.getElementById('big-clock-overlay'), bcTime: document.getElementById('bc-time'),
             devWxNext: document.getElementById('dev-wx-next'), devWxSrc: document.getElementById('dev-wx-src'), devSch30: document.getElementById('dev-sch-30'), devSch60: document.getElementById('dev-sch-60'), devHolTimer: document.getElementById('dev-hol-timer'),
-            logoBox: document.getElementById('logo-box'), logoBack: document.getElementById('logo-back-face')
+            devNextMeteo: document.getElementById('dev-next-meteo'), devBkQueue: document.getElementById('dev-bk-queue'), devHolStatus: document.getElementById('dev-hol-status'),
+            devScheduleList: document.getElementById('dev-schedule-list'), // NEW
+            logoBox: document.getElementById('logo-box'), logoBack: document.getElementById('logo-back-face'), logoFront: document.getElementById('logo-front'),
+            logoFxContainer: document.getElementById('logo-fx-container'), // NEW
+            effectContainer: document.getElementById('effect-container'),
+            nextCapsule: document.getElementById('next-event-capsule') // NEW
         };
 
         // --- UTILS & HELPERS ---
@@ -863,18 +1075,168 @@
             let diff60 = 58 - min; if (diff60 <= 0) diff60 += 60; diff60--;
             DOM.devSch60.innerText = `${diff60}m ${60-sec}s`;
             
+            // Queue size
+            DOM.devBkQueue.innerText = state.breakingQueue.length;
+
+            // Schedule display updates
+            DOM.devNextMeteo.innerText = "--:--"; // Will be updated by checkSchedule
+            
             // Holiday Timer
             if(state.holidayMode && state.nextHolidayFlip > 0) {
                 let diffHol = state.nextHolidayFlip - now.getTime();
                 if(diffHol > 0) {
                     const m = Math.floor(diffHol / 60000);
                     const s = Math.floor((diffHol % 60000) / 1000);
-                    DOM.devHolTimer.innerText = `${m}m ${s}s`;
+                    DOM.devHolTimer.innerText = `${m}:${s < 10 ? '0'+s : s}`;
                 } else {
                     DOM.devHolTimer.innerText = "AKTÍV";
                 }
             } else {
                 DOM.devHolTimer.innerText = "INAKTÍV";
+            }
+        }
+
+        /* --- NEW: DETERMINISTIC SCHEDULE GENERATOR --- */
+        function generateHourlySchedule() {
+            const now = new Date();
+            state.schedule = []; // Reset schedule
+
+            // 1. Meteo Block 1 (Between 12-20 minutes past hour)
+            let meteo1 = new Date(now);
+            meteo1.setMinutes(12 + Math.floor(Math.random() * 8), 0, 0); 
+            if(meteo1 < now) meteo1.setHours(meteo1.getHours() + 1); // If passed, skip/set next hour (handled by next generate call mostly)
+            // Actually, if we generate at XX:00, this is fine. If generated mid-hour, we only add future events.
+            if(meteo1 > now) state.schedule.push({ time: meteo1.getTime(), type: 'meteo', label: "METEO ÁTTEKINTÉS" });
+
+            // 2. Half Hour News (Fixed XX:30)
+            let news30 = new Date(now);
+            news30.setMinutes(30, 0, 0);
+            if(news30 > now) state.schedule.push({ time: news30.getTime(), type: 'summary30', label: "FÉLÓRÁS HÍRADÓ" });
+
+            // 3. Meteo Block 2 (Between 42-48 minutes past hour)
+            let meteo2 = new Date(now);
+            meteo2.setMinutes(42 + Math.floor(Math.random() * 6), 0, 0);
+            if(meteo2 > now) state.schedule.push({ time: meteo2.getTime(), type: 'meteo', label: "METEO ÁTTEKINTÉS" });
+
+            // 4. Hourly News (Fixed XX:57)
+            let news60 = new Date(now);
+            news60.setMinutes(57, 0, 0);
+            if(news60 > now) state.schedule.push({ time: news60.getTime(), type: 'summary60', label: "ÓRÁS HÍRADÓ" });
+
+            // 5. Big Clock (Fixed XX:59:50)
+            let clock = new Date(now);
+            clock.setMinutes(59, 50, 0);
+            if(clock > now) state.schedule.push({ time: clock.getTime(), type: 'clock', label: "NAGY ÓRA" });
+
+            // Sort schedule by time
+            state.schedule.sort((a,b) => a.time - b.time);
+
+            // Update Dev Panel List
+            updateDevScheduleList();
+        }
+
+        function updateDevScheduleList() {
+            let html = `<div style="margin-bottom:5px; color:var(--accent); font-weight:bold;">TERVEZETT ADÁS (SZINKRONIZÁLVA)</div>`;
+            state.schedule.forEach(item => {
+                const d = new Date(item.time);
+                const tStr = `${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
+                let color = "#bbb";
+                if(item.type.includes('summary')) color = "#fff";
+                if(item.type === 'meteo') color = "#00d4ff";
+                if(item.type === 'clock') color = "#ffd700";
+                
+                html += `
+                    <div style="border-bottom:1px solid #222; display:flex; justify-content:space-between; padding:2px 0;">
+                        <span>${tStr}</span>
+                        <span style="color:${color}; text-align:right;">${item.label}</span>
+                    </div>
+                `;
+            });
+            DOM.devScheduleList.innerHTML = html;
+        }
+
+        function checkScheduleExecution() {
+            const now = Date.now();
+            
+            // Check if any event in schedule should trigger now (within 1 sec margin)
+            // We use a small window because the main loop runs every 1000ms.
+            
+            state.schedule.forEach((item, index) => {
+                // If time has passed (within last 1.5s to avoid double trigger) and not triggered yet
+                if (now >= item.time && now < item.time + 1500 && !item.triggered) {
+                    item.triggered = true;
+                    console.log("Executing Schedule Item:", item.label);
+                    
+                    if (item.type === 'meteo') {
+                        if(!state.isBreakingActive && !state.isSummary && !state.isSpecial) {
+                            triggerSpecialMeteoSequence();
+                        }
+                    } else if (item.type === 'summary30') {
+                        triggerSummaryMode(30);
+                    } else if (item.type === 'summary60') {
+                        triggerSummaryMode(60);
+                    } else if (item.type === 'clock') {
+                        triggerBigClock();
+                        crawlNews(false);
+                    }
+                }
+            });
+            
+            // Cleanup passed events from array
+            state.schedule = state.schedule.filter(item => item.time > now - 2000);
+        }
+
+        /* --- UPDATED CAPSULE LOGIC --- */
+        function updateNextEventCapsule() {
+            const now = Date.now();
+            
+            // Get next valid event from our SYNCED schedule
+            // We look at state.schedule which contains exactly what will happen
+            
+            const next = state.schedule.find(item => item.time > now);
+
+            if (!next) {
+                DOM.nextCapsule.classList.remove('visible');
+                return;
+            }
+
+            const diffMinutes = (next.time - now) / 60000;
+            const capsule = DOM.nextCapsule;
+            const timeEl = document.getElementById('nc-time');
+            const titleEl = document.getElementById('nc-title');
+
+            // --- VISIBILITY LOGIC ---
+            // If diffMinutes <= 0, the event has started -> Hide.
+            // If diffMinutes <= 10 AND > 0 -> Show.
+            
+            if (diffMinutes <= 10 && diffMinutes > 0) {
+                capsule.classList.add('visible');
+                
+                // Format HH:MM
+                const d = new Date(next.time);
+                const tStr = `${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}`;
+                
+                timeEl.innerText = tStr;
+                
+                // Set Long Titles as requested
+                let titleText = "";
+                if(next.type === 'meteo') titleText = "ÉLŐ IDŐJÁRÁS KITEKINTŐ";
+                else if(next.type === 'summary30') titleText = "EZ TÖRTÉNT EBBEN A FÉLÓRÁBAN ( ÖSSZEFOGLALÓ )";
+                else if(next.type === 'summary60') titleText = "EZ TÖRTÉNT EBBEN AZ ÓRÁBAN ( ÖSSZEFOGLALÓ )";
+                else if(next.type === 'clock') titleText = "PONTOS IDŐ";
+                
+                titleEl.innerText = titleText;
+
+                // Color logic: < 1 min -> RED (Urgent)
+                if (diffMinutes <= 1) {
+                    timeEl.style.color = "#cc0000"; // Red time
+                    titleEl.style.color = "#cc0000"; // Red text
+                } else {
+                    timeEl.style.color = "var(--accent)"; // Yellow time
+                    titleEl.style.color = "#fff"; // White text
+                }
+            } else {
+                capsule.classList.remove('visible');
             }
         }
 
@@ -1094,6 +1456,12 @@
         }
 
         // --- SEQUENCER & OVERLAYS ---
+        // AUTOMATIC SCHEDULER FOR SPECIAL METEO
+        // (REPLACED BY generateHourlySchedule - keeping stub for manual dev button)
+        function scheduleNextSpecialMeteo() {
+            // No-op for auto scheduling, but can be used for manual tests if needed
+        }
+
         async function triggerSpecialMeteoSequence() {
             state.isSpecial = true;
             const uis = [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ];
@@ -1107,20 +1475,23 @@
                 { title: "SZABOLCS-SZATMÁR-BEREG", list: SZSZB_STATIONS },
                 { title: "MAGYARORSZÁG NAGYVÁROSAI", list: shuffle([...HU_MAJOR_STATIONS]).slice(0, 12) },
                 { title: "KIEMELT VILÁGVÁROSOK", list: shuffle([...WORLD_MAJOR_STATIONS]).slice(0, 12) },
-                { title: "KÜLÖNLEGES HELYSZÍNEK", list: EXOTIC_STATIONS }
+                { title: "PILLANATNYI REKORDOK", type: "extreme" } // NEW PHASE
             ];
 
             let phase = 0;
 
             const runPhase = async () => {
-                if (phase >= sequence.length) return; // Should be stopped by external timer, but safety check
+                if (phase >= sequence.length) return; 
                 
                 const currentTheme = sequence[phase];
-                // Fade out grid slightly to smooth transition
                 DOM.smGrid.style.opacity = 0;
                 
                 setTimeout(async () => {
-                    await renderSpecialBatch(currentTheme.list, currentTheme.title);
+                    if (currentTheme.type === "extreme") {
+                        await renderExtremesBatch();
+                    } else {
+                        await renderSpecialBatch(currentTheme.list, currentTheme.title);
+                    }
                     DOM.smGrid.style.opacity = 1;
                 }, 300);
 
@@ -1131,7 +1502,6 @@
                 }
             };
 
-            // Start first phase
             runPhase();
 
             // End (100s + buffer)
@@ -1181,6 +1551,68 @@
                 });
                 document.getElementById('sm-update-time').innerText = getTime();
             } catch(e) {}
+        }
+
+        /* --- NEW FUNCTION: RENDER EXTREMES --- */
+        async function renderExtremesBatch() {
+            DOM.smTitle.innerText = "PILLANATNYI REKORDOK (VILÁGSZERTE)";
+            DOM.smGrid.innerHTML = '';
+            
+            // Combine all known stations
+            const allStations = [...HU_MAJOR_STATIONS, ...WORLD_MAJOR_STATIONS, ...EXOTIC_STATIONS];
+            
+            // Fetch data for all of them
+            const lats = allStations.map(c => c.lat).join(',');
+            const lons = allStations.map(c => c.lon).join(',');
+            
+            try {
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&current=temperature_2m,wind_speed_10m,precipitation&timezone=auto`);
+                const data = await res.json();
+                const results = Array.isArray(data) ? data : [data];
+                
+                // Map results to station info
+                let mapped = results.map((d, i) => ({
+                    station: allStations[i],
+                    temp: d.current.temperature_2m,
+                    wind: d.current.wind_speed_10m,
+                    rain: d.current.precipitation
+                })).filter(x => x.temp !== undefined); // Safety check
+
+                // Find Extremes
+                const hottest = [...mapped].sort((a,b) => b.temp - a.temp)[0];
+                const coldest = [...mapped].sort((a,b) => a.temp - b.temp)[0];
+                const windiest = [...mapped].sort((a,b) => b.wind - a.wind)[0];
+                
+                // Build Cards array
+                const extremes = [
+                    { label: "LEGMELEGEBB", val: `${hottest.temp.toFixed(1)}°C`, loc: hottest.station, cls: 'ext-hot', icon: '🔥' },
+                    { label: "LEGHIDEGEBB", val: `${coldest.temp.toFixed(1)}°C`, loc: coldest.station, cls: 'ext-cold', icon: '❄️' },
+                    { label: "LEGSZELESEBB", val: `${windiest.wind.toFixed(1)} KM/H`, loc: windiest.station, cls: 'ext-wind', icon: '💨' }
+                ];
+
+                extremes.forEach((ex, i) => {
+                    const div = document.createElement('div');
+                    div.className = `sm-card-item sm-card-extreme ${ex.cls}`;
+                    div.style.animationDelay = `${i * 0.2}s`;
+                    
+                    div.innerHTML = `
+                        <div class="sm-top">
+                            <div class="sm-name" style="font-size:1.1rem; color:#aaa;">${ex.icon} ${ex.label}</div>
+                        </div>
+                        <div class="sm-body" style="flex-direction:column; align-items:flex-start;">
+                            <div class="sm-temp-box" style="font-size:3rem; margin:10px 0;">${ex.val}</div>
+                            <div class="sm-name">
+                                <img src="https://flagcdn.com/24x18/${ex.loc.code}.png" style="margin-right:8px; border-radius:2px;">
+                                ${ex.loc.name}
+                            </div>
+                        </div>
+                    `;
+                    DOM.smGrid.appendChild(div);
+                });
+                
+                document.getElementById('sm-update-time').innerText = getTime();
+
+            } catch(e) { console.error(e); }
         }
 
         function triggerSummaryMode(mins) {
@@ -1400,7 +1832,7 @@
                         <div class="data-row"><span class="data-label">ANGOL FONT (GBP)</span><span class="data-val">${gbp.toFixed(2)} FT</span></div>
                     `;
                     document.getElementById('fin-stamp').innerText = getTime();
-                    document.getElementById('fx-source').innerText = "SOURCE: OPEN-ER";
+                    document.getElementById('fx-source').innerText = "OPEN-ER";
                 }
             } catch(e) {}
         }
@@ -1414,7 +1846,7 @@
                 <div class="data-row"><span class="data-label">ANGOL FONT (GBP)</span><span class="data-val">${gbp.toFixed(2)} FT</span></div>
             `;
             document.getElementById('fin-stamp').innerText = getTime();
-            document.getElementById('fx-source').innerText = `SOURCE: ${source}`;
+            document.getElementById('fx-source').innerText = source;
         }
 
         async function fetchOther() {
@@ -1515,70 +1947,302 @@
             const nyStart = new Date('2025-12-30T00:00:00');
             const nyEnd = new Date('2026-01-02T00:00:00');
             
-            if (now >= xmasStart && now < xmasEnd) {
-                state.holidayMode = 'XMAS';
-            } else if (now >= nyStart && now < nyEnd) {
-                state.holidayMode = 'NY';
-            } else {
-                state.holidayMode = null;
+            // Valentine: 2026-02-14 00:00 to 2026-02-15 00:00
+            const valStart = new Date('2026-02-14T00:00:00');
+            const valEnd = new Date('2026-02-15T00:00:00');
+            
+            let newMode = null;
+            if (now >= xmasStart && now < xmasEnd) { newMode = 'XMAS'; }
+            else if (now >= nyStart && now < nyEnd) { newMode = 'NY'; }
+            else if (now >= valStart && now < valEnd) { newMode = 'VAL'; }
+            
+            // Only update if changed
+            if (newMode !== state.holidayMode) {
+                state.holidayMode = newMode;
+                // Update Logo Front class immediately
+                DOM.logoFront.className = 'logo-front'; // Reset
+                if (newMode) DOM.logoFront.classList.add(newMode.toLowerCase());
+
+                // Start or stop logo fireworks immediately
+                if(newMode === 'NY') {
+                    startLogoFireworks();
+                } else {
+                    stopLogoFireworks();
+                }
             }
         }
         
         function forceHoliday(mode) {
             state.holidayMode = mode;
-            clearTimeout(state.flipperTimer);
-            DOM.logoBox.classList.remove('flipped'); // Reset
+            
+            // Update Logo Front Class
+            DOM.logoFront.className = 'logo-front';
+            if(mode) DOM.logoFront.classList.add(mode.toLowerCase());
+
+            // Handle Logo Fireworks Logic
+            if(mode === 'NY') {
+                startLogoFireworks();
+            } else {
+                stopLogoFireworks();
+            }
+
+            // Reset Sequence
+            clearTimeout(state.holidaySequenceTimer);
+            clearInterval(state.particleInterval);
+            DOM.effectContainer.innerHTML = ''; // Clear particles
+            DOM.logoBox.classList.remove('flipped'); 
+            DOM.logoFront.style.opacity = '0.9'; // Reset opacity if stuck
+            
+            // Reset Static Icons Visibility
+            const staticIcons = document.querySelectorAll('.holiday-deco');
+            staticIcons.forEach(el => el.style.opacity = ''); // Reset inline styles
+
             alert("ÜNNEPI MÓD BEÁLLÍTVA: " + mode);
-            startHolidayFlipper(); // Restart loop
+            
+            // RESTART WITH IMMEDIATE TRIGGER (10 seconds delay instead of 2 mins for testing)
+            const now = Date.now();
+            const quickStartDelay = 10000;
+            state.nextHolidayFlip = now + quickStartDelay; 
+            
+            state.holidaySequenceTimer = setTimeout(() => {
+                runHolidayTransition();
+            }, quickStartDelay - 5000); 
         }
 
-        function startHolidayFlipper() {
-            const flip = () => {
-                // Only flip if a mode is active
-                if (!state.holidayMode) return;
-                
-                // SVG Logo for reuse
-                const logoSvg = `<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`;
-
-                // Set content based on mode
-                if (state.holidayMode === 'XMAS') {
-                    DOM.logoBack.className = 'logo-back mode-xmas';
-                    DOM.logoBack.innerHTML = `
-                        <div class="sparkle"></div>
-                        <div class="holiday-msg">Áldott, Békés<br>Karácsonyt<br><span style="font-size:0.6em; font-family:var(--font-data);">KÍVÁN A</span></div>
-                        <div class="holiday-logo-row">${logoSvg} <span class="holiday-logo-text">TKP NEWS</span></div>
-                    `;
-                } else if (state.holidayMode === 'NY') {
-                    DOM.logoBack.className = 'logo-back mode-ny';
-                    DOM.logoBack.innerHTML = `
-                        <div class="sparkle"></div>
-                        <div class="holiday-msg">Békés, Boldog<br>Új Évet<br><span style="font-size:0.6em; font-family:var(--font-data);">KÍVÁN A</span></div>
-                        <div class="holiday-logo-row">${logoSvg} <span class="holiday-logo-text">TKP NEWS</span></div>
-                    `;
-                }
-                
-                // Do the flip
-                DOM.logoBox.classList.add('flipped');
-                
-                // Stay flipped for 10 seconds (long enough to read)
-                setTimeout(() => {
-                    DOM.logoBox.classList.remove('flipped');
-                }, 10000);
-                
-                // Schedule next flip (random between 2min and 3min -> 120s - 180s)
-                // 120000 ms to 180000 ms
-                const nextFlipDelay = Math.floor(Math.random() * 60000) + 120000; 
-                state.nextHolidayFlip = Date.now() + nextFlipDelay; // For Dev Countdown
-                state.flipperTimer = setTimeout(flip, nextFlipDelay);
-            };
+        // --- NEW: LOGO FIREWORKS CONTINUOUS LOOP ---
+        function startLogoFireworks() {
+            if(state.logoFxInterval) clearInterval(state.logoFxInterval);
             
-            // Initial trigger if active
-            if(state.holidayMode) {
-                 // First flip soon
-                 const initialDelay = 10000; 
-                 state.nextHolidayFlip = Date.now() + initialDelay;
-                 state.flipperTimer = setTimeout(flip, initialDelay);
+            // Create a firework every 1.5 - 2 seconds (Relaxed pace)
+            state.logoFxInterval = setInterval(() => {
+                if(state.holidayMode !== 'NY') {
+                    clearInterval(state.logoFxInterval);
+                    return;
+                }
+                // Don't spawn if logo is flipped to back
+                if(!DOM.logoBox.classList.contains('flipped')) {
+                    createLogoFirework();
+                }
+            }, 1800);
+        }
+
+        function stopLogoFireworks() {
+            if(state.logoFxInterval) clearInterval(state.logoFxInterval);
+            DOM.logoFxContainer.innerHTML = '';
+        }
+
+        function createLogoFirework() {
+            const fw = document.createElement('div');
+            fw.style.position = 'absolute';
+            // Random position inside the logo box (0-100%)
+            // Keep it slightly away from edges (10-90%)
+            fw.style.left = (10 + Math.random() * 80) + '%';
+            fw.style.top = (10 + Math.random() * 80) + '%';
+            DOM.logoFxContainer.appendChild(fw);
+
+            // Create particles
+            const colors = ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#ff00ff', '#ffffff'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Fewer particles for logo version (8-10)
+            for (let i = 0; i < 10; i++) {
+                const p = document.createElement('div');
+                p.className = 'firework-particle';
+                p.style.backgroundColor = color;
+                
+                const angle = (Math.PI * 2 * i) / 10;
+                // Smaller explosion radius for logo (20-40px)
+                const velocity = 20 + Math.random() * 20; 
+                const tx = Math.cos(angle) * velocity + 'px';
+                const ty = Math.sin(angle) * velocity + 'px';
+                
+                p.style.setProperty('--tx', tx);
+                p.style.setProperty('--ty', ty);
+                
+                fw.appendChild(p);
             }
+
+            // Cleanup
+            setTimeout(() => fw.remove(), 1500);
+        }
+
+        // --- NEW SEQUENCE LOGIC (INTRO -> FLIP -> OUTRO) ---
+        
+        function startHolidaySequenceLoop() {
+            clearTimeout(state.holidaySequenceTimer);
+            if (!state.holidayMode) return;
+
+            // Random delay between 2 and 3 minutes (120s - 180s)
+            const nextFlipDelay = Math.floor(Math.random() * 60000) + 120000; 
+            state.nextHolidayFlip = Date.now() + nextFlipDelay; // For Dev Countdown
+            
+            // Schedule the START of the sequence (Intro starts 5s before flip)
+            // Flip happens at nextFlipDelay. Intro starts at nextFlipDelay - 5000.
+            
+            state.holidaySequenceTimer = setTimeout(() => {
+                runHolidayTransition();
+            }, nextFlipDelay - 5000); 
+        }
+
+        async function runHolidayTransition() {
+            if (!state.holidayMode) return;
+            
+            DOM.devHolStatus.innerText = "INTRO (EFFEKT)";
+            DOM.devHolStatus.style.color = "#ffcc00";
+
+            // --- PHASE 1: INTRO (5 Seconds) ---
+            // Start FULL SCREEN particle effects
+            startParticles(state.holidayMode);
+            
+            await sleep(5000);
+
+            // --- PHASE 2: FLIP (10 Seconds) ---
+            DOM.devHolStatus.innerText = "ÜZENET (FLIP)";
+            DOM.devHolStatus.style.color = "#00d4ff";
+            
+            // Prepare Back Face Content
+            prepareBackFace(state.holidayMode);
+            
+            // Flip
+            DOM.logoBox.classList.add('flipped');
+
+            await sleep(10000);
+
+            // --- PHASE 3: OUTRO (5 Seconds) ---
+            DOM.devHolStatus.innerText = "OUTRO";
+            DOM.devHolStatus.style.color = "#ffcc00";
+            
+            // Unflip
+            DOM.logoBox.classList.remove('flipped');
+            
+            // Particles are still running...
+            await sleep(5000);
+
+            // --- PHASE 4: CLEANUP ---
+            stopParticles();
+            
+            DOM.devHolStatus.innerText = "VÁRAKOZÁS";
+            DOM.devHolStatus.style.color = "#aaa";
+
+            // Restart Loop
+            startHolidaySequenceLoop();
+        }
+
+        function startParticles(mode) {
+            clearInterval(state.particleInterval);
+            DOM.effectContainer.innerHTML = ''; // Clear old
+
+            if (mode === 'NY') {
+                // Fireworks
+                state.particleInterval = setInterval(() => {
+                    createFirework();
+                }, 400); // New explosion every 400ms
+            } else if (mode === 'VAL') {
+                // Floating Hearts
+                state.particleInterval = setInterval(() => {
+                    createFloatingHeart();
+                }, 200); // New heart every 200ms
+            }
+        }
+
+        function stopParticles() {
+            clearInterval(state.particleInterval);
+            // Let existing particles finish animation, then clear
+            setTimeout(() => {
+                DOM.effectContainer.innerHTML = '';
+            }, 2000);
+        }
+
+        function createFirework() {
+            const fw = document.createElement('div');
+            fw.style.position = 'absolute';
+            fw.style.left = (Math.random() * 100) + '%';
+            fw.style.top = (Math.random() * 100) + '%';
+            DOM.effectContainer.appendChild(fw);
+
+            // Create particles for this explosion
+            const colors = ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#ff00ff'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+
+            for (let i = 0; i < 12; i++) {
+                const p = document.createElement('div');
+                p.className = 'firework-particle';
+                p.style.backgroundColor = color;
+                
+                // Random angle and distance
+                const angle = (Math.PI * 2 * i) / 12;
+                const velocity = 40 + Math.random() * 40; // distance
+                const tx = Math.cos(angle) * velocity + 'px';
+                const ty = Math.sin(angle) * velocity + 'px';
+                
+                p.style.setProperty('--tx', tx);
+                p.style.setProperty('--ty', ty);
+                
+                fw.appendChild(p);
+            }
+
+            // Clean up this explosion div after animation
+            setTimeout(() => fw.remove(), 1000);
+        }
+
+        function createFloatingHeart() {
+            const h = document.createElement('div');
+            h.innerHTML = '❤️';
+            h.className = 'floating-heart';
+            h.style.left = (Math.random() * 100) + '%';
+            h.style.top = (80 + Math.random() * 20) + '%'; // Start near bottom
+            
+            // Random horizontal drift
+            const drift = (Math.random() - 0.5) * 40 + 'px';
+            h.style.setProperty('--hx', drift);
+            h.style.fontSize = (0.5 + Math.random()) + 'rem'; // Random size
+
+            DOM.effectContainer.appendChild(h);
+            
+            setTimeout(() => h.remove(), 1500);
+        }
+
+        function prepareBackFace(mode) {
+            // SVG Logo for reuse
+            const logoSvg = `<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`;
+
+            let iconHtml = '';
+            let msgHtml = '';
+            
+            if (mode === 'XMAS') {
+                DOM.logoBack.className = 'logo-back mode-xmas';
+                iconHtml = `<svg class="holiday-main-icon icon-tree-anim" viewBox="0 0 50 60">
+                            <rect x="22" y="50" width="6" height="10" class="tree-trunk"/>
+                            <path d="M5,50 L25,20 L45,50 Z" class="tree-layer"/>
+                            <path d="M10,35 L25,10 L40,35 Z" class="tree-layer-2"/>
+                            <path d="M15,20 L25,0 L35,20 Z" class="tree-layer-3"/>
+                            <polygon points="25,0 26,3 29,3 27,5 28,8 25,6 22,8 23,5 21,3 24,3" class="tree-star"/>
+                            <circle cx="15" cy="45" r="2" class="tree-light l1"/>
+                            <circle cx="35" cy="45" r="2" class="tree-light l2"/>
+                            <circle cx="25" cy="40" r="2" class="tree-light l3"/>
+                            <circle cx="20" cy="30" r="2" class="tree-light l4"/>
+                            <circle cx="30" cy="30" r="2" class="tree-light l1"/>
+                            <circle cx="25" cy="15" r="2" class="tree-light l2"/>
+                        </svg>`;
+                msgHtml = `<div class="holiday-msg">Áldott, Békés<br>Karácsonyt<br><span style="font-size:0.6em; font-family:var(--font-data);">KÍVÁN A</span></div>`;
+            } 
+            else if (mode === 'NY') {
+                DOM.logoBack.className = 'logo-back mode-ny';
+                iconHtml = `<svg class="holiday-main-icon icon-champagne" viewBox="0 0 24 24" width="55" height="55"><path d="M19.2,2.6l-6.3,9.5C12.5,12.7,12,13.3,12,14c0,1.1,0.9,2,2,2h4c1.1,0,2-0.9,2-2c0-0.7-0.5-1.3-0.9-1.9L19.2,2.6z M5,2h2v7H5V2z"/></svg>`; 
+                msgHtml = `<div class="holiday-msg">Békés, Boldog<br>Új Évet<br><span style="font-size:0.6em; font-family:var(--font-data);">KÍVÁN A</span></div>`;
+            }
+            else if (mode === 'VAL') {
+                DOM.logoBack.className = 'logo-back mode-val';
+                iconHtml = `<svg class="holiday-main-icon icon-heart-anim" viewBox="0 0 24 24" width="55" height="55"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+                msgHtml = `<div class="holiday-msg">Boldog<br>Valentin-napot<br><span style="font-size:0.6em; font-family:var(--font-data);">KÍVÁN A</span></div>`;
+            }
+
+            DOM.logoBack.innerHTML = `
+                <div class="sparkle"></div>
+                ${iconHtml}
+                ${msgHtml}
+                <div class="holiday-logo-row">${logoSvg} <span class="holiday-logo-text">TKP NEWS</span></div>
+            `;
         }
 
         function startClock() {
@@ -1591,20 +2255,11 @@
                 const days = ['VASÁRNAP','HÉTFŐ','KEDD','SZERDA','CSÜTÖRTÖK','PÉNTEK','SZOMBAT'];
                 DOM.cDate.innerText = `${now.getFullYear()}. ${String(now.getMonth()+1).padStart(2,'0')}. ${String(now.getDate()).padStart(2,'0')}. - ${days[now.getDay()]}`;
 
-                // --- EVENTS ---
+                // --- EXECUTE SCHEDULE ---
+                checkScheduleExecution(); // NEW: Triggers real events
 
-                // Summary trigger
-                // Half Hour: 30:00 -> 33:00 (3 mins)
-                if (now.getMinutes() === 30 && now.getSeconds() === 0) triggerSummaryMode(30);
-                
-                // Full Hour: 57:00 -> 59:50 (2 min 50s - interrupted by Big Clock)
-                if (now.getMinutes() === 57 && now.getSeconds() === 0) triggerSummaryMode(60);
-
-                // Big Clock trigger (XX:09:50 -> 10s wait for Meteo, XX:59:50 -> 10s wait for Hour)
-                if (now.getMinutes() === 59 && now.getSeconds() === 50) {
-                    triggerBigClock();
-                    crawlNews(false); 
-                }
+                // --- UPDATE NEXT CAPSULE ---
+                updateNextEventCapsule(); // UPDATED
 
                 // --- NEWS PRE-FETCH & UPDATE LOGIC ---
 
@@ -1613,21 +2268,16 @@
                    crawlNews(false); // Silent fetch in background
                 }
 
-                // 2. HARD RESET at exact times (00, 15, 30, 45) to ensure we start with fresh news item #1
-                if ([0, 15, 30, 45].includes(now.getMinutes()) && now.getSeconds() === 0) {
-                    // Hour turn specific
-                    if (now.getMinutes() === 0) { 
-                        closeAllOverlays(); 
-                        fetchCurrency(); 
-                    }
+                // 2. HARD RESET at hour start
+                if (now.getMinutes() === 0 && now.getSeconds() === 0) {
+                    closeAllOverlays(); 
+                    fetchCurrency(); 
+                    generateHourlySchedule(); // NEW: RE-CALCULATE FOR NEW HOUR
                     
                     // FORCE TICKER RESET TO START
                     state.tickerIdx = -1; 
-                    manualTicker(1); // Jump to next (which is 0 due to -1)
+                    manualTicker(1); 
                 }
-                
-                // Special Meteo Sequence (XX:09:50)
-                if (now.getMinutes() === 9 && now.getSeconds() === 50) { triggerSpecialMeteoSequence(); }
                 
                 updateDevMonitor();
                 
@@ -1640,9 +2290,10 @@
 
         function init() {
             startClock();
-            checkHolidayMode(); // Check date on startup
-            startHolidayFlipper(); // Initialize flipper based on date
-            
+            checkHolidayMode(); // Check date on startup and SET INITIAL LOGO CLASS
+            startHolidaySequenceLoop(); // Initialize New Sequence Logic
+            generateHourlySchedule(); // Initialize Sync Schedule
+
             const d = document.createElement('div'); d.className='term-line'; d.innerText = ">> RENDSZER KÉSZ"; DOM.term.appendChild(d);
             DOM.fill.style.width = "100%";
             crawlNews(false); fetchCurrency(); fetchOther(); fetchWunderground();
