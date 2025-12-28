@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V13.6 NIGHT OPS</title>
+    <title>TKP NEWS - V13.20 STABLE</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,7 +25,8 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; outline: none; }
-        body { background: #000; color: var(--text); font-family: var(--font-data); overflow: hidden; width: 100vw; height: 100vh; }
+        /* Geometric Precision for Sharp Text */
+        body { background: #000; color: var(--text); font-family: var(--font-data); overflow: hidden; width: 100vw; height: 100vh; text-rendering: geometricPrecision; -webkit-font-smoothing: subpixel-antialiased; }
 
         /* --- STAGE --- */
         #stage { position: absolute; width: 100%; height: 100%; z-index: 1; background: #010101; }
@@ -53,9 +54,7 @@
         }
         .tb-inner { transform: skewX(15deg); display: flex; align-items: center; width: 100%; justify-content: space-between; height: 100%; }
         
-        /* GROUP WRAPPER FOR WIDGET */
         .ny-group { display: flex; flex-direction: column; align-items: flex-start; position: relative; height: 100%; justify-content: center; }
-
         .ny-widget { display: flex; align-items: center; gap: 0; background: rgba(0,0,0,0.6); padding: 5px 15px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); z-index: 20; position: relative; }
         .ny-text-col { display: flex; flex-direction: column; align-items: flex-end; margin-right: 15px; }
         .ny-info { font-family: var(--font-tech); font-weight: 700; color: #fff; font-size: clamp(0.8rem, 1.2vh, 1rem); line-height: 1; margin-bottom: 2px; }
@@ -63,44 +62,50 @@
         .ny-temp-box { display: flex; align-items: center; gap: 8px; border-left: 1px solid rgba(255,255,255,0.2); padding-left: 12px; font-family: var(--font-tech); font-weight: bold;}
         .wind-badge { font-size: 0.75rem; padding-left: 10px; border-left: 1px solid rgba(255,255,255,0.2); font-weight: 700; font-family: var(--font-tech); color: #00d4ff; text-transform: uppercase; white-space: nowrap; }
 
-        /* --- UPDATED CAPSULE STYLES (BOTTOM RIGHT) --- */
+        /* CAPSULE STYLES */
         .next-capsule {
-            position: absolute;
-            bottom: calc(var(--footer-h) + 2px); 
-            right: 2vw; 
+            position: absolute; bottom: calc(var(--footer-h) + 2px); right: 2vw; 
             display: flex; align-items: center; justify-content: flex-end;
-            background: transparent;
-            border: none;
-            box-shadow: none;
-            border-right: 4px solid var(--accent);
-            padding: 0 10px 0 0; 
-            opacity: 0; transform: translateX(20px); 
-            transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
-            pointer-events: none;
-            z-index: 45; 
-            text-shadow: 2px 2px 0 #000, 0 0 10px rgba(0,0,0,0.8);
+            background: transparent; border: none; box-shadow: none; border-right: 4px solid var(--accent);
+            padding: 0 10px 0 0; opacity: 0; transform: translateX(20px); 
+            transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1); pointer-events: none; z-index: 45; 
+            text-shadow: 2px 2px 0 #000;
         }
         .next-capsule.visible { opacity: 1; transform: translateX(0); }
-        
-        .nc-content {
-            font-family: var(--font-tech);
-            color: #fff;
-            font-size: 0.8rem; 
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-            text-align: right;
-        }
-        
+        .nc-content { font-family: var(--font-tech); color: #fff; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; text-align: right; }
         .nc-time-hlt { color: var(--accent); margin-left: 5px; margin-right: 5px; }
+
+        /* WEATHER ALERT CARD */
+        .weather-alert-card {
+            position: absolute; bottom: calc(var(--footer-h) + 15px); left: 2vw;
+            width: 350px; background: linear-gradient(135deg, #1a0000 0%, #330000 100%);
+            border: 1px solid #ff4444; border-left: 6px solid #ff0000;
+            padding: 15px; display: flex; align-items: center; gap: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8); z-index: 1000;
+            transform: translateX(-150%); opacity: 0;
+            transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.5s;
+            border-radius: 4px; pointer-events: none;
+        }
+        .weather-alert-card.active { transform: translateX(0); opacity: 1; pointer-events: auto; }
+        
+        /* ALERT TYPES COLORS */
+        .weather-alert-card.type-snow { background: linear-gradient(135deg, #001a33 0%, #003366 100%); border-color: #00d4ff; border-left-color: #fff; }
+        .weather-alert-card.type-wind { background: linear-gradient(135deg, #1a1a00 0%, #333300 100%); border-color: #ffd700; border-left-color: #ffaa00; }
+        .weather-alert-card.type-fog { background: linear-gradient(135deg, #222 0%, #444 100%); border-color: #888; border-left-color: #ccc; }
+        .weather-alert-card.type-heat { background: linear-gradient(135deg, #330000 0%, #660000 100%); border-color: #ff5500; border-left-color: #ff0000; }
+        .weather-alert-card.type-uv { background: linear-gradient(135deg, #1a001a 0%, #330033 100%); border-color: #cc00cc; border-left-color: #ff00ff; }
+        
+        .wx-alert-icon { font-size: 2.5rem; color: #fff; filter: drop-shadow(0 0 5px rgba(255,255,255,0.5)); }
+        .wx-alert-content { display: flex; flex-direction: column; }
+        .wx-a-title { font-family: var(--font-tech); font-weight: bold; color: var(--accent); font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px; }
+        .wx-a-desc { font-family: var(--font-main); font-weight: 700; color: #fff; font-size: 1.4rem; line-height: 1; text-transform: uppercase; text-shadow: 0 2px 4px #000; }
+        .wx-a-loc { font-family: var(--font-mono); font-size: 0.7rem; color: #ccc; margin-top: 4px; }
 
         .search-container { flex-grow: 1; display: flex; justify-content: center; padding: 0 2vw; }
         .search-form { display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 350px; height: 3.5vh; padding: 0 15px; transition: 0.3s; }
         .search-form:focus-within { border-color: var(--accent); background: #000; box-shadow: 0 0 15px rgba(255,204,0,0.2); }
         .search-form input { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-size: 0.9rem; }
 
-        /* Legacy Link */
         .legacy-btn {
             background: #222; border: 1px solid #444; color: #aaa; padding: 5px 15px; margin-left: 15px; margin-right: 15px;
             font-family: var(--font-condensed); font-weight: bold; cursor: pointer; text-decoration: none; display: flex; align-items: center;
@@ -108,15 +113,13 @@
         }
         .legacy-btn:hover { background: #fff; color: #000; border-color: #fff; }
 
-        /* LOGO & CLOCK WRAPPER */
+        /* LOGO & CLOCK WRAPPER - FIXED */
         @keyframes logoReveal { 0% { transform: translateY(-30px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
         
         .logo-box { 
-            position: absolute; top: 3vh; left: 3.5vw; 
-            width: 160px; height: 160px; 
-            z-index: 50; pointer-events: auto; cursor: pointer;
-            perspective: 1000px; 
-            animation: logoReveal 1.2s ease-out 0.2s both;
+            position: fixed; top: 3vh; left: 3.5vw; width: 160px; height: 160px; 
+            z-index: 2000; pointer-events: auto; cursor: pointer;
+            perspective: 1000px; animation: logoReveal 1.2s ease-out 0.2s both;
         }
 
         .logo-inner {
@@ -126,7 +129,6 @@
         }
         .logo-box.flipped .logo-inner { transform: rotateY(180deg); }
 
-        /* FRONT & BACK FACES */
         .logo-front, .logo-back {
             position: absolute; width: 100%; height: 100%;
             -webkit-backface-visibility: hidden; backface-visibility: hidden;
@@ -135,216 +137,122 @@
 
         .logo-front { opacity: 0.9; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8)); z-index: 2; }
         
-        /* HOLIDAY DECORATIONS (ON FRONT FACE) */
-        .logo-wrapper-front { position: relative; display: flex; justify-content: center; align-items: center; width: 100%; }
-        .logo-main-svg { width: 55px; height: 55px; fill: var(--primary); margin-bottom: 2px; position: relative; z-index: 5; }
-        
+        .logo-wrapper-front { position: relative; display: flex; justify-content: center; align-items: center; width: 100%; margin-top: 5px;}
+        .logo-main-svg { width: 55px; height: 55px; fill: var(--primary); margin-bottom: 2px; position: relative; z-index: 5; transition: all 0.5s; shape-rendering: geometricPrecision; }
+        .logo-front.ny .logo-main-svg { fill: #ffd700; filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6)); }
+
         .holiday-deco { position: absolute; z-index: 4; pointer-events: none; opacity: 0; transition: opacity 0.5s; }
         .logo-front.xmas .deco-tree { opacity: 1; }
         .logo-front.val .deco-val-static { opacity: 1; }
 
-        /* LOGO FX CONTAINER */
-        .logo-fx-container {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 3; overflow: hidden;
-            border-radius: 10px; 
-        }
+        .streamers-container { position: absolute; top: -10px; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; z-index: 10; }
+        .logo-front.ny .streamers-container { opacity: 1; }
+        .streamer { fill: none; stroke-width: 2; stroke-linecap: round; transform-origin: top center; animation: streamerSway 3s ease-in-out infinite alternate; }
+        .st-1 { stroke: #ff3366; animation-delay: 0s; left: 10px; } .st-2 { stroke: #00d4ff; animation-delay: 1s; left: 50%; } .st-3 { stroke: #cc00cc; animation-delay: 2s; right: 10px; }
+        @keyframes streamerSway { 0% { transform: rotate(-5deg) scaleY(0.9); } 100% { transform: rotate(5deg) scaleY(1.05); } }
 
-        /* Container for Dynamic Transition Effects (FullScreen) */
-        #effect-container {
-            position: absolute; width: 200px; height: 200px;
-            top: 50%; left: 50%; transform: translate(-50%, -50%);
-            z-index: 1; pointer-events: none; overflow: visible;
-        }
+        .logo-fx-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; overflow: visible; border-radius: 10px; }
+        #effect-container { position: absolute; width: 200px; height: 200px; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1; pointer-events: none; overflow: visible; }
 
-        /* REALISTIC CHRISTMAS TREE */
-        .deco-tree { 
-            width: 45px; height: 55px; /* Increased size slightly */
-            right: 30px; bottom: -8px; 
-            filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.6));
-        }
-        .tree-layer { fill: #0f5c0f; } /* Dark Green */
-        .tree-layer-2 { fill: #1a7a1a; } /* Medium Green */
-        .tree-layer-3 { fill: #2e8b2e; } /* Light Green */
-        .tree-trunk { fill: #5c4033; }
+        .deco-tree { width: 45px; height: 55px; right: 30px; bottom: -8px; filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.6)); }
+        .tree-layer { fill: #0f5c0f; } .tree-layer-2 { fill: #1a7a1a; } .tree-layer-3 { fill: #2e8b2e; } .tree-trunk { fill: #5c4033; }
         .tree-star { fill: #ffd700; animation: starTwinkle 2s infinite alternate; }
-        
         .tree-light { animation: blinkLights 1.2s infinite alternate; }
-        .tree-light.l1 { fill: #ff3333; animation-delay: 0s; }
-        .tree-light.l2 { fill: #33cc33; animation-delay: 0.4s; }
-        .tree-light.l3 { fill: #3366ff; animation-delay: 0.8s; }
-        .tree-light.l4 { fill: #ffff00; animation-delay: 1.2s; }
-
+        .tree-light.l1 { fill: #ff3333; animation-delay: 0s; } .tree-light.l2 { fill: #33cc33; animation-delay: 0.4s; }
+        .tree-light.l3 { fill: #3366ff; animation-delay: 0.8s; } .tree-light.l4 { fill: #ffff00; animation-delay: 1.2s; }
         @keyframes blinkLights { 0% { opacity: 0.4; filter: brightness(0.8); } 100% { opacity: 1; filter: brightness(1.5); } }
         @keyframes starTwinkle { 0% { opacity: 0.7; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1.1); } }
 
-        /* VALENTINE HEART (Static) */
         .deco-val-static { width: 30px; height: 30px; right: 35px; bottom: 0; fill: #ff3366; animation: heartbeat 1.5s infinite; filter: drop-shadow(0 0 5px #ff0033); }
 
-        /* DYNAMIC FIREWORK PARTICLES */
-        .firework-particle {
-            position: absolute; width: 3px; height: 3px; border-radius: 50%;
-            animation: explode 1.2s ease-out forwards;
-        }
-        @keyframes explode {
-            0% { transform: translate(0, 0) scale(1); opacity: 1; }
-            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
-        }
+        .firework-particle { position: absolute; width: 4px; height: 4px; border-radius: 50%; animation: explode 1.2s ease-out forwards; }
+        .firework-particle.mini { width: 2px; height: 2px; }
+        @keyframes explode { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } }
 
-        /* DYNAMIC FLOATING HEARTS */
-        .floating-heart {
-            position: absolute; font-size: 1.2rem; color: #ff3366;
-            animation: floatUp 1.5s ease-out forwards; text-shadow: 0 0 5px #fff;
-        }
-        @keyframes floatUp {
-            0% { transform: translate(0, 0) scale(0); opacity: 0; }
-            20% { transform: translate(0, -10px) scale(1.2); opacity: 1; }
-            100% { transform: translate(var(--hx), -60px) scale(1); opacity: 0; }
-        }
+        .floating-heart { position: absolute; font-size: 1.2rem; color: #ff3366; animation: floatUp 1.5s ease-out forwards; text-shadow: 0 0 5px #fff; }
+        @keyframes floatUp { 0% { transform: translate(0, 0) scale(0); opacity: 0; } 20% { transform: translate(0, -10px) scale(1.2); opacity: 1; } 100% { transform: translate(var(--hx), -60px) scale(1); opacity: 0; } }
 
-        .logo-text { font-family: var(--font-main); font-weight: 800; font-size: 1.4rem; letter-spacing: 2px; color: #fff; line-height: 1; text-shadow: 0 2px 5px rgba(0,0,0,0.9); z-index: 5; position: relative; }
-        
+        .logo-text { font-family: var(--font-main); font-weight: 800; font-size: 1.4rem; letter-spacing: 2px; color: #fff; line-height: 1; text-shadow: 0 2px 5px rgba(0,0,0,0.9); z-index: 5; position: relative; text-rendering: optimizeLegibility; }
         .mini-clock { display: flex; flex-direction: column; align-items: center; width: 100%; margin-top: 12px; }
         .mc-time { font-family: var(--font-tech); font-weight: 700; font-size: 1.3rem; color: #f0f0f0; line-height: 1; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,1); }
         .mc-sec { font-size: 0.7em; color: var(--accent); margin-left: 1px; vertical-align: top; font-weight: 400; }
         .mc-date { font-family: var(--font-condensed); font-weight: 700; font-size: 0.7rem; color: #ccc; text-transform: uppercase; margin-top: 2px; letter-spacing: 0.5px; text-shadow: 0 1px 3px rgba(0,0,0,1); }
 
-        /* BACK FACE GENERAL - TRANSPARENT (NO LAYER) */
-        .logo-back {
-            transform: rotateY(180deg);
-            border-radius: 10px;
-            justify-content: center;
-            padding: 5px;
-            overflow: hidden;
-            background: transparent;
-            border: none;
-            box-shadow: none;
-        }
-
-        /* Holiday Content Styling */
-        .holiday-main-icon {
-            margin-bottom: 5px;
-            filter: drop-shadow(0 0 10px rgba(255,255,255,0.6));
-        }
-        .icon-tree-anim { animation: sway 3s ease-in-out infinite; }
-        .icon-champagne { animation: tilt 3s ease-in-out infinite; fill: #ffd700; }
-        .icon-heart-anim { animation: heartbeat 1.5s ease-in-out infinite; fill: #ff3366; filter: drop-shadow(0 0 10px #ff0033); }
-
-        @keyframes sway { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(5deg); } }
-        @keyframes tilt { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-10deg); } }
-        @keyframes heartbeat { 0% { transform: scale(1); } 15% { transform: scale(1.2); } 30% { transform: scale(1); } 45% { transform: scale(1.1); } 60% { transform: scale(1); } }
-
-        .holiday-msg {
-            font-family: var(--font-script);
-            font-size: 1.6rem;
-            color: #fff;
-            text-align: center;
-            line-height: 1.1;
-            margin-bottom: 10px;
-            text-shadow: 0 0 5px #000, 0 0 10px #000, 0 0 15px rgba(0,0,0,0.8);
-        }
-        
+        /* LOGO BACK FACE FIX */
+        .logo-back { transform: rotateY(180deg); border-radius: 10px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 8px 4px; overflow: hidden; background: rgba(0, 15, 45, 0.95); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 0 15px rgba(0,0,0,0.5); }
+        .holiday-main-icon { width: 42px; height: 42px; margin-bottom: 2px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.6)); }
+        .holiday-msg { font-family: var(--font-script); font-size: 1.15rem; color: #fff; text-align: center; line-height: 1.1; margin-bottom: 4px; text-shadow: 0 0 5px #000; }
         .mode-val .holiday-msg { color: #ffccdd; text-shadow: 0 0 5px #ff0066, 0 0 10px #000; }
-
-        .holiday-logo-row {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            border-top: 1px solid rgba(255,255,255,0.4);
-            padding-top: 5px;
-            width: 70%;
-            filter: drop-shadow(0 0 5px #000);
-        }
-        .holiday-logo-row svg { width: 35px; height: 35px; fill: var(--primary); filter: drop-shadow(0 0 2px rgba(255,255,255,0.8)); }
-        .holiday-logo-text { font-family: var(--font-main); font-size: 0.9rem; font-weight: 800; letter-spacing: 1px; margin-top: 2px; text-shadow: 0 2px 4px #000; }
-
+        .holiday-logo-row { display: flex; flex-direction: column; align-items: center; border-top: 1px solid rgba(255,255,255,0.4); padding-top: 4px; width: 80%; filter: drop-shadow(0 0 5px #000); }
+        .holiday-logo-row svg { width: 22px; height: 22px; fill: #fff; }
+        .holiday-logo-text { font-family: var(--font-main); font-size: 0.75rem; font-weight: 800; letter-spacing: 1px; margin-top: 1px; }
         .sparkle { position: absolute; width: 100%; height: 100%; top: 0; left: 0; background-image: radial-gradient(white 1px, transparent 1px); background-size: 30px 30px; opacity: 0.5; pointer-events: none; }
 
-        /* SIDEBAR UPDATED - GLASSMORPHISM & WATERMARK */
-        .sidebar { position: absolute; top: 15vh; right: 2vw; width: clamp(280px, 22vw, 420px); display: flex; flex-direction: column; gap: 1.5vh; pointer-events: auto; z-index: 40; }
+        /* SIDEBAR UPDATED - 3D FLIP CONTAINER */
+        .sidebar { position: absolute; top: 15vh; right: 2vw; width: clamp(280px, 22vw, 420px); height: auto; pointer-events: auto; z-index: 40; perspective: 1000px; }
         
-        .card { 
-            background: linear-gradient(135deg, rgba(0,20,50,0.6), rgba(0,10,30,0.75));
-            backdrop-filter: blur(12px); 
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.15); 
-            border-right: 4px solid var(--accent); /* Thinner accent */
-            padding: 15px 20px 25px 20px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
-            position: relative; 
-            border-radius: 4px;
+        .sidebar-flipper {
+            position: relative; width: 100%; height: 100%;
+            transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+            transform-style: preserve-3d;
+        }
+        .sidebar.breaking-active .sidebar-flipper { transform: rotateY(180deg); }
+
+        .sidebar-front, .sidebar-back {
+            position: relative; width: 100%;
+            -webkit-backface-visibility: hidden; backface-visibility: hidden;
         }
         
+        /* FRONT FACE: Standard Content */
+        .sidebar-front { display: flex; flex-direction: column; gap: 1.5vh; }
+
+        /* BACK FACE: Breaking News */
+        .sidebar-back { 
+            position: absolute; top: 0; left: 0; height: 100%; 
+            transform: rotateY(180deg); 
+            display: flex; flex-direction: column;
+        }
+
+        .card { 
+            background: linear-gradient(135deg, rgba(0,20,50,0.6), rgba(0,10,30,0.75));
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.15); border-right: 4px solid var(--accent);
+            padding: 15px 20px 25px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+            position: relative; border-radius: 4px;
+        }
         .card-title { font-family: var(--font-main); font-size: 1.1rem; color: var(--accent); border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 6px; margin-bottom: 10px; font-weight: 700; text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
-        
         .data-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .data-label { font-family: var(--font-tech); font-size: 0.7rem; color: #bbb; text-transform: uppercase; }
         .data-val { font-family: var(--font-mono); font-weight: 700; font-size: 1rem; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
-        
-        /* NEW WATERMARK FOOTER */
-        .watermark-footer {
-            position: absolute; bottom: 4px; right: 8px; width: 100%;
-            display: flex; justify-content: flex-end; align-items: center; gap: 10px;
-            opacity: 0.6;
-        }
+        .watermark-footer { position: absolute; bottom: 4px; right: 8px; width: 100%; display: flex; justify-content: flex-end; align-items: center; gap: 10px; opacity: 0.6; }
         .stamp { font-family: var(--font-tech); font-size: 0.55rem; color: #ccc; display: flex; align-items: center; gap: 4px; }
         .stamp::before { content: ''; width: 4px; height: 4px; background: var(--primary); border-radius: 50%; display: inline-block; animation: blink 2s infinite; }
         .source-tag { font-family: var(--font-mono); font-size: 0.5rem; color: #aaa; text-transform: uppercase; }
 
-        /* NEW SIDEBAR METEO DESIGN - V13 */
+        /* BREAKING CARD STYLE */
+        .breaking-card {
+            background: linear-gradient(135deg, #990000 0%, #330000 100%);
+            border: 1px solid #ff4444; border-left: 8px solid #fff;
+            padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.9);
+            height: 100%; min-height: 400px;
+            display: flex; flex-direction: column;
+            pointer-events: auto; cursor: pointer; /* Enable clicking */
+        }
+        .bk-card-header { font-family: var(--font-tech); color: #fff; font-size: 1rem; letter-spacing: 2px; text-transform: uppercase; border-bottom: 2px solid #ff4444; padding-bottom: 10px; margin-bottom: 15px; }
+        .bk-card-headline { font-family: var(--font-main); font-weight: 800; font-size: 1.8rem; line-height: 1.1; color: #fff; margin-bottom: 15px; text-transform: uppercase; }
+        .bk-card-body { font-family: var(--font-data); font-size: 1.1rem; line-height: 1.4; color: #eee; flex-grow: 1; }
+        .bk-card-meta { font-family: var(--font-mono); font-size: 0.8rem; color: #ffcc00; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px; text-align: right; }
+
+        /* WX DASHBOARD */
         .wx-dashboard { display: flex; flex-direction: column; gap: 5px; padding-top: 5px; }
-        
-        /* Main Header: Temp + Condition */
-        .wx-main-row { 
-            display: grid; 
-            grid-template-columns: auto 1fr; 
-            gap: 15px; 
-            align-items: center; 
-            padding-bottom: 8px; 
-            border-bottom: 1px solid rgba(255,255,255,0.1); 
-            margin-bottom: 2px; 
-        }
-        .wx-temp-big { 
-            font-family: var(--font-tech); 
-            font-size: 3.2rem; 
-            font-weight: 700; 
-            color: #fff; 
-            line-height: 0.9; 
-            letter-spacing: -2px; 
-            white-space: nowrap;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
+        .wx-main-row { display: grid; grid-template-columns: auto 1fr; gap: 15px; align-items: center; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 2px; }
+        .wx-temp-big { font-family: var(--font-tech); font-size: 3.2rem; font-weight: 700; color: #fff; line-height: 0.9; letter-spacing: -2px; white-space: nowrap; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
         .wx-right-col { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; overflow: hidden; }
-        .wx-cond-text { 
-            font-family: var(--font-main); 
-            font-size: 1.3rem; 
-            color: var(--accent); 
-            text-transform: uppercase; 
-            font-weight: 700; 
-            text-align: right; 
-            white-space: nowrap; 
-            overflow: hidden; 
-            text-overflow: ellipsis; 
-            width: 100%; 
-            line-height: 1.1;
-        }
+        .wx-cond-text { font-family: var(--font-main); font-size: 1.3rem; color: var(--accent); text-transform: uppercase; font-weight: 700; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; line-height: 1.1; }
         .wx-feels-like { font-family: var(--font-data); font-size: 0.85rem; color: #bbb; text-transform: uppercase; margin-top: 3px; white-space: nowrap; }
-        
-        /* Dedicated Wind Row */
-        .wx-wind-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255,255,255,0.03);
-            border-top: 1px solid rgba(255,255,255,0.1);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding: 6px 10px;
-            margin-bottom: 8px;
-        }
+        .wx-wind-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 6px 10px; margin-bottom: 8px; }
         .wx-wind-label { font-family: var(--font-mono); font-size: 0.7rem; color: #999; text-transform: uppercase; }
         .wx-wind-val { font-family: var(--font-tech); font-size: 1rem; color: #00d4ff; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-
-        /* Grid for other data */
         .wx-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 15px; }
         .wx-cell { display: flex; flex-direction: column; overflow: hidden; }
         .wx-c-label { font-family: var(--font-mono); font-size: 0.6rem; color: #888; text-transform: uppercase; margin-bottom: 2px; white-space: nowrap; }
@@ -363,14 +271,7 @@
         /* TICKER BAR */
         .ticker-bar { position: absolute; bottom: 0; left: 0; width: 100%; height: var(--footer-h); background: #000; border-top: 5px solid var(--primary); display: flex; z-index: 40; box-shadow: 0 -10px 40px rgba(0,0,0,0.8); transition: opacity 0.3s; }
         .ticker-label { background: var(--primary); height: 100%; display: flex; align-items: center; padding: 0 2.5vw; font-family: var(--font-main); font-weight: 700; font-size: clamp(1.2rem, 3vh, 2rem); flex-shrink: 0; z-index: 50; }
-        
-        /* NIGHT MODE LABEL STYLE */
-        .ticker-label.night-mode {
-            background: #222; /* Dark grey */
-            color: #888;      /* Dimmed text */
-            border-right: 1px solid #444;
-        }
-
+        .ticker-label.night-mode { background: #222; color: #888; border-right: 1px solid #444; }
         .ticker-nav { display: flex; align-items: center; background: #0a0a0a; padding: 0 10px; border-right: 1px solid #333; z-index: 50; gap: 8px; pointer-events: auto; }
         .nav-btn { background: #1a1a1a; border: 1px solid #444; color: #fff; padding: 6px 15px; cursor: pointer; font-family: var(--font-tech); font-weight: bold; transition: 0.2s; }
         .nav-btn:hover { background: var(--accent); color: #000; }
@@ -379,139 +280,73 @@
         .ticker-item { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; padding-left: 30px; opacity: 0; transition: opacity 0.5s; cursor: pointer; pointer-events: auto; }
         .ticker-item:hover { background: rgba(255,255,255,0.08); }
         .ticker-item.active { opacity: 1; }
-        .ticker-content { font-family: var(--font-body); font-size: clamp(1rem, 2.3vh, 1.6rem); white-space: nowrap; display: flex; align-items: center; width: 100%; color: #f0f0f0; position: relative; transition: transform 0s linear; will-change: transform; }
+        .ticker-content { font-family: var(--font-body); font-size: clamp(1rem, 2.3vh, 1.6rem); white-space: nowrap; display: flex; align-items: center; width: 100%; color: #f0f0f0; position: relative; transition: transform 0s linear; }
         .ticker-meta { font-family: var(--font-tech); color: var(--accent); font-weight: 700; background: rgba(255,255,255,0.08); padding: 4px 12px; border-radius: 4px; margin-right: 15px; font-size: 0.85em; flex-shrink: 0; }
         .ticker-refresh-msg { color: var(--accent); font-weight: bold; animation: blink 0.5s infinite; letter-spacing: 2px; }
 
-        /* NIGHT MESSAGE BAR (Replaces Ticker Content) */
-        .night-msg { 
-            display: none; width: 100%; height: 100%; 
-            background: linear-gradient(90deg, #0a0a0a 0%, #151515 50%, #0a0a0a 100%);
-            padding-left: 20px; align-items: center; justify-content: space-between;
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
-        }
+        /* NIGHT MESSAGE BAR */
+        .night-msg { display: none; width: 100%; height: 100%; background: linear-gradient(90deg, #0a0a0a 0%, #151515 50%, #0a0a0a 100%); padding-left: 20px; align-items: center; justify-content: space-between; box-shadow: inset 0 0 30px rgba(0,0,0,0.8); }
         .night-msg.active { display: flex; }
-
-        /* New Night Message Internal Design */
         .nm-left { display: flex; align-items: center; gap: 20px; height: 100%; }
         .nm-icon-box { background: rgba(255,255,255,0.05); height: 100%; display: flex; align-items: center; padding: 0 20px; font-size: 2rem; border-right: 1px solid #333; color: #666; }
-        
         .nm-text { display: flex; flex-direction: column; justify-content: center; }
         .nm-title { font-family: var(--font-tech); color: var(--accent); font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; font-weight: bold; margin-bottom: 3px; }
         .nm-desc { font-family: var(--font-main); color: #fff; font-size: 1.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
-        
         .nm-timeline { display: flex; gap: 4px; margin-right: 2vw; height: 60%; align-items: center; }
-        .nm-t-item { 
-            background: #1a1a1a; color: #666; 
-            font-family: var(--font-mono); font-size: 0.75rem; font-weight: bold; 
-            padding: 0 15px; text-align: center; border-radius: 2px; 
-            display: flex; flex-direction: column; justify-content: center; height: 100%;
-            border: 1px solid #333; position: relative; overflow: hidden;
-        }
-        .nm-t-item.active { 
-            background: linear-gradient(180deg, rgba(255,204,0,0.1), rgba(255,204,0,0.05)); 
-            color: var(--accent); 
-            border-color: var(--accent);
-            box-shadow: 0 0 15px rgba(255,204,0,0.15);
-        }
-        .nm-t-item.active::after {
-            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: var(--accent);
-        }
+        .nm-t-item { background: #1a1a1a; color: #666; font-family: var(--font-mono); font-size: 0.75rem; font-weight: bold; padding: 0 15px; text-align: center; border-radius: 2px; display: flex; flex-direction: column; justify-content: center; height: 100%; border: 1px solid #333; position: relative; overflow: hidden; }
+        .nm-t-item.active { background: linear-gradient(180deg, rgba(255,204,0,0.1), rgba(255,204,0,0.05)); color: var(--accent); border-color: var(--accent); box-shadow: 0 0 15px rgba(255,204,0,0.15); }
+        .nm-t-item.active::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: var(--accent); }
 
-        /* MOST ÉRKEZETT (BREAKING) OVERLAY BAR */
-        .breaking-bar { 
-            position: absolute; bottom: 0; left: 0; width: 100%; height: var(--footer-h); 
-            background: #cc0000; border-top: 4px solid #ff4444; 
-            display: flex; align-items: center; 
-            transform: translateY(100%); opacity: 0; 
-            transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.3s; 
-            z-index: 100; padding: 0 2vw; box-shadow: 0 -10px 40px rgba(0,0,0,0.9); 
-            cursor: pointer; pointer-events: auto; 
-        }
-        .breaking-bar.active { transform: translateY(0); opacity: 1; }
-        .breaking-tag { background: #fff; color: #cc0000; font-family: var(--font-main); font-weight: 900; font-size: 1.4rem; padding: 5px 20px; margin-right: 25px; letter-spacing: 1px; flex-shrink: 0; }
-        .breaking-window { flex-grow: 1; height: 100%; position: relative; overflow: hidden; display: flex; align-items: center; }
-        .breaking-content { font-family: var(--font-data); font-weight: 700; font-size: 1.6rem; color: #fff; text-transform: uppercase; white-space: nowrap; display: flex; align-items: center; width: auto; position: absolute; left: 0; transition: transform 0s linear; }
-        .bk-meta { font-family: var(--font-mono); font-size: 0.8em; margin-right: 15px; opacity: 0.9; color: #ffd700; }
-        .bk-sep { margin: 0 10px; opacity: 0.5; }
+        /* BREAKING BAR (Hidden, but kept in DOM to prevent errors if referenced) */
+        .breaking-bar { display: none; } 
 
-        /* SPECIAL METEO (GRID) */
-        #special-meteo { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle at center, #001a4d 0%, #000510 100%); z-index: 200; display: none; flex-direction: column; align-items: center; padding-top: 3vh; opacity: 0; transition: opacity 0.8s; }
+        /* SPECIAL METEO */
+        #special-meteo { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle at center, #001a4d 0%, #000510 100%); z-index: 200; display: none; flex-direction: column; align-items: center; padding-top: 15vh; opacity: 0; transition: opacity 0.8s; }
         #special-meteo.active { display: flex; opacity: 1; }
         .sm-header { width: 92%; border-bottom: 6px solid var(--accent); display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 15px; margin-bottom: 2vh; }
         .sm-title { font-family: var(--font-main); font-size: clamp(2rem, 4vh, 3.5rem); font-weight: 900; }
-        
-        /* Grid Layout Fix: STRICT SIZE */
-        .sm-grid { 
-            width: 92%; height: 80vh;
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 15px; 
-            overflow: hidden; /* Prevent spillover */
-            align-content: start;
-        }
-        
-        .sm-card-item { 
-            background: rgba(255,255,255,0.05); 
-            border: 1px solid rgba(255,255,255,0.1); 
-            border-left: 6px solid var(--accent); 
-            padding: 12px 20px; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center;
-            opacity: 0;
-            animation: slideInCard 0.6s forwards;
-        }
-
-        /* NEW CARD STYLE FOR EXTREMES */
-        .sm-card-extreme {
-            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(0,0,0,0.5));
-            border: 1px solid rgba(255,255,255,0.3);
-            border-left-width: 8px;
-            padding: 15px 25px;
-            opacity: 0; animation: slideInCard 0.6s forwards;
-        }
-        .ext-hot { border-left-color: #ff3333; }
-        .ext-cold { border-left-color: #00d4ff; }
-        .ext-wind { border-left-color: #cc00cc; }
+        .sm-grid { width: 92%; height: 65vh; display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; overflow: hidden; align-content: start; }
+        .sm-card-item { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-left: 6px solid var(--accent); padding: 12px 20px; display: flex; flex-direction: column; justify-content: center; opacity: 0; animation: slideInCard 0.6s forwards; }
+        .sm-card-extreme { background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(0,0,0,0.5)); border: 1px solid rgba(255,255,255,0.3); border-left-width: 8px; padding: 15px 25px; opacity: 0; animation: slideInCard 0.6s forwards; }
+        .ext-hot { border-left-color: #ff3333; } .ext-cold { border-left-color: #00d4ff; } .ext-wind { border-left-color: #cc00cc; }
+        .ext-rain { border-left-color: #3333ff; } .ext-wet { border-left-color: #00ff00; } .ext-dry { border-left-color: #ffaa00; }
         
         .sm-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; margin-bottom: 5px; }
         .sm-name { font-family: var(--font-main); font-size: 1.3rem; color: #fff; font-weight: 700; display: flex; align-items: center; gap: 10px; }
         .sm-cond { font-family: var(--font-tech); font-size: 0.9rem; color: #aaa; text-transform: uppercase; }
-        
         .sm-body { display: flex; justify-content: space-between; align-items: center; }
         .sm-temp-box { font-family: var(--font-tech); font-size: 2.2rem; font-weight: 700; color: var(--accent); line-height: 1; }
         .sm-details { font-family: var(--font-mono); font-size: 0.75rem; color: #ccc; text-align: right; line-height: 1.4; }
-        
         @keyframes slideInCard { 0% { transform: translateY(20px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+
+        /* EMBEDDED LOGO STYLES */
+        .embedded-logo { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+        .embedded-logo svg { width: 35px; height: 35px; fill: var(--primary); filter: drop-shadow(0 0 5px rgba(0,0,0,0.5)); }
+        .embedded-logo-text { font-family: var(--font-main); font-size: 1.2rem; font-weight: 800; color: #fff; letter-spacing: 1px; }
 
         /* SUMMARY OVERLAY */
         #summary-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 190; display: grid; grid-template-columns: 35% 65%; transform: translateY(-100%); transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
         #summary-overlay.active { transform: translateY(0); }
-        .summary-brand-side { background: #001a4d; border-right: 6px solid var(--accent); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-        .summary-brand-side svg { width: 150px; height: 150px; fill: #fff; margin-bottom: 20px; filter: drop-shadow(0 0 30px rgba(0,100,255,0.5)); }
+        .summary-brand-side { background: #001a4d; border-right: 6px solid var(--accent); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; padding-top: 10vh; }
         .summary-title { font-family: var(--font-main); font-size: clamp(1.8rem, 3vh, 2.5rem); color: #fff; text-transform: uppercase; font-weight: 800; text-align: center; line-height: 1.1; margin-bottom: 10px; }
         .summary-subtitle { font-family: var(--font-tech); font-size: 1.5rem; color: var(--accent); letter-spacing: 2px; text-align: center; }
+        .summary-embedded-branding { display: flex; flex-direction: column; align-items: center; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px; width: 60%; }
         
-        /* SUMMARY COUNTDOWN CAPSULE */
-        .sum-timer-capsule {
-            position: absolute; bottom: 40px; 
-            background: #cc0000; color: #fff;
-            padding: 5px 25px; border-radius: 50px;
-            font-family: var(--font-mono); font-weight: 700;
-            font-size: 1.8rem; display: flex; align-items: center; gap: 10px;
-            box-shadow: 0 0 25px rgba(204,0,0,0.6);
-            border: 2px solid rgba(255,255,255,0.2);
-        }
+        .sum-timer-capsule { position: absolute; bottom: 40px; background: #cc0000; color: #fff; padding: 5px 25px; border-radius: 50px; font-family: var(--font-mono); font-weight: 700; font-size: 1.8rem; display: flex; align-items: center; gap: 10px; box-shadow: 0 0 25px rgba(204,0,0,0.6); border: 2px solid rgba(255,255,255,0.2); }
         .sum-timer-capsule::before { content: '⏱'; font-size: 0.8em; }
-
         .summary-content-side { background: #050505; padding: 40px; display: flex; flex-direction: column; overflow: hidden; position: relative; }
         .summary-header { border-bottom: 2px solid #333; padding-bottom: 15px; margin-bottom: 20px; height: 10px; }
         .summary-page { display: flex; flex-direction: column; gap: 20px; position: absolute; width: calc(100% - 80px); transition: opacity 1.2s ease-in-out, transform 1.2s ease-in-out; opacity: 0; transform: translateX(50px); pointer-events: none; }
         .summary-page.active { opacity: 1; transform: translateX(0); pointer-events: auto; }
+        
         .sum-item { display: flex; gap: 20px; background: rgba(255,255,255,0.05); padding: 15px; border-left: 4px solid #333; transition: 0.3s; cursor: pointer; }
         .sum-item:hover { background: rgba(255,255,255,0.1); border-left-color: var(--accent); }
         .sum-img { width: 120px; height: 80px; object-fit: cover; background: #222; }
+        
+        /* PLACEHOLDER LOGO STYLE */
+        .sum-img.placeholder { display: flex; align-items: center; justify-content: center; background: #001a4d; border: 1px solid #333; }
+        .sum-img.placeholder svg { width: 50%; fill: var(--accent); }
+
         .sum-text { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
         .sum-time { font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent); margin-bottom: 4px; }
         .sum-h { font-family: var(--font-data); font-weight: 700; font-size: 1.3rem; color: #fff; line-height: 1.2; }
@@ -524,6 +359,57 @@
         .bc-time { font-family: var(--font-tech); font-size: 12rem; font-weight: 700; color: #fff; line-height: 1; text-shadow: 0 0 50px rgba(255,255,255,0.2); }
         .bc-sec { color: var(--accent); font-size: 0.5em; vertical-align: super; }
         @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } 100% { transform: scale(1); opacity: 1; } }
+
+        /* BC INFO PANEL (PRO TV STYLE) */
+        .bc-info-panel {
+            width: 80%;
+            background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0, 15, 35, 0.9) 20%, rgba(0, 15, 35, 0.9) 80%, rgba(0,0,0,0) 100%);
+            border-top: 2px solid var(--primary);
+            border-bottom: 2px solid var(--primary);
+            padding: 20px 0;
+            display: flex; flex-direction: column; align-items: center;
+            margin-top: 30px;
+        }
+        .bc-program-title { 
+            font-family: var(--font-main); color: var(--accent); font-size: 1.4rem; 
+            margin-bottom: 15px; text-transform: uppercase; letter-spacing: 3px; font-weight: 700;
+        }
+        
+        .bc-program-grid {
+            display: grid;
+            grid-template-columns: repeat(5, auto); /* 5 items in a row */
+            gap: 40px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .bc-prog-item {
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
+            position: relative;
+        }
+        
+        .bc-prog-time {
+            font-family: var(--font-tech); font-size: 1.5rem; color: var(--accent); font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.4);
+        }
+        
+        .bc-prog-name {
+            font-family: var(--font-data); font-size: 1rem; color: #fff; text-transform: uppercase;
+            letter-spacing: 1px; font-weight: 600; white-space: nowrap;
+        }
+        
+        .bc-prog-item:not(:last-child)::after {
+            content: ''; position: absolute; right: -20px; top: 10%; height: 80%;
+            width: 1px; background: rgba(255,255,255,0.2);
+        }
+
+        .bc-night-info {
+            position: absolute; bottom: 20px; width: 100%; text-align: center;
+            font-family: var(--font-mono); font-size: 0.8rem; color: #888;
+            text-transform: uppercase; letter-spacing: 1px;
+            background: rgba(0,0,0,0.5); padding: 5px 0;
+        }
+        .bc-night-info span { color: var(--primary); margin: 0 10px; font-weight: bold; }
 
         /* DEV & LOADER */
         #auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
@@ -590,18 +476,36 @@
                 </div>
                 
                 <div class="dev-h" style="margin-top:20px;">MANUÁLIS VEZÉRLÉS</div>
-                <button class="btn" onclick="triggerCurrentSummaryTest()">[►] BLOKK TESZTELÉSE</button>
+                <!-- SEPARATED TEST BUTTONS -->
+                <button class="btn" onclick="triggerSummaryMode(30)">[►] FÉLÓRÁS HÍRADÓ TESZT (30p)</button>
+                <button class="btn" onclick="triggerSummaryMode(60)">[►] ÓRÁS HÍRADÓ TESZT (60p)</button>
                 <button class="btn" onclick="triggerBigClock()">[⏰] NAGY ÓRA TESZT</button>
+                <button class="btn" onclick="triggerBigClock()">[📺] MŰSORAJÁNLÓ TESZT (NAGY ÓRA)</button>
+                
                 <button class="btn" onclick="closeAllOverlays()">[X] MINDEN ABLAK BEZÁRÁSA</button>
                 <button class="btn" onclick="forceRefreshAll()">[⚡] AZONNALI FRISSÍTÉS</button>
                 <button class="btn" onclick="testBreaking()">[🔥] BREAKING NEWS TESZT</button>
+                <!-- NEW ALERT TESTS -->
+                <button class="btn" onclick="showWeatherAlert('wind', 85, 'VIHAROS SZÉL')">[⚠️] SZÉL RIASZTÁS</button>
+                <button class="btn" onclick="showWeatherAlert('snow', null, 'HAVAZÁS / HÓZÁPOR')">[❄️] HÓ RIASZTÁS</button>
+                <button class="btn" onclick="showWeatherAlert('storm', null, 'HEVES ZIVATAR')">[⚡] ZIVATAR RIASZTÁS</button>
+                <button class="btn" onclick="showWeatherAlert('rain', null, 'INTENZÍV ESŐZÉS')">[🌧️] ESŐ RIASZTÁS</button>
+                <button class="btn" onclick="showWeatherAlert('fog', null, 'SŰRŰ KÖD')">[🌫️] KÖD RIASZTÁS</button>
+                <button class="btn" onclick="showWeatherAlert('uv', 8.5, 'EXTRÉM UV SUGÁRZÁS')">[☀️] UV RIASZTÁS</button>
+                <button class="btn" onclick="showWeatherAlert('heat', 36, 'HŐSÉGRIADÓ')">[🔥] HŐSÉG RIASZTÁS</button>
+                <button class="btn" onclick="showWeatherAlert('cold', -12, 'EXTRÉM HIDEG')">[🥶] HIDEG RIASZTÁS</button>
+
                 <button class="btn" onclick="triggerSpecialMeteoSequence()">[☁] SPEC. METEO SORREND</button>
                 <button class="btn" onclick="forceHoliday('XMAS')">[🎄] KARÁCSONY KÉNYSZERÍTÉS</button>
                 <button class="btn" onclick="forceHoliday('NY')">[🎉] ÚJÉV KÉNYSZERÍTÉS</button>
-                <!-- NIGHT MODE TEST -->
                 <button class="btn" onclick="toggleNightTest()">[🌙] ÉJSZAKAI MÓD TESZT</button>
             </div>
             <div class="dev-section" style="display:flex; flex-direction:column;">
+                <div class="dev-h">ÚJÉVI EFFEKT TESZT</div>
+                <button class="btn" onclick="toggleStreamers()">[🎀] SZERPENTIN BE/KI</button>
+                <button class="btn" onclick="createLogoFirework()">[🎆] LOGÓ TŰZIJÁTÉK (1DB)</button>
+                <br>
+
                 <div class="dev-h">ADÁSREND FIGYELŐ</div>
                 <div style="font-size:0.8rem; margin-bottom:10px;">
                     KÖV. 30p: <span id="dev-sch-30" style="color:#aaa;">--:--</span><br>
@@ -635,36 +539,67 @@
         <div class="load-bar-wrap"><div class="load-fill" id="load-fill"></div></div>
     </div>
 
-    <!-- SUMMARY OVERLAY -->
+    <!-- SUMMARY OVERLAY (WITH EMBEDDED LOGO) -->
     <div id="summary-overlay">
         <div class="summary-brand-side">
-            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
             <div class="summary-title" id="sum-main-title">HÍRADÓ</div>
             <div class="summary-subtitle" id="sum-sub-title">AZ ELMÚLT 30 PERCBEN</div>
-            <!-- REPLACED: CAPSULE TIMER -->
+            <div class="summary-embedded-branding">
+                <svg viewBox="0 0 24 24" style="width:40px; height:40px; fill:var(--primary); margin-bottom:5px;">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                </svg>
+                <div class="holiday-logo-text" style="font-size:1.1rem; color:#fff;">TKP NEWS</div>
+            </div>
             <div class="sum-timer-capsule" id="sum-clock">03:00</div>
         </div>
         <div class="summary-content-side" id="sum-content"></div>
     </div>
 
-    <!-- BIG CLOCK OVERLAY -->
+    <!-- BIG CLOCK OVERLAY (WITH PRO TV GRID) -->
     <div id="big-clock-overlay">
         <div class="bc-logo">
             <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
         </div>
         <div class="bc-time" id="bc-time">00:00<span class="bc-sec">00</span></div>
+        
+        <!-- NEW PROGRAM GUIDE PANEL -->
+        <div class="bc-info-panel" id="bc-info-panel">
+            <div class="bc-program-title">A KÖVETKEZŐ ÓRÁBAN</div>
+            <div class="bc-program-grid" id="bc-prog-list">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+
+        <div class="bc-night-info">
+            ÉJSZAKAI ADÁSREND: Az előző nap ismétlése: <span>00:00 - 02:00 REGGELI ISM.</span> | <span>02:00 - 04:00 DÉLUTÁNI ISM.</span> | <span>04:00 - 06:00 ESTI ISM.</span>
+        </div>
     </div>
 
-    <!-- SPECIAL METEO (MULTI CARD) -->
+    <!-- SPECIAL METEO (MULTI CARD) (WITH DEDICATED HEADER LOGO) -->
     <div id="special-meteo">
         <div class="sm-header">
             <div class="sm-title" id="sm-main-title">METEO ÁTTEKINTÉS</div>
-            <div style="background:var(--alert); padding:5px 20px; font-weight:bold; font-family:var(--font-tech);">ÉLŐ ADATOK</div>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div class="embedded-logo">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    <span class="embedded-logo-text">TKP NEWS</span>
+                </div>
+            </div>
         </div>
         <div class="sm-grid" id="sm-grid"></div>
         <div style="position:absolute; bottom:4vh; width:90%; border-top:1px solid rgba(255,255,255,0.1); padding-top:15px; color:rgba(255,255,255,0.3); font-family:var(--font-tech); display:flex; justify-content:space-between;">
-            <div>FORRÁS: OPEN-METEO BROADCAST ENGINE</div>
+            <div id="sm-source-footer">FORRÁS: OPEN-METEO BROADCAST ENGINE</div>
             <div>FRISSÍTVE: <span id="sm-update-time">--:--:--</span></div>
+        </div>
+    </div>
+
+    <!-- NEW: WEATHER ALERT CARD (HIDDEN BY DEFAULT) -->
+    <div class="weather-alert-card" id="wx-alert">
+        <div class="wx-alert-icon" id="wx-a-icon">⚠️</div>
+        <div class="wx-alert-content">
+            <div class="wx-a-title" id="wx-a-title">RIASZTÁS</div>
+            <div class="wx-a-desc" id="wx-a-desc">...</div>
+            <div class="wx-a-loc">NYÍREGYHÁZA TÉRSÉGE</div>
         </div>
     </div>
 
@@ -679,7 +614,6 @@
         <!-- TOP COMMAND BAR -->
         <div class="top-bar ui-element" id="ui-top">
             <div class="tb-inner">
-                <!-- WRAPPED WIDGET -->
                 <div class="ny-group">
                     <div class="ny-widget" id="ny-widget">
                         <div class="ny-text-col">
@@ -704,11 +638,11 @@
                     RÉGI OLDAL (KLIKK.HU) &#10138;
                 </a>
                 
-                <div style="font-family:var(--font-tech); font-weight:bold; color:var(--accent); font-size:0.8rem; letter-spacing:1px;">V13.6</div>
+                <div style="font-family:var(--font-tech); font-weight:bold; color:var(--accent); font-size:0.8rem; letter-spacing:1px;">V13.20</div>
             </div>
         </div>
 
-        <!-- NEW: NEXT EVENT CAPSULE (BOTTOM RIGHT) -->
+        <!-- NEW: NEXT EVENT CAPSULE -->
         <div id="next-event-capsule" class="next-capsule">
             <div class="nc-content">
                 KÖVETKEZIK:<span class="nc-time-hlt" id="nc-time">--:--</span><span id="nc-title">--</span>
@@ -720,23 +654,24 @@
             <div class="logo-inner">
                 <!-- FRONT: NORMAL MODE -->
                 <div class="logo-front" id="logo-front">
-                    <!-- NEW: FX CONTAINER FOR LIVE FIREWORKS -->
+                    <!-- NEW: FX CONTAINER FOR LIVE FIREWORKS BEHIND LOGO -->
                     <div class="logo-fx-container" id="logo-fx-container"></div>
+                    
+                    <!-- STREAMERS CONTAINER (INJECTED IN NY MODE) -->
+                    <div class="streamers-container" id="streamers-container">
+                        <!-- Streamers injected by JS -->
+                    </div>
 
                     <div class="logo-wrapper-front">
                         <svg class="logo-main-svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
                         
-                        <!-- XMAS DECO: Realistic Tree -->
+                        <!-- XMAS DECO -->
                         <svg class="holiday-deco deco-tree" viewBox="0 0 50 60">
-                            <!-- Trunk -->
                             <rect x="22" y="50" width="6" height="10" class="tree-trunk"/>
-                            <!-- Layers -->
                             <path d="M5,50 L25,20 L45,50 Z" class="tree-layer"/>
                             <path d="M10,35 L25,10 L40,35 Z" class="tree-layer-2"/>
                             <path d="M15,20 L25,0 L35,20 Z" class="tree-layer-3"/>
-                            <!-- Star -->
                             <polygon points="25,0 26,3 29,3 27,5 28,8 25,6 22,8 23,5 21,3 24,3" class="tree-star"/>
-                            <!-- Lights (Ornaments) -->
                             <circle cx="15" cy="45" r="2" class="tree-light l1"/>
                             <circle cx="35" cy="45" r="2" class="tree-light l2"/>
                             <circle cx="25" cy="40" r="2" class="tree-light l3"/>
@@ -744,7 +679,6 @@
                             <circle cx="30" cy="30" r="2" class="tree-light l1"/>
                             <circle cx="25" cy="15" r="2" class="tree-light l2"/>
                         </svg>
-
                         <!-- VAL DECO -->
                         <svg class="holiday-deco deco-val-static" viewBox="0 0 24 24">
                             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
@@ -767,19 +701,34 @@
 
         <!-- SIDEBAR -->
         <div class="sidebar ui-element" id="ui-right">
-            <div class="card">
-                <div class="card-title">DEVIZA ÁRFOLYAMOK</div>
-                <div id="finance-rows"></div>
-                <div class="watermark-footer">
-                    <div class="source-tag" id="fx-source">SOURCE: --</div>
-                    <div class="stamp">FRISSÍTVE: <span id="fin-stamp">00:00:00</span></div>
+            <div class="sidebar-flipper">
+                <!-- Front: Normal Content -->
+                <div class="sidebar-front">
+                    <div class="card">
+                        <div class="card-title">DEVIZA ÁRFOLYAMOK</div>
+                        <div id="finance-rows"></div>
+                        <div class="watermark-footer">
+                            <div class="source-tag" id="fx-source">SOURCE: --</div>
+                            <div class="stamp">FRISSÍTVE: <span id="fin-stamp">00:00:00</span></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title" id="city-wx-name">BUDAPEST</div>
+                        <div id="wx-rows"></div>
+                        <div class="watermark-footer">
+                            <div class="stamp">FRISSÍTVE: <span id="wx-stamp">00:00:00</span></div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="card">
-                <div class="card-title" id="city-wx-name">BUDAPEST</div>
-                <div id="wx-rows"></div>
-                <div class="watermark-footer">
-                    <div class="stamp">FRISSÍTVE: <span id="wx-stamp">00:00:00</span></div>
+                
+                <!-- Back: Breaking News -->
+                <div class="sidebar-back">
+                    <div class="breaking-card" id="bk-card-clickable">
+                        <div class="bk-card-header">MOST ÉRKEZETT</div>
+                        <div class="bk-card-headline" id="bk-card-headline">...</div>
+                        <div class="bk-card-body" id="bk-card-body">...</div>
+                        <div class="bk-card-meta" id="bk-card-meta">--:-- • FORRÁS</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -796,23 +745,11 @@
             </div>
         </div>
 
-        <!-- BREAKING BAR -->
-        <div class="breaking-bar" id="breaking">
-            <div class="breaking-tag">MOST ÉRKEZETT</div>
-            <div class="breaking-window">
-                <div class="breaking-content" id="breaking-content">
-                    <!-- Dynamic content -->
-                </div>
-            </div>
-        </div>
-
-        <!-- TICKER BAR -->
+        <!-- TICKER BAR (Removed Breaking from Bottom) -->
         <div class="ticker-bar ui-element" id="ui-bottom">
             <div class="ticker-label" id="ticker-label-box">FRISS</div>
             <!-- NIGHT MESSAGE CONTAINER -->
-            <div class="night-msg" id="night-msg">
-                <!-- Structure injected via JS -->
-            </div>
+            <div class="night-msg" id="night-msg"></div>
             
             <div class="ticker-nav" id="ticker-nav">
                 <button class="nav-btn" onclick="manualTicker(-1)">◀</button>
@@ -826,7 +763,7 @@
 
     <script>
         /**
-         * TKP NEWS V13.6 - EXTREMES & UI UPDATE
+         * TKP NEWS V13.20 - STABLE & FIXED
          */
 
         const RSS_FEEDS = [
@@ -848,7 +785,7 @@
             { name: "RTL", url: "https://rtl.hu/rss" },
             { name: "ECONOMX", url: "https://economx.hu/rss" },
             { name: "NAPI", url: "https://www.napi.hu/rss" },
-            { name: "MHIRLAP", url: "https://www.magyarhirlap.hu/rss" },
+            { name: "MAGYAR HÍRLAP", url: "https://www.magyarhirlap.hu/rss" },
             { name: "PESTISRACOK", url: "https://pestisracok.hu/feed/" },
             { name: "NEMZETISPORT", url: "https://www.nemzetisport.hu/feed" },
             { name: "M4SPORT", url: "https://m4sport.hu/feed" },
@@ -863,7 +800,13 @@
             { name: "PLAYER", url: "https://player.hu/feed" },
             { name: "QUBIT", url: "https://qubit.hu/feed" },
             { name: "PCWORLD", url: "https://www.pcwplus.hu/site/rss/rss.xml" },
-            { name: "GAMESTAR", url: "https://www.gsplus.hu/site/rss/rss.xml" }
+            { name: "GAMESTAR", url: "https://www.gsplus.hu/site/rss/rss.xml" },
+            { name: "SZERETLEKMO", url: "https://www.szeretlekmagyarorszag.hu/rss/" },
+            { name: "VG", url: "https://www.vg.hu/feed" },
+            { name: "MOBILARENA", url: "https://mobilarena.hu/hirfolyam/anyagok/rss.xml" },
+            { name: "MAGYAR HANG", url: "https://hang.hu/rss" },
+            { name: "DIVANY", url: "https://divany.hu/24ora/rss" },
+            { name: "KISALFOLD", url: "https://www.kisalfold.hu/feed" }
         ];
 
         const PROXIES = [
@@ -955,7 +898,6 @@
             { name: "Melbourne", lat: -37.81, lon: 144.96, code: "au" }, { name: "Auckland", lat: -36.84, lon: 174.76, code: "nz" },
             { name: "Nairobi", lat: -1.29, lon: 36.82, code: "ke" }, { name: "Dakar", lat: 14.71, lon: -17.46, code: "sn" },
             { name: "Tunisz", lat: 36.80, lon: 10.18, code: "tn" },
-            /* NEW 20 INTERNATIONAL */
             { name: "Berlin", lat: 52.52, lon: 13.40, code: "de" }, { name: "Madrid", lat: 40.41, lon: -3.70, code: "es" },
             { name: "Róma", lat: 41.90, lon: 12.49, code: "it" }, { name: "Bécs", lat: 48.20, lon: 16.37, code: "at" },
             { name: "Varsó", lat: 52.22, lon: 21.01, code: "pl" }, { name: "Prága", lat: 50.07, lon: 14.43, code: "cz" },
@@ -968,7 +910,6 @@
             { name: "Rio de Janeiro", lat: -22.90, lon: -43.17, code: "br" }, { name: "Fokváros", lat: -33.92, lon: 18.42, code: "za" }
         ];
 
-        /* NEW THEMATIC LISTS */
         const SZSZB_STATIONS = [
             { name: "Nyíregyháza", lat: 47.95, lon: 21.71, code: "hu" }, { name: "Mátészalka", lat: 47.95, lon: 22.32, code: "hu" },
             { name: "Kisvárda", lat: 48.21, lon: 22.08, code: "hu" }, { name: "Vásárosnamény", lat: 48.12, lon: 22.31, code: "hu" },
@@ -987,7 +928,6 @@
             { name: "Galápagos", lat: -0.95, lon: -90.96, code: "ec" }, { name: "Fidzsi", lat: -17.71, lon: 178.06, code: "fj" }
         ];
 
-        // SHUFFLE COMBINED LIST FOR VARIETY
         const SIDEBAR_STATIONS = shuffle([...HU_MAJOR_STATIONS, ...WORLD_MAJOR_STATIONS]);
 
         let state = {
@@ -995,34 +935,22 @@
             tickerIdx: 0, mainIdx: 0, wxIdx: 0,
             tickerTimer: null, mainTimer: null,
             isBreaking: false, isSpecial: false, isSummary: false,
-            seenBreaking: new Set(),
-            breakingQueue: [], // NEW: Queue for fresh items
-            breakingHistory: new Set(), // NEW: Avoid re-queuing
-            isBreakingActive: false, // NEW: Track if overlay is active
+            seenBreaking: new Set(), breakingQueue: [], breakingHistory: new Set(), isBreakingActive: false,
             feedStatus: {}, startTime: Date.now(),
             currentMainLink: null, currentBreakingLink: null, currentBreakingItem: null,
             summaryPageIdx: 0, summaryInterval: null, summaryTimerInterval: null,
-            lastWxUpdate: 0, currentWxSource: '--',
-            lastTickerUpdate: Date.now(),
-            specialMeteoInterval: null,
-            meteoPhaseTimer: null,
-            nextMeteoTime: 0, 
-            schedule: [], // NEW: Stores the definitive hourly schedule
-            holidayMode: null, // 'XMAS', 'NY', 'VAL' or null
-            holidaySequenceTimer: null,
-            particleInterval: null,
-            logoFxInterval: null, // NEW FOR CONTINUOUS LOGO FX
-            initialLoadComplete: false, // NEW FLAG TO PREVENT BREAKING SPAM ON START
-            isNightMode: false, // NEW: Night Mode
-            forcedNightMode: false, // Dev override
-            mainTimer: null // NEW: For main cycle interval management
+            lastWxUpdate: 0, currentWxSource: '--', lastTickerUpdate: Date.now(),
+            specialMeteoInterval: null, meteoPhaseTimer: null, nextMeteoTime: 0, 
+            schedule: [], holidayMode: null, nextHolidayFlip: 0, holidaySequenceTimer: null,
+            particleInterval: null, logoFxInterval: null, initialLoadComplete: false,
+            isNightMode: false, forcedNightMode: false, mainTimer: null,
+            weatherAlertCooldown: {}
         };
 
         const DOM = {
             loader: document.getElementById('loader'), term: document.getElementById('term'), fill: document.getElementById('load-fill'),
             stage: document.getElementById('stage'), tickerWindow: document.getElementById('ticker-window'), tickerBar: document.getElementById('ui-bottom'),
-            mainTitle: document.getElementById('m-title'), mainDesc: document.getElementById('m-desc'),
-            mainCat: document.getElementById('m-cat'), mainPrg: document.getElementById('m-prg'),
+            mainTitle: document.getElementById('m-title'), mainDesc: document.getElementById('m-desc'), mainCat: document.getElementById('m-cat'), mainPrg: document.getElementById('m-prg'),
             cTime: document.getElementById('clock-time'), cDate: document.getElementById('clock-date'),
             nyWidget: document.getElementById('ny-widget'), nyTemp: document.getElementById('ny-temp'), nyWind: document.getElementById('ny-wind'), nyTime: document.getElementById('ny-time-badge'), nyFeel: document.getElementById('ny-feel'),
             special: document.getElementById('special-meteo'), smGrid: document.getElementById('sm-grid'), smTitle: document.getElementById('sm-main-title'),
@@ -1031,322 +959,134 @@
             summary: document.getElementById('summary-overlay'), sumContent: document.getElementById('sum-content'), sumClock: document.getElementById('sum-clock'), sumMainTitle: document.getElementById('sum-main-title'), sumSubTitle: document.getElementById('sum-sub-title'),
             bigClock: document.getElementById('big-clock-overlay'), bcTime: document.getElementById('bc-time'),
             devWxNext: document.getElementById('dev-wx-next'), devWxSrc: document.getElementById('dev-wx-src'), devSch30: document.getElementById('dev-sch-30'), devSch60: document.getElementById('dev-sch-60'), devHolTimer: document.getElementById('dev-hol-timer'),
-            devNextMeteo: document.getElementById('dev-next-meteo'), devBkQueue: document.getElementById('dev-bk-queue'), devHolStatus: document.getElementById('dev-hol-status'),
-            devScheduleList: document.getElementById('dev-schedule-list'), // NEW
+            devNextMeteo: document.getElementById('dev-next-meteo'), devBkQueue: document.getElementById('dev-bk-queue'), devHolStatus: document.getElementById('dev-hol-status'), devScheduleList: document.getElementById('dev-schedule-list'),
             logoBox: document.getElementById('logo-box'), logoBack: document.getElementById('logo-back-face'), logoFront: document.getElementById('logo-front'),
-            logoFxContainer: document.getElementById('logo-fx-container'), // NEW
-            effectContainer: document.getElementById('effect-container'),
-            nextCapsule: document.getElementById('next-event-capsule'), // NEW
-            nightMsg: document.getElementById('night-msg'),
-            tickerNav: document.getElementById('ticker-nav'),
-            devNightTimer: document.getElementById('dev-night-timer')
+            logoFxContainer: document.getElementById('logo-fx-container'), streamersContainer: document.getElementById('streamers-container'),
+            effectContainer: document.getElementById('effect-container'), nextCapsule: document.getElementById('next-event-capsule'),
+            nightMsg: document.getElementById('night-msg'), tickerNav: document.getElementById('ticker-nav'), devNightTimer: document.getElementById('dev-night-timer'),
+            wxAlert: document.getElementById('wx-alert'), wxAlertTitle: document.getElementById('wx-a-title'), wxAlertDesc: document.getElementById('wx-a-desc'), wxAlertIcon: document.getElementById('wx-a-icon'),
+            bcInfoPanel: document.getElementById('bc-info-panel'), bcProgList: document.getElementById('bc-prog-list'),
+            sidebar: document.querySelector('.sidebar'), sidebarFlipper: document.querySelector('.sidebar-flipper'), 
+            bkCardHeadline: document.getElementById('bk-card-headline'), bkCardBody: document.getElementById('bk-card-body'), bkCardMeta: document.getElementById('bk-card-meta'),
+            bkCardClickable: document.getElementById('bk-card-clickable')
         };
 
-        // --- UTILS & HELPERS ---
+        // --- UTILS ---
         function getTime() { return new Date().toLocaleTimeString('hu-HU'); }
-        function getWind(deg) { 
-            if(deg===undefined) return "";
-            const s=['ÉSZAK','ÉSZAK-KELET','KELET','DÉL-KELET','DÉL','DÉL-NYUGAT','NYUGAT','ÉSZAK-NYUGAT']; 
-            return s[Math.round(deg/45)%8]; 
-        }
+        function getWind(deg) { if(deg===undefined) return ""; const s=['ÉSZAK','ÉSZAK-KELET','KELET','DÉL-KELET','DÉL','DÉL-NYUGAT','NYUGAT','ÉSZAK-NYUGAT']; return s[Math.round(deg/45)%8]; }
         function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
         function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
         
         function calculatePreciseRealFeel(tempC, humidity, windKmh) {
-            const nowHour = new Date().getHours();
-            const isNight = (nowHour >= 17 || nowHour <= 7); 
+            const nowHour = new Date().getHours(); const isNight = (nowHour >= 17 || nowHour <= 7); 
             const e = (humidity / 100) * 6.105 * Math.exp((17.27 * tempC) / (237.7 + tempC)); 
             const wsMs = windKmh / 3.6; 
-            if (tempC <= 10.0) {
-                let wc = 13.12 + 0.6215 * tempC - 11.37 * Math.pow(windKmh, 0.16) + 0.3965 * tempC * Math.pow(windKmh, 0.16);
-                if (windKmh < 5.0) {
-                    if (humidity > 70) return tempC - ((humidity - 70) / 100) * 2.5; 
-                    return tempC;
-                }
-                return isNight ? wc - 0.8 : wc;
-            }
-            if (tempC >= 27.0) {
-                const T = tempC; const R = humidity;
-                let hi = T + 0.5555 * ((6.11 * Math.exp(5417.7530 * ((1/273.16) - (1/(273.15 + T))))) * (R/100) - 10);
-                return hi;
-            }
-            let radCorrection = isNight ? -3.0 : -1.0; 
-            let realFeel = tempC + (0.33 * e) - (0.70 * wsMs) + radCorrection;
-            return (tempC + realFeel) / 2;
+            if (tempC <= 10.0) { let wc = 13.12 + 0.6215 * tempC - 11.37 * Math.pow(windKmh, 0.16) + 0.3965 * tempC * Math.pow(windKmh, 0.16); if (windKmh < 5.0) return tempC; return isNight ? wc - 0.8 : wc; }
+            if (tempC >= 27.0) { let hi = tempC + 0.5555 * ((6.11 * Math.exp(5417.7530 * ((1/273.16) - (1/(273.15 + tempC))))) * (humidity/100) - 10); return hi; }
+            let radCorrection = isNight ? -3.0 : -1.0; let realFeel = tempC + (0.33 * e) - (0.70 * wsMs) + radCorrection; return (tempC + realFeel) / 2;
         }
 
-        // WMO Code Decoder + Icon
-        function getWmoDesc(code) {
-            const c = parseInt(code);
-            if(c === 0) return { t: "TISZTA", i: "☀️" };
-            if(c === 1) return { t: "DERŰS", i: "🌤️" };
-            if(c === 2) return { t: "VÁLTOZÓ", i: "⛅" };
-            if(c === 3) return { t: "BORÚS", i: "☁️" };
-            if([45,48].includes(c)) return { t: "KÖD", i: "🌫️" };
-            if([51,53,55].includes(c)) return { t: "SZITÁLÁS", i: "🌦️" };
-            if([56,57].includes(c)) return { t: "ÓNOS SZIT.", i: "🌧️" };
-            if([61,63,65].includes(c)) return { t: "ESŐ", i: "🌧️" };
-            if([66,67].includes(c)) return { t: "ÓNOS ESŐ", i: "🌧️" };
-            if([71,73,75].includes(c)) return { t: "HAVAZÁS", i: "❄️" };
-            if(c === 77) return { t: "HAVAS ESŐ", i: "🌨️" };
-            if([80,81,82].includes(c)) return { t: "ZÁPOR", i: "🌦️" };
-            if([85,86].includes(c)) return { t: "HÓZÁPOR", i: "🌨️" };
-            if([95,96,99].includes(c)) return { t: "ZIVATAR", i: "⛈️" };
-            return { t: "VÁLTOZÉKONY", i: "🌡️" };
-        }
+        function getWmoDesc(code) { const c = parseInt(code); if(c === 0) return { t: "TISZTA", i: "☀️" }; if(c === 1) return { t: "DERŰS", i: "🌤️" }; if(c === 2) return { t: "VÁLTOZÓ", i: "⛅" }; if(c === 3) return { t: "BORÚS", i: "☁️" }; if([45,48].includes(c)) return { t: "KÖD", i: "🌫️" }; if([51,53,55].includes(c)) return { t: "SZITÁLÁS", i: "🌦️" }; if([56,57].includes(c)) return { t: "ÓNOS SZIT.", i: "🌧️" }; if([61,63,65].includes(c)) return { t: "ESŐ", i: "🌧️" }; if([66,67].includes(c)) return { t: "ÓNOS ESŐ", i: "🌧️" }; if([71,73,75].includes(c)) return { t: "HAVAZÁS", i: "❄️" }; if(c === 77) return { t: "HAVAS ESŐ", i: "🌨️" }; if([80,81,82].includes(c)) return { t: "ZÁPOR", i: "🌦️" }; if([85,86].includes(c)) return { t: "HÓZÁPOR", i: "🌨️" }; if([95,96,99].includes(c)) return { t: "ZIVATAR", i: "⛈️" }; return { t: "VÁLTOZÉKONY", i: "🌡️" }; }
 
-        // --- AUTH & DEV ---
         function openAuth() { DOM.auth.style.display = 'flex'; DOM.pin.value = ''; DOM.pin.focus(); }
         DOM.pin.addEventListener('input', (e) => { if (e.target.value === '0000') { toggleDev(true); DOM.auth.style.display = 'none'; }});
         DOM.auth.addEventListener('click', (e) => { if (e.target === DOM.auth) DOM.auth.style.display = 'none'; });
         function toggleDev(show) { DOM.dev.style.display = show ? 'flex' : 'none'; if (show) updateDevLog(); }
 
-        function updateDevLog() {
-            if (DOM.dev.style.display === 'none') return;
-            document.getElementById('sys-feeds').innerText = state.allNews.length;
-            const up = Math.floor((Date.now() - state.startTime)/1000);
-            document.getElementById('sys-uptime').innerText = `${Math.floor(up/3600)}h ${Math.floor((up%3600)/60)}m ${up%60}s`;
-            let html = '';
-            RSS_FEEDS.forEach(f => {
-                const s = state.feedStatus[f.name];
-                let cls = 'status-wait', msg = 'VÁRAKOZÁS...';
-                if (s) { if(s.ok) { cls = 'status-ok'; msg = `OK (${s.proxy})`; } else { cls = 'status-fail'; msg = 'HIBA'; } }
-                html += `<tr><td>${f.name}</td><td class="${cls}">${msg}</td></tr>`;
-            });
-            DOM.feedLog.innerHTML = html;
-        }
+        function updateDevLog() { if (DOM.dev.style.display === 'none') return; document.getElementById('sys-feeds').innerText = state.allNews.length; const up = Math.floor((Date.now() - state.startTime)/1000); document.getElementById('sys-uptime').innerText = `${Math.floor(up/3600)}h ${Math.floor((up%3600)/60)}m ${up%60}s`; let html = ''; RSS_FEEDS.forEach(f => { const s = state.feedStatus[f.name]; let cls = 'status-wait', msg = 'VÁRAKOZÁS...'; if (s) { if(s.ok) { cls = 'status-ok'; msg = `OK (${s.proxy})`; } else { cls = 'status-fail'; msg = 'HIBA'; } } html += `<tr><td>${f.name}</td><td class="${cls}">${msg}</td></tr>`; }); DOM.feedLog.innerHTML = html; }
 
-        function updateDevMonitor() {
-            if (DOM.dev.style.display === 'none') return;
-            const now = new Date();
-            const elapsedWx = now.getTime() - state.lastWxUpdate;
-            const nextWx = 30000 - elapsedWx;
-            DOM.devWxNext.innerText = nextWx > 0 ? (nextWx/1000).toFixed(0) + "s" : "MOST";
-            DOM.devWxSrc.innerText = state.currentWxSource;
-            const min = now.getMinutes(); const sec = now.getSeconds();
-            let diff30 = 30 - min; if (diff30 <= 0) diff30 += 60; diff30--; 
-            DOM.devSch30.innerText = `${diff30}m ${60-sec}s`;
-            let diff60 = 58 - min; if (diff60 <= 0) diff60 += 60; diff60--;
-            DOM.devSch60.innerText = `${diff60}m ${60-sec}s`;
-            
-            // Queue size
-            DOM.devBkQueue.innerText = state.breakingQueue.length;
+        function updateDevMonitor() { if (DOM.dev.style.display === 'none') return; const now = new Date(); const elapsedWx = now.getTime() - state.lastWxUpdate; const nextWx = 30000 - elapsedWx; DOM.devWxNext.innerText = nextWx > 0 ? (nextWx/1000).toFixed(0) + "s" : "MOST"; DOM.devWxSrc.innerText = state.currentWxSource; const min = now.getMinutes(); const sec = now.getSeconds(); let diff30 = 30 - min; if (diff30 <= 0) diff30 += 60; diff30--; DOM.devSch30.innerText = `${diff30}m ${60-sec}s`; let diff60 = 58 - min; if (diff60 <= 0) diff60 += 60; diff60--; DOM.devSch60.innerText = `${diff60}m ${60-sec}s`; DOM.devBkQueue.innerText = state.breakingQueue.length; DOM.devNextMeteo.innerText = "--:--"; if (state.isNightMode) { DOM.devNightTimer.innerText = "AKTÍV (06:00-IG)"; } else { let nextMidnight = new Date(now); nextMidnight.setHours(24,0,0,0); let diff = nextMidnight - now; let h = Math.floor(diff/3600000); let m = Math.floor((diff%3600000)/60000); DOM.devNightTimer.innerText = `${h}h ${m}m MÚLVA`; } if(state.holidayMode && state.nextHolidayFlip > 0) { let diffHol = state.nextHolidayFlip - now.getTime(); if(diffHol > 0) { const m = Math.floor(diffHol / 60000); const s = Math.floor((diffHol % 60000) / 1000); DOM.devHolTimer.innerText = `${m}:${s < 10 ? '0'+s : s}`; } else { DOM.devHolTimer.innerText = "AKTÍV"; } } else { DOM.devHolTimer.innerText = "INAKTÍV"; } }
 
-            // Schedule display updates
-            DOM.devNextMeteo.innerText = "--:--"; // Will be updated by checkSchedule
-            
-            // Night Mode Timer
-            if (state.isNightMode) {
-                 DOM.devNightTimer.innerText = "AKTÍV (06:00-IG)";
-            } else {
-                 // Calc time until 00:00
-                 let nextMidnight = new Date(now);
-                 nextMidnight.setHours(24,0,0,0);
-                 let diff = nextMidnight - now;
-                 let h = Math.floor(diff/3600000);
-                 let m = Math.floor((diff%3600000)/60000);
-                 DOM.devNightTimer.innerText = `${h}h ${m}m MÚLVA`;
-            }
+        function generateHourlySchedule() { const now = new Date(); state.schedule = []; let meteo1 = new Date(now); meteo1.setMinutes(12 + Math.floor(Math.random() * 8), 0, 0); if(meteo1 > now) state.schedule.push({ time: meteo1.getTime(), type: 'meteo', label: "METEO ÁTTEKINTÉS" }); let news30 = new Date(now); news30.setMinutes(30, 0, 0); if(news30 > now) state.schedule.push({ time: news30.getTime(), type: 'summary30', label: "FÉLÓRÁS HÍRADÓ" }); let meteo2 = new Date(now); meteo2.setMinutes(42 + Math.floor(Math.random() * 6), 0, 0); if(meteo2 > now) state.schedule.push({ time: meteo2.getTime(), type: 'meteo', label: "METEO ÁTTEKINTÉS" }); let news60 = new Date(now); news60.setMinutes(57, 0, 0); if(news60 > now) state.schedule.push({ time: news60.getTime(), type: 'summary60', label: "ÓRÁS HÍRADÓ" }); let clock = new Date(now); clock.setMinutes(59, 0, 0); if(clock > now) state.schedule.push({ time: clock.getTime(), type: 'clock', label: "NAGY ÓRA" }); state.schedule.sort((a,b) => a.time - b.time); updateDevScheduleList(); }
 
-            // Holiday Timer
-            if(state.holidayMode && state.nextHolidayFlip > 0) {
-                let diffHol = state.nextHolidayFlip - now.getTime();
-                if(diffHol > 0) {
-                    const m = Math.floor(diffHol / 60000);
-                    const s = Math.floor((diffHol % 60000) / 1000);
-                    DOM.devHolTimer.innerText = `${m}:${s < 10 ? '0'+s : s}`;
-                } else {
-                    DOM.devHolTimer.innerText = "AKTÍV";
-                }
-            } else {
-                DOM.devHolTimer.innerText = "INAKTÍV";
-            }
-        }
+        function updateDevScheduleList() { let html = `<div style="margin-bottom:5px; color:var(--accent); font-weight:bold;">TERVEZETT ADÁS (SZINKRONIZÁLVA)</div>`; state.schedule.forEach(item => { const d = new Date(item.time); const tStr = `${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`; let color = "#bbb"; if(item.type.includes('summary')) color = "#fff"; if(item.type === 'meteo') color = "#00d4ff"; if(item.type === 'clock') color = "#ffd700"; html += `<div style="border-bottom:1px solid #222; display:flex; justify-content:space-between; padding:2px 0;"><span>${tStr}</span><span style="color:${color}; text-align:right;">${item.label}</span></div>`; }); DOM.devScheduleList.innerHTML = html; }
 
-        /* --- NEW: DETERMINISTIC SCHEDULE GENERATOR --- */
-        function generateHourlySchedule() {
-            const now = new Date();
-            state.schedule = []; // Reset schedule
+        function checkScheduleExecution() { if (state.isNightMode) return; const now = Date.now(); state.schedule.forEach((item) => { if (now >= item.time && now < item.time + 1500 && !item.triggered) { item.triggered = true; if (item.type === 'meteo') { if(!state.isBreakingActive && !state.isSummary && !state.isSpecial) triggerSpecialMeteoSequence(); } else if (item.type === 'summary30') triggerSummaryMode(30); else if (item.type === 'summary60') triggerSummaryMode(60); else if (item.type === 'clock') { triggerBigClock(); crawlNews(false); } } }); state.schedule = state.schedule.filter(item => item.time > now - 2000); }
 
-            // 1. Meteo Block 1 (Between 12-20 minutes past hour)
-            let meteo1 = new Date(now);
-            meteo1.setMinutes(12 + Math.floor(Math.random() * 8), 0, 0); 
-            if(meteo1 < now) meteo1.setHours(meteo1.getHours() + 1); // If passed, skip/set next hour (handled by next generate call mostly)
-            // Actually, if we generate at XX:00, this is fine. If generated mid-hour, we only add future events.
-            if(meteo1 > now) state.schedule.push({ time: meteo1.getTime(), type: 'meteo', label: "METEO ÁTTEKINTÉS" });
+        function updateNextEventCapsule() { if (state.isNightMode) { DOM.nextCapsule.classList.remove('visible'); return; } const now = Date.now(); const next = state.schedule.find(item => item.time > now); if (!next) { DOM.nextCapsule.classList.remove('visible'); return; } const diffMinutes = (next.time - now) / 60000; if (diffMinutes <= 10 && diffMinutes > 0) { DOM.nextCapsule.classList.add('visible'); const d = new Date(next.time); const tStr = `${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}`; document.getElementById('nc-time').innerText = tStr; let titleText = ""; if(next.type === 'meteo') titleText = "ÉLŐ IDŐJÁRÁS KITEKINTŐ"; else if(next.type === 'summary30') titleText = "EZ TÖRTÉNT EBBEN A FÉLÓRÁBAN"; else if(next.type === 'summary60') titleText = "EZ TÖRTÉNT EBBEN AZ ÓRÁBAN"; else if(next.type === 'clock') titleText = "PONTOS IDŐ"; document.getElementById('nc-title').innerText = titleText; document.getElementById('nc-time').style.color = "var(--accent)"; document.getElementById('nc-title').style.color = "#fff"; } else { DOM.nextCapsule.classList.remove('visible'); } }
 
-            // 2. Half Hour News (Fixed XX:30)
-            let news30 = new Date(now);
-            news30.setMinutes(30, 0, 0);
-            if(news30 > now) state.schedule.push({ time: news30.getTime(), type: 'summary30', label: "FÉLÓRÁS HÍRADÓ" });
-
-            // 3. Meteo Block 2 (Between 42-48 minutes past hour)
-            let meteo2 = new Date(now);
-            meteo2.setMinutes(42 + Math.floor(Math.random() * 6), 0, 0);
-            if(meteo2 > now) state.schedule.push({ time: meteo2.getTime(), type: 'meteo', label: "METEO ÁTTEKINTÉS" });
-
-            // 4. Hourly News (Fixed XX:57)
-            let news60 = new Date(now);
-            news60.setMinutes(57, 0, 0);
-            if(news60 > now) state.schedule.push({ time: news60.getTime(), type: 'summary60', label: "ÓRÁS HÍRADÓ" });
-
-            // 5. Big Clock (Fixed XX:59:50)
-            let clock = new Date(now);
-            clock.setMinutes(59, 50, 0);
-            if(clock > now) state.schedule.push({ time: clock.getTime(), type: 'clock', label: "NAGY ÓRA" });
-
-            // Sort schedule by time
-            state.schedule.sort((a,b) => a.time - b.time);
-
-            // Update Dev Panel List
-            updateDevScheduleList();
-        }
-
-        function updateDevScheduleList() {
-            let html = `<div style="margin-bottom:5px; color:var(--accent); font-weight:bold;">TERVEZETT ADÁS (SZINKRONIZÁLVA)</div>`;
-            state.schedule.forEach(item => {
-                const d = new Date(item.time);
-                const tStr = `${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
-                let color = "#bbb";
-                if(item.type.includes('summary')) color = "#fff";
-                if(item.type === 'meteo') color = "#00d4ff";
-                if(item.type === 'clock') color = "#ffd700";
+        /* --- WEATHER ALERT SYSTEM --- */
+        async function checkWeatherAlerts() {
+            if (state.isNightMode || state.isSpecial || state.isSummary) return; 
+            try {
+                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=47.95&longitude=21.71&current=precipitation,rain,showers,snowfall,weather_code,wind_speed_10m,visibility,uv_index,apparent_temperature&minutely_15=precipitation,weather_code,wind_speed_10m&timezone=auto');
+                const data = await res.json();
+                const curr = data.current;
                 
-                html += `
-                    <div style="border-bottom:1px solid #222; display:flex; justify-content:space-between; padding:2px 0;">
-                        <span>${tStr}</span>
-                        <span style="color:${color}; text-align:right;">${item.label}</span>
-                    </div>
-                `;
-            });
-            DOM.devScheduleList.innerHTML = html;
+                if (curr.wind_speed_10m > 55) attemptAlert('wind', curr.wind_speed_10m, 'VIHAROS SZÉL');
+                if ([71, 73, 75, 77, 85, 86].includes(curr.weather_code)) attemptAlert('snow', null, 'HAVAZÁS / HÓZÁPOR');
+                if ([95, 96, 99].includes(curr.weather_code)) attemptAlert('storm', null, 'HEVES ZIVATAR');
+                if (curr.rain > 1.5 || (curr.precipitation > 2.0 && curr.rain > 0)) attemptAlert('rain', null, 'INTENZÍV ESŐZÉS');
+                
+                if (curr.visibility < 200) attemptAlert('fog', null, 'SŰRŰ KÖD / ROSSZ LÁTÁSI VISZONYOK');
+                if (curr.uv_index > 7) attemptAlert('uv', curr.uv_index, 'EXTRÉM UV SUGÁRZÁS');
+                if (curr.apparent_temperature > 35) attemptAlert('heat', curr.apparent_temperature, 'HŐSÉGRIADÓ');
+                if (curr.apparent_temperature < -10) attemptAlert('cold', curr.apparent_temperature, 'EXTRÉM HIDEG');
+
+            } catch (e) { console.log("Alert check failed", e); }
         }
 
-        function checkScheduleExecution() {
-            if (state.isNightMode) return; // DISABLE SCHEDULE AT NIGHT
-
+        function attemptAlert(type, value, text) {
             const now = Date.now();
-            
-            // Check if any event in schedule should trigger now (within 1 sec margin)
-            // We use a small window because the main loop runs every 1000ms.
-            
-            state.schedule.forEach((item, index) => {
-                // If time has passed (within last 1.5s to avoid double trigger) and not triggered yet
-                if (now >= item.time && now < item.time + 1500 && !item.triggered) {
-                    item.triggered = true;
-                    console.log("Executing Schedule Item:", item.label);
-                    
-                    if (item.type === 'meteo') {
-                        if(!state.isBreakingActive && !state.isSummary && !state.isSpecial) {
-                            triggerSpecialMeteoSequence();
-                        }
-                    } else if (item.type === 'summary30') {
-                        // Night Mode overrides summary news blocks if needed, 
-                        // but here we let normal schedule run. Night logic is in Main Loop.
-                        triggerSummaryMode(30);
-                    } else if (item.type === 'summary60') {
-                        triggerSummaryMode(60);
-                    } else if (item.type === 'clock') {
-                        triggerBigClock();
-                        // Also trigger night refresh check if midnight
-                        crawlNews(false);
-                    }
-                }
-            });
-            
-            // Cleanup passed events from array
-            state.schedule = state.schedule.filter(item => item.time > now - 2000);
-        }
-
-        /* --- UPDATED CAPSULE LOGIC --- */
-        function updateNextEventCapsule() {
-            if (state.isNightMode) { // HIDE AT NIGHT
-                DOM.nextCapsule.classList.remove('visible');
-                return;
-            }
-
-            const now = Date.now();
-            
-            // Get next valid event from our SYNCED schedule
-            // We look at state.schedule which contains exactly what will happen
-            
-            const next = state.schedule.find(item => item.time > now);
-
-            if (!next) {
-                DOM.nextCapsule.classList.remove('visible');
-                return;
-            }
-
-            const diffMinutes = (next.time - now) / 60000;
-            const capsule = DOM.nextCapsule;
-            const timeEl = document.getElementById('nc-time');
-            const titleEl = document.getElementById('nc-title');
-
-            // --- VISIBILITY LOGIC ---
-            // If diffMinutes <= 0, the event has started -> Hide.
-            // If diffMinutes <= 10 AND > 0 -> Show.
-            
-            if (diffMinutes <= 10 && diffMinutes > 0) {
-                capsule.classList.add('visible');
-                
-                // Format HH:MM
-                const d = new Date(next.time);
-                const tStr = `${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}`;
-                
-                timeEl.innerText = tStr;
-                
-                // Set Long Titles as requested
-                let titleText = "";
-                if(next.type === 'meteo') titleText = "ÉLŐ IDŐJÁRÁS KITEKINTŐ";
-                else if(next.type === 'summary30') titleText = "EZ TÖRTÉNT EBBEN A FÉLÓRÁBAN ( ÖSSZEFOGLALÓ )";
-                else if(next.type === 'summary60') titleText = "EZ TÖRTÉNT EBBEN AZ ÓRÁBAN ( ÖSSZEFOGLALÓ )";
-                else if(next.type === 'clock') titleText = "PONTOS IDŐ";
-                
-                titleEl.innerText = titleText;
-
-                // Color logic: < 1 min -> RED (Urgent)
-                if (diffMinutes <= 1) {
-                    timeEl.style.color = "#cc0000"; // Red time
-                    titleEl.style.color = "#cc0000"; // Red text
-                } else {
-                    timeEl.style.color = "var(--accent)"; // Yellow time
-                    titleEl.style.color = "#fff"; // White text
-                }
-            } else {
-                capsule.classList.remove('visible');
+            if (!state.weatherAlertCooldown[type] || (now - state.weatherAlertCooldown[type] > 900000)) {
+                state.weatherAlertCooldown[type] = now;
+                showWeatherAlert(type, value, text);
             }
         }
 
-        function triggerCurrentSummaryTest() {
-            const min = new Date().getMinutes();
-            const mode = (min >= 30 && min < 57) ? 60 : 30; // Adjusted for 57 trigger
-            triggerSummaryMode(mode);
+        function showWeatherAlert(type, value, text) {
+            DOM.wxAlertTitle.innerText = "RIASZTÁS";
+            let suffix = "";
+            if (type === 'wind') suffix = ` (${value.toFixed(0)} KM/H)`;
+            else if (type === 'uv') suffix = ` (UV: ${value.toFixed(1)})`;
+            else if (type === 'heat' || type === 'cold') suffix = ` (${value.toFixed(1)}°C)`;
+            
+            DOM.wxAlertDesc.innerText = text + suffix;
+            DOM.wxAlert.className = 'weather-alert-card active';
+            
+            DOM.wxAlert.classList.remove('type-snow', 'type-wind', 'type-fog', 'type-heat', 'type-uv');
+            
+            if (type === 'snow') { DOM.wxAlert.classList.add('type-snow'); DOM.wxAlertIcon.innerText = '❄️'; } 
+            else if (type === 'wind') { DOM.wxAlert.classList.add('type-wind'); DOM.wxAlertIcon.innerText = '💨'; } 
+            else if (type === 'storm') { DOM.wxAlertIcon.innerText = '⚡'; } 
+            else if (type === 'rain') { DOM.wxAlertIcon.innerText = '🌧️'; }
+            else if (type === 'fog') { DOM.wxAlert.classList.add('type-fog'); DOM.wxAlertIcon.innerText = '🌫️'; }
+            else if (type === 'uv') { DOM.wxAlert.classList.add('type-uv'); DOM.wxAlertIcon.innerText = '☀️'; }
+            else if (type === 'heat') { DOM.wxAlert.classList.add('type-heat'); DOM.wxAlertIcon.innerText = '🔥'; }
+            else if (type === 'cold') { DOM.wxAlert.classList.add('type-snow'); DOM.wxAlertIcon.innerText = '🥶'; }
+
+            setTimeout(() => { DOM.wxAlert.classList.remove('active'); }, 15000);
         }
 
+        /* --- BIG CLOCK CONTENT RENDERER (PROGRAM GUIDE) --- */
+        function renderBigClockContent() {
+            let d = new Date();
+            d.setHours(d.getHours() + 1);
+            d.setMinutes(0);
+            let h = d.getHours();
+            if (h === 24) h = 0; 
+            let hStr = String(h).padStart(2, '0');
+            
+            const m1 = 12 + Math.floor(Math.random() * 5); 
+            const m2 = 42 + Math.floor(Math.random() * 5); 
+            
+            const progList = [
+                `<div class="bc-prog-item"><span class="bc-prog-time">${hStr}:00</span><span class="bc-prog-name">HÍREK</span></div>`,
+                `<div class="bc-prog-item"><span class="bc-prog-time">${hStr}:${m1}</span><span class="bc-prog-name">IDŐJÁRÁS</span></div>`,
+                `<div class="bc-prog-item"><span class="bc-prog-time">${hStr}:30</span><span class="bc-prog-name">FÉLÓRÁS ÖSSZEFOGLALÓ</span></div>`,
+                `<div class="bc-prog-item"><span class="bc-prog-time">${hStr}:${m2}</span><span class="bc-prog-name">IDŐJÁRÁS</span></div>`,
+                `<div class="bc-prog-item"><span class="bc-prog-time">${hStr}:55</span><span class="bc-prog-name">ÓRÁS ÖSSZEFOGLALÓ</span></div>`
+            ];
+            
+            DOM.bcProgList.innerHTML = progList.join('');
+        }
+
+        function triggerCurrentSummaryTest() { const min = new Date().getMinutes(); triggerSummaryMode((min >= 30 && min < 57) ? 60 : 30); }
         function forceRefreshAll() { crawlNews(true); fetchCurrency(); fetchWunderground(); alert("FRISSÍTÉS ELKÜLDVE"); }
-        function testBreaking() { 
-            // Simulate adding a fresh item to queue
-            const now = new Date();
-            const fakeItem = { 
-                title: "RENDKÍVÜLI HÍR: EZ EGY TESZT ÜZENET A SORBAN ÁLLÁS ELLENŐRZÉSÉRE.", 
-                source: "TESZT", 
-                date: now, 
-                link: "https://klikk.hu/" + now.getTime() // Unique link
-            };
-            state.breakingQueue.push(fakeItem);
-            
-            if (!state.isBreakingActive) {
-                processBreakingQueue();
-            }
-        }
-        
-        function toggleNightTest() {
-            state.forcedNightMode = !state.forcedNightMode;
-            alert(state.forcedNightMode ? "ÉJSZAKAI MÓD KÉNYSZERÍTVE" : "ÉJSZAKAI MÓD KIKAPCSOLVA (AUTO)");
-            checkNightMode(); // Apply immediately
-        }
+        function testBreaking() { const now = new Date(); state.breakingQueue.push({ title: "RENDKÍVÜLI HÍR: EZ EGY TESZT ÜZENET, HOGY LÁSSUK MŰKÖDIK-E A SIDEBAR FLIP.", desc: "Ez a hír hosszabb szöveggel rendelkezik, hogy teszteljük az olvasási időt és a kártya megjelenését. Reméljük, hogy minden szépen átfordul és olvasható lesz.", source: "TESZT", date: now, link: "#" }); if (!state.isBreakingActive) processBreakingQueue(); }
+        function toggleNightTest() { state.forcedNightMode = !state.forcedNightMode; alert(state.forcedNightMode ? "ÉJSZAKAI MÓD KÉNYSZERÍTVE" : "ÉJSZAKAI MÓD KIKAPCSOLVA (AUTO)"); checkNightMode(); }
+        function toggleStreamers() { const c = DOM.streamersContainer; if(c.innerHTML === '') { renderNYEDecorations(); DOM.logoFront.classList.add('ny'); } else { c.innerHTML = ''; DOM.logoFront.classList.remove('ny'); } }
 
-        // --- FETCHERS ---
         async function fetchRobust(targetUrl, sourceName) {
             const proxyList = shuffle([...PROXIES]);
             for (let i = 0; i < proxyList.length; i++) {
@@ -1361,28 +1101,14 @@
                     }
                 } catch (e) { }
             }
-            state.feedStatus[sourceName] = { ok: false };
-            return null;
+            state.feedStatus[sourceName] = { ok: false }; return null;
         }
 
         async function crawlNews(isReset = false) {
-            if(isReset) {
-                DOM.tickerWindow.innerHTML = '<div class="ticker-item active"><div class="ticker-content"><span class="ticker-refresh-msg">ADATBÁZIS FRISSÍTÉSE... KÉRJÜK VÁRJON, AMÍG A RENDSZER LEKÉRI AZ ELMÚLT 2 ÓRÁBÓL A HÍREKET</span></div></div>';
-                clearTimeout(state.tickerTimer);
-                DOM.mainTitle.innerText = "ADATBÁZIS FRISSÍTÉSE...";
-                DOM.mainDesc.innerText = "KÉRJÜK VÁRJON, AMÍG A RENDSZER LEKÉRI AZ ELMÚLT 2 ÓRÁBÓL A HÍREKET.";
-            }
-            
-            const jobs = RSS_FEEDS.map(async (src) => {
+            if(isReset) { DOM.tickerWindow.innerHTML = '<div class="ticker-item active"><div class="ticker-content"><span class="ticker-refresh-msg">ADATBÁZIS FRISSÍTÉSE...</span></div></div>'; clearTimeout(state.tickerTimer); DOM.mainTitle.innerText = "ADATBÁZIS FRISSÍTÉSE..."; }
+            RSS_FEEDS.map(async (src) => {
                 const text = await fetchRobust(src.url, src.name);
-                if (text) {
-                    parseAndAdd(text, src.name);
-                    updateLists(); 
-                    updateDevLog();
-                    if(isReset && state.tickerIdx === -1) { 
-                        state.tickerIdx = -1; cycleTicker(1); 
-                    }
-                }
+                if (text) { parseAndAdd(text, src.name); updateLists(); updateDevLog(); if(isReset && state.tickerIdx === -1) { state.tickerIdx = -1; cycleTicker(1); } }
             });
         }
 
@@ -1390,538 +1116,232 @@
             try {
                 const xml = new DOMParser().parseFromString(xmlText, "text/xml");
                 xml.querySelectorAll("item").forEach(item => {
-                    const title = item.querySelector("title")?.textContent.trim();
-                    const link = item.querySelector("link")?.textContent.trim();
+                    const title = item.querySelector("title")?.textContent.trim(); const link = item.querySelector("link")?.textContent.trim();
                     const pubDate = new Date(item.querySelector("pubDate")?.textContent || new Date());
-                    const desc = (item.querySelector("description")?.textContent || "").replace(/<[^>]*>?/gm, '').trim().substring(0, 300);
+                    const desc = (item.querySelector("description")?.textContent || "").replace(/<[^>]*>?/gm, '').trim().substring(0, 500); 
                     let img = item.querySelector("enclosure")?.getAttribute("url");
-                    if(!img) {
-                        const content = item.getElementsByTagNameNS("*", "content")[0]?.textContent || item.querySelector("description")?.textContent;
-                        img = content?.match(/src="([^"]+)"/)?.[1];
-                    }
+                    if(!img) { const content = item.getElementsByTagNameNS("*", "content")[0]?.textContent || item.querySelector("description")?.textContent; img = content?.match(/src="([^"]+)"/)?.[1]; }
                     if (title && link && !state.allNews.find(n => n.link === link)) {
                         state.allNews.push({ title, link, date: pubDate, desc, source: sourceName, img: img });
-                        
-                        // IF INITIAL LOAD IS NOT COMPLETE, MARK AS SEEN IMMEDIATELY TO AVOID SPAM
-                        if(!state.initialLoadComplete) {
-                            state.seenBreaking.add(link);
-                        }
+                        if(!state.initialLoadComplete) state.seenBreaking.add(link);
                     }
                 });
             } catch(e) {}
         }
 
         function updateLists() {
-            if (state.isNightMode) return; // Don't update lists in night mode (static content)
-
+            if (state.isNightMode) return;
             const now = new Date();
-            // Ticker maradhat bővebb (pl 4 óra), hogy legyen tartalom
-            const tickerLimit = 14400000; // 4 hours
-            // Main News szigorúan 2 óra (7 200 000 ms)
-            const mainLimit = 7200000; 
-            
-            const newTicker = state.allNews.filter(n => (now - n.date) < tickerLimit).sort((a,b) => b.date - a.date);
-            if (newTicker.length > 5) state.tickerItems = newTicker;
-            else state.tickerItems = [...state.allNews].sort((a,b) => b.date - a.date).slice(0, 50);
-            
-            // MAIN: 2 hours, Random order
-            const newMain = state.allNews.filter(n => (now - n.date) < mainLimit && n.img).sort(() => Math.random() - 0.5);
-            
-            if(newMain.length > 0) {
-                 state.mainItems = newMain;
-            } else {
-                // Fallback only if absolutely empty (to prevent crash), but try to keep it fresh
-                state.mainItems = state.allNews.filter(n => n.img).slice(0, 10); 
-            }
+            const newTicker = state.allNews.filter(n => (now - n.date) < 14400000).sort((a,b) => b.date - a.date);
+            state.tickerItems = newTicker.length > 5 ? newTicker : [...state.allNews].sort((a,b) => b.date - a.date).slice(0, 50);
+            const newMain = state.allNews.filter(n => (now - n.date) < 7200000 && n.img).sort(() => Math.random() - 0.5);
+            state.mainItems = newMain.length > 0 ? newMain : state.allNews.filter(n => n.img).slice(0, 10);
         }
 
-        // --- NEW BREAKING NEWS SYSTEM (QUEUE BASED) ---
-        
         async function checkBreaking() {
-            if (state.isSpecial || state.isSummary) return; // Don't interrupt full screen overlays
-            
+            if (state.isSpecial || state.isSummary) return;
             const now = Date.now();
-            // STRICT 3 MINUTE WINDOW
-            const threshold = 3 * 60 * 1000; 
-
-            // Check existing allNews array for items younger than 3 minutes
-            // that we haven't added to the history queue yet.
-            const freshItems = state.allNews.filter(n => {
-                const age = now - n.date.getTime();
-                return age <= threshold && age >= 0;
-            });
-
-            // Add new findings to queue
-            let addedCount = 0;
-            // Sort by oldest first within the fresh batch to play in order
-            freshItems.sort((a,b) => a.date - b.date).forEach(item => {
+            state.allNews.filter(n => (now - n.date.getTime()) <= 180000).sort((a,b) => a.date - b.date).forEach(item => {
                 if (!state.breakingHistory.has(item.link)) {
-                    state.breakingHistory.add(item.link);
-                    state.breakingQueue.push(item);
-                    addedCount++;
+                    state.breakingHistory.add(item.link); state.breakingQueue.push(item);
                 }
             });
-
-            // Start playing if not already playing and initial load is done
-            if (addedCount > 0 && !state.isBreakingActive && state.initialLoadComplete) {
-                processBreakingQueue();
-            }
+            if (state.breakingQueue.length > 0 && !state.isBreakingActive && state.initialLoadComplete) processBreakingQueue();
         }
 
         function processBreakingQueue() {
-            // Recursive function to play all items in queue
-            if (state.breakingQueue.length === 0) {
-                closeBreaking();
-                return;
-            }
-
-            state.isBreakingActive = true;
-            const item = state.breakingQueue.shift(); // Get next item
-            
-            // Set Link
+            if (state.breakingQueue.length === 0) { closeBreaking(); return; }
+            state.isBreakingActive = true; 
+            const item = state.breakingQueue.shift(); 
             state.currentBreakingLink = item.link;
 
-            // Display Logic
             const timeStr = item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'});
-            DOM.breakingContent.innerHTML = `
-                <span class="bk-meta">${timeStr}</span>
-                <span class="bk-meta" style="color:#fff; font-weight:900;">${item.source}</span>
-                <span class="bk-sep">///</span>
-                <span>${item.title}</span>
-            `;
+            DOM.bkCardHeadline.innerText = item.title;
+            DOM.bkCardBody.innerText = item.desc;
+            DOM.bkCardMeta.innerText = `${timeStr} • ${item.source}`;
 
-            // Activate Bar
-            DOM.breaking.classList.add('active');
-            
-            // IF Night mode is active, the night message is visible, hide it temporarily? 
-            // Actually the breaking bar overlays it, so it's fine.
-            DOM.tickerBar.style.opacity = '0';
+            DOM.sidebar.classList.add('breaking-active');
 
-            // Calculate Duration based on text length
-            // Wait a moment for rendering
+            const charCount = (item.title.length + item.desc.length);
+            let duration = Math.max(15000, (charCount / 15) * 1000); 
+
             setTimeout(() => {
-                const containerWidth = DOM.breaking.clientWidth - 250; 
-                const textWidth = DOM.breakingContent.clientWidth;
-                let duration = 20000; // Minimum 20s
-
-                if (textWidth > containerWidth) {
-                    const dist = textWidth - containerWidth + 50;
-                    const scrollTime = (dist / 50) * 1000; // 50px/s speed
-                    duration = scrollTime + 7000; // Buffer
-
-                    // Reset position first
-                    DOM.breakingContent.style.transition = 'none';
-                    DOM.breakingContent.style.transform = 'translateX(0)';
-                    
-                    // Trigger scroll
-                    setTimeout(() => {
-                        DOM.breakingContent.style.transition = `transform ${scrollTime/1000}s linear`;
-                        DOM.breakingContent.style.transform = `translateX(-${dist}px)`;
-                    }, 2000);
+                if (state.breakingQueue.length > 0) {
+                     processBreakingQueue();
                 } else {
-                    // Reset if fitting
-                    DOM.breakingContent.style.transition = 'none';
-                    DOM.breakingContent.style.transform = 'translateX(0)';
+                     closeBreaking();
                 }
-
-                // Schedule next item
-                setTimeout(() => {
-                    processBreakingQueue();
-                }, duration);
-
-            }, 100);
+            }, duration);
         }
 
         function closeBreaking() {
-            DOM.breaking.classList.remove('active');
-            DOM.tickerBar.style.opacity = '1';
-            
-            setTimeout(() => {
-                DOM.breakingContent.style.transition = 'none';
-                DOM.breakingContent.style.transform = 'translateX(0)';
-                state.isBreakingActive = false;
-            }, 600);
-        }
-
-        // --- SEQUENCER & OVERLAYS ---
-        // AUTOMATIC SCHEDULER FOR SPECIAL METEO
-        // (REPLACED BY generateHourlySchedule - keeping stub for manual dev button)
-        function scheduleNextSpecialMeteo() {
-            // No-op for auto scheduling, but can be used for manual tests if needed
+            DOM.sidebar.classList.remove('breaking-active');
+            setTimeout(() => { state.isBreakingActive = false; }, 1000); 
         }
 
         async function triggerSpecialMeteoSequence() {
             state.isSpecial = true;
-            const uis = [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ];
-            uis.forEach(ui => document.getElementById(ui.id).classList.add(`hide-${ui.t}`));
-            
-            DOM.special.style.display = 'flex';
-            setTimeout(() => DOM.special.classList.add('active'), 50);
-
-            // Define the sequence: 4 themes, 25 seconds each (Total 100s)
-            const sequence = [
-                { title: "SZABOLCS-SZATMÁR-BEREG", list: SZSZB_STATIONS },
-                { title: "MAGYARORSZÁG NAGYVÁROSAI", list: shuffle([...HU_MAJOR_STATIONS]).slice(0, 12) },
-                { title: "KIEMELT VILÁGVÁROSOK", list: shuffle([...WORLD_MAJOR_STATIONS]).slice(0, 12) },
-                { title: "PILLANATNYI REKORDOK", type: "extreme" } // NEW PHASE
-            ];
-
+            [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ].forEach(ui => document.getElementById(ui.id).classList.add(`hide-${ui.t}`));
+            DOM.special.style.display = 'flex'; setTimeout(() => DOM.special.classList.add('active'), 50);
+            const sequence = [ { title: "SZABOLCS-SZATMÁR-BEREG", list: SZSZB_STATIONS }, { title: "MAGYARORSZÁG NAGYVÁROSAI", list: shuffle([...HU_MAJOR_STATIONS]).slice(0, 12) }, { title: "KIEMELT VILÁGVÁROSOK", list: shuffle([...WORLD_MAJOR_STATIONS]).slice(0, 12) }, { title: "PILLANATNYI REKORDOK", type: "extreme" } ];
             let phase = 0;
-
             const runPhase = async () => {
                 if (phase >= sequence.length) return; 
-                
-                const currentTheme = sequence[phase];
-                DOM.smGrid.style.opacity = 0;
-                
+                const currentTheme = sequence[phase]; DOM.smGrid.style.opacity = 0;
+                document.getElementById('sm-source-footer').innerText = "FORRÁS: OPEN-METEO BROADCAST ENGINE";
                 setTimeout(async () => {
-                    if (currentTheme.type === "extreme") {
-                        await renderExtremesBatch();
-                    } else {
-                        await renderSpecialBatch(currentTheme.list, currentTheme.title);
-                    }
+                    if (currentTheme.type === "extreme") await renderExtremesBatch(); else await renderSpecialBatch(currentTheme.list, currentTheme.title);
                     DOM.smGrid.style.opacity = 1;
                 }, 300);
-
-                phase++;
-                // Schedule next phase in 25 seconds (CHANGED FROM 15s)
-                if(phase < sequence.length) {
-                    state.meteoPhaseTimer = setTimeout(runPhase, 25000);
-                }
+                phase++; if(phase < sequence.length) state.meteoPhaseTimer = setTimeout(runPhase, 25000);
             };
-
             runPhase();
-
-            // End (100s + buffer)
-            state.specialMeteoInterval = setTimeout(() => {
-                closeAllOverlays();
-            }, 102000); 
+            state.specialMeteoInterval = setTimeout(() => closeAllOverlays(), 102000); 
         }
 
         async function renderSpecialBatch(stations, title) {
-            DOM.smTitle.innerText = title;
-            DOM.smGrid.innerHTML = '';
-            const lats = stations.map(c => c.lat).join(',');
-            const lons = stations.map(c => c.lon).join(',');
+            DOM.smTitle.innerText = title; DOM.smGrid.innerHTML = '';
             try {
-                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,apparent_temperature,weather_code`);
-                const data = await res.json();
-                const results = Array.isArray(data) ? data : [data];
-                
-                results.forEach((d, i) => {
-                    if(!d.current) return;
-                    const c = stations[i];
-                    const wmo = getWmoDesc(d.current.weather_code);
-                    
-                    const div = document.createElement('div');
-                    div.className = 'sm-card-item';
-                    // Stagger animation delay
-                    div.style.animationDelay = `${i * 0.05}s`; 
-                    
-                    div.innerHTML = `
-                        <div class="sm-top">
-                            <div class="sm-name">
-                                <img src="https://flagcdn.com/24x18/${c.code}.png" style="margin-right:8px; border-radius:2px;">
-                                ${c.name}
-                            </div>
-                            <div class="sm-cond">${wmo.i} ${wmo.t}</div>
-                        </div>
-                        <div class="sm-body">
-                            <div class="sm-temp-box">${d.current.temperature_2m.toFixed(1)}°</div>
-                            <div class="sm-details">
-                                ÉRZET: ${d.current.apparent_temperature.toFixed(1)}°<br>
-                                PÁRA: ${d.current.relative_humidity_2m}%<br>
-                                SZÉL: ${d.current.wind_speed_10m.toFixed(0)} km/h
-                            </div>
-                        </div>
-                    `;
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${stations.map(c => c.lat).join(',')}&longitude=${stations.map(c => c.lon).join(',')}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,apparent_temperature,weather_code`);
+                const data = await res.json(); (Array.isArray(data) ? data : [data]).forEach((d, i) => {
+                    if(!d.current) return; const c = stations[i]; const wmo = getWmoDesc(d.current.weather_code);
+                    const div = document.createElement('div'); div.className = 'sm-card-item'; div.style.animationDelay = `${i * 0.05}s`; 
+                    div.innerHTML = `<div class="sm-top"><div class="sm-name"><img src="https://flagcdn.com/24x18/${c.code}.png" style="margin-right:8px; border-radius:2px;">${c.name}</div><div class="sm-cond">${wmo.i} ${wmo.t}</div></div><div class="sm-body"><div class="sm-temp-box">${d.current.temperature_2m.toFixed(1)}°</div><div class="sm-details">ÉRZET: ${d.current.apparent_temperature.toFixed(1)}°<br>PÁRA: ${d.current.relative_humidity_2m}%<br>SZÉL: ${d.current.wind_speed_10m.toFixed(0)} km/h</div></div>`;
                     DOM.smGrid.appendChild(div);
                 });
                 document.getElementById('sm-update-time').innerText = getTime();
             } catch(e) {}
         }
 
-        /* --- NEW FUNCTION: RENDER EXTREMES --- */
         async function renderExtremesBatch() {
-            DOM.smTitle.innerText = "PILLANATNYI REKORDOK (VILÁGSZERTE)";
-            DOM.smGrid.innerHTML = '';
-            
-            // Combine all known stations
-            const allStations = [...HU_MAJOR_STATIONS, ...WORLD_MAJOR_STATIONS, ...EXOTIC_STATIONS];
-            
-            // Fetch data for all of them
-            const lats = allStations.map(c => c.lat).join(',');
-            const lons = allStations.map(c => c.lon).join(',');
-            
+            DOM.smTitle.innerText = "PILLANATNYI REKORDOK (VILÁGSZERTE)"; DOM.smGrid.innerHTML = '';
+            document.getElementById('sm-source-footer').innerText = "ADATBÁZIS: OPEN-METEO GLOBAL MODEL (2M HŐMÉRSÉKLET, 10M SZÉL, CSAPADÉK)";
+            const all = [...HU_MAJOR_STATIONS, ...WORLD_MAJOR_STATIONS, ...EXOTIC_STATIONS];
             try {
-                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&current=temperature_2m,wind_speed_10m,precipitation&timezone=auto`);
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${all.map(c => c.lat).join(',')}&longitude=${all.map(c => c.lon).join(',')}&current=temperature_2m,wind_speed_10m,relative_humidity_2m,precipitation&timezone=auto`);
                 const data = await res.json();
-                const results = Array.isArray(data) ? data : [data];
+                let mapped = (Array.isArray(data) ? data : [data]).map((d, i) => ({ station: all[i], temp: d.current.temperature_2m, wind: d.current.wind_speed_10m, hum: d.current.relative_humidity_2m, rain: d.current.precipitation })).filter(x => x.temp !== undefined);
                 
-                // Map results to station info
-                let mapped = results.map((d, i) => ({
-                    station: allStations[i],
-                    temp: d.current.temperature_2m,
-                    wind: d.current.wind_speed_10m,
-                    rain: d.current.precipitation
-                })).filter(x => x.temp !== undefined); // Safety check
+                const hot = mapped.sort((a,b) => b.temp - a.temp)[0];
+                const cold = mapped.sort((a,b) => a.temp - b.temp)[0];
+                const windy = mapped.sort((a,b) => b.wind - a.wind)[0];
+                const rainy = mapped.sort((a,b) => b.rain - a.rain)[0];
+                const humid = mapped.sort((a,b) => b.hum - a.hum)[0];
+                const dry = mapped.sort((a,b) => a.hum - b.hum)[0];
 
-                // Find Extremes
-                const hottest = [...mapped].sort((a,b) => b.temp - a.temp)[0];
-                const coldest = [...mapped].sort((a,b) => a.temp - b.temp)[0];
-                const windiest = [...mapped].sort((a,b) => b.wind - a.wind)[0];
-                
-                // Build Cards array
-                const extremes = [
-                    { label: "LEGMELEGEBB", val: `${hottest.temp.toFixed(1)}°C`, loc: hottest.station, cls: 'ext-hot', icon: '🔥' },
-                    { label: "LEGHIDEGEBB", val: `${coldest.temp.toFixed(1)}°C`, loc: coldest.station, cls: 'ext-cold', icon: '❄️' },
-                    { label: "LEGSZELESEBB", val: `${windiest.wind.toFixed(1)} KM/H`, loc: windiest.station, cls: 'ext-wind', icon: '💨' }
+                const ex = [ 
+                    { label: "LEGMELEGEBB", val: `${hot.temp.toFixed(1)}°C`, loc: hot.station, cls: 'ext-hot', icon: '🔥' }, 
+                    { label: "LEGHIDEGEBB", val: `${cold.temp.toFixed(1)}°C`, loc: cold.station, cls: 'ext-cold', icon: '❄️' }, 
+                    { label: "LEGSZELESEBB", val: `${windy.wind.toFixed(1)} KM/H`, loc: windy.station, cls: 'ext-wind', icon: '💨' },
+                    { label: "LEGCSAPADÉKOSABB", val: `${rainy.rain.toFixed(1)} MM`, loc: rainy.station, cls: 'ext-rain', icon: '🌧️' },
+                    { label: "LEGPÁRÁSABB", val: `${humid.hum}%`, loc: humid.station, cls: 'ext-wet', icon: '💧' },
+                    { label: "LEGSZÁRAZABB", val: `${dry.hum}%`, loc: dry.station, cls: 'ext-dry', icon: '🏜️' }
                 ];
 
-                extremes.forEach((ex, i) => {
-                    const div = document.createElement('div');
-                    div.className = `sm-card-item sm-card-extreme ${ex.cls}`;
-                    div.style.animationDelay = `${i * 0.2}s`;
-                    
-                    div.innerHTML = `
-                        <div class="sm-top">
-                            <div class="sm-name" style="font-size:1.1rem; color:#aaa;">${ex.icon} ${ex.label}</div>
-                        </div>
-                        <div class="sm-body" style="flex-direction:column; align-items:flex-start;">
-                            <div class="sm-temp-box" style="font-size:3rem; margin:10px 0;">${ex.val}</div>
-                            <div class="sm-name">
-                                <img src="https://flagcdn.com/24x18/${ex.loc.code}.png" style="margin-right:8px; border-radius:2px;">
-                                ${ex.loc.name}
-                            </div>
-                        </div>
-                    `;
+                ex.forEach((e, i) => {
+                    const div = document.createElement('div'); div.className = `sm-card-item sm-card-extreme ${e.cls}`; div.style.animationDelay = `${i * 0.2}s`;
+                    div.innerHTML = `<div class="sm-top"><div class="sm-name" style="font-size:1.1rem; color:#aaa;">${e.icon} ${e.label}</div></div><div class="sm-body" style="flex-direction:column; align-items:flex-start;"><div class="sm-temp-box" style="font-size:3rem; margin:10px 0;">${e.val}</div><div class="sm-name"><img src="https://flagcdn.com/24x18/${e.loc.code}.png" style="margin-right:8px; border-radius:2px;">${e.loc.name}</div></div>`;
                     DOM.smGrid.appendChild(div);
                 });
-                
                 document.getElementById('sm-update-time').innerText = getTime();
-
-            } catch(e) { console.error(e); }
+            } catch(e) {}
         }
 
         function triggerSummaryMode(mins) {
             state.isSummary = true;
-            const uis = [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ];
-            uis.forEach(ui => document.getElementById(ui.id).classList.add(`hide-${ui.t}`));
-            
-            const now = new Date();
-            const timeLimit = mins * 60 * 1000;
-            let items = state.allNews.filter(n => (now - n.date) < timeLimit).sort((a,b) => b.date - a.date);
-            // Ensure we have some content
+            [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ].forEach(ui => document.getElementById(ui.id).classList.add(`hide-${ui.t}`));
+            let items = state.allNews.filter(n => (new Date() - n.date) < mins * 60000).sort((a,b) => b.date - a.date);
             if (items.length < 4) items = [...state.allNews].sort((a,b) => b.date - a.date).slice(0, 12);
-
-            DOM.sumMainTitle.innerText = "HÍRÖSSZEFOGLALÓ 3 PERCBEN"; // Updated text
-            DOM.sumSubTitle.innerText = mins === 30 ? "EZ TÖRTÉNT AZ ELMÚLT FÉL ÓRÁBAN" : "EZ TÖRTÉNT AZ ELMÚLT ÓRÁBAN";
+            DOM.sumMainTitle.innerText = "HÍRÖSSZEFOGLALÓ 3 PERCBEN"; DOM.sumSubTitle.innerText = mins === 30 ? "EZ TÖRTÉNT AZ ELMÚLT FÉL ÓRÁBAN" : "EZ TÖRTÉNT AZ ELMÚLT ÓRÁBAN";
             DOM.sumContent.innerHTML = `<div class="summary-header"></div>`;
+            let timeLeft = 180; DOM.sumClock.innerText = "03:00"; if(state.summaryTimerInterval) clearInterval(state.summaryTimerInterval);
+            state.summaryTimerInterval = setInterval(() => { timeLeft--; if(timeLeft < 0) clearInterval(state.summaryTimerInterval); else DOM.sumClock.innerText = `0${Math.floor(timeLeft/60)}:${(timeLeft%60).toString().padStart(2,'0')}`; }, 1000);
+            const pages = []; for (let i = 0; i < items.length; i += 4) { pages.push(items.slice(i, i + 4)); }
             
-            // Start Timer (3 Minutes = 180s)
-            let timeLeft = 180;
-            DOM.sumClock.innerText = "03:00";
-            if(state.summaryTimerInterval) clearInterval(state.summaryTimerInterval);
-            state.summaryTimerInterval = setInterval(() => {
-                timeLeft--;
-                if(timeLeft < 0) {
-                    clearInterval(state.summaryTimerInterval);
-                    return;
-                }
-                const m = Math.floor(timeLeft / 60);
-                const s = timeLeft % 60;
-                DOM.sumClock.innerText = `0${m}:${s < 10 ? '0'+s : s}`;
-            }, 1000);
+            const placeholderLogo = `<svg viewBox="0 0 24 24" style="width:50%; fill:var(--accent);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`;
 
-            const pages = [];
-            for (let i = 0; i < items.length; i += 4) { pages.push(items.slice(i, i + 4)); }
-            
-            pages.forEach((pageItems, pageIndex) => {
-                const pageDiv = document.createElement('div');
-                pageDiv.className = `summary-page ${pageIndex === 0 ? 'active' : ''}`;
-                pageDiv.id = `sum-page-${pageIndex}`;
-                pageItems.forEach(item => {
-                    const row = document.createElement('div'); row.className = 'sum-item';
-                    row.onclick = () => window.open(item.link, '_blank');
-                    const imgHtml = item.img ? `<img src="${item.img}" class="sum-img">` : `<div class="sum-img" style="display:flex;align-items:center;justify-content:center;color:#333;">NO IMG</div>`;
-                    row.innerHTML = `${imgHtml}<div class="sum-text"><div class="sum-time">${item.date.toLocaleTimeString('hu-HU',{hour:'2-digit',minute:'2-digit'})} • ${item.source}</div><div class="sum-h">${item.title}</div><div class="sum-d">${item.desc}</div></div>`;
-                    pageDiv.appendChild(row);
+            pages.forEach((p, idx) => {
+                const d = document.createElement('div'); d.className = `summary-page ${idx === 0 ? 'active' : ''}`; d.id = `sum-page-${idx}`;
+                p.forEach(item => { 
+                    const imgHtml = item.img ? `<img src="${item.img}" class="sum-img">` : `<div class="sum-img placeholder">${placeholderLogo}</div>`;
+                    d.innerHTML += `<div class="sum-item" onclick="window.open('${item.link}','_blank')">${imgHtml}<div class="sum-text"><div class="sum-time">${item.date.toLocaleTimeString('hu-HU',{hour:'2-digit',minute:'2-digit'})} • ${item.source}</div><div class="sum-h">${item.title}</div><div class="sum-d">${item.desc}</div></div></div>`; 
                 });
-                DOM.sumContent.appendChild(pageDiv);
+                DOM.sumContent.appendChild(d);
             });
-            DOM.summary.classList.add('active');
-            let currentPage = 0;
-            
-            // DURATION LOGIC:
-            // Total Duration is 3 minutes (180s).
-            let switchTime = 180000 / (pages.length || 1);
-            if(switchTime < 15000) switchTime = 15000;
-
-            if (pages.length > 1) {
-                state.summaryInterval = setInterval(() => {
-                    if(!state.isSummary) return;
-                    document.getElementById(`sum-page-${currentPage}`).classList.remove('active');
-                    currentPage = (currentPage + 1) % pages.length;
-                    document.getElementById(`sum-page-${currentPage}`).classList.add('active');
-                }, switchTime); 
-            }
-            
-            // Auto close after 3 minutes (unless interrupted by clock)
-            setTimeout(() => { 
-                if(state.isSummary && !DOM.bigClock.classList.contains('active')) {
-                    closeAllOverlays(); 
-                }
-            }, 180000);
+            DOM.summary.classList.add('active'); let cPage = 0;
+            if (pages.length > 1) state.summaryInterval = setInterval(() => { if(state.isSummary) { document.getElementById(`sum-page-${cPage}`).classList.remove('active'); cPage = (cPage + 1) % pages.length; document.getElementById(`sum-page-${cPage}`).classList.add('active'); } }, Math.max(180000/pages.length, 15000));
+            setTimeout(() => { if(state.isSummary && !DOM.bigClock.classList.contains('active')) closeAllOverlays(); }, 180000);
         }
 
-        function triggerBigClock() { state.isSpecial = true; DOM.bigClock.classList.add('active'); }
+        function triggerBigClock() { 
+            state.isSpecial = true; 
+            renderBigClockContent(); 
+            DOM.bigClock.classList.add('active'); 
+        }
 
         function closeAllOverlays() {
             DOM.summary.classList.remove('active'); DOM.bigClock.classList.remove('active'); DOM.special.classList.remove('active');
-            
-            // CLEAN CLEAR
-            clearInterval(state.summaryInterval); 
-            clearInterval(state.summaryTimerInterval);
-            clearTimeout(state.specialMeteoInterval);
-            clearTimeout(state.meteoPhaseTimer); // Clear phase timer
-            
+            clearInterval(state.summaryInterval); clearInterval(state.summaryTimerInterval); clearTimeout(state.specialMeteoInterval); clearTimeout(state.meteoPhaseTimer);
             state.isSummary = false; state.isSpecial = false;
             
-            const uis = [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ];
-            uis.forEach(ui => document.getElementById(ui.id).classList.remove(`hide-${ui.t}`));
+            setTimeout(() => {
+                DOM.summary.style.display = 'none'; DOM.summary.style.pointerEvents = 'none';
+                DOM.special.style.display = 'none'; DOM.special.style.pointerEvents = 'none';
+                DOM.logoBox.style.pointerEvents = 'auto';
+            }, 800);
+
+            [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ].forEach(ui => document.getElementById(ui.id).classList.remove(`hide-${ui.t}`));
             
-            // If exiting overlay in night mode, re-init Main News filtering
-            if (state.isNightMode) {
-                checkNightMode();
-            } else {
-                cycleMain();
-                state.tickerIdx = -1; // Reset ticker
-                manualTicker(1);
-            }
+            if (state.isNightMode) checkNightMode(); else { cycleMain(); state.tickerIdx = -1; manualTicker(1); }
         }
 
-        // --- LOOPS & PWS ---
-        document.getElementById('ui-left').onclick = () => { if(state.currentMainLink) window.open(state.currentMainLink, '_blank'); };
-        document.getElementById('breaking').onclick = () => { if(state.currentBreakingLink) window.open(state.currentBreakingLink, '_blank'); };
-
         function cycleTicker(dir = 1) {
-            if (state.isNightMode) return; // Disable ticker cycling in night mode
-
+            if (state.isNightMode) return;
             state.lastTickerUpdate = Date.now();
-            if (!state.tickerItems.length) {
-                clearTimeout(state.tickerTimer);
-                state.tickerTimer = setTimeout(() => cycleTicker(dir), 1000);
-                return;
-            }
-            
-            // Calculate the index of the next item
+            if (!state.tickerItems.length) { clearTimeout(state.tickerTimer); state.tickerTimer = setTimeout(() => cycleTicker(dir), 1000); return; }
             let nextIdx = (state.tickerIdx + dir + state.tickerItems.length) % state.tickerItems.length;
-
-            // UPDATE ON LOOP START: If wrapping around to 0, fetch fresh news in background
-            if (nextIdx === 0 && dir === 1) {
-                console.log("Ticker loop complete - Refreshing background");
-                crawlNews(false);
-            }
-
-            state.tickerIdx = nextIdx;
-            const item = state.tickerItems[state.tickerIdx];
-            const old = DOM.tickerWindow.querySelector('.ticker-item.active');
-            if (old) { old.classList.remove('active'); setTimeout(() => old.remove(), 600); }
-            const el = document.createElement('div');
-            el.className = 'ticker-item active';
-            el.addEventListener('click', (e) => { e.preventDefault(); window.open(item.link, '_blank'); });
-            const timeStr = item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'});
-            el.innerHTML = `<div class="ticker-content"><div class="ticker-meta">${timeStr} • ${item.source}</div><span>${item.title}</span></div>`;
-            DOM.tickerWindow.appendChild(el);
-            document.getElementById('t-count').innerText = `${state.tickerIdx + 1} / ${state.tickerItems.length}`;
-            
-            // SCROLL LOGIC
-            const content = el.querySelector('.ticker-content');
-            const fullWidth = content.scrollWidth;
-            const containerWidth = DOM.tickerWindow.clientWidth;
-            
-            let delay = 15000; // Alap 15mp
-
-            if (fullWidth > containerWidth) {
-                // If text is longer than screen, scroll it completely off to the left
-                const distance = fullWidth + 50; // Distance to clear element + buffer
-                const speed = 60; // px/sec
-                const animTime = (distance / speed) * 1000;
-                
-                delay = animTime + 2000; // 1.5s start delay + anim + 0.5s buffer
-
-                setTimeout(() => {
-                    content.style.transition = `transform ${animTime}ms linear`;
-                    content.style.transform = `translateX(-${distance}px)`;
-                }, 1500); 
-            }
-
-            clearTimeout(state.tickerTimer);
-            state.tickerTimer = setTimeout(() => cycleTicker(1), delay);
+            if (nextIdx === 0 && dir === 1) crawlNews(false);
+            state.tickerIdx = nextIdx; const item = state.tickerItems[state.tickerIdx];
+            const old = DOM.tickerWindow.querySelector('.ticker-item.active'); if (old) { old.classList.remove('active'); setTimeout(() => old.remove(), 600); }
+            const el = document.createElement('div'); el.className = 'ticker-item active'; el.onclick = () => window.open(item.link, '_blank');
+            el.innerHTML = `<div class="ticker-content"><div class="ticker-meta">${item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'})} • ${item.source}</div><span>${item.title}</span></div>`;
+            DOM.tickerWindow.appendChild(el); document.getElementById('t-count').innerText = `${state.tickerIdx + 1} / ${state.tickerItems.length}`;
+            setTimeout(() => {
+                const c = el.querySelector('.ticker-content');
+                if (c.scrollWidth > DOM.tickerWindow.clientWidth) {
+                    const dist = c.scrollWidth + 50; const t = (dist / 60) * 1000;
+                    c.style.transition = `transform ${t}ms linear`; c.style.transform = `translateX(-${dist}px)`;
+                    clearTimeout(state.tickerTimer); state.tickerTimer = setTimeout(() => cycleTicker(1), t + 2000);
+                } else { clearTimeout(state.tickerTimer); state.tickerTimer = setTimeout(() => cycleTicker(1), 15000); }
+            }, 100);
         }
 
         function manualTicker(dir) { clearTimeout(state.tickerTimer); cycleTicker(dir); }
 
         function cycleMain() {
             if (!state.mainItems.length || state.isSpecial || state.isSummary) return;
-            
-            // Standard wrapping logic
-            if (state.mainIdx >= state.mainItems.length) state.mainIdx = 0;
-            if (state.mainIdx < 0) state.mainIdx = state.mainItems.length - 1; 
-            
-            const item = state.mainItems[state.mainIdx];
-            state.currentMainLink = item.link;
-            
-            // Animation Reset
+            if (state.mainIdx >= state.mainItems.length) state.mainIdx = 0; if (state.mainIdx < 0) state.mainIdx = state.mainItems.length - 1; 
+            const item = state.mainItems[state.mainIdx]; state.currentMainLink = item.link;
             DOM.mainPrg.style.transition = 'none'; DOM.mainPrg.style.width = '0%';
-            
             setTimeout(() => {
                 DOM.mainTitle.innerText = item.title; DOM.mainDesc.innerText = item.desc; 
-                
-                const timeStr = item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'});
-                // UPDATE HEADER
-                // Just display source and time, no manual navigation hint
-                DOM.mainCat.innerHTML = `${item.source} • ${timeStr}`;
-                
+                DOM.mainCat.innerHTML = `${item.source} • ${item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'})}`;
                 const img = document.createElement('img'); img.src = item.img; img.className = 'bg-img'; DOM.stage.appendChild(img);
+                img.onerror = () => { img.remove(); DOM.mainTitle.innerText = "KÉP BETÖLTÉSE SIKERTELEN..."; setTimeout(cycleMain, 2000); };
                 img.onload = () => { img.classList.add('active'); const imgs = DOM.stage.querySelectorAll('.bg-img'); if (imgs.length > 2) imgs[0].remove(); };
                 DOM.mainPrg.style.transition = 'width 19.8s linear'; DOM.mainPrg.style.width = '100%';
             }, 200);
-            
             state.mainIdx++;
         }
 
-        // --- NEW: MAIN CYCLE CONTROL FUNCTIONS ---
-        function startMainLoop() {
-            // Clear existing interval
-            if (state.mainTimer) clearInterval(state.mainTimer);
-            
-            // Start new Interval (20s)
-            state.mainTimer = setInterval(() => { 
-                if(!state.isSpecial && !state.isSummary) cycleMain(); 
-            }, 20000);
-        }
+        function startMainLoop() { if (state.mainTimer) clearInterval(state.mainTimer); state.mainTimer = setInterval(() => { if(!state.isSpecial && !state.isSummary) cycleMain(); }, 20000); }
 
         async function fetchWunderground() {
             state.lastWxUpdate = Date.now();
-            for (let stationId of WU_STATIONS) {
+            for (let id of WU_STATIONS) {
                 try {
-                    const url = `https://api.weather.com/v2/pws/observations/current?stationId=${stationId}&format=json&units=m&apiKey=${WU_KEY}&numericPrecision=decimal`;
-                    const res = await fetch(url);
-                    if (res.ok) {
-                        const data = await res.json();
-                        if (data.observations && data.observations.length > 0) {
-                            const obs = data.observations[0];
-                            DOM.nyTime.innerText = getTime();
-                            DOM.nyTemp.innerText = `${obs.metric.temp.toFixed(1)}°C`;
-                            const rf = calculatePreciseRealFeel(obs.metric.temp, obs.humidity, obs.metric.windSpeed);
-                            DOM.nyFeel.innerText = `${rf.toFixed(1)}°C`;
-                            DOM.nyWind.innerText = `SZÉL: ${obs.metric.windSpeed.toFixed(1)} KM/H ${getWind(obs.winddir)}`;
-                            DOM.nyWidget.style.display = 'flex';
-                            state.currentWxSource = stationId;
-                            return; 
-                        }
-                    }
+                    const res = await fetch(`https://api.weather.com/v2/pws/observations/current?stationId=${id}&format=json&units=m&apiKey=${WU_KEY}&numericPrecision=decimal`);
+                    if (res.ok) { const d = await res.json(); if(d.observations && d.observations.length){ const o = d.observations[0]; DOM.nyTime.innerText = getTime(); DOM.nyTemp.innerText = `${o.metric.temp.toFixed(1)}°C`; DOM.nyFeel.innerText = `${calculatePreciseRealFeel(o.metric.temp, o.humidity, o.metric.windSpeed).toFixed(1)}°C`; DOM.nyWind.innerText = `SZÉL: ${o.metric.windSpeed.toFixed(1)} KM/H ${getWind(o.winddir)}`; DOM.nyWidget.style.display = 'flex'; state.currentWxSource = id; return; } }
                 } catch(e) {}
             }
             state.currentWxSource = 'OFFLINE';
@@ -1937,23 +1357,7 @@
                     }
                 } catch(e) { console.log("FX Key fail, trying next..."); }
             }
-
-            try {
-                const res = await fetch("https://open.er-api.com/v6/latest/HUF");
-                const data = await res.json();
-                if(data.result === "success") {
-                    const r = data.rates; 
-                    const eur = 1/r.EUR; const usd = 1/r.USD; const chf = 1/r.CHF; const gbp = 1/r.GBP;
-                    document.getElementById('finance-rows').innerHTML = `
-                        <div class="data-row"><span class="data-label">EURÓ (EUR)</span><span class="data-val">${eur.toFixed(2)} FT</span></div>
-                        <div class="data-row"><span class="data-label">USA DOLLÁR (USD)</span><span class="data-val">${usd.toFixed(2)} FT</span></div>
-                        <div class="data-row"><span class="data-label">SVÁJCI FRANK (CHF)</span><span class="data-val">${chf.toFixed(2)} FT</span></div>
-                        <div class="data-row"><span class="data-label">ANGOL FONT (GBP)</span><span class="data-val">${gbp.toFixed(2)} FT</span></div>
-                    `;
-                    document.getElementById('fin-stamp').innerText = getTime();
-                    document.getElementById('fx-source').innerText = "OPEN-ER";
-                }
-            } catch(e) {}
+            try { const res = await fetch("https://open.er-api.com/v6/latest/HUF"); const data = await res.json(); if(data.result === "success") { const r = data.rates; document.getElementById('finance-rows').innerHTML = `<div class="data-row"><span class="data-label">EURÓ (EUR)</span><span class="data-val">${(1/r.EUR).toFixed(2)} FT</span></div><div class="data-row"><span class="data-label">USA DOLLÁR (USD)</span><span class="data-val">${(1/r.USD).toFixed(2)} FT</span></div><div class="data-row"><span class="data-label">SVÁJCI FRANK (CHF)</span><span class="data-val">${(1/r.CHF).toFixed(2)} FT</span></div><div class="data-row"><span class="data-label">ANGOL FONT (GBP)</span><span class="data-val">${(1/r.GBP).toFixed(2)} FT</span></div>`; document.getElementById('fin-stamp').innerText = getTime(); document.getElementById('fx-source').innerText = "OPEN-ER"; } } catch(e) {}
         }
 
         function renderCurrency(r, source) {
@@ -1964,510 +1368,177 @@
                 <div class="data-row"><span class="data-label">SVÁJCI FRANK (CHF)</span><span class="data-val">${chf.toFixed(2)} FT</span></div>
                 <div class="data-row"><span class="data-label">ANGOL FONT (GBP)</span><span class="data-val">${gbp.toFixed(2)} FT</span></div>
             `;
-            document.getElementById('fin-stamp').innerText = getTime();
-            document.getElementById('fx-source').innerText = source;
+            document.getElementById('fin-stamp').innerText = getTime(); document.getElementById('fx-source').innerText = source;
         }
 
         async function fetchOther() {
-            const lats = SIDEBAR_STATIONS.map(c => c.lat).join(',');
-            const lons = SIDEBAR_STATIONS.map(c => c.lon).join(',');
             try {
-                // Requesting more data: Pressure, UV, Visibility, WMO Code, Wind Dir
-                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,wind_direction_10m,surface_pressure,uv_index,visibility,weather_code`);
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${SIDEBAR_STATIONS.map(c=>c.lat).join(',')}&longitude=${SIDEBAR_STATIONS.map(c=>c.lon).join(',')}&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,wind_direction_10m,surface_pressure,uv_index,visibility,weather_code`);
                 const data = await res.json();
-                if(Array.isArray(data)) {
-                    state.weatherData = data.map((d, i) => {
-                        return {
-                            name: SIDEBAR_STATIONS[i].name,
-                            flagCode: SIDEBAR_STATIONS[i].code,
-                            t: d.current.temperature_2m,
-                            f: d.current.apparent_temperature,
-                            h: d.current.relative_humidity_2m,
-                            w: d.current.wind_speed_10m,
-                            wd: d.current.wind_direction_10m,
-                            p: d.current.surface_pressure,
-                            uv: d.current.uv_index,
-                            v: d.current.visibility,
-                            code: d.current.weather_code
-                        };
-                    });
-                }
+                if(Array.isArray(data)) { state.weatherData = data.map((d, i) => ({ name: SIDEBAR_STATIONS[i].name, flagCode: SIDEBAR_STATIONS[i].code, t: d.current.temperature_2m, f: d.current.apparent_temperature, h: d.current.relative_humidity_2m, w: d.current.wind_speed_10m, wd: d.current.wind_direction_10m, p: d.current.surface_pressure, uv: d.current.uv_index, v: d.current.visibility, code: d.current.weather_code })); }
                 updateWeatherCard();
-            } catch(e) { }
+            } catch(e) {}
         }
 
         function updateWeatherCard() {
-            if (!state.weatherData.length) return;
-            const w = state.weatherData[state.wxIdx];
-            
-            // Set Title (Flag Image + City Name) - FIXED FOR ALL DEVICES
+            if (!state.weatherData.length) return; const w = state.weatherData[state.wxIdx]; const wmo = getWmoDesc(w.code);
             document.getElementById('city-wx-name').innerHTML = `<img src="https://flagcdn.com/24x18/${w.flagCode}.png" style="margin-right:10px; border-radius:2px;">${w.name.toUpperCase()}`;
-            
-            // Format Visibility (km or m)
-            let vis = w.v >= 1000 ? (w.v/1000).toFixed(1) + " KM" : w.v + " M";
-            
-            // Get WMO desc
-            const wmo = getWmoDesc(w.code);
-
-            // Build Dashboard HTML
-            document.getElementById('wx-rows').innerHTML = `
-                <div class="wx-dashboard">
-                    <!-- Main Row -->
-                    <div class="wx-main-row">
-                        <div class="wx-temp-big">${w.t.toFixed(1)}°</div>
-                        <div class="wx-right-col">
-                            <div class="wx-cond-text" title="${wmo.t}">${wmo.i} ${wmo.t}</div>
-                            <div class="wx-feels-like">ÉRZET: ${w.f.toFixed(1)}°</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Full Width Wind Row -->
-                    <div class="wx-wind-row">
-                        <div class="wx-wind-label">SZÉL (10M)</div>
-                        <div class="wx-wind-val">${w.w.toFixed(1)} KM/H • ${getWind(w.wd)}</div>
-                    </div>
-
-                    <!-- Details Grid -->
-                    <div class="wx-details-grid">
-                        <div class="wx-cell">
-                            <span class="wx-c-label">PÁRATARTALOM</span>
-                            <span class="wx-c-val">${w.h}%</span>
-                        </div>
-                        <div class="wx-cell">
-                            <span class="wx-c-label">LÉGNYOMÁS</span>
-                            <span class="wx-c-val">${w.p.toFixed(0)} hPa</span>
-                        </div>
-                         <div class="wx-cell">
-                            <span class="wx-c-label">UV INDEX</span>
-                            <span class="wx-c-val">${w.uv.toFixed(1)}</span>
-                        </div>
-                        <div class="wx-cell">
-                            <span class="wx-c-label">LÁTÓTÁVOLSÁG</span>
-                            <span class="wx-c-val">${vis}</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.getElementById('wx-stamp').innerText = getTime();
-            // Loop through all stations before repeating (cycle logic)
-            state.wxIdx = (state.wxIdx + 1) % state.weatherData.length;
+            document.getElementById('wx-rows').innerHTML = `<div class="wx-dashboard"><div class="wx-main-row"><div class="wx-temp-big">${w.t.toFixed(1)}°</div><div class="wx-right-col"><div class="wx-cond-text" title="${wmo.t}">${wmo.i} ${wmo.t}</div><div class="wx-feels-like">ÉRZET: ${w.f.toFixed(1)}°</div></div></div><div class="wx-wind-row"><div class="wx-wind-label">SZÉL (10M)</div><div class="wx-wind-val">${w.w.toFixed(1)} KM/H • ${getWind(w.wd)}</div></div><div class="wx-details-grid"><div class="wx-cell"><span class="wx-c-label">PÁRATARTALOM</span><span class="wx-c-val">${w.h}%</span></div><div class="wx-cell"><span class="wx-c-label">LÉGNYOMÁS</span><span class="wx-c-val">${w.p.toFixed(0)} hPa</span></div><div class="wx-cell"><span class="wx-c-label">UV INDEX</span><span class="wx-c-val">${w.uv.toFixed(1)}</span></div><div class="wx-cell"><span class="wx-c-label">LÁTÓTÁVOLSÁG</span><span class="wx-c-val">${w.v >= 1000 ? (w.v/1000).toFixed(1) + " KM" : w.v + " M"}</span></div></div></div>`;
+            document.getElementById('wx-stamp').innerText = getTime(); state.wxIdx = (state.wxIdx + 1) % state.weatherData.length;
         }
 
-        // --- HOLIDAY LOGIC & FLIPPER ---
-        
         function checkHolidayMode() {
             const now = new Date();
-            
-            // Christmas: 2025-12-24 00:00 to 2025-12-27 00:00
-            const xmasStart = new Date('2025-12-24T00:00:00');
-            const xmasEnd = new Date('2025-12-27T00:00:00');
-            
-            // New Year: 2025-12-30 00:00 to 2026-01-02 00:00
-            const nyStart = new Date('2025-12-30T00:00:00');
-            const nyEnd = new Date('2026-01-02T00:00:00');
-            
-            // Valentine: 2026-02-14 00:00 to 2026-02-15 00:00
-            const valStart = new Date('2026-02-14T00:00:00');
-            const valEnd = new Date('2026-02-15T00:00:00');
+            const xmasStart = new Date('2025-12-24T00:00:00'); const xmasEnd = new Date('2025-12-27T00:00:00');
+            const nyStart = new Date('2025-12-30T00:00:00'); const nyEnd = new Date('2026-01-02T00:00:00');
+            const valStart = new Date('2026-02-14T00:00:00'); const valEnd = new Date('2026-02-15T00:00:00');
             
             let newMode = null;
-            if (now >= xmasStart && now < xmasEnd) { newMode = 'XMAS'; }
-            else if (now >= nyStart && now < nyEnd) { newMode = 'NY'; }
-            else if (now >= valStart && now < valEnd) { newMode = 'VAL'; }
+            if (now >= xmasStart && now < xmasEnd) newMode = 'XMAS';
+            else if (now >= nyStart && now < nyEnd) newMode = 'NY';
+            else if (now >= valStart && now < valEnd) newMode = 'VAL';
             
-            // Only update if changed
-            if (newMode !== state.holidayMode) {
-                state.holidayMode = newMode;
-                // Update Logo Front class immediately
-                DOM.logoFront.className = 'logo-front'; // Reset
-                if (newMode) DOM.logoFront.classList.add(newMode.toLowerCase());
-
-                // Start or stop logo fireworks immediately
-                if(newMode === 'NY') {
-                    startLogoFireworks();
-                } else {
-                    stopLogoFireworks();
-                }
-            }
+            if (newMode !== state.holidayMode) forceHoliday(newMode);
         }
         
-        function forceHoliday(mode) {
-            state.holidayMode = mode;
-            
-            // Update Logo Front Class
-            DOM.logoFront.className = 'logo-front';
-            if(mode) DOM.logoFront.classList.add(mode.toLowerCase());
-
-            // Handle Logo Fireworks Logic
-            if(mode === 'NY') {
-                startLogoFireworks();
-            } else {
-                stopLogoFireworks();
-            }
-
-            // Reset Sequence
-            clearTimeout(state.holidaySequenceTimer);
-            clearInterval(state.particleInterval);
-            DOM.effectContainer.innerHTML = ''; // Clear particles
-            DOM.logoBox.classList.remove('flipped'); 
-            DOM.logoFront.style.opacity = '0.9'; // Reset opacity if stuck
-            
-            // Reset Static Icons Visibility
-            const staticIcons = document.querySelectorAll('.holiday-deco');
-            staticIcons.forEach(el => el.style.opacity = ''); // Reset inline styles
-
-            alert("ÜNNEPI MÓD BEÁLLÍTVA: " + mode);
-            
-            // RESTART WITH IMMEDIATE TRIGGER (10 seconds delay instead of 2 mins for testing)
-            const now = Date.now();
-            const quickStartDelay = 10000;
-            state.nextHolidayFlip = now + quickStartDelay; 
-            
-            state.holidaySequenceTimer = setTimeout(() => {
-                runHolidayTransition();
-            }, quickStartDelay - 5000); 
+        function renderNYEDecorations() {
+            const container = DOM.streamersContainer;
+            container.innerHTML = `
+                <svg width="100%" height="100%" viewBox="0 0 160 160" preserveAspectRatio="none">
+                    <path class="streamer st-1" d="M20,0 C10,10 30,20 20,30 C10,40 30,50 20,60 C10,70 30,80 20,90 C10,100 30,110 20,120" />
+                    <path class="streamer st-2" d="M80,0 C70,10 90,20 80,30 C70,40 90,50 80,60 C70,70 90,80 80,90 C70,100 90,110 80,120" />
+                    <path class="streamer st-3" d="M140,0 C130,10 150,20 140,30 C130,40 150,50 140,60 C130,70 150,80 140,90 C130,100 150,110 140,120" />
+                    <path class="streamer st-4" d="M50,-10 C40,0 60,10 50,20 C40,30 60,40 50,50 C40,60 60,70 50,80" style="opacity:0.6;" />
+                </svg>
+            `;
         }
 
-        // --- NEW: LOGO FIREWORKS CONTINUOUS LOOP ---
+        function forceHoliday(mode) {
+            state.holidayMode = mode;
+            DOM.logoFront.className = 'logo-front';
+            DOM.streamersContainer.innerHTML = ''; 
+            if(mode) DOM.logoFront.classList.add(mode.toLowerCase());
+
+            if(mode === 'NY') { startLogoFireworks(); renderNYEDecorations(); } 
+            else { stopLogoFireworks(); }
+
+            clearTimeout(state.holidaySequenceTimer); clearInterval(state.particleInterval); DOM.effectContainer.innerHTML = ''; 
+            DOM.logoBox.classList.remove('flipped'); DOM.logoFront.style.opacity = '0.9';
+            document.querySelectorAll('.holiday-deco').forEach(el => el.style.opacity = '');
+            if(mode) { 
+                alert("ÜNNEPI MÓD: " + mode);
+                const quickStartDelay = 10000; state.nextHolidayFlip = Date.now() + quickStartDelay; 
+                state.holidaySequenceTimer = setTimeout(() => runHolidayTransition(), quickStartDelay - 5000); 
+            }
+        }
+
         function startLogoFireworks() {
             if(state.logoFxInterval) clearInterval(state.logoFxInterval);
-            
-            // Create a firework every 1.5 - 2 seconds (Relaxed pace)
-            state.logoFxInterval = setInterval(() => {
-                if(state.holidayMode !== 'NY') {
-                    clearInterval(state.logoFxInterval);
-                    return;
-                }
-                // Don't spawn if logo is flipped to back
-                if(!DOM.logoBox.classList.contains('flipped')) {
-                    createLogoFirework();
-                }
-            }, 1800);
+            state.logoFxInterval = setInterval(() => { if(state.holidayMode === 'NY' && !DOM.logoBox.classList.contains('flipped')) createLogoFirework(); }, 2500);
         }
 
         function stopLogoFireworks() {
-            if(state.logoFxInterval) clearInterval(state.logoFxInterval);
-            DOM.logoFxContainer.innerHTML = '';
+            if(state.logoFxInterval) clearInterval(state.logoFxInterval); DOM.logoFxContainer.innerHTML = '';
         }
 
         function createLogoFirework() {
-            const fw = document.createElement('div');
-            fw.style.position = 'absolute';
-            // Random position inside the logo box (0-100%)
-            // Keep it slightly away from edges (10-90%)
-            fw.style.left = (10 + Math.random() * 80) + '%';
-            fw.style.top = (10 + Math.random() * 80) + '%';
+            const fw = document.createElement('div'); fw.style.position = 'absolute';
+            fw.style.left = (20 + Math.random() * 60) + '%'; fw.style.top = (20 + Math.random() * 60) + '%';
             DOM.logoFxContainer.appendChild(fw);
-
-            // Create particles
-            const colors = ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#ff00ff', '#ffffff'];
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            
-            // Fewer particles for logo version (8-10)
-            for (let i = 0; i < 10; i++) {
-                const p = document.createElement('div');
-                p.className = 'firework-particle';
-                p.style.backgroundColor = color;
-                
-                const angle = (Math.PI * 2 * i) / 10;
-                // Smaller explosion radius for logo (20-40px)
-                const velocity = 20 + Math.random() * 20; 
-                const tx = Math.cos(angle) * velocity + 'px';
-                const ty = Math.sin(angle) * velocity + 'px';
-                
-                p.style.setProperty('--tx', tx);
-                p.style.setProperty('--ty', ty);
-                
+            const colors = ['#ffcc00', '#ffffff', '#00d4ff', '#ff3366']; const color = colors[Math.floor(Math.random() * colors.length)];
+            for (let i = 0; i < 6; i++) {
+                const p = document.createElement('div'); p.className = 'firework-particle mini'; p.style.backgroundColor = color;
+                const angle = (Math.PI * 2 * i) / 6; const velocity = 25 + Math.random() * 15; 
+                p.style.setProperty('--tx', (Math.cos(angle) * velocity) + 'px'); p.style.setProperty('--ty', (Math.sin(angle) * velocity) + 'px');
                 fw.appendChild(p);
             }
-
-            // Cleanup
             setTimeout(() => fw.remove(), 1500);
         }
 
-        // --- NEW SEQUENCE LOGIC (INTRO -> FLIP -> OUTRO) ---
-        
         function startHolidaySequenceLoop() {
-            clearTimeout(state.holidaySequenceTimer);
-            if (!state.holidayMode) return;
-
-            // Random delay between 2 and 3 minutes (120s - 180s)
-            const nextFlipDelay = Math.floor(Math.random() * 60000) + 120000; 
-            state.nextHolidayFlip = Date.now() + nextFlipDelay; // For Dev Countdown
-            
-            // Schedule the START of the sequence (Intro starts 5s before flip)
-            // Flip happens at nextFlipDelay. Intro starts at nextFlipDelay - 5000.
-            
-            state.holidaySequenceTimer = setTimeout(() => {
-                runHolidayTransition();
-            }, nextFlipDelay - 5000); 
+            clearTimeout(state.holidaySequenceTimer); if (!state.holidayMode) return;
+            const nextFlipDelay = Math.floor(Math.random() * 60000) + 120000; state.nextHolidayFlip = Date.now() + nextFlipDelay; 
+            state.holidaySequenceTimer = setTimeout(() => runHolidayTransition(), nextFlipDelay - 5000); 
         }
 
         async function runHolidayTransition() {
             if (!state.holidayMode) return;
-            
-            DOM.devHolStatus.innerText = "INTRO (EFFEKT)";
-            DOM.devHolStatus.style.color = "#ffcc00";
-
-            // --- PHASE 1: INTRO (5 Seconds) ---
-            // Start FULL SCREEN particle effects
-            startParticles(state.holidayMode);
-            
-            await sleep(5000);
-
-            // --- PHASE 2: FLIP (10 Seconds) ---
-            DOM.devHolStatus.innerText = "ÜZENET (FLIP)";
-            DOM.devHolStatus.style.color = "#00d4ff";
-            
-            // Prepare Back Face Content
-            prepareBackFace(state.holidayMode);
-            
-            // Flip
-            DOM.logoBox.classList.add('flipped');
-
+            DOM.devHolStatus.innerText = "INTRO (EFFEKT)"; DOM.devHolStatus.style.color = "#ffcc00";
+            startParticles(state.holidayMode); await sleep(5000);
+            DOM.devHolStatus.innerText = "ÜZENET (FLIP)"; DOM.devHolStatus.style.color = "#00d4ff";
+            prepareBackFace(state.holidayMode); DOM.logoBox.classList.add('flipped');
             await sleep(10000);
-
-            // --- PHASE 3: OUTRO (5 Seconds) ---
-            DOM.devHolStatus.innerText = "OUTRO";
-            DOM.devHolStatus.style.color = "#ffcc00";
-            
-            // Unflip
-            DOM.logoBox.classList.remove('flipped');
-            
-            // Particles are still running...
-            await sleep(5000);
-
-            // --- PHASE 4: CLEANUP ---
-            stopParticles();
-            
-            DOM.devHolStatus.innerText = "VÁRAKOZÁS";
-            DOM.devHolStatus.style.color = "#aaa";
-
-            // Restart Loop
+            DOM.devHolStatus.innerText = "OUTRO"; DOM.devHolStatus.style.color = "#ffcc00";
+            DOM.logoBox.classList.remove('flipped'); await sleep(5000);
+            stopParticles(); DOM.devHolStatus.innerText = "VÁRAKOZÁS"; DOM.devHolStatus.style.color = "#aaa";
             startHolidaySequenceLoop();
         }
 
         function startParticles(mode) {
-            clearInterval(state.particleInterval);
-            DOM.effectContainer.innerHTML = ''; // Clear old
-
-            if (mode === 'NY') {
-                // Fireworks
-                state.particleInterval = setInterval(() => {
-                    createFirework();
-                }, 400); // New explosion every 400ms
-            } else if (mode === 'VAL') {
-                // Floating Hearts
-                state.particleInterval = setInterval(() => {
-                    createFloatingHeart();
-                }, 200); // New heart every 200ms
-            }
+            clearInterval(state.particleInterval); DOM.effectContainer.innerHTML = '';
+            if (mode === 'NY') state.particleInterval = setInterval(createFirework, 600); // Optimized rate
+            else if (mode === 'VAL') state.particleInterval = setInterval(createFloatingHeart, 300);
         }
 
-        function stopParticles() {
-            clearInterval(state.particleInterval);
-            // Let existing particles finish animation, then clear
-            setTimeout(() => {
-                DOM.effectContainer.innerHTML = '';
-            }, 2000);
-        }
+        function stopParticles() { clearInterval(state.particleInterval); setTimeout(() => DOM.effectContainer.innerHTML = '', 2000); }
 
         function createFirework() {
-            const fw = document.createElement('div');
-            fw.style.position = 'absolute';
-            fw.style.left = (Math.random() * 100) + '%';
-            fw.style.top = (Math.random() * 100) + '%';
+            const fw = document.createElement('div'); fw.style.position = 'absolute';
+            fw.style.left = (Math.random() * 100) + '%'; fw.style.top = (Math.random() * 100) + '%';
             DOM.effectContainer.appendChild(fw);
-
-            // Create particles for this explosion
-            const colors = ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#ff00ff'];
-            const color = colors[Math.floor(Math.random() * colors.length)];
-
-            for (let i = 0; i < 12; i++) {
-                const p = document.createElement('div');
-                p.className = 'firework-particle';
-                p.style.backgroundColor = color;
-                
-                // Random angle and distance
-                const angle = (Math.PI * 2 * i) / 12;
-                const velocity = 40 + Math.random() * 40; // distance
-                const tx = Math.cos(angle) * velocity + 'px';
-                const ty = Math.sin(angle) * velocity + 'px';
-                
-                p.style.setProperty('--tx', tx);
-                p.style.setProperty('--ty', ty);
-                
+            const colors = ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#ff00ff']; const color = colors[Math.floor(Math.random() * colors.length)];
+            for (let i = 0; i < 8; i++) {
+                const p = document.createElement('div'); p.className = 'firework-particle'; p.style.backgroundColor = color;
+                const angle = (Math.PI * 2 * i) / 8; const velocity = 40 + Math.random() * 30; 
+                p.style.setProperty('--tx', (Math.cos(angle) * velocity) + 'px'); p.style.setProperty('--ty', (Math.sin(angle) * velocity) + 'px');
                 fw.appendChild(p);
             }
-
-            // Clean up this explosion div after animation
             setTimeout(() => fw.remove(), 1000);
         }
 
         function createFloatingHeart() {
-            const h = document.createElement('div');
-            h.innerHTML = '❤️';
-            h.className = 'floating-heart';
-            h.style.left = (Math.random() * 100) + '%';
-            h.style.top = (80 + Math.random() * 20) + '%'; // Start near bottom
-            
-            // Random horizontal drift
-            const drift = (Math.random() - 0.5) * 40 + 'px';
-            h.style.setProperty('--hx', drift);
-            h.style.fontSize = (0.5 + Math.random()) + 'rem'; // Random size
-
-            DOM.effectContainer.appendChild(h);
-            
-            setTimeout(() => h.remove(), 1500);
+            const h = document.createElement('div'); h.innerHTML = '❤️'; h.className = 'floating-heart';
+            h.style.left = (Math.random() * 100) + '%'; h.style.top = (80 + Math.random() * 20) + '%'; 
+            h.style.setProperty('--hx', (Math.random() - 0.5) * 40 + 'px'); h.style.fontSize = (0.5 + Math.random()) + 'rem';
+            DOM.effectContainer.appendChild(h); setTimeout(() => h.remove(), 1500);
         }
 
         function prepareBackFace(mode) {
-            // SVG Logo for reuse
-            const logoSvg = `<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`;
-
-            let iconHtml = '';
-            let msgHtml = '';
-            
+            const logoSvg = `<svg viewBox="0 0 24 24" style="fill:#fff;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`;
+            let iconHtml = '', msgHtml = '';
             if (mode === 'XMAS') {
                 DOM.logoBack.className = 'logo-back mode-xmas';
-                iconHtml = `<svg class="holiday-main-icon icon-tree-anim" viewBox="0 0 50 60">
-                            <rect x="22" y="50" width="6" height="10" class="tree-trunk"/>
-                            <path d="M5,50 L25,20 L45,50 Z" class="tree-layer"/>
-                            <path d="M10,35 L25,10 L40,35 Z" class="tree-layer-2"/>
-                            <path d="M15,20 L25,0 L35,20 Z" class="tree-layer-3"/>
-                            <polygon points="25,0 26,3 29,3 27,5 28,8 25,6 22,8 23,5 21,3 24,3" class="tree-star"/>
-                            <circle cx="15" cy="45" r="2" class="tree-light l1"/>
-                            <circle cx="35" cy="45" r="2" class="tree-light l2"/>
-                            <circle cx="25" cy="40" r="2" class="tree-light l3"/>
-                            <circle cx="20" cy="30" r="2" class="tree-light l4"/>
-                            <circle cx="30" cy="30" r="2" class="tree-light l1"/>
-                            <circle cx="25" cy="15" r="2" class="tree-light l2"/>
-                        </svg>`;
+                iconHtml = `<svg class="holiday-main-icon icon-tree-anim" viewBox="0 0 50 60"><rect x="22" y="50" width="6" height="10" class="tree-trunk"/><path d="M5,50 L25,20 L45,50 Z" class="tree-layer"/><path d="M10,35 L25,10 L40,35 Z" class="tree-layer-2"/><path d="M15,20 L25,0 L35,20 Z" class="tree-layer-3"/><polygon points="25,0 26,3 29,3 27,5 28,8 25,6 22,8 23,5 21,3 24,3" class="tree-star"/><circle cx="15" cy="45" r="2" class="tree-light l1"/><circle cx="35" cy="45" r="2" class="tree-light l2"/><circle cx="25" cy="40" r="2" class="tree-light l3"/><circle cx="20" cy="30" r="2" class="tree-light l4"/><circle cx="30" cy="30" r="2" class="tree-light l1"/><circle cx="25" cy="15" r="2" class="tree-light l2"/></svg>`;
                 msgHtml = `<div class="holiday-msg">Áldott, Békés<br>Karácsonyt<br><span style="font-size:0.6em; font-family:var(--font-data);">KÍVÁN A</span></div>`;
-            } 
-            else if (mode === 'NY') {
+            } else if (mode === 'NY') {
                 DOM.logoBack.className = 'logo-back mode-ny';
                 iconHtml = `<svg class="holiday-main-icon icon-champagne" viewBox="0 0 24 24" width="55" height="55"><path d="M19.2,2.6l-6.3,9.5C12.5,12.7,12,13.3,12,14c0,1.1,0.9,2,2,2h4c1.1,0,2-0.9,2-2c0-0.7-0.5-1.3-0.9-1.9L19.2,2.6z M5,2h2v7H5V2z"/></svg>`; 
                 msgHtml = `<div class="holiday-msg">Békés, Boldog<br>Új Évet<br><span style="font-size:0.6em; font-family:var(--font-data);">KÍVÁN A</span></div>`;
-            }
-            else if (mode === 'VAL') {
+            } else if (mode === 'VAL') {
                 DOM.logoBack.className = 'logo-back mode-val';
                 iconHtml = `<svg class="holiday-main-icon icon-heart-anim" viewBox="0 0 24 24" width="55" height="55"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
                 msgHtml = `<div class="holiday-msg">Boldog<br>Valentin-napot<br><span style="font-size:0.6em; font-family:var(--font-data);">KÍVÁN A</span></div>`;
             }
-
-            DOM.logoBack.innerHTML = `
-                <div class="sparkle"></div>
-                ${iconHtml}
-                ${msgHtml}
-                <div class="holiday-logo-row">${logoSvg} <span class="holiday-logo-text">TKP NEWS</span></div>
-            `;
+            DOM.logoBack.innerHTML = `<div class="sparkle"></div>${iconHtml}${msgHtml}<div class="holiday-logo-row">${logoSvg} <span class="holiday-logo-text">TKP NEWS</span></div>`;
         }
 
-        /* --- NIGHT MODE LOGIC --- */
         function checkNightMode() {
-            const now = new Date();
-            const h = now.getHours();
-            
-            // Night mode is between 00:00 and 06:00
-            // OR if forced via dev panel
-            const isNight = state.forcedNightMode || (h >= 0 && h < 6);
-            
+            const now = new Date(); const h = now.getHours(); const isNight = state.forcedNightMode || (h >= 0 && h < 6);
             const labelBox = document.getElementById('ticker-label-box');
-
             if (isNight !== state.isNightMode) {
-                // Mode Changed
                 state.isNightMode = isNight;
-                
-                if (isNight) {
-                    // Enter Night Mode
-                    DOM.tickerWindow.style.display = 'none';
-                    DOM.tickerNav.style.display = 'none';
-                    DOM.nightMsg.classList.add('active');
-                    
-                    // CHANGE LABEL TO "ISMÉTLÉS"
-                    labelBox.innerText = "ISMÉTLÉS";
-                    labelBox.classList.add('night-mode');
-
-                } else {
-                    // Exit Night Mode
-                    DOM.tickerWindow.style.display = 'block';
-                    DOM.tickerNav.style.display = 'flex';
-                    DOM.nightMsg.classList.remove('active');
-                    
-                    // CHANGE LABEL BACK TO "FRISS"
-                    labelBox.innerText = "FRISS";
-                    labelBox.classList.remove('night-mode');
-
-                    updateLists(); // Restore standard lists
-                    cycleMain(); // Restart cycle
-                    cycleTicker(1); // Restart ticker
-                }
+                if (isNight) { DOM.tickerWindow.style.display = 'none'; DOM.tickerNav.style.display = 'none'; DOM.nightMsg.classList.add('active'); labelBox.innerText = "ISMÉTLÉS"; labelBox.classList.add('night-mode'); } 
+                else { DOM.tickerWindow.style.display = 'block'; DOM.tickerNav.style.display = 'flex'; DOM.nightMsg.classList.remove('active'); labelBox.innerText = "FRISS"; labelBox.classList.remove('night-mode'); updateLists(); cycleMain(); cycleTicker(1); }
             }
-
             if (isNight) {
-                // Determine Slot based on hour
-                let slot = 0; // 00-02
-                if (h >= 2 && h < 4) slot = 1; // 02-04
-                else if (h >= 4 && h < 6) slot = 2; // 04-06
-                
-                // Calculate Previous Day ranges
-                const yesterday = new Date(now);
-                yesterday.setDate(yesterday.getDate() - 1);
-                
-                let startHour = 6;
-                let endHour = 12;
-                
-                let timeText = "REGGELI HÍREK 06:00 - 12:00";
-                
-                if (slot === 1) { 
-                    startHour = 12; endHour = 18; 
-                    timeText = "DÉLUTÁNI HÍREK 12:00 - 18:00";
-                }
-                if (slot === 2) { 
-                    startHour = 18; endHour = 24; 
-                    timeText = "ESTI HÍREK 18:00 - 00:00";
-                }
-                
-                // Create Timestamps
-                const tStart = new Date(yesterday).setHours(startHour, 0, 0, 0);
-                const tEnd = new Date(yesterday).setHours(endHour, 0, 0, 0); 
-                
-                // Filter News WITHOUT SLICING (Load everything available)
-                let nightItems = state.allNews.filter(n => {
-                    const t = n.date.getTime();
-                    return t >= tStart && t < tEnd && n.img;
-                });
-                
-                // Fallback only if absolutely empty
-                if (nightItems.length === 0) {
-                    // Just take a random selection from main list if nothing matches (safety)
-                    nightItems = [...state.allNews].filter(n => n.img).slice(0, 30);
-                }
-                
-                // Sort by time (oldest first for "replay" feel, or newest? Usually replay is linear)
-                // Let's sort by date ascending to simulate the day passing
-                nightItems.sort((a,b) => a.date - b.date);
-
-                state.mainItems = nightItems;
-                
-                // Build HTML Structure for Bottom Bar
-                let html = `
-                    <div class="nm-left">
-                        <div class="nm-icon-box">🌙</div>
-                        <div class="nm-text">
-                            <div class="nm-title">ÉJSZAKAI ADÁS</div>
-                            <div class="nm-desc">${timeText}</div>
-                        </div>
-                    </div>
-                    <div class="nm-timeline">
-                        <div class="nm-t-item ${slot===0?'active':''}">00-02<br>REGGEL</div>
-                        <div class="nm-t-item ${slot===1?'active':''}">02-04<br>DÉLUTÁN</div>
-                        <div class="nm-t-item ${slot===2?'active':''}">04-06<br>ESTE</div>
-                    </div>
-                `;
-                
-                DOM.nightMsg.innerHTML = html;
+                let slot = 0, startHour = 6, endHour = 12, timeText = "REGGELI HÍREK 06:00 - 12:00";
+                if (h >= 2 && h < 4) { slot = 1; startHour = 12; endHour = 18; timeText = "DÉLUTÁNI HÍREK 12:00 - 18:00"; }
+                else if (h >= 4 && h < 6) { slot = 2; startHour = 18; endHour = 24; timeText = "ESTI HÍREK 18:00 - 00:00"; }
+                const y = new Date(now); y.setDate(y.getDate() - 1); const tStart = new Date(y).setHours(startHour, 0, 0, 0); const tEnd = new Date(y).setHours(endHour, 0, 0, 0); 
+                let nightItems = state.allNews.filter(n => { const t = n.date.getTime(); return t >= tStart && t < tEnd && n.img; });
+                if (nightItems.length === 0) nightItems = [...state.allNews].filter(n => n.img).slice(0, 30);
+                nightItems.sort((a,b) => a.date - b.date); state.mainItems = nightItems;
+                DOM.nightMsg.innerHTML = `<div class="nm-left"><div class="nm-icon-box">🌙</div><div class="nm-text"><div class="nm-title">ÉJSZAKAI ADÁS</div><div class="nm-desc">${timeText}</div></div></div><div class="nm-timeline"><div class="nm-t-item ${slot===0?'active':''}">00-02<br>REGGEL</div><div class="nm-t-item ${slot===1?'active':''}">02-04<br>DÉLUTÁN</div><div class="nm-t-item ${slot===2?'active':''}">04-06<br>ESTE</div></div>`;
             }
         }
 
@@ -2477,80 +1548,29 @@
                 const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
                 DOM.cTime.innerHTML = `${timeStr}<span class="mc-sec">${String(now.getSeconds()).padStart(2,'0')}</span>`;
                 DOM.bcTime.innerHTML = `${timeStr}<span class="bc-sec">${String(now.getSeconds()).padStart(2,'0')}</span>`;
-                // DOM.sumClock.innerText = timeStr; // REMOVED FOR COUNTDOWN
                 const days = ['VASÁRNAP','HÉTFŐ','KEDD','SZERDA','CSÜTÖRTÖK','PÉNTEK','SZOMBAT'];
                 DOM.cDate.innerText = `${now.getFullYear()}. ${String(now.getMonth()+1).padStart(2,'0')}. ${String(now.getDate()).padStart(2,'0')}. - ${days[now.getDay()]}`;
-
-                // --- EXECUTE SCHEDULE ---
-                checkScheduleExecution(); // NEW: Triggers real events
-
-                // --- UPDATE NEXT CAPSULE ---
-                updateNextEventCapsule(); // UPDATED
-
-                // --- NIGHT MODE CHECK ---
-                checkNightMode();
-
-                // --- NEWS PRE-FETCH & UPDATE LOGIC ---
-
-                // 1. Background Fetch at 15s before the quarter hour (XX:14:45, XX:29:45, XX:44:45)
-                if ([14, 29, 44].includes(now.getMinutes()) && now.getSeconds() === 45) {
-                   crawlNews(false); // Silent fetch in background
-                }
-
-                // 2. HARD RESET at hour start
-                if (now.getMinutes() === 0 && now.getSeconds() === 0) {
-                    closeAllOverlays(); 
-                    fetchCurrency(); 
-                    generateHourlySchedule(); // NEW: RE-CALCULATE FOR NEW HOUR
-                    
-                    // FORCE TICKER RESET TO START
-                    if (!state.isNightMode) {
-                        state.tickerIdx = -1; 
-                        manualTicker(1); 
-                    }
-                }
-                
+                checkScheduleExecution(); updateNextEventCapsule(); checkNightMode();
+                if ([14, 29, 44].includes(now.getMinutes()) && now.getSeconds() === 45) crawlNews(false); 
+                if (now.getMinutes() === 0 && now.getSeconds() === 0) { closeAllOverlays(); fetchCurrency(); generateHourlySchedule(); if (!state.isNightMode) { state.tickerIdx = -1; manualTicker(1); } }
                 updateDevMonitor();
-                
-                if (Date.now() - state.lastTickerUpdate > 12000 && !state.isSpecial && !state.isSummary && !state.isNightMode) {
-                    console.warn("Watchdog: Hard Reset");
-                    crawlNews(false); cycleTicker(1);
-                }
+                if (Date.now() - state.lastTickerUpdate > 12000 && !state.isSpecial && !state.isSummary && !state.isNightMode) { crawlNews(false); cycleTicker(1); }
             }, 1000);
         }
 
         function init() {
-            startClock();
-            startMainLoop(); // START MAIN LOOP (20s)
-            
-            checkHolidayMode(); // Check date on startup and SET INITIAL LOGO CLASS
-            startHolidaySequenceLoop(); // Initialize New Sequence Logic
-            generateHourlySchedule(); // Initialize Sync Schedule
+            // FIX: BIND EVENTS HERE WHEN DOM IS READY
+            DOM.bkCardClickable.onclick = () => { if(state.currentBreakingLink) window.open(state.currentBreakingLink, '_blank'); };
+            document.getElementById('ui-left').onclick = () => { if(state.currentMainLink) window.open(state.currentMainLink, '_blank'); };
 
-            const d = document.createElement('div'); d.className='term-line'; d.innerText = ">> RENDSZER KÉSZ"; DOM.term.appendChild(d);
-            DOM.fill.style.width = "100%";
+            startClock(); startMainLoop(); checkHolidayMode(); startHolidaySequenceLoop(); generateHourlySchedule();
+            const d = document.createElement('div'); d.className='term-line'; d.innerText = ">> RENDSZER KÉSZ"; DOM.term.appendChild(d); DOM.fill.style.width = "100%";
             crawlNews(false); fetchCurrency(); fetchOther(); fetchWunderground();
-            
-            // Set flag after 5 seconds to allow initial news to load without triggering breaking
             setTimeout(() => { state.initialLoadComplete = true; }, 5000);
-
             setTimeout(() => { DOM.loader.style.opacity = 0; setTimeout(() => DOM.loader.remove(), 1000); }, 500);
-            
-            setInterval(updateWeatherCard, 6000);
-            setInterval(fetchWunderground, 30000);
-            
-            // Breaking News Check Loop (45s)
-            setInterval(checkBreaking, 45000);
-
-            // Night Mode Background Refresh (Staggered loading simulation)
-            setInterval(() => {
-                if(state.isNightMode) {
-                    // Try fetching to see if more news came in for yesterday (rare but possible)
-                    // Or simply re-run filtering to ensure mainItems has everything in allNews
-                    crawlNews(false);
-                }
-            }, 120000); // Every 2 minutes
-
+            setInterval(updateWeatherCard, 6000); setInterval(fetchWunderground, 30000); setInterval(checkBreaking, 45000);
+            setInterval(() => { if(state.isNightMode) crawlNews(false); }, 120000);
+            setInterval(checkWeatherAlerts, 45000); 
             cycleMain(); cycleTicker();
         }
 
