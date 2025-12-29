@@ -188,7 +188,7 @@
         .bk-watermark svg { width: 18px; height: 18px; fill: #fff; filter: drop-shadow(0 0 2px rgba(0,0,0,0.5)); }
         .bk-watermark span { font-family: var(--font-main); font-weight: 800; font-size: 0.7rem; color: #fff; letter-spacing: 1px; }
 
-        .bk-card-headline { font-family: var(--font-main); font-weight: 800; font-size: 1.8rem; line-height: 1.1; color: #fff; margin-bottom: 15px; text-transform: uppercase; z-index: 5; background: linear-gradient(180deg, #570000 0%, #460000 100%); box-shadow: 0 5px 15px rgba(0,0,0,0.3); padding: 5px; border-radius: 4px; }
+        .bk-card-headline { font-family: var(--font-main); font-weight: 800; font-size: 1.2rem; line-height: 1.1; color: #fff; margin-bottom: 15px; text-transform: uppercase; z-index: 5; background: linear-gradient(180deg, #570000 0%, #460000 100%); box-shadow: 0 5px 15px rgba(0,0,0,0.3); padding: 5px; border-radius: 4px; }
         .bk-card-body { font-family: var(--font-data); font-size: 1.1rem; line-height: 1.4; color: #eee; flex-grow: 1; overflow: hidden; position: relative; mask-image: linear-gradient(to bottom, black 90%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%); }
         .bk-scroll-wrapper { position: relative; top: 0; will-change: transform; }
         .bk-card-meta { font-family: var(--font-mono); font-size: 0.8rem; color: #ffcc00; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px; text-align: right; z-index: 5; background: inherit; }
@@ -1702,7 +1702,18 @@
                 const days = ['VASÁRNAP','HÉTFŐ','KEDD','SZERDA','CSÜTÖRTÖK','PÉNTEK','SZOMBAT'];
                 DOM.cDate.innerText = `${now.getFullYear()}. ${String(now.getMonth()+1).padStart(2,'0')}. ${String(now.getDate()).padStart(2,'0')}. - ${days[now.getDay()]}`;
                 checkScheduleExecution(); updateNextEventCapsule(); checkNightMode();
-                if ([14, 29, 44].includes(now.getMinutes()) && now.getSeconds() === 45) crawlNews(false); 
+                if ([14, 29, 44].includes(now.getMinutes()) && now.getSeconds() === 45) {
+    // Indexek nullázása, hogy a legfrissebbet mutassa azonnal
+    state.mainIdx = 0;       
+    state.tickerIdx = -1;    
+    
+    // Frissítés indítása
+    crawlNews(false);
+    
+    // Manuális léptetés, hogy azonnal frissüljön a kép a várakozás helyett
+    manualTicker(1);
+    cycleMain(true);
+}
                 if (now.getMinutes() === 0 && now.getSeconds() === 0) { closeAllOverlays(); fetchCurrency(); generateHourlySchedule(); if (!state.isNightMode) { state.tickerIdx = -1; manualTicker(1); } }
                 updateDevMonitor();
                 if (Date.now() - state.lastTickerUpdate > 12000 && !state.isSpecial && !state.isSummary && !state.isNightMode) { crawlNews(false); cycleTicker(1); }
