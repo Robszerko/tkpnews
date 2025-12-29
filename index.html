@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V13.29 FINAL FIX</title>
+    <title>TKP NEWS - V14.3 INSTANT LOAD & STABLE PWS</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -183,10 +183,15 @@
         .source-tag { font-family: var(--font-mono); font-size: 0.5rem; color: #aaa; text-transform: uppercase; }
 
         .breaking-card { background: linear-gradient(135deg, #990000 0%, #330000 100%); border: 1px solid #ff4444; border-left: 8px solid #fff; padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.9); height: 100%; min-height: 400px; display: flex; flex-direction: column; pointer-events: auto; cursor: pointer; }
-        .bk-card-header { font-family: var(--font-tech); color: #fff; font-size: 1rem; letter-spacing: 2px; text-transform: uppercase; border-bottom: 2px solid #ff4444; padding-bottom: 10px; margin-bottom: 15px; }
-        .bk-card-headline { font-family: var(--font-main); font-weight: 800; font-size: 1.8rem; line-height: 1.1; color: #fff; margin-bottom: 15px; text-transform: uppercase; }
-        .bk-card-body { font-family: var(--font-data); font-size: 1.1rem; line-height: 1.4; color: #eee; flex-grow: 1; }
-        .bk-card-meta { font-family: var(--font-mono); font-size: 0.8rem; color: #ffcc00; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px; text-align: right; }
+        .bk-card-header { font-family: var(--font-tech); color: #fff; font-size: 1rem; letter-spacing: 2px; text-transform: uppercase; border-bottom: 2px solid #ff4444; padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .bk-watermark { display: flex; align-items: center; gap: 6px; opacity: 0.6; }
+        .bk-watermark svg { width: 18px; height: 18px; fill: #fff; filter: drop-shadow(0 0 2px rgba(0,0,0,0.5)); }
+        .bk-watermark span { font-family: var(--font-main); font-weight: 800; font-size: 0.7rem; color: #fff; letter-spacing: 1px; }
+
+        .bk-card-headline { font-family: var(--font-main); font-weight: 800; font-size: 1.8rem; line-height: 1.1; color: #fff; margin-bottom: 15px; text-transform: uppercase; z-index: 5; background: linear-gradient(180deg, #570000 0%, #460000 100%); box-shadow: 0 5px 15px rgba(0,0,0,0.3); padding: 5px; border-radius: 4px; }
+        .bk-card-body { font-family: var(--font-data); font-size: 1.1rem; line-height: 1.4; color: #eee; flex-grow: 1; overflow: hidden; position: relative; mask-image: linear-gradient(to bottom, black 90%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%); }
+        .bk-scroll-wrapper { position: relative; top: 0; will-change: transform; }
+        .bk-card-meta { font-family: var(--font-mono); font-size: 0.8rem; color: #ffcc00; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px; text-align: right; z-index: 5; background: inherit; }
 
         /* WX DASHBOARD */
         .wx-dashboard { display: flex; flex-direction: column; gap: 5px; padding-top: 5px; }
@@ -277,6 +282,13 @@
         .sm-card-extreme { background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(0,0,0,0.5)); border: 1px solid rgba(255,255,255,0.3); border-left-width: 8px; padding: 10px 20px; opacity: 0; animation: slideInCard 0.6s forwards; }
         .ext-hot { border-left-color: #ff3333; } .ext-cold { border-left-color: #00d4ff; } .ext-wind { border-left-color: #cc00cc; }
         .ext-rain { border-left-color: #3333ff; } .ext-wet { border-left-color: #00ff00; } .ext-dry { border-left-color: #ffaa00; }
+        
+        /* NYIREGYHAZA DETAIL CARD STYLES */
+        .ny-detail-card { background: linear-gradient(135deg, #001a4d 0%, #000022 100%); border: 1px solid rgba(255,255,255,0.2); border-left: 5px solid #00d4ff; }
+        .ny-d-label { font-family: var(--font-tech); font-size: 0.8rem; color: #888; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px; }
+        .ny-d-val { font-family: var(--font-main); font-size: 2rem; color: #fff; font-weight: bold; line-height: 1; }
+        .ny-d-icon { font-size: 1.8rem; margin-bottom: 5px; }
+
         .sm-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 3px; margin-bottom: 3px; }
         .sm-name { font-family: var(--font-main); font-size: 1.1rem; color: #fff; font-weight: 700; display: flex; align-items: center; gap: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .sm-cond { font-family: var(--font-tech); font-size: 0.8rem; color: #aaa; text-transform: uppercase; }
@@ -379,59 +391,39 @@
                 <div class="dev-h">AKTUÁLIS ÓRA ADÁSMENETE</div>
                 <div id="dev-schedule-list" style="font-size:0.75rem; color:#bbb; line-height:1.6; font-family:var(--font-mono);"></div>
                 <br>
-                <div class="dev-h">IDŐJÁRÁS FIGYELŐ</div>
+                <div class="dev-h">IDŐJÁRÁS FIGYELŐ (PRECÍZ)</div>
                 <div style="font-size:0.8rem; margin-bottom:10px;">
                     KÖV. FRISSÍTÉS: <span id="dev-wx-next" style="color:var(--accent);">--:--</span><br>
                     JELENLEGI FORRÁS: <span id="dev-wx-src" style="color:#0f0;">--</span>
-                </div>
-                <div class="dev-h" style="margin-top:20px;">ÜNNEPI ÜZEMMÓD</div>
-                <div style="font-size:0.8rem; margin-bottom:10px;">
-                    KÖVETKEZŐ: <span id="dev-hol-timer" style="color:var(--accent);">--:--</span><br>
-                    ÁLLAPOT: <span id="dev-hol-status" style="color:#aaa;">VÁRAKOZÁS</span>
                 </div>
                 <div class="dev-h" style="margin-top:20px;">MANUÁLIS VEZÉRLÉS</div>
                 <button class="btn" onclick="triggerSummaryMode(30)">[►] FÉLÓRÁS HÍRADÓ TESZT (30p)</button>
                 <button class="btn" onclick="triggerSummaryMode(60)">[►] ÓRÁS HÍRADÓ TESZT (60p)</button>
                 <button class="btn" onclick="triggerBigClock()">[⏰] NAGY ÓRA TESZT</button>
-                <button class="btn" onclick="triggerBigClock()">[📺] MŰSORAJÁNLÓ TESZT (NAGY ÓRA)</button>
                 <button class="btn" onclick="closeAllOverlays()">[X] MINDEN ABLAK BEZÁRÁSA</button>
                 <button class="btn" onclick="forceRefreshAll()">[⚡] AZONNALI FRISSÍTÉS</button>
                 <button class="btn" onclick="testBreaking()">[🔥] BREAKING NEWS TESZT</button>
-                <!-- NEW ALERT TESTS -->
+                
+                <div class="dev-h" style="margin-top:20px;">ÚJ SPECIÁLIS KÁRTYA TESZTEK</div>
+                <button class="btn" onclick="triggerSpecialMeteoSequence()">[☁] TELJES METEO SORREND (AUTO)</button>
+                <button class="btn" onclick="testSpecificPhase(1)">[1] SZABOLCS VÁRMEGYE</button>
+                <button class="btn" onclick="testSpecificPhase(2)">[2] ORSZÁGOS KÖRKÉP</button>
+                <button class="btn" onclick="testSpecificPhase(3)">[3] VILÁGVÁROSOK</button>
+                <button class="btn" onclick="testSpecificPhase(4)">[4] EXTRÉM / EGZOTIKUS</button>
+                <button class="btn" onclick="testSpecificPhase(5)">[5] NYÍREGYHÁZA RÉSZLETES</button>
+            </div>
+            <div class="dev-section" style="display:flex; flex-direction:column;">
+                <div class="dev-h">RIASZTÁS TESZT</div>
                 <button class="btn" onclick="showWeatherAlert('wind', 85, 'VIHAROS SZÉL')">[⚠️] SZÉL RIASZTÁS</button>
                 <button class="btn" onclick="showWeatherAlert('snow', null, 'HAVAZÁS / HÓZÁPOR')">[❄️] HÓ RIASZTÁS</button>
                 <button class="btn" onclick="showWeatherAlert('storm', null, 'HEVES ZIVATAR')">[⚡] ZIVATAR RIASZTÁS</button>
-                <button class="btn" onclick="showWeatherAlert('rain', null, 'INTENZÍV ESŐZÉS')">[🌧️] ESŐ RIASZTÁS</button>
-                <button class="btn" onclick="showWeatherAlert('fog', null, 'SŰRŰ KÖD')">[🌫️] KÖD RIASZTÁS</button>
-                <button class="btn" onclick="showWeatherAlert('uv', 8.5, 'EXTRÉM UV SUGÁRZÁS')">[☀️] UV RIASZTÁS</button>
                 <button class="btn" onclick="showWeatherAlert('heat', 36, 'HŐSÉGRIADÓ')">[🔥] HŐSÉG RIASZTÁS</button>
-                <button class="btn" onclick="showWeatherAlert('cold', -12, 'EXTRÉM HIDEG')">[🥶] HIDEG RIASZTÁS</button>
-
-                <button class="btn" onclick="triggerSpecialMeteoSequence()">[☁] SPEC. METEO SORREND</button>
-                <button class="btn" onclick="forceHoliday('XMAS')">[🎄] KARÁCSONY KÉNYSZERÍTÉS</button>
-                <button class="btn" onclick="forceHoliday('NY')">[🎉] ÚJÉV KÉNYSZERÍTÉS</button>
-                <button class="btn" onclick="forceHoliday('VAL')">[❤️] VALENTIN KÉNYSZERÍTÉS</button>
-                <button class="btn" onclick="toggleNightTest()">[🌙] ÉJSZAKAI MÓD TESZT</button>
-            </div>
-            <div class="dev-section" style="display:flex; flex-direction:column;">
-                <div class="dev-h">ÚJÉVI EFFEKT TESZT</div>
-                <button class="btn" onclick="toggleStreamers()">[🎀] SZERPENTIN BE/KI</button>
-                <button class="btn" onclick="createLogoFirework()">[🎆] LOGÓ TŰZIJÁTÉK (1DB)</button>
                 <br>
                 <div class="dev-h">ADÁSREND FIGYELŐ</div>
                 <div style="font-size:0.8rem; margin-bottom:10px;">
-                    KÖV. 30p: <span id="dev-sch-30" style="color:#aaa;">--:--</span><br>
-                    KÖV. ÓRA: <span id="dev-sch-60" style="color:#aaa;">--:--</span><br>
                     KÖV. METEO BLOKK: <span id="dev-next-meteo" style="color:#00d4ff; font-weight:bold;">--:--</span>
                 </div>
-                <div style="font-size:0.8rem; margin-bottom:10px; border-top:1px solid #333; padding-top:5px;">
-                    ÉJSZAKAI ADÁS: <span id="dev-night-timer" style="color:#9933ff; font-weight:bold;">--:--</span>
-                </div>
-                <div class="dev-h">BREAKING NEWS SOR</div>
-                <div style="font-size:0.8rem; margin-bottom:5px;">
-                    SORBAN ÁLL: <span id="dev-bk-queue" style="color:var(--alert); font-weight:bold;">0</span> DB
-                </div>
-                <div class="dev-h" style="margin-top:10px;">PROXY ÁLLAPOT</div>
+                <div class="dev-h">PROXY ÁLLAPOT</div>
                 <div style="font-size:0.8rem; margin-bottom:5px;">
                     FORRÁSOK: <span id="sys-feeds">0</span> | ÜZEMIDŐ: <span id="sys-uptime">0</span>
                 </div>
@@ -548,7 +540,7 @@
                     RÉGI OLDAL (KLIKK.HU) &#10138;
                 </a>
                 
-                <div style="font-family:var(--font-tech); font-weight:bold; color:var(--accent); font-size:0.8rem; letter-spacing:1px;">V13.29</div>
+                <div style="font-family:var(--font-tech); font-weight:bold; color:var(--accent); font-size:0.8rem; letter-spacing:1px;">V14.3</div>
             </div>
         </div>
 
@@ -634,7 +626,13 @@
                 <!-- Back: Breaking News -->
                 <div class="sidebar-back">
                     <div class="breaking-card" id="bk-card-clickable">
-                        <div class="bk-card-header">MOST ÉRKEZETT</div>
+                        <div class="bk-card-header">
+                            <span>MOST ÉRKEZETT</span>
+                            <div class="bk-watermark">
+                                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                                <span>TKP NEWS</span>
+                            </div>
+                        </div>
                         <div class="bk-card-headline" id="bk-card-headline">...</div>
                         <div class="bk-card-body" id="bk-card-body">...</div>
                         <div class="bk-card-meta" id="bk-card-meta">--:-- • FORRÁS</div>
@@ -682,7 +680,7 @@
 
     <script>
         /**
-         * TKP NEWS V13.29 - NY FIX & NIGHT TEXT
+         * TKP NEWS V14.3 - MULTI-PWS STABILITY & INSTANT NEWS LOAD
          */
 
         const RSS_FEEDS = [
@@ -741,110 +739,63 @@
         const WU_STATIONS = ['INYREG42', 'INYREG51', 'INYREG26', 'INYREG47', 'INYREG30'];
         const FX_KEYS = ['8258c9489622103635e16227fd9dadd7b8d1', '426709d24c8d4420f140ac7c451db300edfa'];
 
+        /* ----- STATION LISTS FOR SPECIAL METEO ----- */
+        const SZABOLCS_STATIONS = [
+            { name: "Nyíregyháza", lat: 47.95, lon: 21.71, code: "hu" },
+            { name: "Kisvárda", lat: 48.22, lon: 22.08, code: "hu" },
+            { name: "Mátészalka", lat: 47.95, lon: 22.32, code: "hu" },
+            { name: "Nyírbátor", lat: 47.83, lon: 22.13, code: "hu" },
+            { name: "Vásárosnamény", lat: 48.12, lon: 22.32, code: "hu" },
+            { name: "Fehérgyarmat", lat: 47.98, lon: 22.51, code: "hu" },
+            { name: "Tiszavasvári", lat: 47.96, lon: 21.36, code: "hu" },
+            { name: "Újfehértó", lat: 47.80, lon: 21.68, code: "hu" },
+            { name: "Nagykálló", lat: 47.88, lon: 21.84, code: "hu" },
+            { name: "Záhony", lat: 48.40, lon: 22.18, code: "hu" },
+            { name: "Csenger", lat: 47.83, lon: 22.68, code: "hu" },
+            { name: "Nyírtelek", lat: 48.01, lon: 21.62, code: "hu" },
+            { name: "Ibrány", lat: 48.13, lon: 21.71, code: "hu" },
+            { name: "Baktalórántháza", lat: 48.00, lon: 22.06, code: "hu" },
+            { name: "Nagyecsed", lat: 47.86, lon: 22.39, code: "hu" },
+            { name: "Tiszalök", lat: 48.01, lon: 21.38, code: "hu" }
+        ];
+
         const HU_MAJOR_STATIONS = [
             { name: "Budapest", lat: 47.49, lon: 19.04, code: "hu" }, { name: "Debrecen", lat: 47.53, lon: 21.62, code: "hu" },
             { name: "Szeged", lat: 46.25, lon: 20.15, code: "hu" }, { name: "Miskolc", lat: 48.10, lon: 20.78, code: "hu" },
             { name: "Pécs", lat: 46.07, lon: 18.23, code: "hu" }, { name: "Győr", lat: 47.68, lon: 17.63, code: "hu" },
             { name: "Sopron", lat: 47.68, lon: 16.58, code: "hu" }, { name: "Veszprém", lat: 47.09, lon: 17.91, code: "hu" },
             { name: "Eger", lat: 47.90, lon: 20.37, code: "hu" }, { name: "Szentes", lat: 46.65, lon: 20.26, code: "hu" },
-            { name: "Baja", lat: 46.18, lon: 18.95, code: "hu" }, { name: "Esztergom", lat: 47.79, lon: 18.74, code: "hu" },
-            { name: "Siófok", lat: 46.90, lon: 18.05, code: "hu" }, { name: "Keszthely", lat: 46.76, lon: 17.24, code: "hu" },
-            { name: "Pápa", lat: 47.33, lon: 17.46, code: "hu" }, { name: "Gyula", lat: 46.65, lon: 21.28, code: "hu" },
-            { name: "Hajdúszoboszló", lat: 47.45, lon: 21.40, code: "hu" }, { name: "Szekszárd", lat: 46.35, lon: 18.70, code: "hu" },
-            { name: "Gödöllő", lat: 47.60, lon: 19.35, code: "hu" }, { name: "Vác", lat: 47.77, lon: 19.13, code: "hu" },
-            { name: "Székesfehérvár", lat: 47.19, lon: 18.41, code: "hu" }, { name: "Kecskemét", lat: 46.88, lon: 19.69, code: "hu" },
-            { name: "Szarvas", lat: 46.86, lon: 20.55, code: "hu" }, { name: "Karcag", lat: 47.31, lon: 20.92, code: "hu" },
-            { name: "Mezőtúr", lat: 47.00, lon: 20.62, code: "hu" }, { name: "Sátoraljaújhely", lat: 48.40, lon: 21.66, code: "hu" },
-            { name: "Sárospatak", lat: 48.32, lon: 21.57, code: "hu" }, { name: "Balatonfüred", lat: 46.96, lon: 17.89, code: "hu" },
-            { name: "Komárom", lat: 47.74, lon: 18.12, code: "hu" }, { name: "Paks", lat: 46.61, lon: 18.86, code: "hu" },
-            { name: "Kalocsa", lat: 46.52, lon: 18.98, code: "hu" }, { name: "Szigetvár", lat: 46.05, lon: 17.80, code: "hu" },
-            { name: "Tapolca", lat: 46.88, lon: 17.44, code: "hu" }, { name: "Hatvan", lat: 47.67, lon: 19.68, code: "hu" },
-            { name: "Dombóvár", lat: 46.38, lon: 18.13, code: "hu" },
-            { name: "Mosonmagyaróvár", lat: 47.87, lon: 17.27, code: "hu" }, { name: "Jászberény", lat: 47.50, lon: 19.91, code: "hu" },
-            { name: "Orosháza", lat: 46.57, lon: 20.66, code: "hu" }, { name: "Kiskunfélegyháza", lat: 46.71, lon: 19.85, code: "hu" },
-            { name: "Ajka", lat: 47.10, lon: 17.56, code: "hu" }, { name: "Várpalota", lat: 47.20, lon: 18.14, code: "hu" },
-            { name: "Törökszentmiklós", lat: 47.17, lon: 20.41, code: "hu" }, { name: "Makó", lat: 46.21, lon: 20.48, code: "hu" },
-            { name: "Tata", lat: 47.65, lon: 18.32, code: "hu" }, { name: "Komló", lat: 46.19, lon: 18.26, code: "hu" },
-            { name: "Hajdúböszörmény", lat: 47.67, lon: 21.51, code: "hu" }, { name: "Nyergesújfalu", lat: 47.76, lon: 18.56, code: "hu" },
-            { name: "Százhalombatta", lat: 47.31, lon: 18.91, code: "hu" }, { name: "Göd", lat: 47.69, lon: 19.14, code: "hu" },
-            { name: "Fót", lat: 47.61, lon: 19.19, code: "hu" },
-            { name: "Sárvár", lat: 47.25, lon: 16.93, code: "hu" }, { name: "Kőszeg", lat: 47.38, lon: 16.54, code: "hu" },
-            { name: "Szentgotthárd", lat: 46.95, lon: 16.27, code: "hu" }, { name: "Lenti", lat: 46.62, lon: 16.53, code: "hu" },
-            { name: "Marcali", lat: 46.58, lon: 17.41, code: "hu" }, { name: "Nagyatád", lat: 46.23, lon: 17.36, code: "hu" },
-            { name: "Siklós", lat: 45.85, lon: 18.29, code: "hu" }, { name: "Dunaföldvár", lat: 46.80, lon: 18.91, code: "hu" },
-            { name: "Kiskőrös", lat: 46.62, lon: 19.28, code: "hu" }, { name: "Kiskunhalas", lat: 46.43, lon: 19.48, code: "hu" },
-            { name: "Csongrád", lat: 46.71, lon: 20.14, code: "hu" }, { name: "Mezőkövesd", lat: 47.81, lon: 20.57, code: "hu" },
-            { name: "Tiszaújváros", lat: 47.92, lon: 21.05, code: "hu" }, { name: "Szerencs", lat: 48.16, lon: 21.20, code: "hu" },
-            { name: "Berettyóújfalu", lat: 47.22, lon: 21.54, code: "hu" }, { name: "Püspökladány", lat: 47.32, lon: 21.11, code: "hu" },
-            { name: "Hajdúnánás", lat: 47.84, lon: 21.43, code: "hu" }, { name: "Kisbér", lat: 47.50, lon: 18.03, code: "hu" },
-            { name: "Mór", lat: 47.37, lon: 18.21, code: "hu" }, { name: "Nagykáta", lat: 47.41, lon: 19.74, code: "hu" },
-            { name: "Salgótarján", lat: 48.10, lon: 19.80, code: "hu" }, { name: "Cegléd", lat: 47.17, lon: 19.80, code: "hu" },
-            { name: "Dunaújváros", lat: 46.96, lon: 18.93, code: "hu" }, { name: "Érd", lat: 47.38, lon: 18.91, code: "hu" },
             { name: "Szolnok", lat: 47.18, lon: 20.20, code: "hu" }, { name: "Tatabánya", lat: 47.57, lon: 18.40, code: "hu" },
             { name: "Kaposvár", lat: 46.36, lon: 17.79, code: "hu" }, { name: "Zalaegerszeg", lat: 46.84, lon: 16.84, code: "hu" },
             { name: "Békéscsaba", lat: 46.68, lon: 21.09, code: "hu" }, { name: "Nagykanizsa", lat: 46.45, lon: 16.99, code: "hu" },
-            { name: "Hódmezővásárhely", lat: 46.43, lon: 20.32, code: "hu" }, { name: "Dunakeszi", lat: 47.64, lon: 19.14, code: "hu" },
-            { name: "Szigetszentmiklós", lat: 47.34, lon: 19.05, code: "hu" }, { name: "Budaörs", lat: 47.46, lon: 18.96, code: "hu" },
-            { name: "Szentendre", lat: 47.66, lon: 19.07, code: "hu" }, { name: "Gyál", lat: 47.38, lon: 19.22, code: "hu" },
-            { name: "Vecsés", lat: 47.40, lon: 19.26, code: "hu" }, { name: "Dunaharaszti", lat: 47.35, lon: 19.09, code: "hu" },
-            { name: "Fót", lat: 47.61, lon: 19.19, code: "hu" }, { name: "Veresegyház", lat: 47.65, lon: 19.28, code: "hu" },
-            /* NEW HU */
-            { name: "Bácsalmás", lat: 46.12, lon: 19.34, code: "hu" }, { name: "Celldömölk", lat: 47.25, lon: 17.15, code: "hu" }, 
-            { name: "Encs", lat: 48.33, lon: 21.12, code: "hu" }, { name: "Szécsény", lat: 48.08, lon: 19.52, code: "hu" },
-            { name: "Siklós", lat: 45.85, lon: 18.30, code: "hu" }, { name: "Szigetvár", lat: 46.05, lon: 17.80, code: "hu" },
-            { name: "Mohács", lat: 45.99, lon: 18.68, code: "hu" }, { name: "Balassagyarmat", lat: 48.07, lon: 19.29, code: "hu" },
-            { name: "Mátraverebély", lat: 48.00, lon: 19.76, code: "hu" }, { name: "Hajdúhadház", lat: 47.67, lon: 21.66, code: "hu" },
-            { name: "Tiszakécske", lat: 46.93, lon: 20.10, code: "hu" }, { name: "Kiskunmajsa", lat: 46.49, lon: 19.74, code: "hu" },
-            { name: "Tolna", lat: 46.43, lon: 18.78, code: "hu" }, { name: "Tamási", lat: 46.63, lon: 18.28, code: "hu" },
-            { name: "Bicske", lat: 47.49, lon: 18.63, code: "hu" }
+            { name: "Szombathely", lat: 47.23, lon: 16.62, code: "hu" }, { name: "Dunaújváros", lat: 46.96, lon: 18.93, code: "hu" },
+            { name: "Hódmezővásárhely", lat: 46.43, lon: 20.32, code: "hu" }, { name: "Szekszárd", lat: 46.35, lon: 18.70, code: "hu" }
         ];
 
         const WORLD_MAJOR_STATIONS = [
             { name: "London", lat: 51.50, lon: -0.12, code: "gb" }, { name: "New York", lat: 40.71, lon: -74.00, code: "us" },
-            { name: "Barcelona", lat: 41.38, lon: 2.17, code: "es" }, { name: "Milánó", lat: 45.46, lon: 9.19, code: "it" },
-            { name: "München", lat: 48.13, lon: 11.58, code: "de" }, { name: "Amszterdam", lat: 52.36, lon: 4.90, code: "nl" },
-            { name: "Brüsszel", lat: 50.85, lon: 4.35, code: "be" }, { name: "Zürich", lat: 47.37, lon: 8.54, code: "ch" },
-            { name: "Koppenhága", lat: 55.67, lon: 12.56, code: "dk" }, { name: "Stockholm", lat: 59.32, lon: 18.06, code: "se" },
-            { name: "Oslo", lat: 59.91, lon: 10.75, code: "no" }, { name: "Helsinki", lat: 60.16, lon: 24.93, code: "fi" },
-            { name: "Dublin", lat: 53.34, lon: -6.26, code: "ie" }, { name: "Lisszabon", lat: 38.72, lon: -9.13, code: "pt" },
-            { name: "Athén", lat: 37.98, lon: 23.72, code: "gr" }, { name: "Isztambul", lat: 41.00, lon: 28.97, code: "tr" },
-            { name: "Dubai", lat: 25.20, lon: 55.27, code: "ae" }, { name: "Szingapúr", lat: 1.35, lon: 103.81, code: "sg" },
-            { name: "Hong Kong", lat: 22.31, lon: 114.16, code: "hk" }, { name: "Kairó", lat: 30.04, lon: 31.23, code: "eg" },
-            { name: "Szöul", lat: 37.56, lon: 126.97, code: "kr" }, { name: "Bangkok", lat: 13.75, lon: 100.50, code: "th" },
-            { name: "Delhi", lat: 28.61, lon: 77.20, code: "in" }, { name: "Sanghaj", lat: 31.23, lon: 121.47, code: "cn" },
-            { name: "Chicago", lat: 41.87, lon: -87.62, code: "us" }, { name: "San Francisco", lat: 37.77, lon: -122.41, code: "us" },
-            { name: "Miami", lat: 25.76, lon: -80.19, code: "us" }, { name: "Buenos Aires", lat: -34.60, lon: -58.38, code: "ar" },
-            { name: "Mexikóváros", lat: 19.43, lon: -99.13, code: "mx" }, { name: "Lima", lat: -12.04, lon: -77.04, code: "pe" },
-            { name: "Lagos", lat: 6.52, lon: 3.37, code: "ng" }, { name: "Casablanca", lat: 33.57, lon: -7.58, code: "ma" },
-            { name: "Tel Aviv", lat: 32.08, lon: 34.78, code: "il" }, { name: "Jakarta", lat: -6.20, lon: 106.84, code: "id" },
-            { name: "Manila", lat: 14.59, lon: 120.98, code: "ph" },
-            { name: "Reykjavík", lat: 64.14, lon: -21.94, code: "is" }, { name: "Las Vegas", lat: 36.17, lon: -115.14, code: "us" },
-            { name: "Honolulu", lat: 21.30, lon: -157.85, code: "us" }, { name: "Montreal", lat: 45.50, lon: -73.56, code: "ca" },
-            { name: "Sao Paulo", lat: -23.55, lon: -46.63, code: "br" }, { name: "Bogota", lat: 4.71, lon: -74.07, code: "co" },
-            { name: "Santiago", lat: -33.44, lon: -70.66, code: "cl" }, { name: "Mumbai", lat: 19.07, lon: 72.87, code: "in" },
-            { name: "Kuala Lumpur", lat: 3.13, lon: 101.68, code: "my" }, { name: "Taipei", lat: 25.03, lon: 121.56, code: "tw" },
-            { name: "Melbourne", lat: -37.81, lon: 144.96, code: "au" }, { name: "Auckland", lat: -36.84, lon: 174.76, code: "nz" },
-            { name: "Nairobi", lat: -1.29, lon: 36.82, code: "ke" }, { name: "Dakar", lat: 14.71, lon: -17.46, code: "sn" },
-            { name: "Tunisz", lat: 36.80, lon: 10.18, code: "tn" },
-            { name: "Berlin", lat: 52.52, lon: 13.40, code: "de" }, { name: "Madrid", lat: 40.41, lon: -3.70, code: "es" },
-            { name: "Róma", lat: 41.90, lon: 12.49, code: "it" }, { name: "Bécs", lat: 48.20, lon: 16.37, code: "at" },
-            { name: "Varsó", lat: 52.22, lon: 21.01, code: "pl" }, { name: "Prága", lat: 50.07, lon: 14.43, code: "cz" },
-            { name: "Pozsony", lat: 48.14, lon: 17.10, code: "sk" }, { name: "Zágráb", lat: 45.81, lon: 15.98, code: "hr" },
-            { name: "Belgrád", lat: 44.78, lon: 20.44, code: "rs" }, { name: "Bukarest", lat: 44.42, lon: 26.10, code: "ro" },
-            { name: "Szófia", lat: 42.69, lon: 23.32, code: "bg" }, { name: "Kijev", lat: 50.45, lon: 30.52, code: "ua" },
-            { name: "Moszkva", lat: 55.75, lon: 37.61, code: "ru" }, { name: "Tokió", lat: 35.67, lon: 139.65, code: "jp" },
-            { name: "Peking", lat: 39.90, lon: 116.40, code: "cn" }, { name: "Sydney", lat: -33.86, lon: 151.20, code: "au" },
-            { name: "Toronto", lat: 43.65, lon: -79.38, code: "ca" }, { name: "Los Angeles", lat: 34.05, lon: -118.24, code: "us" },
-            { name: "Rio de Janeiro", lat: -22.90, lon: -43.17, code: "br" }, { name: "Fokváros", lat: -33.92, lon: 18.42, code: "za" },
-            /* NEW WORLD */
-            { name: "Vancouver", lat: 49.28, lon: -123.12, code: "ca" }, { name: "Manchester", lat: 53.48, lon: -2.24, code: "gb" },
-            { name: "Lyon", lat: 45.76, lon: 4.83, code: "fr" }, { name: "Marseille", lat: 43.29, lon: 5.36, code: "fr" },
-            { name: "Valencia", lat: 39.46, lon: -0.37, code: "es" }, { name: "Porto", lat: 41.15, lon: -8.62, code: "pt" },
-            { name: "Genf", lat: 46.20, lon: 6.14, code: "ch" }, { name: "Hamburg", lat: 53.55, lon: 9.99, code: "de" },
-            { name: "Frankfurt", lat: 50.11, lon: 8.68, code: "de" }, { name: "Oszaka", lat: 34.69, lon: 135.50, code: "jp" },
-            { name: "Szapporo", lat: 43.06, lon: 141.35, code: "jp" }, { name: "Brisbane", lat: -27.47, lon: 153.02, code: "au" },
-            { name: "Perth", lat: -31.95, lon: 115.86, code: "au" }, { name: "Doha", lat: 25.28, lon: 51.53, code: "qa" },
-            { name: "Rijád", lat: 24.71, lon: 46.67, code: "sa" }
+            { name: "Tokió", lat: 35.67, lon: 139.65, code: "jp" }, { name: "Sydney", lat: -33.86, lon: 151.20, code: "au" },
+            { name: "Peking", lat: 39.90, lon: 116.40, code: "cn" }, { name: "Moszkva", lat: 55.75, lon: 37.61, code: "ru" },
+            { name: "Berlin", lat: 52.52, lon: 13.40, code: "de" }, { name: "Párizs", lat: 48.85, lon: 2.35, code: "fr" },
+            { name: "Róma", lat: 41.90, lon: 12.49, code: "it" }, { name: "Dubai", lat: 25.20, lon: 55.27, code: "ae" },
+            { name: "Los Angeles", lat: 34.05, lon: -118.24, code: "us" }, { name: "Rio de Janeiro", lat: -22.90, lon: -43.17, code: "br" },
+            { name: "Fokváros", lat: -33.92, lon: 18.42, code: "za" }, { name: "Toronto", lat: 43.65, lon: -79.38, code: "ca" },
+            { name: "Mumbai", lat: 19.07, lon: 72.87, code: "in" }, { name: "Szingapúr", lat: 1.35, lon: 103.81, code: "sg" }
+        ];
+
+        const EXOTIC_STATIONS = [
+            { name: "Death Valley", lat: 36.53, lon: -116.93, code: "us" },
+            { name: "Ojmjakon", lat: 63.46, lon: 142.79, code: "ru" },
+            { name: "McMurdo (Antarktisz)", lat: -77.85, lon: 166.67, code: "aq" },
+            { name: "Everest Alaptábor", lat: 28.00, lon: 86.85, code: "np" },
+            { name: "Las Vegas", lat: 36.17, lon: -115.14, code: "us" },
+            { name: "Honolulu (Hawaii)", lat: 21.30, lon: -157.85, code: "us" },
+            { name: "Nuuk (Grönland)", lat: 64.18, lon: -51.72, code: "gl" },
+            { name: "Ushuaia", lat: -54.80, lon: -68.30, code: "ar" },
+            { name: "Alice Springs", lat: -23.69, lon: 133.87, code: "au" },
+            { name: "Reykjavík", lat: 64.14, lon: -21.94, code: "is" },
+            { name: "Mekka", lat: 21.38, lon: 39.85, code: "sa" },
+            { name: "Manaus (Amazonas)", lat: -3.11, lon: -60.02, code: "br" }
         ];
 
         const SIDEBAR_STATIONS = shuffle([...HU_MAJOR_STATIONS, ...WORLD_MAJOR_STATIONS]);
@@ -863,7 +814,8 @@
             schedule: [], holidayMode: null, nextHolidayFlip: 0, holidaySequenceTimer: null,
             particleInterval: null, logoFxInterval: null, initialLoadComplete: false,
             isNightMode: false, forcedNightMode: false, mainTimer: null,
-            weatherAlertCooldown: {}
+            weatherAlertCooldown: {},
+            mainStarted: false // NEW FLAG
         };
 
         const DOM = {
@@ -896,21 +848,30 @@
         function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
         function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
         
-        // --- REAL FEEL LOGIC (Updated to check for non-negative wind) ---
-        function calculatePreciseRealFeel(tempC, humidity, windKmh) {
-            // Heat Index (Rothfusz)
-            if (tempC >= 27.0) {
+        // --- HYBRID REAL FEEL AGGREGATION LOGIC (V14.2) ---
+        function calculateAggregateRealFeel(t, h, w) {
+            // This function handles the "Formula Selection" based on conditions
+            
+            // 1. Extreme Cold (< 10°C): Canadian Wind Chill (Slightly more sensitive than NOAA)
+            if (t <= 10.0 && w > 3.0) {
+                // Canadian Wind Chill Index formula
+                return 13.12 + 0.6215 * t - 11.37 * Math.pow(w, 0.16) + 0.3965 * t * Math.pow(w, 0.16);
+            }
+
+            // 2. Extreme Heat (> 27°C): NOAA Heat Index
+            if (t >= 27.0) {
                 const c1 = -8.78469475556, c2 = 1.61139411, c3 = 2.33854883889, c4 = -0.14611605, c5 = -0.012308094, c6 = -0.0164248277778, c7 = 0.002211732, c8 = 0.00072546, c9 = -0.000003582;
-                return c1 + c2 * tempC + c3 * humidity + c4 * tempC * humidity + c5 * tempC * tempC + c6 * humidity * humidity + c7 * tempC * tempC * humidity + c8 * tempC * humidity * humidity + c9 * tempC * tempC * humidity * humidity;
+                return c1 + c2 * t + c3 * h + c4 * t * h + c5 * t * t + c6 * h * h + c7 * t * t * h + c8 * t * h * h + c9 * t * t * h * h;
             }
-            // Wind Chill
-            if (tempC <= 10.0 && windKmh > 4.8) {
-                return 13.12 + 0.6215 * tempC - 11.37 * Math.pow(windKmh, 0.16) + 0.3965 * tempC * Math.pow(windKmh, 0.16);
-            }
-            // AAT (Australian Apparent Temperature) for mild weather
-            const e = (humidity / 100) * 6.105 * Math.exp((17.27 * tempC) / (237.7 + tempC));
-            const wsMs = Math.max(0, windKmh / 3.6); // Ensure non-negative
-            return tempC + (0.33 * e) - (0.70 * wsMs) - 0.7; 
+
+            // 3. The "Mild" Zone (10 - 27°C): Australian Apparent Temperature (AAT)
+            // This is the key fix for "feeling the wind" even when it's 15 degrees.
+            // AAT = Ta + 0.33*e - 0.70*ws - 4.00 (Where 4.00 is radiation baseline, we reduce it if night/cloudy, but keeping simpler here)
+            // Vapor Pressure (e) approx:
+            const e = (h / 100) * 6.105 * Math.exp((17.27 * t) / (237.7 + t));
+            const wsMs = w / 3.6; // km/h to m/s
+            // We use a modified baseline to match perceived conditions better indoors vs outdoors
+            return t + (0.33 * e) - (0.70 * wsMs) - 4.0; 
         }
 
         function getWmoDesc(code, isDay = 1) { 
@@ -1052,7 +1013,19 @@
 
         function triggerCurrentSummaryTest() { const min = new Date().getMinutes(); triggerSummaryMode((min >= 30 && min < 57) ? 60 : 30); }
         function forceRefreshAll() { crawlNews(true); fetchCurrency(); fetchWunderground(); alert("FRISSÍTÉS ELKÜLDVE"); }
-        function testBreaking() { const now = new Date(); state.breakingQueue.push({ title: "RENDKÍVÜLI HÍR: EZ EGY TESZT ÜZENET, HOGY LÁSSUK MŰKÖDIK-E A SIDEBAR FLIP.", desc: "Ez a hír hosszabb szöveggel rendelkezik, hogy teszteljük az olvasási időt és a kártya megjelenését. Reméljük, hogy minden szépen átfordul és olvasható lesz.", source: "TESZT", date: now, link: "#" }); if (!state.isBreakingActive) processBreakingQueue(); }
+        function testBreaking() { 
+            const now = new Date(); 
+            // Generate a long dummy text for scroll testing
+            const longDesc = "EZ EGY TESZT ÜZENET, AMELY A GÖRGETÉSI FUNKCIÓT DEMONSTRÁLJA. Ez a szöveg szándékosan hosszúra lett nyújtva, hogy meghaladja a rendelkezésre álló keret méretét. Amikor a tartalom hosszabb, mint a konténer, a rendszer automatikusan észleli ezt, vár 3 másodpercet, majd egy finom animációval felfelé görgeti a szöveget, hogy az alsó sorok is olvashatóvá váljanak. A szöveg végül eltűnik a 'MOST ÉRKEZETT' fejléc alatt, így biztosítva, hogy minden információ átadható legyen anélkül, hogy a felhasználói felületet torzítaná.";
+            state.breakingQueue.push({ 
+                title: "RENDKÍVÜLI HÍR: SCROLL TESZT", 
+                desc: longDesc, 
+                source: "TESZT", 
+                date: now, 
+                link: "#" 
+            }); 
+            if (!state.isBreakingActive) processBreakingQueue(); 
+        }
         function toggleNightTest() { state.forcedNightMode = !state.forcedNightMode; alert(state.forcedNightMode ? "ÉJSZAKAI MÓD KÉNYSZERÍTVE" : "ÉJSZAKAI MÓD KIKAPCSOLVA (AUTO)"); checkNightMode(); }
         function toggleStreamers() { const c = DOM.streamersContainer; if(c.innerHTML === '') { renderNYEDecorations(); DOM.logoFront.classList.add('ny'); } else { c.innerHTML = ''; DOM.logoFront.classList.remove('ny'); } }
 
@@ -1075,9 +1048,10 @@
 
         async function crawlNews(isReset = false) {
             if(isReset) { DOM.tickerWindow.innerHTML = '<div class="ticker-item active"><div class="ticker-content"><span class="ticker-refresh-msg">ADATBÁZIS FRISSÍTÉSE...</span></div></div>'; clearTimeout(state.tickerTimer); DOM.mainTitle.innerText = "ADATBÁZIS FRISSÍTÉSE..."; }
+            // INSTANT LOAD: Don't wait for all.
             RSS_FEEDS.map(async (src) => {
                 const text = await fetchRobust(src.url, src.name);
-                if (text) { parseAndAdd(text, src.name); updateLists(); updateDevLog(); if(isReset && state.tickerIdx === -1) { state.tickerIdx = -1; cycleTicker(1); } }
+                if (text) { parseAndAdd(text, src.name); }
             });
         }
 
@@ -1095,6 +1069,22 @@
                         if(!state.initialLoadComplete) state.seenBreaking.add(link);
                     }
                 });
+                
+                // INSTANT UPDATE TRIGGER
+                updateLists();
+                updateDevLog();
+                
+                // START MAIN UI IMMEDIATELY IF NOT STARTED
+                if(state.mainItems.length > 0 && !state.mainStarted) {
+                    state.mainStarted = true;
+                    // REMOVE LOADER
+                    DOM.loader.style.opacity = 0; 
+                    setTimeout(() => DOM.loader.remove(), 1000);
+                    // START CYCLE
+                    cycleMain(); 
+                    if(state.tickerIdx === 0) cycleTicker(1);
+                }
+
             } catch(e) {}
         }
 
@@ -1126,10 +1116,34 @@
 
             const timeStr = item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'});
             DOM.bkCardHeadline.innerText = item.title;
-            DOM.bkCardBody.innerText = item.desc;
             DOM.bkCardMeta.innerText = `${timeStr} • ${item.source}`;
+            
+            // RESET CONTENT & SCROLL
+            DOM.bkCardBody.innerHTML = ""; 
+            const wrapper = document.createElement("div");
+            wrapper.className = "bk-scroll-wrapper";
+            wrapper.innerText = item.desc;
+            DOM.bkCardBody.appendChild(wrapper);
 
+            // ACTIVATE CARD
             DOM.sidebar.classList.add('breaking-active');
+
+            // SCROLL LOGIC
+            const bodyH = DOM.bkCardBody.clientHeight;
+            // Slight delay to ensure render
+            setTimeout(() => {
+                const scrollH = wrapper.scrollHeight;
+                if(scrollH > bodyH) {
+                    const dist = scrollH - bodyH + 20; // +buffer
+                    const duration = Math.max(2, dist * 0.05); // dynamic speed
+                    
+                    wrapper.style.transition = `transform ${duration}s linear`;
+                    
+                    setTimeout(() => {
+                        wrapper.style.transform = `translateY(-${dist}px)`;
+                    }, 3000); // 3s wait before scroll
+                }
+            }, 500);
 
             const charCount = (item.title.length + item.desc.length);
             let duration = Math.max(15000, (charCount / 15) * 1000); 
@@ -1140,7 +1154,7 @@
                 } else {
                      closeBreaking();
                 }
-            }, duration);
+            }, duration + 3000); // Add buffer for scroll wait
         }
 
         function closeBreaking() {
@@ -1159,34 +1173,82 @@
             startMainLoop(); 
         };
 
-        async function triggerSpecialMeteoSequence() {
+        /* --- NEW 5-PHASE SPECIAL METEO SEQUENCE --- */
+        async function triggerSpecialMeteoSequence(startPhase = 0) {
             state.isSpecial = true;
             [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ].forEach(ui => document.getElementById(ui.id).classList.add(`hide-${ui.t}`));
             DOM.special.style.display = 'flex'; setTimeout(() => DOM.special.classList.add('active'), 50);
-            const sequence = [ { title: "MAGYARORSZÁG NAGYVÁROSAI", list: shuffle([...HU_MAJOR_STATIONS]).slice(0, 12) }, { title: "KIEMELT VILÁGVÁROSOK", list: shuffle([...WORLD_MAJOR_STATIONS]).slice(0, 12) }, { title: "PILLANATNYI REKORDOK", type: "extreme" } ];
-            let phase = 0;
+
+            // Phase definitions
+            const sequence = [
+                { type: "list", title: "SZABOLCS-SZATMÁR-BEREG VÁRMEGYE", list: shuffle([...SZABOLCS_STATIONS]).slice(0, 12) },
+                { type: "list", title: "MAGYARORSZÁG KÖRKÉP", list: shuffle([...HU_MAJOR_STATIONS]).slice(0, 12) },
+                { type: "list", title: "VILÁGVÁROSOK", list: shuffle([...WORLD_MAJOR_STATIONS]).slice(0, 12) },
+                { type: "list", title: "EXTRÉM ÉS KÜLÖNLEGES HELYSZÍNEK", list: shuffle([...EXOTIC_STATIONS]).slice(0, 12) },
+                { type: "ny_detailed", title: "NYÍREGYHÁZA RÉSZLETES ADATOK" }
+            ];
+
+            let phase = startPhase;
+            
             const runPhase = async () => {
                 if (phase >= sequence.length) return; 
-                const currentTheme = sequence[phase]; DOM.smGrid.style.opacity = 0;
+                const currentTheme = sequence[phase]; 
+                DOM.smGrid.style.opacity = 0;
                 document.getElementById('sm-source-footer').innerText = "FORRÁS: OPEN-METEO BROADCAST ENGINE";
+                
                 setTimeout(async () => {
-                    if (currentTheme.type === "extreme") await renderExtremesBatch(); else await renderSpecialBatch(currentTheme.list, currentTheme.title);
+                    if (currentTheme.type === "list") {
+                        await renderSpecialBatch(currentTheme.list, currentTheme.title);
+                    } else if (currentTheme.type === "ny_detailed") {
+                        await renderNyiregyhazaDetailed();
+                    }
                     DOM.smGrid.style.opacity = 1;
                 }, 300);
-                phase++; if(phase < sequence.length) state.meteoPhaseTimer = setTimeout(runPhase, 25000);
+
+                phase++; 
+                if(phase < sequence.length) {
+                    state.meteoPhaseTimer = setTimeout(runPhase, 15000); // 15s per phase
+                } else {
+                    state.specialMeteoInterval = setTimeout(() => closeAllOverlays(), 15000);
+                }
             };
+            
             runPhase();
-            state.specialMeteoInterval = setTimeout(() => closeAllOverlays(), 102000); 
+        }
+
+        // Test helper for Dev Panel
+        function testSpecificPhase(phaseNum) {
+            // Adjust phase index (1-based to 0-based)
+             state.isSpecial = true;
+            [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ].forEach(ui => document.getElementById(ui.id).classList.add(`hide-${ui.t}`));
+            DOM.special.style.display = 'flex'; setTimeout(() => DOM.special.classList.add('active'), 50);
+
+            const sequence = [
+                { type: "list", title: "SZABOLCS-SZATMÁR-BEREG VÁRMEGYE", list: shuffle([...SZABOLCS_STATIONS]).slice(0, 12) },
+                { type: "list", title: "MAGYARORSZÁG KÖRKÉP", list: shuffle([...HU_MAJOR_STATIONS]).slice(0, 12) },
+                { type: "list", title: "VILÁGVÁROSOK", list: shuffle([...WORLD_MAJOR_STATIONS]).slice(0, 12) },
+                { type: "list", title: "EXTRÉM ÉS KÜLÖNLEGES HELYSZÍNEK", list: shuffle([...EXOTIC_STATIONS]).slice(0, 12) },
+                { type: "ny_detailed", title: "NYÍREGYHÁZA RÉSZLETES ADATOK" }
+            ];
+            
+            const currentTheme = sequence[phaseNum - 1];
+            DOM.smGrid.style.opacity = 0;
+            setTimeout(async () => {
+                if (currentTheme.type === "list") await renderSpecialBatch(currentTheme.list, currentTheme.title);
+                else if (currentTheme.type === "ny_detailed") await renderNyiregyhazaDetailed();
+                DOM.smGrid.style.opacity = 1;
+            }, 300);
+            
+            // Manual close needed
         }
 
         async function renderSpecialBatch(stations, title) {
             DOM.smTitle.innerText = title; DOM.smGrid.innerHTML = '';
             try {
-                // ADD is_day to request
                 const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${stations.map(c => c.lat).join(',')}&longitude=${stations.map(c => c.lon).join(',')}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,apparent_temperature,weather_code,is_day`);
-                const data = await res.json(); (Array.isArray(data) ? data : [data]).forEach((d, i) => {
+                const data = await res.json(); 
+                (Array.isArray(data) ? data : [data]).forEach((d, i) => {
                     if(!d.current) return; const c = stations[i]; 
-                    // Pass is_day to helper
                     const wmo = getWmoDesc(d.current.weather_code, d.current.is_day);
                     const div = document.createElement('div'); div.className = 'sm-card-item'; div.style.animationDelay = `${i * 0.05}s`; 
                     div.innerHTML = `<div class="sm-top"><div class="sm-name"><img src="https://flagcdn.com/24x18/${c.code}.png" style="margin-right:8px; border-radius:2px;">${c.name}</div><div class="sm-cond">${wmo.i} ${wmo.t}</div></div><div class="sm-body"><div class="sm-temp-box">${d.current.temperature_2m.toFixed(1)}°</div><div class="sm-details">ÉRZET: ${d.current.apparent_temperature.toFixed(1)}°<br>PÁRA: ${d.current.relative_humidity_2m}%<br>SZÉL: ${d.current.wind_speed_10m.toFixed(0)} km/h</div></div>`;
@@ -1196,55 +1258,50 @@
             } catch(e) {}
         }
 
-        async function renderExtremesBatch() {
-            DOM.smTitle.innerText = "PILLANATNYI REKORDOK (VILÁGSZERTE)"; DOM.smGrid.innerHTML = '';
-            document.getElementById('sm-source-footer').innerText = "ADATBÁZIS: OPEN-METEO GLOBAL MODEL (2M HŐMÉRSÉKLET, 10M SZÉL, CSAPADÉK)";
-            const all = [...HU_MAJOR_STATIONS, ...WORLD_MAJOR_STATIONS];
-            try {
-                // ADDED: surface_pressure, snowfall
-                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${all.map(c => c.lat).join(',')}&longitude=${all.map(c => c.lon).join(',')}&current=temperature_2m,wind_speed_10m,relative_humidity_2m,precipitation,surface_pressure,snowfall&timezone=auto`);
-                const data = await res.json();
-                let mapped = (Array.isArray(data) ? data : [data]).map((d, i) => ({ 
-                    station: all[i], 
-                    temp: d.current.temperature_2m, 
-                    wind: d.current.wind_speed_10m, 
-                    hum: d.current.relative_humidity_2m, 
-                    rain: d.current.precipitation,
-                    press: d.current.surface_pressure,
-                    snow: d.current.snowfall 
-                })).filter(x => x.temp !== undefined);
-                
-                const hot = mapped.sort((a,b) => b.temp - a.temp)[0];
-                const cold = mapped.sort((a,b) => a.temp - b.temp)[0];
-                const windy = mapped.sort((a,b) => b.wind - a.wind)[0];
-                const rainy = mapped.sort((a,b) => b.rain - a.rain)[0];
-                const humid = mapped.sort((a,b) => b.hum - a.hum)[0];
-                const dry = mapped.sort((a,b) => a.hum - b.hum)[0];
-                
-                // NEW EXTREMES
-                const highPress = mapped.sort((a,b) => b.press - a.press)[0];
-                const lowPress = mapped.sort((a,b) => a.press - b.press)[0];
-                const snowy = mapped.sort((a,b) => b.snow - a.snow)[0];
+        async function renderNyiregyhazaDetailed() {
+            DOM.smTitle.innerText = "NYÍREGYHÁZA - RÉSZLETES PILLANATKÉP"; 
+            DOM.smGrid.innerHTML = '';
+            document.getElementById('sm-source-footer').innerText = "ADATBÁZIS: OPEN-METEO MULTI-MODEL ENSAMBLE";
 
-                const ex = [ 
-                    { label: "LEGMELEGEBB", val: `${hot.temp.toFixed(1)}°C`, loc: hot.station, cls: 'ext-hot', icon: '🔥' }, 
-                    { label: "LEGHIDEGEBB", val: `${cold.temp.toFixed(1)}°C`, loc: cold.station, cls: 'ext-cold', icon: '❄️' }, 
-                    { label: "LEGSZELESEBB", val: `${windy.wind.toFixed(1)} KM/H`, loc: windy.station, cls: 'ext-wind', icon: '💨' },
-                    { label: "LEGCSAPADÉKOSABB", val: `${rainy.rain.toFixed(1)} MM`, loc: rainy.station, cls: 'ext-rain', icon: '🌧️' },
-                    { label: "LEGPÁRÁSABB", val: `${humid.hum}%`, loc: humid.station, cls: 'ext-wet', icon: '💧' },
-                    { label: "LEGSZÁRAZABB", val: `${dry.hum}%`, loc: dry.station, cls: 'ext-dry', icon: '🏜️' },
-                    { label: "LEGNYOMÁSOSABB", val: `${highPress.press.toFixed(0)} hPa`, loc: highPress.station, cls: 'ext-dry', icon: '⏲️' },
-                    { label: "LEGALACSONYABB NYOMÁS", val: `${lowPress.press.toFixed(0)} hPa`, loc: lowPress.station, cls: 'ext-wind', icon: '🌀' },
-                    { label: "LEGINTENZÍVEBB HAVAZÁS", val: `${snowy.snow.toFixed(1)} CM`, loc: snowy.station, cls: 'ext-cold', icon: '🌨️' }
+            try {
+                // Fetch tons of data for Nyíregyháza
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=47.95&longitude=21.71&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,rain,showers,snowfall,weather_code,cloud_cover,pressure_msl,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m,uv_index,dew_point_2m,visibility&timezone=auto`);
+                const data = await res.json();
+                const cur = data.current;
+                const wmo = getWmoDesc(cur.weather_code, cur.is_day);
+
+                // Create 12 data blocks
+                const metrics = [
+                    { label: "HŐMÉRSÉKLET", val: `${cur.temperature_2m.toFixed(1)}°C`, icon: "🌡️" },
+                    { label: "HŐÉRZET", val: `${cur.apparent_temperature.toFixed(1)}°C`, icon: "🤔" },
+                    { label: "KÖRÜLMÉNYEK", val: wmo.t, icon: wmo.i },
+                    { label: "SZÉL (10M)", val: `${cur.wind_speed_10m.toFixed(1)} KM/H`, icon: "💨" },
+                    { label: "SZÉLLÖKÉS", val: `${cur.wind_gusts_10m.toFixed(1)} KM/H`, icon: "🌬️" },
+                    { label: "SZÉLIRÁNY", val: getWind(cur.wind_direction_10m), icon: "🧭" },
+                    { label: "CSAPADÉK (MOST)", val: `${cur.precipitation.toFixed(1)} MM`, icon: "🌧️" },
+                    { label: "PÁRATARTALOM", val: `${cur.relative_humidity_2m}%`, icon: "💧" },
+                    { label: "HARMATPONT", val: `${cur.dew_point_2m.toFixed(1)}°C`, icon: "🌫️" },
+                    { label: "LÉGNYOMÁS", val: `${cur.pressure_msl.toFixed(0)} hPa`, icon: "⏲️" },
+                    { label: "UV INDEX", val: cur.uv_index.toFixed(1), icon: "☀️" },
+                    { label: "LÁTÓTÁVOLSÁG", val: cur.visibility > 1000 ? (cur.visibility/1000).toFixed(1)+" KM" : cur.visibility+" M", icon: "👁️" }
                 ];
 
-                ex.forEach((e, i) => {
-                    const div = document.createElement('div'); div.className = `sm-card-item sm-card-extreme ${e.cls}`; div.style.animationDelay = `${i * 0.1}s`;
-                    div.innerHTML = `<div class="sm-top"><div class="sm-name" style="font-size:1rem; color:#aaa;">${e.icon} ${e.label}</div></div><div class="sm-body" style="flex-direction:column; align-items:flex-start;"><div class="sm-temp-box" style="font-size:2.5rem; margin:5px 0;">${e.val}</div><div class="sm-name"><img src="https://flagcdn.com/24x18/${e.loc.code}.png" style="margin-right:8px; border-radius:2px;">${e.loc.name}</div></div>`;
+                metrics.forEach((m, i) => {
+                    const div = document.createElement('div'); 
+                    div.className = 'sm-card-item ny-detail-card'; 
+                    div.style.animationDelay = `${i * 0.05}s`;
+                    div.innerHTML = `
+                        <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:100%;">
+                            <div class="ny-d-label">${m.label}</div>
+                            <div class="ny-d-icon">${m.icon}</div>
+                            <div class="ny-d-val">${m.val}</div>
+                        </div>
+                    `;
                     DOM.smGrid.appendChild(div);
                 });
                 document.getElementById('sm-update-time').innerText = getTime();
-            } catch(e) {}
+
+            } catch (e) { console.error(e); }
         }
 
         function triggerSummaryMode(mins) {
@@ -1362,13 +1419,60 @@
 
         async function fetchWunderground() {
             state.lastWxUpdate = Date.now();
-            for (let id of WU_STATIONS) {
-                try {
-                    const res = await fetch(`https://api.weather.com/v2/pws/observations/current?stationId=${id}&format=json&units=m&apiKey=${WU_KEY}&numericPrecision=decimal`);
-                    if (res.ok) { const d = await res.json(); if(d.observations && d.observations.length){ const o = d.observations[0]; DOM.nyTime.innerText = getTime(); DOM.nyTemp.innerText = `${o.metric.temp.toFixed(1)}°C`; DOM.nyFeel.innerText = `${calculatePreciseRealFeel(o.metric.temp, o.humidity, o.metric.windSpeed).toFixed(1)}°C`; DOM.nyWind.innerText = `SZÉL: ${o.metric.windSpeed.toFixed(1)} KM/H ${getWind(o.winddir)}`; DOM.nyWidget.style.display = 'flex'; state.currentWxSource = id; return; } }
-                } catch(e) {}
+            let validReadings = [];
+            
+            // MULTI-STATION FETCH - ROBUST (Promise.allSettled)
+            const promises = WU_STATIONS.map(id => 
+                fetch(`https://api.weather.com/v2/pws/observations/current?stationId=${id}&format=json&units=m&apiKey=${WU_KEY}&numericPrecision=decimal`)
+                .then(res => res.ok ? res.json() : null)
+                .catch(e => null)
+            );
+
+            // Use allSettled so one failure doesn't kill the batch
+            const results = await Promise.allSettled(promises);
+
+            results.forEach((res, index) => {
+                if (res.status === 'fulfilled' && res.value) {
+                    const d = res.value;
+                    if (d.observations && d.observations.length > 0) {
+                        const o = d.observations[0];
+                        // Filter out bad data (e.g. temp -9999 or extremely erratic)
+                        if (o && o.metric && typeof o.metric.temp === 'number' && o.metric.temp > -60 && o.metric.temp < 60) {
+                            validReadings.push({
+                                temp: o.metric.temp,
+                                hum: o.humidity || 50, // Default to 50 if missing
+                                wind: o.metric.windSpeed || 0,
+                                windDir: o.winddir || 0,
+                                id: WU_STATIONS[index]
+                            });
+                        }
+                    }
+                }
+            });
+
+            if (validReadings.length > 0) {
+                // CALCULATE AVERAGES
+                const avgTemp = validReadings.reduce((sum, r) => sum + r.temp, 0) / validReadings.length;
+                const avgHum = validReadings.reduce((sum, r) => sum + r.hum, 0) / validReadings.length;
+                const avgWind = validReadings.reduce((sum, r) => sum + r.wind, 0) / validReadings.length;
+                
+                // Use first valid wind dir for simplicity
+                const windDir = validReadings[0].windDir; 
+
+                DOM.nyTime.innerText = getTime();
+                DOM.nyTemp.innerText = `${avgTemp.toFixed(1)}°C`;
+                
+                // USE HYBRID AGGREGATE REAL FEEL
+                const feel = calculateAggregateRealFeel(avgTemp, avgHum, avgWind);
+                DOM.nyFeel.innerText = `${feel.toFixed(1)}°C`;
+                
+                DOM.nyWind.innerText = `SZÉL: ${avgWind.toFixed(1)} KM/H ${getWind(windDir)}`;
+                DOM.nyWidget.style.display = 'flex';
+                
+                state.currentWxSource = `PWS ÁTLAG (${validReadings.length})`;
+            } else {
+                state.currentWxSource = 'OFFLINE (NINCS ADAT)';
             }
-            state.currentWxSource = 'OFFLINE';
         }
 
         async function fetchCurrency() {
@@ -1626,7 +1730,9 @@
             const d = document.createElement('div'); d.className='term-line'; d.innerText = ">> RENDSZER KÉSZ"; DOM.term.appendChild(d); DOM.fill.style.width = "100%";
             crawlNews(false); fetchCurrency(); fetchOther(); fetchWunderground();
             setTimeout(() => { state.initialLoadComplete = true; }, 5000);
-            setTimeout(() => { DOM.loader.style.opacity = 0; setTimeout(() => DOM.loader.remove(), 1000); }, 500);
+            
+            // NOTE: Loader removal moved to parseAndAdd for instant feel
+            
             setInterval(updateWeatherCard, 6000); setInterval(fetchWunderground, 30000); setInterval(checkBreaking, 45000);
             setInterval(() => { if(state.isNightMode) crawlNews(false); }, 120000);
             setInterval(checkWeatherAlerts, 45000); 
