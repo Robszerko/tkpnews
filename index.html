@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V13.22 STABLE FIX</title>
+    <title>TKP NEWS - V13.29 FINAL FIX</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,8 +25,6 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; outline: none; }
-        
-        /* SHARPNESS SETTINGS */
         body { 
             background: #000; color: var(--text); 
             font-family: var(--font-data); 
@@ -126,26 +124,34 @@
         .logo-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
         .logo-box.flipped .logo-inner { transform: rotateY(180deg); }
         .logo-front, .logo-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
-        .logo-front { opacity: 1; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.8)); z-index: 2; } /* Less blur shadow */
+        .logo-front { opacity: 1; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.8)); z-index: 2; }
         .logo-wrapper-front { position: relative; display: flex; justify-content: center; align-items: center; width: 100%; margin-top: 5px;}
         .logo-main-svg { width: 55px; height: 55px; fill: var(--primary); margin-bottom: 2px; position: relative; z-index: 5; transition: all 0.5s; shape-rendering: geometricPrecision; }
-        .logo-front.ny .logo-main-svg { fill: #ffd700; filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.6)); } /* Tighter shadow */
+        .logo-front.ny .logo-main-svg { fill: #ffd700; filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8)); }
         
-        .holiday-deco { position: absolute; z-index: 4; pointer-events: none; opacity: 0; transition: opacity 0.5s; }
+        /* HOLIDAY DECORATIONS ON FRONT */
+        .holiday-deco { 
+            position: absolute; z-index: 4; pointer-events: none; opacity: 0; transition: opacity 0.5s; 
+        }
+        
+        /* XMAS TREE FIX */
+        .deco-tree {
+            top: -5px; right: -15px; width: 40px; height: 50px;
+        }
         .logo-front.xmas .deco-tree { opacity: 1; }
-        .logo-front.val .deco-val-static { opacity: 1; }
+        
+        /* VALENTIN HEART */
+        .logo-front.val .deco-val-static { opacity: 1; top: -10px; right: -15px; width: 35px; fill: #ff0066; filter: drop-shadow(0 0 5px #ff0066); }
+
         .streamers-container { position: absolute; top: -10px; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; z-index: 10; }
         .logo-front.ny .streamers-container { opacity: 1; }
         .logo-fx-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; overflow: visible; border-radius: 10px; }
         #effect-container { position: absolute; width: 200px; height: 200px; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1; pointer-events: none; overflow: visible; }
         
-        /* Optimized Fireworks */
         .firework-particle { position: absolute; width: 4px; height: 4px; border-radius: 50%; animation: explode 1.5s ease-out forwards; }
-        @keyframes explode { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(0.1); opacity: 0; } }
+        @keyframes explode { 0% { transform: translate(0, 0) scale(1.5); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } }
 
-        /* Sharp Logo Text */
-        .logo-text { font-family: var(--font-main); font-weight: 800; font-size: 1.4rem; letter-spacing: 2px; color: #fff; line-height: 1; text-shadow: 0 1px 3px rgba(0,0,0,1); z-index: 5; position: relative; }
-        
+        .logo-text { font-family: var(--font-main); font-weight: 800; font-size: 1.4rem; letter-spacing: 2px; color: #fff; line-height: 1; text-shadow: 0 1px 3px rgba(0,0,0,1); z-index: 5; position: relative; text-rendering: optimizeLegibility; }
         .mini-clock { display: flex; flex-direction: column; align-items: center; width: 100%; margin-top: 12px; }
         .mc-time { font-family: var(--font-tech); font-weight: 700; font-size: 1.3rem; color: #f0f0f0; line-height: 1; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,1); }
         .mc-sec { font-size: 0.7em; color: var(--accent); margin-left: 1px; vertical-align: top; font-weight: 400; }
@@ -200,7 +206,35 @@
         /* MAIN NEWS & TICKER */
         .main-news { position: absolute; bottom: 13vh; left: 4vw; width: clamp(400px, 60vw, 1300px); pointer-events: auto; cursor: pointer; z-index: 20; transition: transform 0.2s; }
         .main-news:hover { transform: scale(1.01); }
+        
+        /* SMOOTH TEXT TRANSITION CLASSES */
+        .text-fade { transition: opacity 0.4s ease-out; opacity: 1; }
+        .text-fade.faded-out { opacity: 0; }
+
         .cat-tag { background: var(--accent); color: #000; font-family: var(--font-main); font-weight: 800; padding: 0.8vh 2.5vw; font-size: 1.3rem; clip-path: polygon(0 0, 100% 0, 95% 100%, 0% 100%); display: inline-flex; align-items: center; gap: 12px; }
+        
+        /* SEPARATE NAV LAYER */
+        .main-nav-bar {
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(0,0,0,0.7);
+            width: fit-content;
+            padding: 5px 15px;
+            margin-bottom: 5px; 
+            border-left: 4px solid var(--primary);
+            pointer-events: auto;
+            z-index: 100;
+        }
+        .mn-btn { 
+            cursor: pointer; color: var(--accent); font-weight: bold; font-size: 1.2rem;
+            padding: 0 10px; transition: color 0.2s;
+            user-select: none;
+        }
+        .mn-btn:hover { color: #fff; }
+        .mn-counter { 
+            font-family: var(--font-mono); font-size: 0.9rem; color: #fff; 
+            margin: 0 10px; font-weight: bold; 
+        }
+
         .headline-box { background: var(--glass); border-left: 10px solid var(--primary); padding: 2.5vh 2.5vw; box-shadow: 0 20px 50px rgba(0,0,0,0.7); position: relative; }
         .headline { font-family: var(--font-main); font-weight: 700; font-size: clamp(1.6rem, 3.5vh, 3.2rem); line-height: 1.1; text-transform: uppercase; color: #fff; letter-spacing: -1px; }
         .subline-box { background: rgba(255, 255, 255, 0.98); padding: 1.5vh 3vw; width: fit-content; max-width: 100%; border-radius: 0 0 4px 4px; }
@@ -376,6 +410,7 @@
                 <button class="btn" onclick="triggerSpecialMeteoSequence()">[☁] SPEC. METEO SORREND</button>
                 <button class="btn" onclick="forceHoliday('XMAS')">[🎄] KARÁCSONY KÉNYSZERÍTÉS</button>
                 <button class="btn" onclick="forceHoliday('NY')">[🎉] ÚJÉV KÉNYSZERÍTÉS</button>
+                <button class="btn" onclick="forceHoliday('VAL')">[❤️] VALENTIN KÉNYSZERÍTÉS</button>
                 <button class="btn" onclick="toggleNightTest()">[🌙] ÉJSZAKAI MÓD TESZT</button>
             </div>
             <div class="dev-section" style="display:flex; flex-direction:column;">
@@ -414,7 +449,7 @@
         <div class="load-bar-wrap"><div class="load-fill" id="load-fill"></div></div>
     </div>
 
-    <!-- SUMMARY OVERLAY -->
+    <!-- SUMMARY OVERLAY (WITH EMBEDDED LOGO) -->
     <div id="summary-overlay">
         <div class="summary-brand-side">
             <div class="summary-title" id="sum-main-title">HÍRADÓ</div>
@@ -446,7 +481,7 @@
         </div>
 
         <div class="bc-night-info">
-            ÉJSZAKAI ADÁSREND: Az előző napi hirek ismétlése: <span>00:00 - 02:00 REGGELI ISM.</span> | <span>02:00 - 04:00 DÉLUTÁNI ISM.</span> | <span>04:00 - 06:00 ESTI ISM.</span>
+            ÉJSZAKAI ADÁSREND: <span>00:00 - 02:00 REGGELI ISM.</span> | <span>02:00 - 04:00 DÉLUTÁNI ISM.</span> | <span>04:00 - 06:00 ESTI ISM.</span>
         </div>
     </div>
 
@@ -513,7 +548,7 @@
                     RÉGI OLDAL (KLIKK.HU) &#10138;
                 </a>
                 
-                <div style="font-family:var(--font-tech); font-weight:bold; color:var(--accent); font-size:0.8rem; letter-spacing:1px;">V13.22</div>
+                <div style="font-family:var(--font-tech); font-weight:bold; color:var(--accent); font-size:0.8rem; letter-spacing:1px;">V13.29</div>
             </div>
         </div>
 
@@ -540,19 +575,19 @@
                     <div class="logo-wrapper-front">
                         <svg class="logo-main-svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
                         
-                        <!-- XMAS DECO -->
+                        <!-- XMAS DECO FIXED -->
                         <svg class="holiday-deco deco-tree" viewBox="0 0 50 60">
-                            <rect x="22" y="50" width="6" height="10" class="tree-trunk"/>
-                            <path d="M5,50 L25,20 L45,50 Z" class="tree-layer"/>
-                            <path d="M10,35 L25,10 L40,35 Z" class="tree-layer-2"/>
-                            <path d="M15,20 L25,0 L35,20 Z" class="tree-layer-3"/>
-                            <polygon points="25,0 26,3 29,3 27,5 28,8 25,6 22,8 23,5 21,3 24,3" class="tree-star"/>
-                            <circle cx="15" cy="45" r="2" class="tree-light l1"/>
-                            <circle cx="35" cy="45" r="2" class="tree-light l2"/>
-                            <circle cx="25" cy="40" r="2" class="tree-light l3"/>
-                            <circle cx="20" cy="30" r="2" class="tree-light l4"/>
-                            <circle cx="30" cy="30" r="2" class="tree-light l1"/>
-                            <circle cx="25" cy="15" r="2" class="tree-light l2"/>
+                            <rect x="22" y="50" width="6" height="10" fill="#8B4513"/>
+                            <path d="M5,50 L25,20 L45,50 Z" fill="#228B22"/>
+                            <path d="M10,35 L25,10 L40,35 Z" fill="#228B22"/>
+                            <path d="M15,20 L25,0 L35,20 Z" fill="#228B22"/>
+                            <polygon points="25,0 26,3 29,3 27,5 28,8 25,6 22,8 23,5 21,3 24,3" fill="#FFD700"/>
+                            <circle cx="15" cy="45" r="2" fill="#FF0000"/>
+                            <circle cx="35" cy="45" r="2" fill="#FFFF00"/>
+                            <circle cx="25" cy="40" r="2" fill="#0000FF"/>
+                            <circle cx="20" cy="30" r="2" fill="#FF00FF"/>
+                            <circle cx="30" cy="30" r="2" fill="#FF0000"/>
+                            <circle cx="25" cy="15" r="2" fill="#FFFF00"/>
                         </svg>
                         <!-- VAL DECO -->
                         <svg class="holiday-deco deco-val-static" viewBox="0 0 24 24">
@@ -610,13 +645,22 @@
 
         <!-- MAIN NEWS -->
         <div class="main-news ui-element" id="ui-left">
-            <div class="cat-tag" id="m-cat">HÍRFORRÁS</div>
-            <div class="headline-box">
-                <div class="headline" id="m-title">ADATOK SZINKRONIZÁLÁSA...</div>
-                <div class="progress-bar" id="m-prg"></div>
+            <!-- NEW SEPARATE NAV LAYER (Z-INDEX 100) -->
+            <div class="main-nav-bar" id="main-nav-layer">
+                <span class="mn-btn" onclick="event.stopPropagation(); stepMain(-1)">◀</span>
+                <span class="mn-counter" id="nav-count">0 / 0</span>
+                <span class="mn-btn" onclick="event.stopPropagation(); stepMain(1)">▶</span>
             </div>
-            <div class="subline-box">
-                <div class="subline" id="m-desc">Kérjük várjon, amíg a rendszer lekéri az elmúlt 2 órából a híreket.</div>
+
+            <div class="text-fade" id="m-text-container">
+                <div class="cat-tag" id="m-cat">HÍRFORRÁS</div>
+                <div class="headline-box">
+                    <div class="headline" id="m-title">ADATOK SZINKRONIZÁLÁSA...</div>
+                    <div class="progress-bar" id="m-prg"></div>
+                </div>
+                <div class="subline-box">
+                    <div class="subline" id="m-desc">Kérjük várjon, amíg a rendszer lekéri az elmúlt 2 órából a híreket.</div>
+                </div>
             </div>
         </div>
 
@@ -638,7 +682,7 @@
 
     <script>
         /**
-         * TKP NEWS V13.22 - STABLE FIX & OPTIMIZATIONS
+         * TKP NEWS V13.29 - NY FIX & NIGHT TEXT
          */
 
         const RSS_FEEDS = [
@@ -803,24 +847,6 @@
             { name: "Rijád", lat: 24.71, lon: 46.67, code: "sa" }
         ];
 
-        const SZSZB_STATIONS = [
-            { name: "Nyíregyháza", lat: 47.95, lon: 21.71, code: "hu" }, { name: "Mátészalka", lat: 47.95, lon: 22.32, code: "hu" },
-            { name: "Kisvárda", lat: 48.21, lon: 22.08, code: "hu" }, { name: "Vásárosnamény", lat: 48.12, lon: 22.31, code: "hu" },
-            { name: "Fehérgyarmat", lat: 47.98, lon: 22.51, code: "hu" }, { name: "Nyírbátor", lat: 47.83, lon: 22.13, code: "hu" },
-            { name: "Nagykálló", lat: 47.87, lon: 21.84, code: "hu" }, { name: "Újfehértó", lat: 47.80, lon: 21.68, code: "hu" },
-            { name: "Tiszavasvári", lat: 47.95, lon: 21.36, code: "hu" }, { name: "Záhony", lat: 48.40, lon: 22.18, code: "hu" },
-            { name: "Csenger", lat: 47.83, lon: 22.68, code: "hu" }, { name: "Balkány", lat: 47.77, lon: 21.85, code: "hu" }
-        ];
-
-        const EXOTIC_STATIONS = [
-            { name: "Antarktisz (Vosztok)", lat: -78.46, lon: 106.84, code: "aq" }, { name: "Death Valley", lat: 36.53, lon: -116.93, code: "us" },
-            { name: "Ojmjakon", lat: 63.46, lon: 142.79, code: "ru" }, { name: "Mount Everest BC", lat: 28.00, lon: 86.85, code: "np" },
-            { name: "Csernobil", lat: 51.27, lon: 30.22, code: "ua" }, { name: "Szahara", lat: 23.41, lon: 25.66, code: "eg" },
-            { name: "Amazonas", lat: -3.46, lon: -62.21, code: "br" }, { name: "Bermuda", lat: 32.30, lon: -64.75, code: "bm" },
-            { name: "Húsvét-sziget", lat: -27.11, lon: -109.34, code: "cl" }, { name: "Északi-sark", lat: 89.99, lon: 0.00, code: "no" },
-            { name: "Galápagos", lat: -0.95, lon: -90.96, code: "ec" }, { name: "Fidzsi", lat: -17.71, lon: 178.06, code: "fj" }
-        ];
-
         const SIDEBAR_STATIONS = shuffle([...HU_MAJOR_STATIONS, ...WORLD_MAJOR_STATIONS]);
 
         let state = {
@@ -843,6 +869,7 @@
         const DOM = {
             loader: document.getElementById('loader'), term: document.getElementById('term'), fill: document.getElementById('load-fill'),
             stage: document.getElementById('stage'), tickerWindow: document.getElementById('ticker-window'), tickerBar: document.getElementById('ui-bottom'),
+            mTextContainer: document.getElementById('m-text-container'),
             mainTitle: document.getElementById('m-title'), mainDesc: document.getElementById('m-desc'), mainCat: document.getElementById('m-cat'), mainPrg: document.getElementById('m-prg'),
             cTime: document.getElementById('clock-time'), cDate: document.getElementById('clock-date'),
             nyWidget: document.getElementById('ny-widget'), nyTemp: document.getElementById('ny-temp'), nyWind: document.getElementById('ny-wind'), nyTime: document.getElementById('ny-time-badge'), nyFeel: document.getElementById('ny-feel'),
@@ -869,19 +896,27 @@
         function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
         function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
         
+        // --- REAL FEEL LOGIC (Updated to check for non-negative wind) ---
         function calculatePreciseRealFeel(tempC, humidity, windKmh) {
-            const nowHour = new Date().getHours(); const isNight = (nowHour >= 17 || nowHour <= 7); const e = (humidity / 100) * 6.105 * Math.exp((17.27 * tempC) / (237.7 + tempC)); const wsMs = windKmh / 3.6; 
-            if (tempC <= 10.0) { let wc = 13.12 + 0.6215 * tempC - 11.37 * Math.pow(windKmh, 0.16) + 0.3965 * tempC * Math.pow(windKmh, 0.16); if (windKmh < 5.0) return tempC; return isNight ? wc - 0.8 : wc; }
-            if (tempC >= 27.0) { let hi = tempC + 0.5555 * ((6.11 * Math.exp(5417.7530 * ((1/273.16) - (1/(273.15 + tempC))))) * (humidity/100) - 10); return hi; }
-            let radCorrection = isNight ? -3.0 : -1.0; let realFeel = tempC + (0.33 * e) - (0.70 * wsMs) + radCorrection; return (tempC + realFeel) / 2;
+            // Heat Index (Rothfusz)
+            if (tempC >= 27.0) {
+                const c1 = -8.78469475556, c2 = 1.61139411, c3 = 2.33854883889, c4 = -0.14611605, c5 = -0.012308094, c6 = -0.0164248277778, c7 = 0.002211732, c8 = 0.00072546, c9 = -0.000003582;
+                return c1 + c2 * tempC + c3 * humidity + c4 * tempC * humidity + c5 * tempC * tempC + c6 * humidity * humidity + c7 * tempC * tempC * humidity + c8 * tempC * humidity * humidity + c9 * tempC * tempC * humidity * humidity;
+            }
+            // Wind Chill
+            if (tempC <= 10.0 && windKmh > 4.8) {
+                return 13.12 + 0.6215 * tempC - 11.37 * Math.pow(windKmh, 0.16) + 0.3965 * tempC * Math.pow(windKmh, 0.16);
+            }
+            // AAT (Australian Apparent Temperature) for mild weather
+            const e = (humidity / 100) * 6.105 * Math.exp((17.27 * tempC) / (237.7 + tempC));
+            const wsMs = Math.max(0, windKmh / 3.6); // Ensure non-negative
+            return tempC + (0.33 * e) - (0.70 * wsMs) - 0.7; 
         }
 
-        // IMPROVED WMO DESC WITH NIGHT ICONS
         function getWmoDesc(code, isDay = 1) { 
             const c = parseInt(code); 
             const sun = "☀️"; const sunCloud = "🌤️"; const sunPart = "⛅";
-            const moon = "🌙"; const moonCloud = "☁️"; // Night variants
-            
+            const moon = "🌙"; const moonCloud = "☁️"; 
             if(c === 0) return { t: "TISZTA", i: isDay ? sun : moon }; 
             if(c === 1) return { t: "DERŰS", i: isDay ? sunCloud : moon }; 
             if(c === 2) return { t: "VÁLTOZÓ", i: isDay ? sunPart : moonCloud }; 
@@ -906,7 +941,30 @@
 
         function updateDevLog() { if (DOM.dev.style.display === 'none') return; document.getElementById('sys-feeds').innerText = state.allNews.length; const up = Math.floor((Date.now() - state.startTime)/1000); document.getElementById('sys-uptime').innerText = `${Math.floor(up/3600)}h ${Math.floor((up%3600)/60)}m ${up%60}s`; let html = ''; RSS_FEEDS.forEach(f => { const s = state.feedStatus[f.name]; let cls = 'status-wait', msg = 'VÁRAKOZÁS...'; if (s) { if(s.ok) { cls = 'status-ok'; msg = `OK (${s.proxy})`; } else { cls = 'status-fail'; msg = 'HIBA'; } } html += `<tr><td>${f.name}</td><td class="${cls}">${msg}</td></tr>`; }); DOM.feedLog.innerHTML = html; }
 
-        function updateDevMonitor() { if (DOM.dev.style.display === 'none') return; const now = new Date(); const elapsedWx = now.getTime() - state.lastWxUpdate; const nextWx = 30000 - elapsedWx; DOM.devWxNext.innerText = nextWx > 0 ? (nextWx/1000).toFixed(0) + "s" : "MOST"; DOM.devWxSrc.innerText = state.currentWxSource; const min = now.getMinutes(); const sec = now.getSeconds(); let diff30 = 30 - min; if (diff30 <= 0) diff30 += 60; diff30--; DOM.devSch30.innerText = `${diff30}m ${60-sec}s`; let diff60 = 58 - min; if (diff60 <= 0) diff60 += 60; diff60--; DOM.devSch60.innerText = `${diff60}m ${60-sec}s`; DOM.devBkQueue.innerText = state.breakingQueue.length; DOM.devNextMeteo.innerText = "--:--"; if (state.isNightMode) { DOM.devNightTimer.innerText = "AKTÍV (06:00-IG)"; } else { let nextMidnight = new Date(now); nextMidnight.setHours(24,0,0,0); let diff = nextMidnight - now; let h = Math.floor(diff/3600000); let m = Math.floor((diff%3600000)/60000); DOM.devNightTimer.innerText = `${h}h ${m}m MÚLVA`; } if(state.holidayMode && state.nextHolidayFlip > 0) { let diffHol = state.nextHolidayFlip - now.getTime(); if(diffHol > 0) { const m = Math.floor(diffHol / 60000); const s = Math.floor((diffHol % 60000) / 1000); DOM.devHolTimer.innerText = `${m}:${s < 10 ? '0'+s : s}`; } else { DOM.devHolTimer.innerText = "AKTÍV"; } } else { DOM.devHolTimer.innerText = "INAKTÍV"; } }
+        function updateDevMonitor() { 
+            if (DOM.dev.style.display === 'none') return; 
+            const now = new Date(); 
+            const elapsedWx = now.getTime() - state.lastWxUpdate; 
+            const nextWx = 30000 - elapsedWx; 
+            DOM.devWxNext.innerText = nextWx > 0 ? (nextWx/1000).toFixed(0) + "s" : "MOST"; 
+            DOM.devWxSrc.innerText = state.currentWxSource; 
+            const min = now.getMinutes(); const sec = now.getSeconds(); 
+            let diff30 = 30 - min; if (diff30 <= 0) diff30 += 60; diff30--; DOM.devSch30.innerText = `${diff30}m ${60-sec}s`; 
+            let diff60 = 58 - min; if (diff60 <= 0) diff60 += 60; diff60--; DOM.devSch60.innerText = `${diff60}m ${60-sec}s`; 
+            DOM.devBkQueue.innerText = state.breakingQueue.length; 
+            DOM.devNextMeteo.innerText = "--:--"; 
+            if (state.isNightMode) { DOM.devNightTimer.innerText = "AKTÍV (06:00-IG)"; } else { let nextMidnight = new Date(now); nextMidnight.setHours(24,0,0,0); let diff = nextMidnight - now; let h = Math.floor(diff/3600000); let m = Math.floor((diff%3600000)/60000); DOM.devNightTimer.innerText = `${h}h ${m}m MÚLVA`; } 
+            
+            // EXACT HOLIDAY COUNTDOWN
+            if(state.holidayMode && state.nextHolidayFlip > 0) { 
+                let diffHol = state.nextHolidayFlip - now.getTime(); 
+                if(diffHol > 0) { 
+                    const m = Math.floor(diffHol / 60000); 
+                    const s = Math.floor((diffHol % 60000) / 1000); 
+                    DOM.devHolTimer.innerText = `${m}:${s < 10 ? '0'+s : s}`; 
+                } else { DOM.devHolTimer.innerText = "FUT..."; } 
+            } else { DOM.devHolTimer.innerText = "INAKTÍV"; } 
+        }
 
         function generateHourlySchedule() { const now = new Date(); state.schedule = []; let meteo1 = new Date(now); meteo1.setMinutes(12 + Math.floor(Math.random() * 8), 0, 0); if(meteo1 > now) state.schedule.push({ time: meteo1.getTime(), type: 'meteo', label: "METEO ÁTTEKINTÉS" }); let news30 = new Date(now); news30.setMinutes(30, 0, 0); if(news30 > now) state.schedule.push({ time: news30.getTime(), type: 'summary30', label: "FÉLÓRÁS HÍRADÓ" }); let meteo2 = new Date(now); meteo2.setMinutes(42 + Math.floor(Math.random() * 6), 0, 0); if(meteo2 > now) state.schedule.push({ time: meteo2.getTime(), type: 'meteo', label: "METEO ÁTTEKINTÉS" }); let news60 = new Date(now); news60.setMinutes(57, 0, 0); if(news60 > now) state.schedule.push({ time: news60.getTime(), type: 'summary60', label: "ÓRÁS HÍRADÓ" }); let clock = new Date(now); clock.setMinutes(59, 0, 0); if(clock > now) state.schedule.push({ time: clock.getTime(), type: 'clock', label: "NAGY ÓRA" }); state.schedule.sort((a,b) => a.time - b.time); updateDevScheduleList(); }
 
@@ -1090,11 +1148,22 @@
             setTimeout(() => { state.isBreakingActive = false; }, 1000); 
         }
 
+        /* --- MANUAL NAV --- */
+        window.stepMain = function(dir) {
+            if(!state.mainItems.length) return;
+            clearInterval(state.mainTimer); 
+            state.mainIdx += dir;
+            if (state.mainIdx < 0) state.mainIdx = state.mainItems.length - 1;
+            if (state.mainIdx >= state.mainItems.length) state.mainIdx = 0;
+            cycleMain(true); 
+            startMainLoop(); 
+        };
+
         async function triggerSpecialMeteoSequence() {
             state.isSpecial = true;
             [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ].forEach(ui => document.getElementById(ui.id).classList.add(`hide-${ui.t}`));
             DOM.special.style.display = 'flex'; setTimeout(() => DOM.special.classList.add('active'), 50);
-            const sequence = [ { title: "SZABOLCS-SZATMÁR-BEREG", list: SZSZB_STATIONS }, { title: "MAGYARORSZÁG NAGYVÁROSAI", list: shuffle([...HU_MAJOR_STATIONS]).slice(0, 12) }, { title: "KIEMELT VILÁGVÁROSOK", list: shuffle([...WORLD_MAJOR_STATIONS]).slice(0, 12) }, { title: "PILLANATNYI REKORDOK", type: "extreme" } ];
+            const sequence = [ { title: "MAGYARORSZÁG NAGYVÁROSAI", list: shuffle([...HU_MAJOR_STATIONS]).slice(0, 12) }, { title: "KIEMELT VILÁGVÁROSOK", list: shuffle([...WORLD_MAJOR_STATIONS]).slice(0, 12) }, { title: "PILLANATNYI REKORDOK", type: "extreme" } ];
             let phase = 0;
             const runPhase = async () => {
                 if (phase >= sequence.length) return; 
@@ -1130,7 +1199,7 @@
         async function renderExtremesBatch() {
             DOM.smTitle.innerText = "PILLANATNYI REKORDOK (VILÁGSZERTE)"; DOM.smGrid.innerHTML = '';
             document.getElementById('sm-source-footer').innerText = "ADATBÁZIS: OPEN-METEO GLOBAL MODEL (2M HŐMÉRSÉKLET, 10M SZÉL, CSAPADÉK)";
-            const all = [...HU_MAJOR_STATIONS, ...WORLD_MAJOR_STATIONS, ...EXOTIC_STATIONS];
+            const all = [...HU_MAJOR_STATIONS, ...WORLD_MAJOR_STATIONS];
             try {
                 // ADDED: surface_pressure, snowfall
                 const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${all.map(c => c.lat).join(',')}&longitude=${all.map(c => c.lon).join(',')}&current=temperature_2m,wind_speed_10m,relative_humidity_2m,precipitation,surface_pressure,snowfall&timezone=auto`);
@@ -1249,20 +1318,44 @@
 
         function manualTicker(dir) { clearTimeout(state.tickerTimer); cycleTicker(dir); }
 
-        function cycleMain() {
+        function cycleMain(manual = false) {
             if (!state.mainItems.length || state.isSpecial || state.isSummary) return;
-            if (state.mainIdx >= state.mainItems.length) state.mainIdx = 0; if (state.mainIdx < 0) state.mainIdx = state.mainItems.length - 1; 
+            if (!manual) {
+                if (state.mainIdx >= state.mainItems.length) state.mainIdx = 0; 
+                if (state.mainIdx < 0) state.mainIdx = state.mainItems.length - 1; 
+            }
+            
             const item = state.mainItems[state.mainIdx]; state.currentMainLink = item.link;
-            DOM.mainPrg.style.transition = 'none'; DOM.mainPrg.style.width = '0%';
+            
+            // SMOOTH TEXT TRANSITION
+            DOM.mTextContainer.classList.add('faded-out');
+
             setTimeout(() => {
-                DOM.mainTitle.innerText = item.title; DOM.mainDesc.innerText = item.desc; 
-                DOM.mainCat.innerHTML = `${item.source} • ${item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'})}`;
+                // Update Text Content while hidden
+                DOM.mainTitle.innerText = item.title; 
+                DOM.mainDesc.innerText = item.desc; 
+                
+                const idx = state.mainIdx + 1;
+                document.getElementById('nav-count').innerText = `${idx} / ${state.mainItems.length}`;
+                DOM.mainCat.innerText = `${item.source} • ${item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'})}`;
+                
+                // Fade Text Back In
+                DOM.mTextContainer.classList.remove('faded-out');
+
+                // Image Handling (Crossfade)
                 const img = document.createElement('img'); img.src = item.img; img.className = 'bg-img'; DOM.stage.appendChild(img);
-                img.onerror = () => { img.remove(); DOM.mainTitle.innerText = "KÉP BETÖLTÉSE SIKERTELEN..."; setTimeout(cycleMain, 2000); };
+                img.onerror = () => { img.remove(); DOM.mainTitle.innerText = "KÉP BETÖLTÉSE SIKERTELEN..."; setTimeout(() => cycleMain(), 2000); };
                 img.onload = () => { img.classList.add('active'); const imgs = DOM.stage.querySelectorAll('.bg-img'); if (imgs.length > 2) imgs[0].remove(); };
-                DOM.mainPrg.style.transition = 'width 19.8s linear'; DOM.mainPrg.style.width = '100%';
-            }, 200);
-            state.mainIdx++;
+                
+                // RESTART TIMER BAR
+                DOM.mainPrg.style.transition = 'none'; DOM.mainPrg.style.width = '0%';
+                setTimeout(() => {
+                     DOM.mainPrg.style.transition = 'width 19.8s linear'; DOM.mainPrg.style.width = '100%';
+                }, 50);
+
+            }, 400); // Wait for fade out
+            
+            if(!manual) state.mainIdx++;
         }
 
         function startMainLoop() { if (state.mainTimer) clearInterval(state.mainTimer); state.mainTimer = setInterval(() => { if(!state.isSpecial && !state.isSummary) cycleMain(); }, 20000); }
@@ -1361,25 +1454,32 @@
 
         function startLogoFireworks() {
             if(state.logoFxInterval) clearInterval(state.logoFxInterval);
-            state.logoFxInterval = setInterval(() => { if(state.holidayMode === 'NY' && !DOM.logoBox.classList.contains('flipped')) createLogoFirework(); }, 1800);
+            // OPTIMIZED INTERVAL
+            state.logoFxInterval = setInterval(() => { if(state.holidayMode === 'NY' && !DOM.logoBox.classList.contains('flipped')) createLogoFirework(); }, 1200);
         }
 
         function stopLogoFireworks() {
             if(state.logoFxInterval) clearInterval(state.logoFxInterval); DOM.logoFxContainer.innerHTML = '';
         }
 
+        // --- INCREASED FIREWORKS FOR NY LOGO (20 PARTICLES) ---
         function createLogoFirework() {
             const fw = document.createElement('div'); fw.style.position = 'absolute';
-            fw.style.left = (10 + Math.random() * 80) + '%'; fw.style.top = (10 + Math.random() * 80) + '%';
+            fw.style.left = (20 + Math.random() * 60) + '%'; fw.style.top = (20 + Math.random() * 60) + '%';
             DOM.logoFxContainer.appendChild(fw);
             const colors = ['#ffcc00', '#ffffff', '#00d4ff', '#ff3366', '#ffff00']; const color = colors[Math.floor(Math.random() * colors.length)];
-            for (let i = 0; i < 8; i++) {
-                const p = document.createElement('div'); p.className = 'firework-particle mini'; p.style.backgroundColor = color;
-                const angle = (Math.PI * 2 * i) / 8; const velocity = 35 + Math.random() * 20; 
+            
+            // Increased to 20 particles
+            for (let i = 0; i < 20; i++) {
+                const p = document.createElement('div'); p.className = 'firework-particle'; 
+                p.style.backgroundColor = color;
+                p.style.width = (1.5 + Math.random()*2) + 'px'; // Varied size
+                p.style.height = p.style.width;
+                const angle = (Math.PI * 2 * i) / 20; const velocity = 45 + Math.random() * 25; 
                 p.style.setProperty('--tx', (Math.cos(angle) * velocity) + 'px'); p.style.setProperty('--ty', (Math.sin(angle) * velocity) + 'px');
                 fw.appendChild(p);
             }
-            setTimeout(() => fw.remove(), 2000);
+            setTimeout(() => fw.remove(), 1600);
         }
 
         function startHolidaySequenceLoop() {
@@ -1414,9 +1514,9 @@
             fw.style.left = (Math.random() * 100) + '%'; fw.style.top = (Math.random() * 100) + '%';
             DOM.effectContainer.appendChild(fw);
             const colors = ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#ff00ff']; const color = colors[Math.floor(Math.random() * colors.length)];
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 20; i++) { 
                 const p = document.createElement('div'); p.className = 'firework-particle'; p.style.backgroundColor = color;
-                const angle = (Math.PI * 2 * i) / 10; const velocity = 50 + Math.random() * 40; 
+                const angle = (Math.PI * 2 * i) / 20; const velocity = 50 + Math.random() * 40; 
                 p.style.setProperty('--tx', (Math.cos(angle) * velocity) + 'px'); p.style.setProperty('--ty', (Math.sin(angle) * velocity) + 'px');
                 fw.appendChild(p);
             }
@@ -1454,8 +1554,26 @@
             const labelBox = document.getElementById('ticker-label-box');
             if (isNight !== state.isNightMode) {
                 state.isNightMode = isNight;
-                if (isNight) { DOM.tickerWindow.style.display = 'none'; DOM.tickerNav.style.display = 'none'; DOM.nightMsg.classList.add('active'); labelBox.innerText = "ISMÉTLÉS"; labelBox.classList.add('night-mode'); } 
-                else { DOM.tickerWindow.style.display = 'block'; DOM.tickerNav.style.display = 'flex'; DOM.nightMsg.classList.remove('active'); labelBox.innerText = "FRISS"; labelBox.classList.remove('night-mode'); updateLists(); cycleMain(); cycleTicker(1); }
+                if (isNight) { 
+                    DOM.tickerWindow.style.display = 'none'; 
+                    DOM.tickerNav.style.display = 'none'; 
+                    DOM.nightMsg.classList.add('active'); 
+                    labelBox.innerText = "ISMÉTLÉS"; 
+                    labelBox.classList.add('night-mode');
+                    
+                    // SHOW LOADING TEXT ONLY ON INIT
+                    DOM.mainDesc.innerText = "Kérjük várjon, amíg a rendszer betölti az előző nap híreit."; 
+                } 
+                else { 
+                    DOM.tickerWindow.style.display = 'block'; 
+                    DOM.tickerNav.style.display = 'flex'; 
+                    DOM.nightMsg.classList.remove('active'); 
+                    labelBox.innerText = "FRISS"; 
+                    labelBox.classList.remove('night-mode'); 
+                    updateLists(); 
+                    cycleMain(); 
+                    cycleTicker(1); 
+                }
             }
             if (isNight) {
                 let slot = 0, startHour = 6, endHour = 12, timeText = "REGGELI HÍREK 06:00 - 12:00";
@@ -1465,7 +1583,9 @@
                 let nightItems = state.allNews.filter(n => { const t = n.date.getTime(); return t >= tStart && t < tEnd && n.img; });
                 if (nightItems.length === 0) nightItems = [...state.allNews].filter(n => n.img).slice(0, 30);
                 nightItems.sort((a,b) => a.date - b.date); state.mainItems = nightItems;
-                DOM.nightMsg.innerHTML = `<div class="nm-left"><div class="nm-icon-box">🌙</div><div class="nm-text"><div class="nm-title">ÉJSZAKAI ADÁS</div><div class="nm-desc">${timeText}</div></div></div><div class="nm-timeline"><div class="nm-t-item ${slot===0?'active':''}">00-02<br>REGGEL</div><div class="nm-t-item ${slot===1?'active':''}">02-04<br>DÉLUTÁN</div><div class="nm-t-item ${slot===2?'active':''}">04-06<br>ESTE</div></div>`;
+                
+                // FIXED NIGHT TITLE TEXT
+                DOM.nightMsg.innerHTML = `<div class="nm-left"><div class="nm-icon-box">🌙</div><div class="nm-text"><div class="nm-title">ÉJSZAKAI ADÁS - AZ ELŐZŐ NAP HÍREI</div><div class="nm-desc">${timeText}</div></div></div><div class="nm-timeline"><div class="nm-t-item ${slot===0?'active':''}">00-02<br>REGGEL</div><div class="nm-t-item ${slot===1?'active':''}">02-04<br>DÉLUTÁN</div><div class="nm-t-item ${slot===2?'active':''}">04-06<br>ESTE</div></div>`;
             }
         }
 
@@ -1486,7 +1606,18 @@
         }
 
         function init() {
-            // FIX: BIND EVENTS SAFELY
+            // GLOBAL MANUAL NAV FUNCTION
+            window.stepMain = function(dir) {
+                if(!state.mainItems.length) return;
+                clearInterval(state.mainTimer); 
+                state.mainIdx += dir;
+                if (state.mainIdx < 0) state.mainIdx = state.mainItems.length - 1;
+                if (state.mainIdx >= state.mainItems.length) state.mainIdx = 0;
+                cycleMain(true); 
+                startMainLoop(); 
+            };
+
+            // SAFE EVENT BINDING
             if(DOM.bkCardClickable) DOM.bkCardClickable.onclick = () => { if(state.currentBreakingLink) window.open(state.currentBreakingLink, '_blank'); };
             const uiLeft = document.getElementById('ui-left');
             if(uiLeft) uiLeft.onclick = () => { if(state.currentMainLink) window.open(state.currentMainLink, '_blank'); };
