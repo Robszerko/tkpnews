@@ -122,48 +122,20 @@
         @keyframes logoReveal { 0% { transform: translateY(-30px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
         .logo-box { position: fixed; top: 3vh; left: 3.5vw; width: 160px; height: 160px; z-index: 2000; pointer-events: auto; cursor: pointer; perspective: 1000px; animation: logoReveal 1.2s ease-out 0.2s both; }
         .logo-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
-        .logo-box.flipped .logo-inner { transform: rotateY(180deg); }
+        
         .logo-front, .logo-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
         .logo-front { opacity: 1; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.8)); z-index: 2; }
         .logo-wrapper-front { position: relative; display: flex; justify-content: center; align-items: center; width: 100%; margin-top: 5px;}
         .logo-main-svg { width: 55px; height: 55px; fill: var(--primary); margin-bottom: 2px; position: relative; z-index: 5; transition: all 0.5s; shape-rendering: geometricPrecision; }
-        .logo-front.ny .logo-main-svg { fill: #ffd700; filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8)); }
         
-        /* HOLIDAY DECORATIONS ON FRONT */
-        .holiday-deco { 
-            position: absolute; z-index: 4; pointer-events: none; opacity: 0; transition: opacity 0.5s; 
-        }
-        
-        /* XMAS TREE FIX */
-        .deco-tree {
-            top: -5px; right: -15px; width: 40px; height: 50px;
-        }
-        .logo-front.xmas .deco-tree { opacity: 1; }
-        
-        /* VALENTIN HEART */
-        .logo-front.val .deco-val-static { opacity: 1; top: -10px; right: -15px; width: 35px; fill: #ff0066; filter: drop-shadow(0 0 5px #ff0066); }
-
-        .streamers-container { position: absolute; top: -10px; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; z-index: 10; }
-        .logo-front.ny .streamers-container { opacity: 1; }
-        .logo-fx-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; overflow: visible; border-radius: 10px; }
-        #effect-container { position: absolute; width: 200px; height: 200px; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1; pointer-events: none; overflow: visible; }
-        
-        .firework-particle { position: absolute; width: 4px; height: 4px; border-radius: 50%; animation: explode 1.5s ease-out forwards; }
-        @keyframes explode { 0% { transform: translate(0, 0) scale(1.5); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } }
-
         .logo-text { font-family: var(--font-main); font-weight: 800; font-size: 1.4rem; letter-spacing: 2px; color: #fff; line-height: 1; text-shadow: 0 1px 3px rgba(0,0,0,1); z-index: 5; position: relative; text-rendering: optimizeLegibility; }
         .mini-clock { display: flex; flex-direction: column; align-items: center; width: 100%; margin-top: 12px; }
         .mc-time { font-family: var(--font-tech); font-weight: 700; font-size: 1.3rem; color: #f0f0f0; line-height: 1; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,1); }
         .mc-sec { font-size: 0.7em; color: var(--accent); margin-left: 1px; vertical-align: top; font-weight: 400; }
         .mc-date { font-family: var(--font-condensed); font-weight: 700; font-size: 0.7rem; color: #ccc; text-transform: uppercase; margin-top: 2px; letter-spacing: 0.5px; text-shadow: 0 1px 3px rgba(0,0,0,1); }
+        
         .logo-back { transform: rotateY(180deg); border-radius: 10px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 8px 4px; overflow: hidden; background: rgba(0, 15, 45, 0.95); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 0 15px rgba(0,0,0,0.5); }
-        .holiday-main-icon { width: 42px; height: 42px; margin-bottom: 2px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.6)); }
-        .holiday-msg { font-family: var(--font-script); font-size: 1.15rem; color: #fff; text-align: center; line-height: 1.1; margin-bottom: 4px; text-shadow: 0 0 5px #000; }
-        .holiday-logo-row { display: flex; flex-direction: column; align-items: center; border-top: 1px solid rgba(255,255,255,0.4); padding-top: 4px; width: 80%; filter: drop-shadow(0 0 5px #000); }
-        .holiday-logo-row svg { width: 22px; height: 22px; fill: #fff; }
-        .holiday-logo-text { font-family: var(--font-main); font-size: 0.75rem; font-weight: 800; letter-spacing: 1px; margin-top: 1px; }
-        .sparkle { position: absolute; width: 100%; height: 100%; top: 0; left: 0; background-image: radial-gradient(white 1px, transparent 1px); background-size: 30px 30px; opacity: 0.5; pointer-events: none; }
-
+        
         /* SIDEBAR - 3D FLIP CONTAINER */
         .sidebar { position: absolute; top: 15vh; right: 2vw; width: clamp(280px, 22vw, 420px); height: auto; pointer-events: auto; z-index: 40; perspective: 1000px; }
         .sidebar-flipper { position: relative; width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1); transform-style: preserve-3d; }
@@ -422,10 +394,16 @@
                 <div class="dev-h">ADÁSREND FIGYELŐ</div>
                 <div style="font-size:0.8rem; margin-bottom:10px;">
                     KÖV. METEO BLOKK: <span id="dev-next-meteo" style="color:#00d4ff; font-weight:bold;">--:--</span>
+                    <span style="font-size:0.6rem; color:#666; display:none;" id="dev-sch-30"></span><span style="font-size:0.6rem; color:#666; display:none;" id="dev-sch-60"></span>
+                </div>
+                <div class="dev-h">ÉJSZAKAI ADÁS</div>
+                <div style="font-size:0.8rem; margin-bottom:10px;">
+                    ÁLLAPOT: <span id="dev-night-timer" style="color:#888;">--</span>
                 </div>
                 <div class="dev-h">PROXY ÁLLAPOT</div>
                 <div style="font-size:0.8rem; margin-bottom:5px;">
                     FORRÁSOK: <span id="sys-feeds">0</span> | ÜZEMIDŐ: <span id="sys-uptime">0</span>
+                    <span id="dev-bk-queue" style="display:none;">0</span>
                 </div>
                 <div style="flex-grow:1; overflow-y:auto; background:#050505; padding:5px; border:1px solid #222;">
                     <table class="log-table" id="feed-log-table"></table>
@@ -551,44 +529,14 @@
             </div>
         </div>
 
-        <!-- LOGO & CLOCK & HOLIDAY FLIP -->
+        <!-- LOGO & CLOCK -->
         <div class="logo-box" id="logo-box" onclick="openAuth()">
             <div class="logo-inner">
                 <!-- FRONT: NORMAL MODE -->
                 <div class="logo-front" id="logo-front">
-                    <!-- NEW: FX CONTAINER FOR LIVE FIREWORKS BEHIND LOGO -->
-                    <div class="logo-fx-container" id="logo-fx-container"></div>
-                    
-                    <!-- STREAMERS CONTAINER (INJECTED IN NY MODE) -->
-                    <div class="streamers-container" id="streamers-container">
-                        <!-- Streamers injected by JS -->
-                    </div>
-
                     <div class="logo-wrapper-front">
                         <svg class="logo-main-svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                        
-                        <!-- XMAS DECO FIXED -->
-                        <svg class="holiday-deco deco-tree" viewBox="0 0 50 60">
-                            <rect x="22" y="50" width="6" height="10" fill="#8B4513"/>
-                            <path d="M5,50 L25,20 L45,50 Z" fill="#228B22"/>
-                            <path d="M10,35 L25,10 L40,35 Z" fill="#228B22"/>
-                            <path d="M15,20 L25,0 L35,20 Z" fill="#228B22"/>
-                            <polygon points="25,0 26,3 29,3 27,5 28,8 25,6 22,8 23,5 21,3 24,3" fill="#FFD700"/>
-                            <circle cx="15" cy="45" r="2" fill="#FF0000"/>
-                            <circle cx="35" cy="45" r="2" fill="#FFFF00"/>
-                            <circle cx="25" cy="40" r="2" fill="#0000FF"/>
-                            <circle cx="20" cy="30" r="2" fill="#FF00FF"/>
-                            <circle cx="30" cy="30" r="2" fill="#FF0000"/>
-                            <circle cx="25" cy="15" r="2" fill="#FFFF00"/>
-                        </svg>
-                        <!-- VAL DECO -->
-                        <svg class="holiday-deco deco-val-static" viewBox="0 0 24 24">
-                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                        </svg>
                     </div>
-
-                    <!-- Container for Pre/Post Flip Effects -->
-                    <div id="effect-container"></div>
 
                     <div class="logo-text">TKP NEWS</div>
                     <div class="mini-clock">
@@ -596,7 +544,7 @@
                         <div class="mc-date" id="clock-date">----. --. --.</div>
                     </div>
                 </div>
-                <!-- BACK: HOLIDAY MODE (Injected via JS) -->
+                <!-- BACK: EMPTY (No Holiday Mode) -->
                 <div class="logo-back" id="logo-back-face"></div>
             </div>
         </div>
@@ -811,8 +759,8 @@
             summaryPageIdx: 0, summaryInterval: null, summaryTimerInterval: null,
             lastWxUpdate: 0, currentWxSource: '--', lastTickerUpdate: Date.now(),
             specialMeteoInterval: null, meteoPhaseTimer: null, nextMeteoTime: 0, 
-            schedule: [], holidayMode: null, nextHolidayFlip: 0, holidaySequenceTimer: null,
-            particleInterval: null, logoFxInterval: null, initialLoadComplete: false,
+            schedule: [],
+            initialLoadComplete: false,
             isNightMode: false, forcedNightMode: false, mainTimer: null,
             weatherAlertCooldown: {},
             mainStarted: false // NEW FLAG
@@ -830,11 +778,10 @@
             feedLog: document.getElementById('feed-log-table'), auth: document.getElementById('auth-overlay'), pin: document.getElementById('pin-input'), dev: document.getElementById('dev-panel'),
             summary: document.getElementById('summary-overlay'), sumContent: document.getElementById('sum-content'), sumClock: document.getElementById('sum-clock'), sumMainTitle: document.getElementById('sum-main-title'), sumSubTitle: document.getElementById('sum-sub-title'),
             bigClock: document.getElementById('big-clock-overlay'), bcTime: document.getElementById('bc-time'),
-            devWxNext: document.getElementById('dev-wx-next'), devWxSrc: document.getElementById('dev-wx-src'), devSch30: document.getElementById('dev-sch-30'), devSch60: document.getElementById('dev-sch-60'), devHolTimer: document.getElementById('dev-hol-timer'),
-            devNextMeteo: document.getElementById('dev-next-meteo'), devBkQueue: document.getElementById('dev-bk-queue'), devHolStatus: document.getElementById('dev-hol-status'), devScheduleList: document.getElementById('dev-schedule-list'),
+            devWxNext: document.getElementById('dev-wx-next'), devWxSrc: document.getElementById('dev-wx-src'), devSch30: document.getElementById('dev-sch-30'), devSch60: document.getElementById('dev-sch-60'),
+            devNextMeteo: document.getElementById('dev-next-meteo'), devBkQueue: document.getElementById('dev-bk-queue'), devScheduleList: document.getElementById('dev-schedule-list'),
             logoBox: document.getElementById('logo-box'), logoBack: document.getElementById('logo-back-face'), logoFront: document.getElementById('logo-front'),
-            logoFxContainer: document.getElementById('logo-fx-container'), streamersContainer: document.getElementById('streamers-container'),
-            effectContainer: document.getElementById('effect-container'), nextCapsule: document.getElementById('next-event-capsule'),
+            nextCapsule: document.getElementById('next-event-capsule'),
             nightMsg: document.getElementById('night-msg'), tickerNav: document.getElementById('ticker-nav'), devNightTimer: document.getElementById('dev-night-timer'),
             wxAlert: document.getElementById('wx-alert'), wxAlertTitle: document.getElementById('wx-a-title'), wxAlertDesc: document.getElementById('wx-a-desc'), wxAlertIcon: document.getElementById('wx-a-icon'),
             bcInfoPanel: document.getElementById('bc-info-panel'), bcProgList: document.getElementById('bc-prog-list'),
@@ -915,16 +862,6 @@
             DOM.devBkQueue.innerText = state.breakingQueue.length; 
             DOM.devNextMeteo.innerText = "--:--"; 
             if (state.isNightMode) { DOM.devNightTimer.innerText = "AKTÍV (06:00-IG)"; } else { let nextMidnight = new Date(now); nextMidnight.setHours(24,0,0,0); let diff = nextMidnight - now; let h = Math.floor(diff/3600000); let m = Math.floor((diff%3600000)/60000); DOM.devNightTimer.innerText = `${h}h ${m}m MÚLVA`; } 
-            
-            // EXACT HOLIDAY COUNTDOWN
-            if(state.holidayMode && state.nextHolidayFlip > 0) { 
-                let diffHol = state.nextHolidayFlip - now.getTime(); 
-                if(diffHol > 0) { 
-                    const m = Math.floor(diffHol / 60000); 
-                    const s = Math.floor((diffHol % 60000) / 1000); 
-                    DOM.devHolTimer.innerText = `${m}:${s < 10 ? '0'+s : s}`; 
-                } else { DOM.devHolTimer.innerText = "FUT..."; } 
-            } else { DOM.devHolTimer.innerText = "INAKTÍV"; } 
         }
 
         function generateHourlySchedule() { const now = new Date(); state.schedule = []; let meteo1 = new Date(now); meteo1.setMinutes(12 + Math.floor(Math.random() * 8), 0, 0); if(meteo1 > now) state.schedule.push({ time: meteo1.getTime(), type: 'meteo', label: "METEO ÁTTEKINTÉS" }); let news30 = new Date(now); news30.setMinutes(30, 0, 0); if(news30 > now) state.schedule.push({ time: news30.getTime(), type: 'summary30', label: "FÉLÓRÁS HÍRADÓ" }); let meteo2 = new Date(now); meteo2.setMinutes(42 + Math.floor(Math.random() * 6), 0, 0); if(meteo2 > now) state.schedule.push({ time: meteo2.getTime(), type: 'meteo', label: "METEO ÁTTEKINTÉS" }); let news60 = new Date(now); news60.setMinutes(57, 0, 0); if(news60 > now) state.schedule.push({ time: news60.getTime(), type: 'summary60', label: "ÓRÁS HÍRADÓ" }); let clock = new Date(now); clock.setMinutes(59, 0, 0); if(clock > now) state.schedule.push({ time: clock.getTime(), type: 'clock', label: "NAGY ÓRA" }); state.schedule.sort((a,b) => a.time - b.time); updateDevScheduleList(); }
@@ -1027,8 +964,7 @@
             if (!state.isBreakingActive) processBreakingQueue(); 
         }
         function toggleNightTest() { state.forcedNightMode = !state.forcedNightMode; alert(state.forcedNightMode ? "ÉJSZAKAI MÓD KÉNYSZERÍTVE" : "ÉJSZAKAI MÓD KIKAPCSOLVA (AUTO)"); checkNightMode(); }
-        function toggleStreamers() { const c = DOM.streamersContainer; if(c.innerHTML === '') { renderNYEDecorations(); DOM.logoFront.classList.add('ny'); } else { c.innerHTML = ''; DOM.logoFront.classList.remove('ny'); } }
-
+        
         async function fetchRobust(targetUrl, sourceName) {
             const proxyList = shuffle([...PROXIES]);
             for (let i = 0; i < proxyList.length; i++) {
@@ -1518,141 +1454,6 @@
             document.getElementById('wx-stamp').innerText = getTime(); state.wxIdx = (state.wxIdx + 1) % state.weatherData.length;
         }
 
-        function checkHolidayMode() {
-            const now = new Date();
-            const xmasStart = new Date('2025-12-24T00:00:00'); const xmasEnd = new Date('2025-12-27T00:00:00');
-            const nyStart = new Date('2025-12-30T00:00:00'); const nyEnd = new Date('2026-01-02T00:00:00');
-            const valStart = new Date('2026-02-14T00:00:00'); const valEnd = new Date('2026-02-15T00:00:00');
-            
-            let newMode = null;
-            if (now >= xmasStart && now < xmasEnd) newMode = 'XMAS';
-            else if (now >= nyStart && now < nyEnd) newMode = 'NY';
-            else if (now >= valStart && now < valEnd) newMode = 'VAL';
-            
-            if (newMode !== state.holidayMode) forceHoliday(newMode);
-        }
-        
-        function renderNYEDecorations() {
-            const container = DOM.streamersContainer;
-            container.innerHTML = ''; // NO STREAMERS REQUESTED
-        }
-
-        function forceHoliday(mode) {
-            state.holidayMode = mode;
-            DOM.logoFront.className = 'logo-front';
-            DOM.streamersContainer.innerHTML = ''; 
-            if(mode) DOM.logoFront.classList.add(mode.toLowerCase());
-
-            if(mode === 'NY') { startLogoFireworks(); } 
-            else { stopLogoFireworks(); }
-
-            clearTimeout(state.holidaySequenceTimer); clearInterval(state.particleInterval); DOM.effectContainer.innerHTML = ''; 
-            DOM.logoBox.classList.remove('flipped'); DOM.logoFront.style.opacity = '0.9';
-            document.querySelectorAll('.holiday-deco').forEach(el => el.style.opacity = '');
-            if(mode) { 
-                alert("ÜNNEPI MÓD: " + mode);
-                const quickStartDelay = 10000; state.nextHolidayFlip = Date.now() + quickStartDelay; 
-                state.holidaySequenceTimer = setTimeout(() => runHolidayTransition(), quickStartDelay - 5000); 
-            }
-        }
-
-        function startLogoFireworks() {
-            if(state.logoFxInterval) clearInterval(state.logoFxInterval);
-            // OPTIMIZED INTERVAL
-            state.logoFxInterval = setInterval(() => { if(state.holidayMode === 'NY' && !DOM.logoBox.classList.contains('flipped')) createLogoFirework(); }, 1200);
-        }
-
-        function stopLogoFireworks() {
-            if(state.logoFxInterval) clearInterval(state.logoFxInterval); DOM.logoFxContainer.innerHTML = '';
-        }
-
-        // --- INCREASED FIREWORKS FOR NY LOGO (20 PARTICLES) ---
-        function createLogoFirework() {
-            const fw = document.createElement('div'); fw.style.position = 'absolute';
-            fw.style.left = (20 + Math.random() * 60) + '%'; fw.style.top = (20 + Math.random() * 60) + '%';
-            DOM.logoFxContainer.appendChild(fw);
-            const colors = ['#ffcc00', '#ffffff', '#00d4ff', '#ff3366', '#ffff00']; const color = colors[Math.floor(Math.random() * colors.length)];
-            
-            // Increased to 20 particles
-            for (let i = 0; i < 20; i++) {
-                const p = document.createElement('div'); p.className = 'firework-particle'; 
-                p.style.backgroundColor = color;
-                p.style.width = (1.5 + Math.random()*2) + 'px'; // Varied size
-                p.style.height = p.style.width;
-                const angle = (Math.PI * 2 * i) / 20; const velocity = 45 + Math.random() * 25; 
-                p.style.setProperty('--tx', (Math.cos(angle) * velocity) + 'px'); p.style.setProperty('--ty', (Math.sin(angle) * velocity) + 'px');
-                fw.appendChild(p);
-            }
-            setTimeout(() => fw.remove(), 1600);
-        }
-
-        function startHolidaySequenceLoop() {
-            clearTimeout(state.holidaySequenceTimer); if (!state.holidayMode) return;
-            const nextFlipDelay = Math.floor(Math.random() * 60000) + 120000; state.nextHolidayFlip = Date.now() + nextFlipDelay; 
-            state.holidaySequenceTimer = setTimeout(() => runHolidayTransition(), nextFlipDelay - 5000); 
-        }
-
-        async function runHolidayTransition() {
-            if (!state.holidayMode) return;
-            DOM.devHolStatus.innerText = "INTRO (EFFEKT)"; DOM.devHolStatus.style.color = "#ffcc00";
-            startParticles(state.holidayMode); await sleep(5000);
-            DOM.devHolStatus.innerText = "ÜZENET (FLIP)"; DOM.devHolStatus.style.color = "#00d4ff";
-            prepareBackFace(state.holidayMode); DOM.logoBox.classList.add('flipped');
-            await sleep(10000);
-            DOM.devHolStatus.innerText = "OUTRO"; DOM.devHolStatus.style.color = "#ffcc00";
-            DOM.logoBox.classList.remove('flipped'); await sleep(5000);
-            stopParticles(); DOM.devHolStatus.innerText = "VÁRAKOZÁS"; DOM.devHolStatus.style.color = "#aaa";
-            startHolidaySequenceLoop();
-        }
-
-        function startParticles(mode) {
-            clearInterval(state.particleInterval); DOM.effectContainer.innerHTML = '';
-            if (mode === 'NY') state.particleInterval = setInterval(createFirework, 800);
-            else if (mode === 'VAL') state.particleInterval = setInterval(createFloatingHeart, 300);
-        }
-
-        function stopParticles() { clearInterval(state.particleInterval); setTimeout(() => DOM.effectContainer.innerHTML = '', 2000); }
-
-        function createFirework() {
-            const fw = document.createElement('div'); fw.style.position = 'absolute';
-            fw.style.left = (Math.random() * 100) + '%'; fw.style.top = (Math.random() * 100) + '%';
-            DOM.effectContainer.appendChild(fw);
-            const colors = ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#ff00ff']; const color = colors[Math.floor(Math.random() * colors.length)];
-            for (let i = 0; i < 20; i++) { 
-                const p = document.createElement('div'); p.className = 'firework-particle'; p.style.backgroundColor = color;
-                const angle = (Math.PI * 2 * i) / 20; const velocity = 50 + Math.random() * 40; 
-                p.style.setProperty('--tx', (Math.cos(angle) * velocity) + 'px'); p.style.setProperty('--ty', (Math.sin(angle) * velocity) + 'px');
-                fw.appendChild(p);
-            }
-            setTimeout(() => fw.remove(), 1500);
-        }
-
-        function createFloatingHeart() {
-            const h = document.createElement('div'); h.innerHTML = '❤️'; h.className = 'floating-heart';
-            h.style.left = (Math.random() * 100) + '%'; h.style.top = (80 + Math.random() * 20) + '%'; 
-            h.style.setProperty('--hx', (Math.random() - 0.5) * 40 + 'px'); h.style.fontSize = (0.5 + Math.random()) + 'rem';
-            DOM.effectContainer.appendChild(h); setTimeout(() => h.remove(), 1500);
-        }
-
-        function prepareBackFace(mode) {
-            const logoSvg = `<svg viewBox="0 0 24 24" style="fill:#fff;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`;
-            let iconHtml = '', msgHtml = '';
-            if (mode === 'XMAS') {
-                DOM.logoBack.className = 'logo-back mode-xmas';
-                iconHtml = `<svg class="holiday-main-icon icon-tree-anim" viewBox="0 0 50 60"><rect x="22" y="50" width="6" height="10" class="tree-trunk"/><path d="M5,50 L25,20 L45,50 Z" class="tree-layer"/><path d="M10,35 L25,10 L40,35 Z" class="tree-layer-2"/><path d="M15,20 L25,0 L35,20 Z" class="tree-layer-3"/><polygon points="25,0 26,3 29,3 27,5 28,8 25,6 22,8 23,5 21,3 24,3" class="tree-star"/><circle cx="15" cy="45" r="2" class="tree-light l1"/><circle cx="35" cy="45" r="2" class="tree-light l2"/><circle cx="25" cy="40" r="2" class="tree-light l3"/><circle cx="20" cy="30" r="2" class="tree-light l4"/><circle cx="30" cy="30" r="2" class="tree-light l1"/><circle cx="25" cy="15" r="2" class="tree-light l2"/></svg>`;
-                msgHtml = `<div class="holiday-msg">Áldott, Békés<br>Karácsonyt<br><span style="font-size:0.6em; font-family:var(--font-data);">KÍVÁN A</span></div>`;
-            } else if (mode === 'NY') {
-                DOM.logoBack.className = 'logo-back mode-ny';
-                iconHtml = `<svg class="holiday-main-icon icon-champagne" viewBox="0 0 24 24" width="55" height="55"><path d="M19.2,2.6l-6.3,9.5C12.5,12.7,12,13.3,12,14c0,1.1,0.9,2,2,2h4c1.1,0,2-0.9,2-2c0-0.7-0.5-1.3-0.9-1.9L19.2,2.6z M5,2h2v7H5V2z"/></svg>`; 
-                msgHtml = `<div class="holiday-msg">Békés, Boldog<br>Új Évet<br><span style="font-size:0.6em; font-family:var(--font-data);">KÍVÁN A</span></div>`;
-            } else if (mode === 'VAL') {
-                DOM.logoBack.className = 'logo-back mode-val';
-                iconHtml = `<svg class="holiday-main-icon icon-heart-anim" viewBox="0 0 24 24" width="55" height="55"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
-                msgHtml = `<div class="holiday-msg">Boldog<br>Valentin-napot<br><span style="font-size:0.6em; font-family:var(--font-data);">KÍVÁN A</span></div>`;
-            }
-            DOM.logoBack.innerHTML = `<div class="sparkle"></div>${iconHtml}${msgHtml}<div class="holiday-logo-row">${logoSvg} <span class="holiday-logo-text">TKP NEWS</span></div>`;
-        }
-
         function checkNightMode() {
             const now = new Date(); const h = now.getHours(); const isNight = state.forcedNightMode || (h >= 0 && h < 6);
             const labelBox = document.getElementById('ticker-label-box');
@@ -1703,17 +1504,12 @@
                 DOM.cDate.innerText = `${now.getFullYear()}. ${String(now.getMonth()+1).padStart(2,'0')}. ${String(now.getDate()).padStart(2,'0')}. - ${days[now.getDay()]}`;
                 checkScheduleExecution(); updateNextEventCapsule(); checkNightMode();
                 if ([14, 29, 44].includes(now.getMinutes()) && now.getSeconds() === 45) {
-    // Indexek nullázása, hogy a legfrissebbet mutassa azonnal
-    state.mainIdx = 0;       
-    state.tickerIdx = -1;    
-    
-    // Frissítés indítása
-    crawlNews(false);
-    
-    // Manuális léptetés, hogy azonnal frissüljön a kép a várakozás helyett
-    manualTicker(1);
-    cycleMain(true);
-}
+                    state.mainIdx = 0;       
+                    state.tickerIdx = -1;    
+                    crawlNews(false);
+                    manualTicker(1);
+                    cycleMain(true);
+                }
                 if (now.getMinutes() === 0 && now.getSeconds() === 0) { closeAllOverlays(); fetchCurrency(); generateHourlySchedule(); if (!state.isNightMode) { state.tickerIdx = -1; manualTicker(1); } }
                 updateDevMonitor();
                 if (Date.now() - state.lastTickerUpdate > 12000 && !state.isSpecial && !state.isSummary && !state.isNightMode) { crawlNews(false); cycleTicker(1); }
@@ -1737,12 +1533,10 @@
             const uiLeft = document.getElementById('ui-left');
             if(uiLeft) uiLeft.onclick = () => { if(state.currentMainLink) window.open(state.currentMainLink, '_blank'); };
 
-            startClock(); startMainLoop(); checkHolidayMode(); startHolidaySequenceLoop(); generateHourlySchedule();
+            startClock(); startMainLoop(); generateHourlySchedule();
             const d = document.createElement('div'); d.className='term-line'; d.innerText = ">> RENDSZER KÉSZ"; DOM.term.appendChild(d); DOM.fill.style.width = "100%";
             crawlNews(false); fetchCurrency(); fetchOther(); fetchWunderground();
             setTimeout(() => { state.initialLoadComplete = true; }, 5000);
-            
-            // NOTE: Loader removal moved to parseAndAdd for instant feel
             
             setInterval(updateWeatherCard, 6000); setInterval(fetchWunderground, 30000); setInterval(checkBreaking, 45000);
             setInterval(() => { if(state.isNightMode) crawlNews(false); }, 120000);
