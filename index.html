@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V14.15 NIGHT MODE TEST ADDED</title>
+    <title>TKP NEWS - V14.25 ROBUST ENGINE</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,7 +35,7 @@
             position: fixed; top: 0; left: 0;
         }
 
-        /* --- STAGE --- */
+        /* --- STAGE (Main News Backgrounds) --- */
         #stage { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; background: #010101; }
         .bg-img { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.1); transition: opacity 2s ease, transform 25s linear; }
         .bg-img.active { opacity: 1; transform: scale(1); }
@@ -91,7 +91,7 @@
             background: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(10,10,20,0.98) 100%);
             border-left: 1px solid rgba(255,255,255,0.1); border-right: 1px solid rgba(255,255,255,0.1);
             border-bottom: 4px solid #fff; border-radius: 0 0 6px 6px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.8); z-index: 1000; /* Under Logo (2000) */
+            box-shadow: 0 15px 30px rgba(0,0,0,0.8); z-index: 1000; 
             transform: translateY(-110%); opacity: 0;
             transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s;
             display: flex; flex-direction: column; padding: 12px 10px; pointer-events: none; backdrop-filter: blur(5px);
@@ -149,11 +149,23 @@
         }
         .legacy-btn:hover { background: #fff; color: #000; border-color: #fff; }
 
-        /* LOGO & CLOCK WRAPPER */
+        /* LOGO & CLOCK WRAPPER - ON TOP */
         @keyframes logoReveal { 0% { transform: translateY(-30px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
-        .logo-box { position: fixed; top: 3vh; left: 3.5vw; width: 160px; height: 160px; z-index: 2000; pointer-events: auto; cursor: pointer; perspective: 1000px; animation: logoReveal 1.2s ease-out 0.2s both; }
+        /* transition covers all properties to allow smooth move to center */
+        .logo-box { position: fixed; top: 3vh; left: 3.5vw; width: 160px; height: 160px; z-index: 2000; pointer-events: auto; cursor: pointer; perspective: 1000px; animation: logoReveal 1.2s ease-out 0.2s both; transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
         .logo-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
         .logo-box.flipped .logo-inner { transform: rotateY(180deg); }
+        
+        /* LOGO MODES */
+        /* Forces logo to be above EVERYTHING during the sequence */
+        .logo-box.high-z { z-index: 10001 !important; } 
+        
+        /* LOGO CENTER STAGE MODE (FOR BIG CLOCK) */
+        .logo-box.center-stage {
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) scale(3.5) !important;
+        }
         
         .logo-front, .logo-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; transition: opacity 0.5s; }
         .logo-front { opacity: 1; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.8)); z-index: 2; }
@@ -280,8 +292,12 @@
         .breaking-bar { display: none; } 
 
         /* SPECIAL METEO (12 CARD LAYOUT) - FIXED Z-INDEX */
-        #special-meteo { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle at center, #001a4d 0%, #000510 100%); z-index: 5000; display: none; flex-direction: column; align-items: center; padding-top: 15vh; opacity: 0; transition: opacity 0.8s; }
+        #special-meteo { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: transparent; z-index: 5000; display: none; flex-direction: column; align-items: center; padding-top: 15vh; opacity: 0; transition: opacity 0.8s; }
         #special-meteo.active { display: flex; opacity: 1; }
+        
+        /* New Background for Special Meteo */
+        .sm-bg { position: absolute; top:0; left:0; width:100%; height:100%; z-index:-1; object-fit: cover; filter: brightness(0.4); }
+
         .sm-header { width: 92%; border-bottom: 6px solid var(--accent); display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 15px; margin-bottom: 2vh; }
         .sm-title { font-family: var(--font-main); font-size: clamp(2rem, 4vh, 3.5rem); font-weight: 900; }
         .sm-grid { width: 92%; height: 65vh; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(3, 1fr); gap: 10px; overflow: hidden; align-content: start; }
@@ -308,8 +324,9 @@
         .embedded-logo-text { font-family: var(--font-main); font-size: 1.2rem; font-weight: 800; color: #fff; letter-spacing: 1px; }
 
         /* SUMMARY OVERLAY */
-        #summary-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 190; display: grid; grid-template-columns: 35% 65%; transform: translateY(-100%); transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-        #summary-overlay.active { transform: translateY(0); }
+        #summary-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; display: none; grid-template-columns: 35% 65%; transform: translateY(0); opacity: 0; transition: opacity 0.5s; }
+        #summary-overlay.active { opacity: 1; }
+        
         .summary-brand-side { background: #001a4d; border-right: 6px solid var(--accent); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; padding-top: 10vh; }
         .summary-title { font-family: var(--font-main); font-size: clamp(1.8rem, 3vh, 2.5rem); color: #fff; text-transform: uppercase; font-weight: 800; text-align: center; line-height: 1.1; margin-bottom: 10px; }
         .summary-subtitle { font-family: var(--font-tech); font-size: 1.5rem; color: var(--accent); letter-spacing: 2px; text-align: center; }
@@ -330,22 +347,58 @@
         .sum-h { font-family: var(--font-data); font-weight: 700; font-size: 1.3rem; color: #fff; line-height: 1.2; }
         .sum-d { font-family: var(--font-body); font-size: 0.9rem; color: #aaa; margin-top: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-        /* BIG CLOCK */
-        #big-clock-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 300; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.5s; }
-        #big-clock-overlay.active { opacity: 1; pointer-events: auto; }
-        .bc-logo svg { width: 180px; height: 180px; fill: var(--primary); margin-bottom: 30px; animation: pulse 2s infinite; }
-        .bc-time { font-family: var(--font-tech); font-size: 12rem; font-weight: 700; color: #fff; line-height: 1; text-shadow: 0 0 50px rgba(255,255,255,0.2); }
-        .bc-sec { color: var(--accent); font-size: 0.5em; vertical-align: super; }
-        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } 100% { transform: scale(1); opacity: 1; } }
-        .bc-info-panel { width: 80%; background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0, 15, 35, 0.9) 20%, rgba(0, 15, 35, 0.9) 80%, rgba(0,0,0,0) 100%); border-top: 2px solid var(--primary); border-bottom: 2px solid var(--primary); padding: 20px 0; display: flex; flex-direction: column; align-items: center; margin-top: 30px; }
-        .bc-program-title { font-family: var(--font-main); color: var(--accent); font-size: 1.4rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 3px; font-weight: 700; }
-        .bc-program-grid { display: grid; grid-template-columns: repeat(5, auto); gap: 40px; justify-content: center; align-items: center; }
-        .bc-prog-item { display: flex; flex-direction: column; align-items: center; gap: 5px; position: relative; }
-        .bc-prog-time { font-family: var(--font-tech); font-size: 1.5rem; color: var(--accent); font-weight: bold; text-shadow: 0 0 10px rgba(255, 204, 0, 0.4); }
-        .bc-prog-name { font-family: var(--font-data); font-size: 1rem; color: #fff; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; white-space: nowrap; }
-        .bc-prog-item:not(:last-child)::after { content: ''; position: absolute; right: -20px; top: 10%; height: 80%; width: 1px; background: rgba(255,255,255,0.2); }
-        .bc-night-info { position: absolute; bottom: 20px; width: 100%; text-align: center; font-family: var(--font-mono); font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 1px; background: rgba(0,0,0,0.5); padding: 5px 0; }
-        .bc-night-info span { color: var(--primary); margin: 0 10px; font-weight: bold; }
+        /* NEW PROGRAM GUIDE OVERLAY (REPLACES BIG CLOCK OVERLAY) */
+        #prog-guide-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 5000; /* High Z-Index for overlay */
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.5s;
+            overflow: hidden;
+        }
+        #prog-guide-overlay.active { opacity: 1; pointer-events: auto; }
+
+        /* The Clock Background inside the overlay */
+        .pg-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover; background-position: center;
+            filter: blur(15px) brightness(0.4); /* Darkened for readability */
+            transition: filter 10s ease-in-out, transform 15s linear;
+            z-index: -1;
+        }
+        .pg-bg.sharpen {
+            filter: blur(0px) brightness(0.8);
+            transform: scale(1.05);
+        }
+
+        .pg-container {
+            display: flex; flex-direction: column; gap: 25px; transform: skewX(-10deg);
+            margin-left: 20vw; /* Push to right to balance left logo */
+            z-index: 2;
+        }
+        .pg-item {
+            display: flex; flex-direction: column; align-items: flex-start;
+            opacity: 0; transform: translateX(50px);
+            animation: pgSlideIn 0.8s forwards;
+            border-left: 5px solid var(--accent); padding-left: 20px;
+        }
+        /* Fade Out Animation for List items */
+        .pg-item.fading-out {
+            animation: pgFadeOut 0.8s forwards !important;
+        }
+        
+        .pg-time {
+            font-family: var(--font-tech); font-size: 2.5rem; color: var(--accent); font-weight: 700;
+            line-height: 1; text-shadow: 0 0 15px rgba(255, 204, 0, 0.4);
+        }
+        .pg-title {
+            font-family: var(--font-main); font-size: 2rem; color: #fff; text-transform: uppercase;
+            font-weight: 800; letter-spacing: 1px;
+        }
+        .pg-desc {
+            font-family: var(--font-data); font-size: 1.2rem; color: #bbb; text-transform: uppercase;
+        }
+        @keyframes pgSlideIn { 0% { opacity: 0; transform: translateX(50px); } 100% { opacity: 1; transform: translateX(0); } }
+        @keyframes pgFadeOut { 0% { opacity: 1; transform: translateX(0); } 100% { opacity: 0; transform: translateX(-50px); } }
 
         /* DEV & LOADER */
         #auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
@@ -401,13 +454,12 @@
                     JELENLEGI FORRÁS: <span id="dev-wx-src" style="color:#0f0;">--</span>
                 </div>
                 <div class="dev-h" style="margin-top:20px;">MANUÁLIS VEZÉRLÉS</div>
-                <button class="btn" onclick="triggerSummaryMode(30)">[►] FÉLÓRÁS HÍRADÓ TESZT (30p)</button>
-                <button class="btn" onclick="triggerSummaryMode(60)">[►] ÓRÁS HÍRADÓ TESZT (60p)</button>
-                <button class="btn" onclick="triggerBigClock()">[⏰] NAGY ÓRA TESZT</button>
+                <button class="btn" onclick="safeTrigger(() => triggerSummaryMode(30))">[►] FÉLÓRÁS HÍRADÓ TESZT (30p)</button>
+                <button class="btn" onclick="safeTrigger(() => triggerSummaryMode(60))">[►] ÓRÁS HÍRADÓ TESZT (60p)</button>
+                <button class="btn" onclick="safeTrigger(() => triggerBigClockSequence())">[⏰] NAGY ÓRA TESZT (1 PERC)</button>
                 <button class="btn" onclick="closeAllOverlays()">[X] MINDEN ABLAK BEZÁRÁSA</button>
                 <button class="btn" onclick="forceRefreshAll()">[⚡] AZONNALI FRISSÍTÉS</button>
                 <button class="btn" onclick="testBreaking()">[🔥] BREAKING NEWS TESZT</button>
-                <button class="btn" onclick="triggerNyeSequence()">[🎉] SZILVESZTERI SHOW TESZT (SEQ)</button>
                 <button class="btn" onclick="toggleNightTest()">[🌙] ÉJSZAKAI MÓD TESZT</button>
                 
                 <div class="dev-h" style="margin-top:20px;">RIASZTÁSI NYELV TESZT (PWS)</div>
@@ -423,7 +475,7 @@
                 <button class="btn" onclick="hideForecastAlert()">[❌] TÖRLÉS</button>
                 
                 <div class="dev-h" style="margin-top:20px;">SPECIÁLIS METEO GRID TESZT</div>
-                 <button class="btn" onclick="triggerSpecialMeteoSequence()">[☁] TELJES METEO SORREND (AUTO)</button>
+                 <button class="btn" onclick="safeTrigger(() => triggerSpecialMeteoSequence())">[☁] TELJES METEO SORREND (AUTO)</button>
             </div>
             <div class="dev-section" style="display:flex; flex-direction:column;">
                 <div class="dev-h">RIASZTÁS TESZT</div>
@@ -479,28 +531,21 @@
         <div class="summary-content-side" id="sum-content"></div>
     </div>
 
-    <!-- BIG CLOCK OVERLAY (WITH PRO TV GRID) -->
-    <div id="big-clock-overlay">
-        <div class="bc-logo">
-            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-        </div>
-        <div class="bc-time" id="bc-time">00:00<span class="bc-sec">00</span></div>
+    <!-- BIG CLOCK OVERLAY -> RENAMED TO PROGRAM GUIDE OVERLAY -->
+    <div id="prog-guide-overlay">
+        <!-- BACKGROUND IMAGE LAYER -->
+        <div class="pg-bg" id="pg-bg"></div>
         
-        <!-- NEW PROGRAM GUIDE PANEL -->
-        <div class="bc-info-panel" id="bc-info-panel">
-            <div class="bc-program-title">A KÖVETKEZŐ ÓRÁBAN</div>
-            <div class="bc-program-grid" id="bc-prog-list">
-                <!-- Injected via JS -->
-            </div>
-        </div>
-
-        <div class="bc-night-info">
-            ÉJSZAKAI ADÁSREND: <span>00:00 - 02:00 REGGELI ISM.</span> | <span>02:00 - 04:00 DÉLUTÁNI ISM.</span> | <span>04:00 - 06:00 ESTI ISM.</span>
+        <div class="pg-container" id="pg-container">
+            <!-- Items injected by JS -->
         </div>
     </div>
 
     <!-- SPECIAL METEO (MULTI CARD) (WITH DEDICATED HEADER LOGO) -->
     <div id="special-meteo">
+        <!-- DYNAMIC BACKGROUND LAYER FOR METEO -->
+        <div class="sm-bg" id="sm-bg"></div>
+        
         <div class="sm-header">
             <div class="sm-title" id="sm-main-title">METEO ÁTTEKINTÉS</div>
             <div style="display:flex; align-items:center; gap:10px;">
@@ -516,9 +561,6 @@
             <div>FRISSÍTVE: <span id="sm-update-time">--:--:--</span></div>
         </div>
     </div>
-
-    <!-- NEW: WEATHER ALERT CARD (HIDDEN BY DEFAULT) -->
-    <!-- LEGACY ALERT CARD REMOVED TO PREVENT GHOSTING -->
 
     <!-- NEW: FORECAST ALERT CARD (MOVED TO RIGHT) -->
     <div class="forecast-card" id="fc-alert">
@@ -538,6 +580,44 @@
     <div id="stage">
         <div class="overlay"></div>
         <div class="grid"></div>
+    </div>
+
+    <!-- IMPORTANT: LOGO IS NOW OUTSIDE GRAPHICS-LAYER TO BE ON TOP -->
+    <!-- LOGO & CLOCK -->
+    <div class="logo-box" id="logo-box" onclick="openAuth()">
+        <div class="logo-inner">
+            <!-- FRONT: NORMAL MODE -->
+            <div class="logo-front" id="logo-front">
+                <div class="streamers-container" id="streamers-container"></div>
+                <div class="logo-fx-container" id="logo-fx-container"></div>
+                
+                <div class="logo-wrapper-front">
+                    <svg class="logo-main-svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                </div>
+
+                <div class="logo-text">TKP NEWS</div>
+                <div class="mini-clock">
+                    <div class="mc-time" id="clock-time">00:00<span class="mc-sec">00</span></div>
+                    <div class="mc-date" id="clock-date">----. --. --.</div>
+                </div>
+            </div>
+            
+            <!-- BACK: NYE GREETING -->
+            <div class="logo-back" id="logo-back-face">
+                <div class="ny-msg-title">Békés Boldog<br>Új Évet<br>Kíván</div>
+                <div class="ny-msg-sub">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    TKP NEWS
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: NEXT EVENT CAPSULE MOVED TO BODY AS WELL FOR Z-INDEX SAFETY -->
+    <div id="next-event-capsule" class="next-capsule">
+        <div class="nc-content">
+            KÖVETKEZIK:<span class="nc-time-hlt" id="nc-time">--:--</span><span id="nc-title">--</span>
+        </div>
     </div>
 
     <div class="graphics-layer">
@@ -582,44 +662,7 @@
                     RÉGI OLDAL (KLIKK.HU) &#10138;
                 </a>
                 
-                <div style="font-family:var(--font-tech); font-weight:bold; color:var(--accent); font-size:0.8rem; letter-spacing:1px;">V14.14</div>
-            </div>
-        </div>
-
-        <!-- NEW: NEXT EVENT CAPSULE -->
-        <div id="next-event-capsule" class="next-capsule">
-            <div class="nc-content">
-                KÖVETKEZIK:<span class="nc-time-hlt" id="nc-time">--:--</span><span id="nc-title">--</span>
-            </div>
-        </div>
-
-        <!-- LOGO & CLOCK -->
-        <div class="logo-box" id="logo-box" onclick="openAuth()">
-            <div class="logo-inner">
-                <!-- FRONT: NORMAL MODE -->
-                <div class="logo-front" id="logo-front">
-                    <div class="streamers-container" id="streamers-container"></div>
-                    <div class="logo-fx-container" id="logo-fx-container"></div>
-                    
-                    <div class="logo-wrapper-front">
-                        <svg class="logo-main-svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                    </div>
-
-                    <div class="logo-text">TKP NEWS</div>
-                    <div class="mini-clock">
-                        <div class="mc-time" id="clock-time">00:00<span class="mc-sec">00</span></div>
-                        <div class="mc-date" id="clock-date">----. --. --.</div>
-                    </div>
-                </div>
-                
-                <!-- BACK: NYE GREETING -->
-                <div class="logo-back" id="logo-back-face">
-                    <div class="ny-msg-title">Békés Boldog<br>Új Évet<br>Kíván</div>
-                    <div class="ny-msg-sub">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                        TKP NEWS
-                    </div>
-                </div>
+                <div style="font-family:var(--font-tech); font-weight:bold; color:var(--accent); font-size:0.8rem; letter-spacing:1px;">V14.25</div>
             </div>
         </div>
 
@@ -702,7 +745,10 @@
 
     <script>
         /**
-         * TKP NEWS V14.14 - STABLE METEO & CLEANUP
+         * TKP NEWS V14.25 - ROBUST ENGINE
+         * Unified Trigger Logic: Big Clock, Summary, Meteo now share strict locking.
+         * Display Enforcement: Uses display:grid/flex forcing before fade-in.
+         * Fallback: News generator for empty feeds.
          */
 
         const RSS_FEEDS = [
@@ -821,6 +867,43 @@
 
         const SIDEBAR_STATIONS = shuffle([...HU_MAJOR_STATIONS, ...WORLD_MAJOR_STATIONS]);
 
+        // EXTENDED BACKGROUND LIBRARY
+        const BACKGROUNDS = {
+            // WINTER
+            winter_night: [
+                'https://images.unsplash.com/photo-1478265409131-1f65c88f965c?q=80&w=1920&fit=crop', // Cold night
+                'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1920&fit=crop', // Stars
+                'https://images.unsplash.com/photo-1483664852095-d6cc6870705d?q=80&w=1920&fit=crop'  // Winter forest
+            ],
+            winter_day: [
+                'https://images.unsplash.com/photo-1457269449834-928af64c684d?q=80&w=1920&fit=crop', // Snow
+                'https://images.unsplash.com/photo-1517299321609-52687d1bc55a?q=80&w=1920&fit=crop', // Frosty
+                'https://images.unsplash.com/photo-1489674267075-cee793167910?q=80&w=1920&fit=crop'  // Mountain
+            ],
+            
+            // GENERAL
+            dawn: [
+                'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?q=80&w=1920&fit=crop', // Sunrise gold
+                'https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1920&fit=crop', // Field dawn
+                'https://images.unsplash.com/photo-1595835008034-3151761858a7?q=80&w=1920&fit=crop'  // Foggy morning
+            ],
+            day: [
+                'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1920&fit=crop', // Landscape
+                'https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1920&fit=crop', // Lake
+                'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=1920&fit=crop'  // Nature
+            ],
+            dusk: [
+                'https://images.unsplash.com/photo-1472120435266-53107fd0c44a?q=80&w=1920&fit=crop', // Moody sunset
+                'https://images.unsplash.com/photo-1505322022379-7c3353ee6291?q=80&w=1920&fit=crop', // Late evening
+                'https://images.unsplash.com/photo-1616036740256-298365357318?q=80&w=1920&fit=crop'  // City dusk
+            ],
+            night: [
+                'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1920&fit=crop', // Stars
+                'https://images.unsplash.com/photo-1531306728370-e2ebd9d7bb99?q=80&w=1920&fit=crop', // Space
+                'https://images.unsplash.com/photo-1502481851512-e9e2529bfbf9?q=80&w=1920&fit=crop'  // Deep night
+            ]
+        };
+
         let state = {
             allNews: [], tickerItems: [], mainItems: [], weatherData: [],
             tickerIdx: 0, mainIdx: 0, wxIdx: 0,
@@ -840,7 +923,9 @@
             nyeLoopTimer: null,
             nyeSequenceActive: false,
             particleInterval: null,
-            isAlertTongueActive: false
+            isAlertTongueActive: false,
+            bigClockTimeout: null,
+            isLocked: false // New Lock to prevent ghosting
         };
 
         const DOM = {
@@ -850,11 +935,11 @@
             mainTitle: document.getElementById('m-title'), mainDesc: document.getElementById('m-desc'), mainCat: document.getElementById('m-cat'), mainPrg: document.getElementById('m-prg'),
             cTime: document.getElementById('clock-time'), cDate: document.getElementById('clock-date'),
             nyWidget: document.getElementById('ny-widget'), nyTemp: document.getElementById('ny-temp'), nyWind: document.getElementById('ny-wind'), nyTime: document.getElementById('ny-time-badge'), nyFeel: document.getElementById('ny-feel'),
-            special: document.getElementById('special-meteo'), smGrid: document.getElementById('sm-grid'), smTitle: document.getElementById('sm-main-title'),
+            special: document.getElementById('special-meteo'), smGrid: document.getElementById('sm-grid'), smTitle: document.getElementById('sm-main-title'), smBg: document.getElementById('sm-bg'),
             breaking: document.getElementById('breaking'), breakingContent: document.getElementById('breaking-content'),
             feedLog: document.getElementById('feed-log-table'), auth: document.getElementById('auth-overlay'), pin: document.getElementById('pin-input'), dev: document.getElementById('dev-panel'),
             summary: document.getElementById('summary-overlay'), sumContent: document.getElementById('sum-content'), sumClock: document.getElementById('sum-clock'), sumMainTitle: document.getElementById('sum-main-title'), sumSubTitle: document.getElementById('sum-sub-title'),
-            bigClock: document.getElementById('big-clock-overlay'), bcTime: document.getElementById('bc-time'),
+            progGuide: document.getElementById('prog-guide-overlay'), pgContainer: document.getElementById('pg-container'), pgBg: document.getElementById('pg-bg'),
             devWxNext: document.getElementById('dev-wx-next'), devWxSrc: document.getElementById('dev-wx-src'), devSch30: document.getElementById('dev-sch-30'), devSch60: document.getElementById('dev-sch-60'),
             devNextMeteo: document.getElementById('dev-next-meteo'), devBkQueue: document.getElementById('dev-bk-queue'), devScheduleList: document.getElementById('dev-schedule-list'), devNyeTimer: document.getElementById('dev-nye-timer'), devNyeStatus: document.getElementById('dev-nye-status'),
             logoBox: document.getElementById('logo-box'), logoBack: document.getElementById('logo-back-face'), logoFront: document.getElementById('logo-front'),
@@ -862,7 +947,6 @@
             nextCapsule: document.getElementById('next-event-capsule'),
             nightMsg: document.getElementById('night-msg'), tickerNav: document.getElementById('ticker-nav'), devNightTimer: document.getElementById('dev-night-timer'),
             wxAlert: document.getElementById('wx-alert'), wxAlertTitle: document.getElementById('wx-a-title'), wxAlertDesc: document.getElementById('wx-a-desc'), wxAlertIcon: document.getElementById('wx-a-icon'),
-            bcInfoPanel: document.getElementById('bc-info-panel'), bcProgList: document.getElementById('bc-prog-list'),
             alertTongue: document.getElementById('alert-tongue'), atTitle: document.getElementById('at-title'), atMain: document.getElementById('at-main'), atSub: document.getElementById('at-sub'), atIcon: document.getElementById('at-icon'),
             fcAlert: document.getElementById('fc-alert'), fcLabel: document.getElementById('fc-label'), fcMain: document.getElementById('fc-main'), fcSub: document.getElementById('fc-sub'), fcIcon: document.getElementById('fc-icon'),
             sidebar: document.querySelector('.sidebar'), sidebarFlipper: document.querySelector('.sidebar-flipper'), 
@@ -883,6 +967,39 @@
             return '';
         }
         
+        function safeTrigger(callback) {
+            closeAllOverlays();
+            setTimeout(callback, 1200); // Safe delay to allow cleanup
+        }
+        
+        /* --- DYNAMIC BACKGROUND SELECTION (BIG CLOCK & SPECIAL METEO ONLY) --- */
+        function getHighQualityBg() {
+            const now = new Date();
+            const month = now.getMonth(); // 0-11
+            const hour = now.getHours();
+            
+            let season = 'day'; // Default fallback
+            
+            // Season Check
+            let isWinter = (month === 11 || month <= 1);
+            
+            // Time Check
+            let time = 'day';
+            if (hour >= 5 && hour < 7) time = 'dawn';
+            else if (hour >= 7 && hour < 16) time = 'day'; // Winter day is shorter
+            else if (hour >= 16 && hour < 19) time = 'dusk';
+            else time = 'night';
+
+            if (isWinter && time === 'day') return shuffle(BACKGROUNDS.winter_day)[0];
+            if (isWinter && time === 'night') return shuffle(BACKGROUNDS.winter_night)[0];
+            
+            if (time === 'dawn') return shuffle(BACKGROUNDS.dawn)[0];
+            if (time === 'dusk') return shuffle(BACKGROUNDS.dusk)[0];
+            if (time === 'night') return shuffle(BACKGROUNDS.night)[0];
+            
+            return shuffle(BACKGROUNDS.day)[0];
+        }
+
         function calculateAggregateRealFeel(t, h, w) {
             if (t <= 10.0 && w > 3.0) return 13.12 + 0.6215 * t - 11.37 * Math.pow(w, 0.16) + 0.3965 * t * Math.pow(w, 0.16);
             if (t >= 27.0) {
@@ -931,7 +1048,7 @@
             DOM.devWxSrc.innerText = state.currentWxSource; 
             const min = now.getMinutes(); const sec = now.getSeconds(); 
             let diff30 = 30 - min; if (diff30 <= 0) diff30 += 60; diff30--; DOM.devSch30.innerText = `${diff30}m ${60-sec}s`; 
-            let diff60 = 58 - min; if (diff60 <= 0) diff60 += 60; diff60--; DOM.devSch60.innerText = `${diff60}m ${60-sec}s`; 
+            let diff60 = 56 - min; if (diff60 <= 0) diff60 += 60; diff60--; DOM.devSch60.innerText = `${diff60}m ${60-sec}s`; 
             DOM.devBkQueue.innerText = state.breakingQueue.length; 
             DOM.devNextMeteo.innerText = "--:--"; 
             if (state.isNightMode) { DOM.devNightTimer.innerText = "AKTÍV (06:00-IG)"; } else { let nextMidnight = new Date(now); nextMidnight.setHours(24,0,0,0); let diff = nextMidnight - now; let h = Math.floor(diff/3600000); let m = Math.floor((diff%3600000)/60000); DOM.devNightTimer.innerText = `${h}h ${m}m MÚLVA`; } 
@@ -950,25 +1067,80 @@
             }
         }
 
-        function generateHourlySchedule() { const now = new Date(); state.schedule = []; let meteo1 = new Date(now); meteo1.setMinutes(12 + Math.floor(Math.random() * 8), 0, 0); if(meteo1 > now) state.schedule.push({ time: meteo1.getTime(), type: 'meteo', label: "METEO ÁTTEKINTÉS" }); let news30 = new Date(now); news30.setMinutes(30, 0, 0); if(news30 > now) state.schedule.push({ time: news30.getTime(), type: 'summary30', label: "FÉLÓRÁS HÍRADÓ" }); let meteo2 = new Date(now); meteo2.setMinutes(42 + Math.floor(Math.random() * 6), 0, 0); if(meteo2 > now) state.schedule.push({ time: meteo2.getTime(), type: 'meteo', label: "METEO ÁTTEKINTÉS" }); let news60 = new Date(now); news60.setMinutes(57, 0, 0); if(news60 > now) state.schedule.push({ time: news60.getTime(), type: 'summary60', label: "ÓRÁS HÍRADÓ" }); let clock = new Date(now); clock.setMinutes(59, 0, 0); if(clock > now) state.schedule.push({ time: clock.getTime(), type: 'clock', label: "NAGY ÓRA" }); state.schedule.sort((a,b) => a.time - b.time); updateDevScheduleList(); }
+        function generateHourlySchedule() { 
+            const now = new Date(); 
+            state.schedule = []; 
+            
+            // FIXED TIMES FOR STABILITY
+            // Meteo 1 at xx:15
+            let meteo1 = new Date(now); meteo1.setMinutes(15, 0, 0); 
+            if(meteo1 > now) state.schedule.push({ time: meteo1.getTime(), type: 'meteo', label: "METEO ÁTTEKINTÉS" }); 
+            
+            // News 30 at xx:30
+            let news30 = new Date(now); news30.setMinutes(30, 0, 0); 
+            if(news30 > now) state.schedule.push({ time: news30.getTime(), type: 'summary30', label: "FÉLÓRÁS HÍRADÓ" }); 
+            
+            // Meteo 2 at xx:45
+            let meteo2 = new Date(now); meteo2.setMinutes(45, 0, 0); 
+            if(meteo2 > now) state.schedule.push({ time: meteo2.getTime(), type: 'meteo', label: "METEO ÁTTEKINTÉS" }); 
+            
+            // News 60 at xx:56 (Starting early to finish by 59:00)
+            let news60 = new Date(now); news60.setMinutes(56, 0, 0); 
+            if(news60 > now) state.schedule.push({ time: news60.getTime(), type: 'summary60', label: "ÓRÁS HÍRADÓ" }); 
+            
+            // Clock at xx:59
+            let clock = new Date(now); clock.setMinutes(59, 0, 0); 
+            if(clock > now) state.schedule.push({ time: clock.getTime(), type: 'clock', label: "NAGY ÓRA" }); 
+            
+            state.schedule.sort((a,b) => a.time - b.time); 
+            updateDevScheduleList(); 
+        }
 
         function updateDevScheduleList() { let html = `<div style="margin-bottom:5px; color:var(--accent); font-weight:bold;">TERVEZETT ADÁS (SZINKRONIZÁLVA)</div>`; state.schedule.forEach(item => { const d = new Date(item.time); const tStr = `${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`; let color = "#bbb"; if(item.type.includes('summary')) color = "#fff"; if(item.type === 'meteo') color = "#00d4ff"; if(item.type === 'clock') color = "#ffd700"; html += `<div style="border-bottom:1px solid #222; display:flex; justify-content:space-between; padding:2px 0;"><span>${tStr}</span><span style="color:${color}; text-align:right;">${item.label}</span></div>`; }); DOM.devScheduleList.innerHTML = html; }
 
-        function checkScheduleExecution() { if (state.isNightMode) return; const now = Date.now(); state.schedule.forEach((item) => { if (now >= item.time && now < item.time + 1500 && !item.triggered) { item.triggered = true; if (item.type === 'meteo') { if(!state.isBreakingActive && !state.isSummary && !state.isSpecial) triggerSpecialMeteoSequence(); } else if (item.type === 'summary30') triggerSummaryMode(30); else if (item.type === 'summary60') triggerSummaryMode(60); else if (item.type === 'clock') { triggerBigClock(); crawlNews(false); } } }); state.schedule = state.schedule.filter(item => item.time > now - 2000); }
+        function checkScheduleExecution() { 
+            if (state.isNightMode) return; 
+            const now = Date.now(); 
+            state.schedule.forEach((item) => { 
+                // Widen window to 5s to prevent misses
+                if (now >= item.time && now < item.time + 5000 && !item.triggered) { 
+                    item.triggered = true; 
+                    
+                    // FORCE EXECUTION: Close everything else first if it's not the correct one
+                    // EXCEPT: If we are in 59:00, we MUST clear.
+                    
+                    if(item.type === 'clock') {
+                        closeAllOverlays(); // FORCE CLOSE 56:00 summary if running
+                        setTimeout(() => triggerBigClockSequence(), 1200);
+                    }
+                    else {
+                        // For others, we close softly
+                        closeAllOverlays();
+                        setTimeout(() => {
+                            if (item.type === 'meteo') { 
+                                triggerSpecialMeteoSequence(); 
+                            } else if (item.type === 'summary30') {
+                                triggerSummaryMode(30); 
+                            } else if (item.type === 'summary60') {
+                                triggerSummaryMode(60); // 3 minutes -> ends at 59:00
+                            } 
+                        }, 1200); 
+                    }
+                } 
+            }); 
+            state.schedule = state.schedule.filter(item => item.time > now - 6000); 
+        }
 
         function updateNextEventCapsule() { if (state.isNightMode) { DOM.nextCapsule.classList.remove('visible'); return; } const now = Date.now(); const next = state.schedule.find(item => item.time > now); if (!next) { DOM.nextCapsule.classList.remove('visible'); return; } const diffMinutes = (next.time - now) / 60000; if (diffMinutes <= 10 && diffMinutes > 0) { DOM.nextCapsule.classList.add('visible'); const d = new Date(next.time); const tStr = `${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}`; document.getElementById('nc-time').innerText = tStr; let titleText = ""; if(next.type === 'meteo') titleText = "ÉLŐ IDŐJÁRÁS KITEKINTŐ"; else if(next.type === 'summary30') titleText = "EZ TÖRTÉNT EBBEN A FÉLÓRÁBAN"; else if(next.type === 'summary60') titleText = "EZ TÖRTÉNT EBBEN AZ ÓRÁBAN"; else if(next.type === 'clock') titleText = "PONTOS IDŐ"; document.getElementById('nc-title').innerText = titleText; document.getElementById('nc-time').style.color = "var(--accent)"; document.getElementById('nc-title').style.color = "#fff"; } else { DOM.nextCapsule.classList.remove('visible'); } }
 
         /* --- WEATHER ALERT SYSTEM --- */
         async function checkWeatherAlerts() {
-            if (state.isNightMode || state.isSpecial || state.isSummary) return; 
+            if (state.isNightMode || state.isSpecial || state.isSummary || state.isLocked) return; 
             try {
                 // Fetch PWS & Forecast Data
                 const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=47.95&longitude=21.71&current=precipitation,rain,showers,snowfall,weather_code,wind_speed_10m,wind_gusts_10m,visibility,uv_index,apparent_temperature&minutely_15=precipitation_probability,weather_code,wind_speed_10m,uv_index&hourly=precipitation_probability,wind_speed_10m,uv_index&timezone=auto');
                 const data = await res.json();
                 
-                // 1. PWS ALERTS (Top Tongue) - Logic in checkAlertTongue
-
-                // 2. FORECAST ALERTS (Bottom Card)
                 const nextHourProb = data.minutely_15.precipitation_probability[0] || 0;
                 const nextHourWind = data.minutely_15.wind_speed_10m[0] || 0;
                 const nextHourUV = data.minutely_15.uv_index[0] || 0;
@@ -978,94 +1150,137 @@
             } catch (e) { console.log("Alert check failed", e); }
         }
 
-        /* --- FORECAST ALERT LOGIC (Bottom Right) --- */
-        function checkForecastAlerts(rainProb, windSpeed, uvIndex) {
-            let mode = 'none';
-            let val = 0;
+        /* --- NEW BIG CLOCK SEQUENCE (1 MINUTE) - REFINED TIMING --- */
+        function triggerBigClockSequence() {
+            // FORCE CLEAN SLATE
+            state.isSpecial = true;
+            state.isLocked = true; 
+            
+            // 1. Hide UI Elements
+            [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ].forEach(ui => document.getElementById(ui.id).classList.add(`hide-${ui.t}`));
+            
+            // Force Logo to be VISIBLE and ON TOP
+            DOM.logoBox.classList.remove('force-hide');
+            DOM.logoBox.classList.add('high-z'); 
+            DOM.logoBox.style.display = 'block';
 
-            if (rainProb > 60) {
-                mode = 'rain';
-                val = rainProb;
-            } else if (windSpeed > 45) {
-                mode = 'wind';
-                val = windSpeed;
-            } else if (uvIndex > 7) {
-                mode = 'uv';
-                val = uvIndex;
-            }
+            // Hide alerts to be clean
+            DOM.alertTongue.classList.add('force-hide');
+            DOM.fcAlert.classList.add('force-hide');
+            DOM.nextCapsule.classList.remove('visible');
 
-            if (mode !== 'none') showForecastAlert(mode, val);
-            else hideForecastAlert();
+            // 2. Set Background - Pick a nice one
+            DOM.pgBg.style.backgroundImage = `url('${getHighQualityBg()}')`;
+            DOM.pgBg.classList.remove('sharpen'); 
+
+            // 3. Prepare Program Guide Content - 2 HOURS AHEAD
+            
+            let d1 = new Date(); d1.setHours(d1.getHours() + 1); 
+            let h1 = d1.getHours(); if (h1 === 24) h1 = 0; 
+            let h1Str = String(h1).padStart(2, '0');
+
+            let d2 = new Date(); d2.setHours(d2.getHours() + 2); 
+            let h2 = d2.getHours(); if (h2 === 24) h2 = 0; 
+            let h2Str = String(h2).padStart(2, '0');
+
+            // Generate Two Batches
+            // Batch 1: THE NEXT HOUR
+            const batch1 = `
+                <div class="pg-item" style="animation-delay:0.2s">
+                    <span class="pg-time">${h1Str}:00</span>
+                    <span class="pg-title">HÍRADÓ</span>
+                    <span class="pg-desc">A LEGFRISSEBB HÍREK AZ ELMÚLT ÓRÁBÓL</span>
+                </div>
+                <div class="pg-item" style="animation-delay:1.0s">
+                    <span class="pg-time">${h1Str}:15</span>
+                    <span class="pg-title">METEO KITEKINTŐ</span>
+                    <span class="pg-desc">RÉSZLETES IDŐJÁRÁS-JELENTÉS</span>
+                </div>
+                 <div class="pg-item" style="animation-delay:1.8s">
+                    <span class="pg-time">${h1Str}:30</span>
+                    <span class="pg-title">FÉLÓRÁS ÖSSZEFOGLALÓ</span>
+                    <span class="pg-desc">HATÁROKON INNEN ÉS TÚL</span>
+                </div>
+                 <div class="pg-item" style="animation-delay:2.6s">
+                    <span class="pg-time">${h1Str}:56</span>
+                    <span class="pg-title">HÍREK ÉS IDŐJÁRÁS</span>
+                    <span class="pg-desc">ÓRÁS ÖSSZEFOGLALÓ BLOKK</span>
+                </div>
+            `;
+
+            // Batch 2: THE HOUR AFTER
+            const batch2 = `
+                <div class="pg-item" style="animation-delay:0.2s">
+                    <span class="pg-time">${h2Str}:00</span>
+                    <span class="pg-title">HÍRADÓ</span>
+                    <span class="pg-desc">A LEGFRISSEBB HÍREK AZ ELMÚLT ÓRÁBÓL</span>
+                </div>
+                <div class="pg-item" style="animation-delay:1.0s">
+                    <span class="pg-time">${h2Str}:15</span>
+                    <span class="pg-title">METEO KITEKINTŐ</span>
+                    <span class="pg-desc">RÉSZLETES IDŐJÁRÁS-JELENTÉS</span>
+                </div>
+                 <div class="pg-item" style="animation-delay:1.8s">
+                    <span class="pg-time">${h2Str}:30</span>
+                    <span class="pg-title">FÉLÓRÁS ÖSSZEFOGLALÓ</span>
+                    <span class="pg-desc">HATÁROKON INNEN ÉS TÚL</span>
+                </div>
+                 <div class="pg-item" style="animation-delay:2.6s">
+                    <span class="pg-time">${h2Str}:56</span>
+                    <span class="pg-title">HÍREK ÉS IDŐJÁRÁS</span>
+                    <span class="pg-desc">ÓRÁS ÖSSZEFOGLALÓ BLOKK</span>
+                </div>
+            `;
+
+            // START SEQUENCE
+            DOM.pgContainer.innerHTML = batch1;
+            DOM.progGuide.classList.add('active');
+
+            // 19s: Fade Out Batch 1
+            setTimeout(() => {
+                 const items = DOM.pgContainer.querySelectorAll('.pg-item');
+                 items.forEach(el => el.classList.add('fading-out'));
+            }, 19000);
+
+            // 20s: Switch to Batch 2
+            setTimeout(() => {
+                DOM.pgContainer.innerHTML = batch2; 
+            }, 20000);
+
+            // 39s: Fade Out Batch 2
+             setTimeout(() => {
+                 const items = DOM.pgContainer.querySelectorAll('.pg-item');
+                 items.forEach(el => el.classList.add('fading-out'));
+            }, 39000);
+
+            // 40s: Clear Text, Sharpen BG, Show off the view
+            setTimeout(() => {
+                DOM.pgContainer.style.opacity = '0'; // Ensure clear
+                DOM.pgBg.classList.add('sharpen');
+            }, 40000);
+
+            // 50s: Move Logo
+            setTimeout(() => {
+                DOM.logoBox.classList.add('center-stage');
+            }, 50000);
+
+            // 60s: Reset Everything for New Hour
+            setTimeout(() => {
+                closeAllOverlays();
+                DOM.logoBox.classList.remove('center-stage');
+                DOM.logoBox.classList.remove('high-z');
+                DOM.pgContainer.style.opacity = '1';
+                DOM.pgBg.classList.remove('sharpen');
+                state.isLocked = false; 
+                // Immediate refresh for new hour
+                crawlNews(true);
+            }, 60000);
         }
 
-        function showForecastAlert(type, value) {
-            const card = DOM.fcAlert;
-            // Prevent showing if Breaking News is active (Collision Avoidance)
-            if (state.isBreakingActive) {
-                card.classList.add('collision-hidden');
-            } else {
-                card.classList.remove('collision-hidden');
-            }
-
-            let label = "ELŐREJELZÉS";
-            let main = "";
-            let sub = "";
-            let icon = "";
-
-            if (type === 'rain') {
-                icon = "☔";
-                main = "CSAPADÉK ZÓNA ÉRKEZIK";
-                sub = `VALÓSZÍNŰSÉG: ${value}%`;
-            } else if (type === 'wind') {
-                icon = "🍃";
-                main = "SZÉLERŐSÖDÉS VÁRHATÓ";
-                sub = `SEBESSÉG: ${value} KM/H FELETT`;
-            } else if (type === 'uv') {
-                icon = "☀️";
-                main = "VESZÉLYES UV SZINT";
-                sub = `UV INDEX: ${value} (EXTRÉM)`;
-            }
-
-            DOM.fcLabel.innerText = label;
-            DOM.fcMain.innerText = main;
-            DOM.fcSub.innerText = sub;
-            DOM.fcIcon.innerText = icon;
-            
-            card.classList.add('active');
-        }
-
-        function hideForecastAlert() {
-            DOM.fcAlert.classList.remove('active');
-        }
-
-        /* --- BIG CLOCK CONTENT RENDERER (PROGRAM GUIDE) --- */
-        function renderBigClockContent() {
-            let d = new Date();
-            d.setHours(d.getHours() + 1);
-            d.setMinutes(0);
-            let h = d.getHours();
-            if (h === 24) h = 0; 
-            let hStr = String(h).padStart(2, '0');
-            
-            const m1 = 12 + Math.floor(Math.random() * 5); 
-            const m2 = 42 + Math.floor(Math.random() * 5); 
-            
-            const progList = [
-                `<div class="bc-prog-item"><span class="bc-prog-time">${hStr}:00</span><span class="bc-prog-name">HÍREK</span></div>`,
-                `<div class="bc-prog-item"><span class="bc-prog-time">${hStr}:${m1}</span><span class="bc-prog-name">IDŐJÁRÁS</span></div>`,
-                `<div class="bc-prog-item"><span class="bc-prog-time">${hStr}:30</span><span class="bc-prog-name">FÉLÓRÁS ÖSSZEFOGLALÓ</span></div>`,
-                `<div class="bc-prog-item"><span class="bc-prog-time">${hStr}:${m2}</span><span class="bc-prog-name">IDŐJÁRÁS</span></div>`,
-                `<div class="bc-prog-item"><span class="bc-prog-time">${hStr}:55</span><span class="bc-prog-name">ÓRÁS ÖSSZEFOGLALÓ</span></div>`
-            ];
-            
-            DOM.bcProgList.innerHTML = progList.join('');
-        }
-
-        function triggerCurrentSummaryTest() { const min = new Date().getMinutes(); triggerSummaryMode((min >= 30 && min < 57) ? 60 : 30); }
         function forceRefreshAll() { crawlNews(true); fetchCurrency(); fetchWunderground(); alert("FRISSÍTÉS ELKÜLDVE"); }
         function testBreaking() { 
             const now = new Date(); 
-            const longDesc = "EZ EGY TESZT ÜZENET, AMELY A GÖRGETÉSI FUNKCIÓT DEMONSTRÁLJA. Ez a szöveg szándékosan hosszúra lett nyújtva, hogy meghaladja a rendelkezésre álló keret méretét. Amikor a tartalom hosszabb, mint a konténer, a rendszer automatikusan észleli ezt, vár 3 másodpercet, majd egy finom animációval felfelé görgeti a szöveget, hogy az alsó sorok is olvashatóvá váljanak. A szöveg végül eltűnik a 'MOST ÉRKEZETT' fejléc alatt, így biztosítva, hogy minden információ átadható legyen anélkül, hogy a felhasználói felületet torzítaná.";
+            const longDesc = "EZ EGY TESZT ÜZENET, AMELY A GÖRGETÉSI FUNKCIÓT DEMONSTRÁLJA. Ez a szöveg szándékosan hosszúra lett nyújtva, hogy meghaladja a rendelkezésre álló keret méretét.";
             state.breakingQueue.push({ 
                 title: "RENDKÍVÜLI HÍR: SCROLL TESZT", 
                 desc: longDesc, 
@@ -1141,7 +1356,7 @@
         }
 
         async function checkBreaking() {
-            if (state.isSpecial || state.isSummary) return;
+            if (state.isSpecial || state.isSummary || state.isLocked) return;
             const now = Date.now();
             state.allNews.filter(n => (now - n.date.getTime()) <= 180000).sort((a,b) => a.date - b.date).forEach(item => {
                 if (!state.breakingHistory.has(item.link)) {
@@ -1155,8 +1370,6 @@
             if (state.breakingQueue.length === 0) { closeBreaking(); return; }
             state.isBreakingActive = true; 
             
-            // SMART COLLISION AVOIDANCE
-            // Hide Forecast Card temporarily
             if (DOM.fcAlert.classList.contains('active')) {
                 DOM.fcAlert.classList.add('collision-hidden');
             }
@@ -1166,7 +1379,6 @@
 
             const timeStr = item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'});
             DOM.bkCardHeadline.innerText = item.title;
-            // UPDATE: Include Logo in Meta
             const logo = getLogoHtml(item.source);
             DOM.bkCardMeta.innerHTML = `${timeStr} • ${logo} ${item.source}`;
             
@@ -1199,15 +1411,12 @@
 
         function closeBreaking() {
             DOM.sidebar.classList.remove('breaking-active');
-            
-            // Restore Forecast Card Visibility
             DOM.fcAlert.classList.remove('collision-hidden');
-            
             setTimeout(() => { state.isBreakingActive = false; }, 1000); 
         }
 
         window.stepMain = function(dir) {
-            if(!state.mainItems.length) return;
+            if(!state.mainItems.length || state.isLocked) return;
             clearInterval(state.mainTimer); 
             state.mainIdx += dir;
             if (state.mainIdx < 0) state.mainIdx = state.mainItems.length - 1;
@@ -1216,18 +1425,27 @@
             startMainLoop(); 
         };
 
-        /* --- METEO SEQUENCE FIX: ADDED TIMEOUT & ERROR HANDLING --- */
+        /* --- METEO SEQUENCE --- */
         async function triggerSpecialMeteoSequence(startPhase = 0) {
+            // AGGRESSIVE LOCKING
             state.isSpecial = true;
-            // Add Force Hide Class to conflicting elements
+            state.isLocked = true;
+            
+            // HIDE UI
             [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ].forEach(ui => document.getElementById(ui.id).classList.add(`hide-${ui.t}`));
             
-            // HIDE LOGO AND ALERTS EXPLICITLY
+            // HIDE ELEMENTS
             DOM.logoBox.classList.add('force-hide');
             DOM.alertTongue.classList.add('force-hide');
             DOM.fcAlert.classList.add('force-hide');
 
+            // SETUP BACKGROUND
+            DOM.smBg.style.backgroundImage = `url('${getHighQualityBg()}')`;
+
+            // FORCE DISPLAY
             DOM.special.style.display = 'flex'; 
+            
+            // FADE IN
             setTimeout(() => DOM.special.classList.add('active'), 50);
 
             const sequence = [
@@ -1265,33 +1483,9 @@
             runPhase();
         }
 
-        function testSpecificPhase(phaseNum) {
-             state.isSpecial = true;
-            [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ].forEach(ui => document.getElementById(ui.id).classList.add(`hide-${ui.t}`));
-            DOM.logoBox.classList.add('force-hide'); // HIDE LOGO FOR TEST TOO
-            DOM.special.style.display = 'flex'; setTimeout(() => DOM.special.classList.add('active'), 50);
-
-            const sequence = [
-                { type: "list", title: "SZABOLCS-SZATMÁR-BEREG VÁRMEGYE", list: shuffle([...SZABOLCS_STATIONS]).slice(0, 12) },
-                { type: "list", title: "MAGYARORSZÁG KÖRKÉP", list: shuffle([...HU_MAJOR_STATIONS]).slice(0, 12) },
-                { type: "list", title: "VILÁGVÁROSOK", list: shuffle([...WORLD_MAJOR_STATIONS]).slice(0, 12) },
-                { type: "list", title: "EXTRÉM ÉS KÜLÖNLEGES HELYSZÍNEK", list: shuffle([...EXOTIC_STATIONS]).slice(0, 12) },
-                { type: "ny_detailed", title: "NYÍREGYHÁZA RÉSZLETES ADATOK" }
-            ];
-            
-            const currentTheme = sequence[phaseNum - 1];
-            DOM.smGrid.style.opacity = 0;
-            setTimeout(async () => {
-                if (currentTheme.type === "list") await renderSpecialBatch(currentTheme.list, currentTheme.title);
-                else if (currentTheme.type === "ny_detailed") await renderNyiregyhazaDetailed();
-                DOM.smGrid.style.opacity = 1;
-            }, 300);
-        }
-
         async function renderSpecialBatch(stations, title) {
             DOM.smTitle.innerText = title; DOM.smGrid.innerHTML = '';
             try {
-                // INCREASED TIMEOUT TO 5s
                 const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${stations.map(c => c.lat).join(',')}&longitude=${stations.map(c => c.lon).join(',')}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,apparent_temperature,weather_code,is_day`, { signal: AbortSignal.timeout(5000) });
                 const data = await res.json(); 
                 (Array.isArray(data) ? data : [data]).forEach((d, i) => {
@@ -1360,21 +1554,53 @@
             }
         }
 
-        /* --- SUMMARY FIX: ADDED BACKUP NEWS LOGIC --- */
+        /* --- SUMMARY FIX --- */
         function triggerSummaryMode(mins) {
+            // AGGRESSIVE LOCKING
             state.isSummary = true;
+            state.isLocked = true; 
+            
+            // HIDE UI
             [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ].forEach(ui => document.getElementById(ui.id).classList.add(`hide-${ui.t}`));
             
-            // Try getting news from requested timeframe
-            let items = state.allNews.filter(n => (new Date() - n.date) < mins * 60000).sort((a,b) => b.date - a.date);
-            
-            // FALLBACK: If less than 4 items, take recent 12 items regardless of time
-            if (items.length < 4) items = [...state.allNews].sort((a,b) => b.date - a.date).slice(0, 12);
+            // Fallback content if empty
+            let items = [];
+            if(state.allNews.length > 0) {
+                items = state.allNews.filter(n => (new Date() - n.date) < mins * 60000).sort((a,b) => b.date - a.date);
+                if (items.length < 4) items = [...state.allNews].sort((a,b) => b.date - a.date).slice(0, 12);
+            } else {
+                // Generate Dummy items
+                for(let i=0; i<8; i++) {
+                    items.push({title: "RENDSZER ÜZENET: ADATOK TÖLTÉSE...", desc: "Kérjük várjon, amíg a hírek frissülnek a központi szerverről.", date: new Date(), source: "SYSTEM", link: "#"});
+                }
+            }
             
             DOM.sumMainTitle.innerText = "HÍRÖSSZEFOGLALÓ 3 PERCBEN"; DOM.sumSubTitle.innerText = mins === 30 ? "EZ TÖRTÉNT AZ ELMÚLT FÉL ÓRÁBAN" : "EZ TÖRTÉNT AZ ELMÚLT ÓRÁBAN";
             DOM.sumContent.innerHTML = `<div class="summary-header"></div>`;
-            let timeLeft = 180; DOM.sumClock.innerText = "03:00"; if(state.summaryTimerInterval) clearInterval(state.summaryTimerInterval);
-            state.summaryTimerInterval = setInterval(() => { timeLeft--; if(timeLeft < 0) clearInterval(state.summaryTimerInterval); else DOM.sumClock.innerText = `0${Math.floor(timeLeft/60)}:${(timeLeft%60).toString().padStart(2,'0')}`; }, 1000);
+            
+            // PRECISE TIMER FOR 60m MODE: Until 59:00 exactly
+            let secondsToNextHour = 180; // Default 3 mins
+            if(mins === 60) {
+                // Ensure it stops exactly at 59:00
+                const now = new Date();
+                const target = new Date(now); target.setMinutes(59,0,0);
+                secondsToNextHour = Math.floor((target - now)/1000);
+            }
+            
+            let timeLeft = secondsToNextHour; 
+            DOM.sumClock.innerText = `0${Math.floor(timeLeft/60)}:${(timeLeft%60).toString().padStart(2,'0')}`; 
+            
+            if(state.summaryTimerInterval) clearInterval(state.summaryTimerInterval);
+            state.summaryTimerInterval = setInterval(() => { 
+                timeLeft--; 
+                if(timeLeft < 0) {
+                    clearInterval(state.summaryTimerInterval);
+                    if(mins === 60) closeAllOverlays(); // Safety close at end of time
+                } else {
+                    DOM.sumClock.innerText = `0${Math.floor(timeLeft/60)}:${(timeLeft%60).toString().padStart(2,'0')}`; 
+                }
+            }, 1000);
+            
             const pages = []; for (let i = 0; i < items.length; i += 4) { pages.push(items.slice(i, i + 4)); }
             
             const placeholderLogo = `<svg viewBox="0 0 24 24" style="width:50%; fill:var(--accent);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`;
@@ -1383,26 +1609,35 @@
                 const d = document.createElement('div'); d.className = `summary-page ${idx === 0 ? 'active' : ''}`; d.id = `sum-page-${idx}`;
                 p.forEach(item => { 
                     const imgHtml = item.img ? `<img src="${item.img}" class="sum-img">` : `<div class="sum-img placeholder">${placeholderLogo}</div>`;
-                    // UPDATE: LOGO IN SUMMARY
                     const logo = getLogoHtml(item.source);
                     d.innerHTML += `<div class="sum-item" onclick="window.open('${item.link}','_blank')">${imgHtml}<div class="sum-text"><div class="sum-time">${logo} ${item.date.toLocaleTimeString('hu-HU',{hour:'2-digit',minute:'2-digit'})} • ${item.source}</div><div class="sum-h">${item.title}</div><div class="sum-d">${item.desc}</div></div></div>`; 
                 });
                 DOM.sumContent.appendChild(d);
             });
-            DOM.summary.classList.add('active'); let cPage = 0;
-            if (pages.length > 1) state.summaryInterval = setInterval(() => { if(state.isSummary) { document.getElementById(`sum-page-${cPage}`).classList.remove('active'); cPage = (cPage + 1) % pages.length; document.getElementById(`sum-page-${cPage}`).classList.add('active'); } }, Math.max(180000/pages.length, 15000));
-            setTimeout(() => { if(state.isSummary && !DOM.bigClock.classList.contains('active')) closeAllOverlays(); }, 180000);
-        }
-
-        function triggerBigClock() { 
-            state.isSpecial = true; 
-            renderBigClockContent(); 
-            DOM.bigClock.classList.add('active'); 
+            
+            // FORCE DISPLAY
+            DOM.summary.style.display = 'grid'; 
+            
+            // FADE IN
+            setTimeout(() => DOM.summary.classList.add('active'), 50);
+            
+            let cPage = 0;
+            if (pages.length > 1) state.summaryInterval = setInterval(() => { if(state.isSummary) { document.getElementById(`sum-page-${cPage}`).classList.remove('active'); cPage = (cPage + 1) % pages.length; document.getElementById(`sum-page-${cPage}`).classList.add('active'); } }, Math.max(secondsToNextHour*1000/pages.length, 15000));
+            
+            // Extra safety: Kill overlay manually if not killed by timer
+            setTimeout(() => { if(state.isSummary && !DOM.logoBox.classList.contains('center-stage')) closeAllOverlays(); }, secondsToNextHour * 1000 + 1000);
         }
 
         function closeAllOverlays() {
-            DOM.summary.classList.remove('active'); DOM.bigClock.classList.remove('active'); DOM.special.classList.remove('active');
-            clearInterval(state.summaryInterval); clearInterval(state.summaryTimerInterval); clearTimeout(state.specialMeteoInterval); clearTimeout(state.meteoPhaseTimer);
+            DOM.summary.classList.remove('active'); 
+            DOM.special.classList.remove('active');
+            DOM.progGuide.classList.remove('active');
+            
+            // REMOVE CENTER STAGE TO TRIGGER RETURN ANIMATION
+            DOM.logoBox.classList.remove('center-stage');
+            DOM.logoBox.classList.remove('high-z');
+
+            clearInterval(state.summaryInterval); clearInterval(state.summaryTimerInterval); clearTimeout(state.specialMeteoInterval); clearTimeout(state.meteoPhaseTimer); clearTimeout(state.bigClockTimeout);
             state.isSummary = false; state.isSpecial = false;
             
             setTimeout(() => {
@@ -1414,6 +1649,8 @@
                 DOM.logoBox.classList.remove('force-hide');
                 DOM.alertTongue.classList.remove('force-hide');
                 DOM.fcAlert.classList.remove('force-hide');
+                
+                state.isLocked = false; // UNLOCK UI
             }, 800);
 
             [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ].forEach(ui => document.getElementById(ui.id).classList.remove(`hide-${ui.t}`));
@@ -1430,7 +1667,6 @@
             state.tickerIdx = nextIdx; const item = state.tickerItems[state.tickerIdx];
             const old = DOM.tickerWindow.querySelector('.ticker-item.active'); if (old) { old.classList.remove('active'); setTimeout(() => old.remove(), 600); }
             const el = document.createElement('div'); el.className = 'ticker-item active'; el.onclick = () => window.open(item.link, '_blank');
-            // UPDATE: LOGO IN TICKER
             const logo = getLogoHtml(item.source);
             el.innerHTML = `<div class="ticker-content"><div class="ticker-meta">${logo} ${item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'})} • ${item.source}</div><span>${item.title}</span></div>`;
             DOM.tickerWindow.appendChild(el); document.getElementById('t-count').innerText = `${state.tickerIdx + 1} / ${state.tickerItems.length}`;
@@ -1447,7 +1683,8 @@
         function manualTicker(dir) { clearTimeout(state.tickerTimer); cycleTicker(dir); }
 
         function cycleMain(manual = false) {
-            if (!state.mainItems.length || state.isSpecial || state.isSummary) return;
+            if (!state.mainItems.length || state.isSpecial || state.isSummary || state.isLocked) return;
+            
             if (!manual) {
                 if (state.mainIdx >= state.mainItems.length) state.mainIdx = 0; 
                 if (state.mainIdx < 0) state.mainIdx = state.mainItems.length - 1; 
@@ -1458,24 +1695,36 @@
             DOM.mTextContainer.classList.add('faded-out');
 
             setTimeout(() => {
+                if (state.isLocked) return; // Strict Safety Check
+                
                 DOM.mainTitle.innerText = item.title; 
                 DOM.mainDesc.innerText = item.desc; 
                 
                 const idx = state.mainIdx + 1;
                 document.getElementById('nav-count').innerText = `${idx} / ${state.mainItems.length}`;
-                // UPDATE: LOGO IN MAIN
                 const logo = getLogoHtml(item.source);
                 DOM.mainCat.innerHTML = `${logo} ${item.source} • ${item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'})}`;
                 
                 DOM.mTextContainer.classList.remove('faded-out');
 
-                const img = document.createElement('img'); img.src = item.img; img.className = 'bg-img'; DOM.stage.appendChild(img);
+                // Main News uses the ITEM'S IMAGE, NOT the background generator
+                const img = document.createElement('img'); 
+                img.src = item.img; // Correct logic preserved
+                img.className = 'bg-img'; 
+                DOM.stage.appendChild(img);
+                
                 img.onerror = () => { img.remove(); DOM.mainTitle.innerText = "KÉP BETÖLTÉSE SIKERTELEN..."; setTimeout(() => cycleMain(), 2000); };
-                img.onload = () => { img.classList.add('active'); const imgs = DOM.stage.querySelectorAll('.bg-img'); if (imgs.length > 2) imgs[0].remove(); };
+                img.onload = () => { 
+                    if(state.isLocked) { img.remove(); return; } // Double check
+                    img.classList.add('active'); 
+                    const imgs = DOM.stage.querySelectorAll('.bg-img'); 
+                    if (imgs.length > 2) imgs[0].remove(); 
+                };
                 
                 DOM.mainPrg.style.transition = 'none'; DOM.mainPrg.style.width = '0%';
                 setTimeout(() => {
-                     DOM.mainPrg.style.transition = 'width 19.8s linear'; DOM.mainPrg.style.width = '100%';
+                     DOM.mainPrg.style.transition = 'width 21.8s linear'; 
+                     DOM.mainPrg.style.width = '100%';
                 }, 50);
 
             }, 400); 
@@ -1483,7 +1732,7 @@
             if(!manual) state.mainIdx++;
         }
 
-        function startMainLoop() { if (state.mainTimer) clearInterval(state.mainTimer); state.mainTimer = setInterval(() => { if(!state.isSpecial && !state.isSummary) cycleMain(); }, 20000); }
+        function startMainLoop() { if (state.mainTimer) clearInterval(state.mainTimer); state.mainTimer = setInterval(() => { if(!state.isSpecial && !state.isSummary) cycleMain(); }, 22000); } // 22s
 
         /* --- UPDATED PWS FETCH: DETECT RAIN & WIND --- */
         async function fetchWunderground() {
@@ -1537,7 +1786,6 @@
                 DOM.nyWidget.style.display = 'flex';
                 state.currentWxSource = `PWS ÁTLAG (${validReadings.length})`;
 
-                // CHECK FOR ALERTS BASED ON REAL DATA (TOP TONGUE)
                 checkAlertTongue(maxPrecipRate, maxPrecipTotal, maxGust, avgTemp);
 
             } else {
@@ -1617,7 +1865,6 @@
 
         function showForecastAlert(type, value) {
             const card = DOM.fcAlert;
-            // Prevent showing if Breaking News is active (Collision Avoidance)
             if (state.isBreakingActive) {
                 card.classList.add('collision-hidden');
             } else {
@@ -1737,18 +1984,10 @@
                 const now = new Date();
                 const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
                 DOM.cTime.innerHTML = `${timeStr}<span class="mc-sec">${String(now.getSeconds()).padStart(2,'0')}</span>`;
-                DOM.bcTime.innerHTML = `${timeStr}<span class="bc-sec">${String(now.getSeconds()).padStart(2,'0')}</span>`;
                 const days = ['VASÁRNAP','HÉTFŐ','KEDD','SZERDA','CSÜTÖRTÖK','PÉNTEK','SZOMBAT'];
                 DOM.cDate.innerText = `${now.getFullYear()}. ${String(now.getMonth()+1).padStart(2,'0')}. ${String(now.getDate()).padStart(2,'0')}. - ${days[now.getDay()]}`;
-                checkScheduleExecution(); updateNextEventCapsule(); checkNightMode(); checkHolidayMode();
-                if ([14, 29, 44].includes(now.getMinutes()) && now.getSeconds() === 45) {
-                    state.mainIdx = 0;       
-                    state.tickerIdx = -1;    
-                    crawlNews(false);
-                    manualTicker(1);
-                    cycleMain(true);
-                }
-                if (now.getMinutes() === 0 && now.getSeconds() === 0) { closeAllOverlays(); fetchCurrency(); generateHourlySchedule(); if (!state.isNightMode) { state.tickerIdx = -1; manualTicker(1); } }
+                checkScheduleExecution(); updateNextEventCapsule(); checkNightMode();
+                if (now.getMinutes() === 0 && now.getSeconds() === 0) { fetchCurrency(); generateHourlySchedule(); if (!state.isNightMode) { state.tickerIdx = -1; manualTicker(1); } }
                 updateDevMonitor();
                 if (Date.now() - state.lastTickerUpdate > 12000 && !state.isSpecial && !state.isSummary && !state.isNightMode) { crawlNews(false); cycleTicker(1); }
             }, 1000);
