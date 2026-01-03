@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V15.00 ADÁSREND MONITOR</title>
+    <title>TKP NEWS - V15.20 EASTER & KOKARDA UPGRADE</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,7 +16,8 @@
             --alert: #cc0000;
             --sport-main: #006622;
             --sport-light: #00cc44;
-            --love: #ff0055; /* Valentin szín */
+            --love: #ff0055;
+            --easter: #50c878; /* Húsvéti zöld */
             --glass: rgba(0, 15, 45, 0.95);
             --text: #ffffff;
             --footer-h: clamp(65px, 9vh, 95px);
@@ -225,30 +226,37 @@
         .logo-col-icon { display: flex; align-items: center; justify-content: center; margin-right: 12px; position: relative; width: 38px; height: 38px; }
         .logo-svg-icon { width: 38px; height: 38px; fill: rgba(255, 255, 255, 0.9); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9)); position: absolute; top: 0; left: 0; transition: opacity 0.5s, transform 0.5s; }
         
+        /* ICONS */
         #heart-icon { opacity: 0; transform: scale(0.5); fill: var(--love); filter: drop-shadow(0 0 10px rgba(255,0,85,0.6)); }
         #heart-icon.visible { opacity: 1; transform: scale(1); }
-        
-        /* Permanent state for Valentine Day */
         #heart-icon.permanent-visible { opacity: 1; transform: scale(1); animation: heartbeat 1.5s infinite; }
-        #globe-icon.permanent-hidden { opacity: 0; transform: scale(0.5); }
-
-        #globe-icon.hidden { opacity: 0; transform: scale(0.5); }
         
+        #kokarda-icon { opacity: 0; transform: scale(0.5); filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5)); }
+        #kokarda-icon.permanent-visible { opacity: 1; transform: scale(1); }
+        
+        #easter-icon { opacity: 0; transform: scale(0.5); }
+        #easter-icon.permanent-visible { opacity: 1; transform: scale(1); }
+        
+        .permanent-hidden { opacity: 0 !important; transform: scale(0.5) !important; }
+        #globe-icon.hidden { opacity: 0; transform: scale(0.5); }
         #heart-icon.beating { animation: heartbeat 1.2s infinite; }
 
         .logo-col-text { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
         .logo-text-inline { font-family: var(--font-main); font-weight: 800; font-size: 1.3rem; color: rgba(255, 255, 255, 0.9); letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.9); line-height: 0.9; margin-bottom: 2px; }
-        .logo-row-time { font-family: var(--font-tech); font-weight: 700; font-size: 1.1rem; color: rgba(255, 255, 255, 0.9); text-shadow: 0 2px 3px rgba(0,0,0,0.9); line-height: 1; margin-bottom: 1px; }
+        
+        /* ADJUSTED CLOCK STYLES */
+        .logo-row-time { font-family: var(--font-tech); font-weight: 700; font-size: 1.0rem; color: rgba(255, 255, 255, 0.9); text-shadow: 0 2px 3px rgba(0,0,0,0.9); line-height: 1; margin-bottom: 1px; }
+        .mc-sec { font-size: 0.7em; color: rgba(255, 204, 0, 0.9); margin-left: 5px; font-weight: 400; text-shadow: 0 1px 2px #000; }
+        
         .logo-row-date { font-family: var(--font-condensed); font-weight: 700; font-size: 0.75rem; color: rgba(255, 255, 255, 0.75); text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 1px 3px rgba(0,0,0,0.9); line-height: 1; }
-        .mc-sec { font-size: 0.75em; color: rgba(255, 204, 0, 0.9); margin-left: 1px; font-weight: 400; text-shadow: 0 1px 2px #000; }
         
         .logo-back { position: absolute; top:0; left:0; width: 100%; height: 100%; transform: rotateY(180deg); border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px; background: linear-gradient(135deg, #001a4d 0%, #000022 100%); border: 2px solid #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); text-align: center; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
         .logo-back.valentine { border-color: var(--love); background: linear-gradient(135deg, #330011 0%, #110005 100%); box-shadow: 0 0 20px rgba(255, 0, 85, 0.5); }
+        .logo-back.easter { border-color: var(--easter); background: linear-gradient(135deg, #003311 0%, #001100 100%); box-shadow: 0 0 20px rgba(80, 200, 120, 0.5); }
         
         .ny-msg-title { font-family: var(--font-script); font-size: 1.4rem; color: #ffd700; margin-bottom: 2px; line-height: 1.1; }
         .ny-msg-sub { font-family: var(--font-main); font-size: 0.7rem; font-weight: bold; color: #fff; }
         
-        /* Valentine Message Styles */
         .val-msg { text-shadow: 0 0 5px rgba(255,0,85,0.5); }
         .val-frame { border: 2px solid var(--love); padding: 4px 10px; border-radius: 4px; display:inline-block; margin: 4px 0; background: rgba(255,0,85,0.15); box-shadow: 0 0 10px rgba(255,0,85,0.2); }
         
@@ -437,20 +445,21 @@
         .auth-title { font-family: var(--font-tech); color: var(--accent); font-size: 1.2rem; letter-spacing: 2px; margin-bottom: 10px; }
         .pin-input { background: #000; border: 1px solid #444; color: #fff; font-family: var(--font-mono); font-size: 2rem; width: 120px; text-align: center; padding: 10px; outline: none; letter-spacing: 5px; }
         
-        /* NEW DEV PANEL STYLES */
         #dev-panel { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80vw; max-width: 900px; height: 80vh; background: rgba(10, 15, 20, 0.98); border: 1px solid #333; z-index: 10001; display: none; flex-direction: column; box-shadow: 0 0 100px rgba(0,0,0,0.9); font-family: var(--font-mono); color: #ccc; }
         .dev-head { background: #1a1a1a; padding: 15px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
         .dev-body { flex-grow: 1; padding: 20px; overflow-y: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .dev-section { background: #080808; border: 1px solid #222; padding: 15px; }
         .dev-h { font-family: var(--font-tech); color: var(--primary); border-bottom: 1px solid #222; margin-bottom: 10px; padding-bottom: 5px; font-weight: bold; }
         
-        /* SCHEDULE TABLE STYLES */
         #dev-schedule-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-bottom: 15px; }
         #dev-schedule-table th { text-align: left; color: #888; border-bottom: 1px solid #333; padding: 4px; font-size: 0.7rem; }
         #dev-schedule-table td { border-bottom: 1px solid #222; padding: 6px 4px; color: #bbb; }
         .sch-time { color: var(--accent); font-weight: bold; }
         .sch-live { color: #f00; font-weight: 900; animation: blink 1s infinite; letter-spacing: 1px; }
         .sch-val { color: var(--love); font-weight: bold; }
+        .sch-nat { color: #ce2939; font-weight: bold; }
+        .sch-eas { color: #50c878; font-weight: bold; }
+        .sch-off { color: #555; font-style: italic; }
 
         .btn { background: #222; border: 1px solid #444; color: #fff; padding: 8px 15px; cursor: pointer; font-family: var(--font-mono); font-size: 0.8rem; margin-bottom: 5px; width: 100%; text-align: left; transition: 0.2s; }
         .btn:hover { background: var(--primary); }
@@ -499,6 +508,12 @@
                 <div style="font-size:0.7rem; color:#666; margin-top:5px; border-top:1px solid #333; padding-top:5px;">
                     VALENTIN NAPI ÜZEMMÓD: <span id="dev-val-status" style="color:#888;">INAKTÍV</span>
                 </div>
+                <div style="font-size:0.7rem; color:#666;">
+                    MÁRCIUS 15. ÜZEMMÓD: <span id="dev-nat-status" style="color:#888;">INAKTÍV</span>
+                </div>
+                <div style="font-size:0.7rem; color:#666;">
+                    HÚSVÉTI ÜZEMMÓD: <span id="dev-eas-status" style="color:#888;">INAKTÍV</span>
+                </div>
                 
                 <div class="dev-h" style="margin-top:20px;">MANUÁLIS VEZÉRLÉS</div>
                 <button class="btn" onclick="safeTrigger(() => triggerSummaryMode(3, 'half'))">[►] FÉLÓRÁS HÍRADÓ (3p)</button>
@@ -506,6 +521,8 @@
                 <button class="btn" onclick="safeTrigger(() => triggerSummaryMode(2, 'sport'))">[►] SPORTHÍREK (2p)</button>
                 <button class="btn" onclick="safeTrigger(() => triggerBigClockSequence())">[⏰] NAGY ÓRA TESZT (1 PERC)</button>
                 <button class="btn" onclick="triggerValentineSequence()">[❤️] VALENTIN SEQ. TESZT</button>
+                <button class="btn" onclick="toggleKokardaTest()">[🇭🇺] MÁRCIUS 15. TESZT</button>
+                <button class="btn" onclick="triggerEasterSequence()">[🐰] HÚSVÉT TESZT</button>
                 <button class="btn" onclick="closeAllOverlays()">[X] MINDEN ABLAK BEZÁRÁSA</button>
                 <button class="btn" onclick="forceRefreshAll()">[⚡] AZONNALI FRISSÍTÉS</button>
                 <button class="btn" onclick="testBreaking()">[🔥] BREAKING NEWS TESZT</button>
@@ -622,8 +639,43 @@
             <div class="logo-front">
                 <div class="logo-col-icon">
                     <svg id="globe-icon" class="logo-svg-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                    <!-- HEART ICON (HIDDEN BY DEFAULT) -->
+                    <!-- HEART ICON (VALENTINE) -->
                     <svg id="heart-icon" class="logo-svg-icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    <!-- UPDATED KOKARDA ICON (MARCH 15) - REALISTIC -->
+                    <svg id="kokarda-icon" class="logo-svg-icon" viewBox="0 0 50 50">
+                        <defs>
+                            <radialGradient id="gradRed" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                                <stop offset="80%" style="stop-color:#ce2939;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#9e1b26;stop-opacity:1" />
+                            </radialGradient>
+                            <radialGradient id="gradGreen" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                                <stop offset="80%" style="stop-color:#477050;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#2e4a34;stop-opacity:1" />
+                            </radialGradient>
+                            <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feDropShadow dx="1" dy="1" stdDeviation="1" flood-color="#000" flood-opacity="0.5"/>
+                            </filter>
+                        </defs>
+                        <!-- Ribbons -->
+                        <path d="M18 35 Q15 45 10 50 L22 48 L25 35" fill="#ce2939" filter="url(#shadow)"/>
+                        <path d="M32 35 Q35 45 40 50 L28 48 L25 35" fill="#ce2939" filter="url(#shadow)"/>
+                        
+                        <!-- Rosette Layers -->
+                        <circle cx="25" cy="25" r="18" fill="url(#gradRed)" filter="url(#shadow)" />
+                        <circle cx="25" cy="25" r="11" fill="#f0f0f0" />
+                        <circle cx="25" cy="25" r="5" fill="url(#gradGreen)" />
+                    </svg>
+                    <!-- EASTER ICON (EGGS + BUNNY) -->
+                    <svg id="easter-icon" class="logo-svg-icon" viewBox="0 0 50 50">
+                        <!-- Egg 1 (Reddish) -->
+                        <ellipse cx="15" cy="30" rx="9" ry="12" fill="#ff6b6b" transform="rotate(-15 15 30)" />
+                        <path d="M10 25 Q15 28 20 25" stroke="white" stroke-width="1" fill="none" transform="rotate(-15 15 30)"/>
+                        <!-- Egg 2 (Goldish) -->
+                        <ellipse cx="25" cy="32" rx="9" ry="12" fill="#ffd700" />
+                        <path d="M20 27 Q25 30 30 27" stroke="#b8860b" stroke-width="1" fill="none"/>
+                        <!-- Bunny Silhouette (White) -->
+                        <path d="M40 38 C35 38 32 35 32 30 C32 25 34 20 34 15 C34 10 32 5 35 5 C36 5 37 8 37 12 C38 8 40 5 42 5 C44 5 43 10 42 15 C44 20 45 25 45 30 C45 35 43 38 40 38 Z" fill="#fff"/>
+                    </svg>
                 </div>
                 <div class="logo-col-text">
                     <div class="logo-text-inline">TKP NEWS</div>
@@ -689,7 +741,7 @@
                     RÉGI OLDAL (KLIKK.HU) &#10138;
                 </a>
                 
-                <div style="font-family:var(--font-tech); font-weight:bold; color:var(--accent); font-size:0.8rem; letter-spacing:1px;">V15.00 MONITOR</div>
+                <div style="font-family:var(--font-tech); font-weight:bold; color:var(--accent); font-size:0.8rem; letter-spacing:1px;">V15.20 EASTER</div>
             </div>
         </div>
 
@@ -879,7 +931,6 @@
 
         const SIDEBAR_STATIONS = shuffle([...HU_MAJOR_STATIONS, ...WORLD_MAJOR_STATIONS]);
 
-        // EXTENDED BACKGROUND LIBRARY (EXPANDED)
         const BACKGROUNDS = {
             winter_night: [
                 'https://images.unsplash.com/photo-1478265409131-1f65c88f965c?q=80&w=1920&fit=crop', 
@@ -960,7 +1011,10 @@
             bigClockTimeout: null,
             isLocked: false,
             isClockRunning: false,
-            valentineInterval: null
+            valentineInterval: null,
+            easterInterval: null,
+            testKokarda: false,
+            testEaster: false
         };
 
         const DOM = {
@@ -977,9 +1031,9 @@
             progGuide: document.getElementById('prog-guide-overlay'), pgContainer: document.getElementById('pg-container'), pgBg: document.getElementById('pg-bg'),
             devWxNext: document.getElementById('dev-wx-next'), devWxSrc: document.getElementById('dev-wx-src'), devSch30: document.getElementById('dev-sch-30'), devSch60: document.getElementById('dev-sch-60'),
             devNextMeteo: document.getElementById('dev-next-meteo'), devBkQueue: document.getElementById('dev-bk-queue'), devScheduleList: document.getElementById('dev-schedule-list'), devNyeTimer: document.getElementById('dev-nye-timer'), devNyeStatus: document.getElementById('dev-nye-status'),
-            devScheduleTable: document.getElementById('dev-schedule-table').querySelector('tbody'), devValStatus: document.getElementById('dev-val-status'),
+            devScheduleTable: document.getElementById('dev-schedule-table').querySelector('tbody'), devValStatus: document.getElementById('dev-val-status'), devNatStatus: document.getElementById('dev-nat-status'), devEasStatus: document.getElementById('dev-eas-status'),
             logoBox: document.getElementById('logo-box'), logoBack: document.getElementById('logo-back-face'), logoBackContent: document.getElementById('logo-back-content'), logoFront: document.getElementById('logo-front'),
-            globeIcon: document.getElementById('globe-icon'), heartIcon: document.getElementById('heart-icon'),
+            globeIcon: document.getElementById('globe-icon'), heartIcon: document.getElementById('heart-icon'), kokardaIcon: document.getElementById('kokarda-icon'), easterIcon: document.getElementById('easter-icon'),
             nextCapsule: document.getElementById('next-event-capsule'),
             nightMsg: document.getElementById('night-msg'), tickerNav: document.getElementById('ticker-nav'), devNightTimer: document.getElementById('dev-night-timer'),
             wxAlert: document.getElementById('wx-alert'), wxAlertTitle: document.getElementById('wx-a-title'), wxAlertDesc: document.getElementById('wx-a-desc'), wxAlertIcon: document.getElementById('wx-a-icon'),
@@ -1094,26 +1148,34 @@
                 // Set durations for "On Air" logic
                 if(item.type === 'summary60') duration = 6 * 60000;
                 else if(item.type === 'summary30') duration = 3 * 60000;
-                else if(item.type === 'meteo') duration = 40000; // Sequence approx
+                else if(item.type === 'meteo') duration = 40000; 
                 else if(item.type === 'clock') duration = 60000;
                 else if(item.type === 'sport') duration = 2 * 60000;
 
                 let timeStr = "";
-                
-                if (diff > 0) {
-                    let m = Math.floor(diff / 60000);
-                    let s = Math.floor((diff % 60000) / 1000);
-                    timeStr = `-${m}:${s.toString().padStart(2,'0')}`;
-                    status = "VÁRAKOZÁS";
-                } else if (diff > -duration) {
-                    timeStr = "00:00";
-                    status = "<span class='sch-live'>ADÁSBAN</span>";
+                let rowClass = "";
+
+                // NIGHT MODE LOGIC FOR SCHEDULE
+                if (state.isNightMode && item.type !== 'clock') {
+                    timeStr = "--:--";
+                    status = "<span class='sch-off'>ÜZEMSZÜNET</span>";
+                    rowClass = "opacity:0.5;";
                 } else {
-                    timeStr = "---";
-                    status = "VÉGE";
+                    if (diff > 0) {
+                        let m = Math.floor(diff / 60000);
+                        let s = Math.floor((diff % 60000) / 1000);
+                        timeStr = `-${m}:${s.toString().padStart(2,'0')}`;
+                        status = "VÁRAKOZÁS";
+                    } else if (diff > -duration) {
+                        timeStr = "00:00";
+                        status = "<span class='sch-live'>ADÁSBAN</span>";
+                    } else {
+                        timeStr = "---";
+                        status = "VÉGE";
+                    }
                 }
                 
-                html += `<tr>
+                html += `<tr style="${rowClass}">
                     <td>${item.label}</td>
                     <td class="sch-time">${timeStr}</td>
                     <td>${status}</td>
@@ -1123,46 +1185,110 @@
 
             // Valentine Status
             const isVal = checkValentineDate();
-            DOM.devValStatus.innerHTML = isVal ? "<span class='sch-val'>AKTÍV</span>" : "INAKTÍV";
+            DOM.devValStatus.innerHTML = isVal ? "<span class='sch-val'>AKTÍV</span> (MA)" : "INAKTÍV <span style='font-size:0.6rem;'>(FEB 14. 00:00 - FEB 15. 00:00)</span>";
+
+            // March 15 Status
+            const isNat = checkMarch15Date() || state.testKokarda;
+            DOM.devNatStatus.innerHTML = isNat ? "<span class='sch-nat'>AKTÍV</span> (MA)" : "INAKTÍV <span style='font-size:0.6rem;'>(MÁR 15. 00:00 - MÁR 16. 00:00)</span>";
+
+            // Easter Status
+            const isEas = checkEasterDate() || state.testEaster;
+            DOM.devEasStatus.innerHTML = isEas ? "<span class='sch-eas'>AKTÍV</span> (MA)" : "INAKTÍV <span style='font-size:0.6rem;'>(HÚSVÉT V. - HÚSVÉT K.)</span>";
 
             // Proxy & Queue
             DOM.devBkQueue.innerText = state.breakingQueue.length; 
         }
 
-        /* --- VALENTINE LOGIC START --- */
+        /* --- HOLIDAY DATE CHECKERS & LOGIC --- */
+        
+        // --- VALENTINE (FEB 14) ---
         function checkValentineDate() {
             const now = new Date();
-            // Month is 0-indexed (Jan=0, Feb=1)
-            const isValentine = (now.getMonth() === 1 && now.getDate() === 14);
-            
-            // Permanent Swap Logic
-            if(isValentine) {
-                DOM.globeIcon.classList.add('permanent-hidden');
-                DOM.heartIcon.classList.add('permanent-visible');
-            } else {
-                DOM.globeIcon.classList.remove('permanent-hidden');
-                DOM.heartIcon.classList.remove('permanent-visible');
-            }
-            
-            return isValentine;
+            return (now.getMonth() === 1 && now.getDate() === 14);
         }
 
+        // --- NATIONAL DAY (MAR 15) ---
+        function checkMarch15Date() {
+            const now = new Date();
+            return (now.getMonth() === 2 && now.getDate() === 15);
+        }
+
+        // --- EASTER ALGORITHM ---
+        function calculateEasterSunday(year) {
+            const f = Math.floor,
+                G = year % 19,
+                C = f(year / 100),
+                H = (C - f(C / 4) - f((8 * C + 13) / 25) + 19 * G + 15) % 30,
+                I = H - f(H / 28) * (1 - f(29 / (H + 1)) * f((21 - G) / 11)),
+                J = (year + f(year / 4) + I + 2 - C + f(C / 4)) % 7,
+                L = I - J,
+                month = 3 + f((L + 40) / 44),
+                day = L + 28 - 31 * f(month / 4);
+            return { month: month - 1, day: day }; // month is 0-indexed
+        }
+
+        function checkEasterDate() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const easter = calculateEasterSunday(year);
+            
+            // Create Date objects for Easter Sunday 00:00 and Tuesday 00:00
+            const start = new Date(year, easter.month, easter.day, 0, 0, 0);
+            const end = new Date(year, easter.month, easter.day + 2, 0, 0, 0); // Tue 00:00
+            
+            return (now >= start && now < end);
+        }
+
+        function updateHolidayIcons() {
+            const isVal = checkValentineDate();
+            const isNat = checkMarch15Date() || state.testKokarda;
+            const isEas = checkEasterDate() || state.testEaster;
+
+            // Reset all
+            DOM.globeIcon.classList.remove('permanent-hidden');
+            DOM.heartIcon.classList.remove('permanent-visible');
+            DOM.kokardaIcon.classList.remove('permanent-visible');
+            DOM.easterIcon.classList.remove('permanent-visible');
+
+            // Priority: Easter > Mar 15 > Valentine (Unlikely to overlap, but hierarchy helps)
+            if (isEas) {
+                DOM.globeIcon.classList.add('permanent-hidden');
+                DOM.easterIcon.classList.add('permanent-visible');
+            } else if (isNat) {
+                DOM.globeIcon.classList.add('permanent-hidden');
+                DOM.kokardaIcon.classList.add('permanent-visible');
+            } else if (isVal) {
+                DOM.globeIcon.classList.add('permanent-hidden');
+                DOM.heartIcon.classList.add('permanent-visible');
+            }
+        }
+
+        function toggleKokardaTest() {
+            state.testKokarda = !state.testKokarda;
+            state.testEaster = false; // Reset others
+            updateHolidayIcons();
+            updateDevMonitor();
+        }
+
+        function toggleEasterTest() {
+            state.testEaster = !state.testEaster;
+            state.testKokarda = false; // Reset others
+            updateHolidayIcons();
+            updateDevMonitor();
+        }
+
+        /* --- ANIMATION SEQUENCES --- */
+
+        // VALENTINE
         function triggerValentineSequence() {
-            // Prevent collision
             if(state.isLocked || state.isClockRunning) return;
 
-            // 1. Morph Globe to Heart (if not already permanent)
             if(!DOM.heartIcon.classList.contains('permanent-visible')) {
                 DOM.globeIcon.classList.add('hidden');
                 DOM.heartIcon.classList.add('visible');
             }
+            setTimeout(() => { DOM.heartIcon.classList.add('beating'); }, 500);
 
-            // 2. Intensify Beat (3s)
-            setTimeout(() => {
-                DOM.heartIcon.classList.add('beating');
-            }, 500);
-
-            // 3. Prepare Back Face
             const originalContent = DOM.logoBackContent.innerHTML;
             const originalClass = DOM.logoBack.className;
             
@@ -1181,63 +1307,96 @@
                 </div>
             `;
 
-            // 4. Flip (at 3.5s)
+            setTimeout(() => { DOM.heartIcon.classList.remove('beating'); DOM.logoBox.classList.add('flipped'); }, 3500);
+            setTimeout(() => { DOM.logoBox.classList.remove('flipped'); }, 23500);
+            setTimeout(() => { DOM.heartIcon.classList.add('beating'); }, 24500);
             setTimeout(() => {
                 DOM.heartIcon.classList.remove('beating');
-                DOM.logoBox.classList.add('flipped');
-            }, 3500);
-
-            // 5. Stay for 20s, then Flip Back
-            setTimeout(() => {
-                DOM.logoBox.classList.remove('flipped');
-            }, 23500);
-
-            // 6. Beat again, then restore (if not permanent)
-            setTimeout(() => {
-                DOM.heartIcon.classList.add('beating');
-            }, 24500);
-
-            setTimeout(() => {
-                DOM.heartIcon.classList.remove('beating');
-                
                 if(!DOM.heartIcon.classList.contains('permanent-visible')) {
                     DOM.heartIcon.classList.remove('visible');
                     DOM.globeIcon.classList.remove('hidden');
                 }
-                
-                // Restore Back Face Content
-                setTimeout(() => {
-                    DOM.logoBackContent.innerHTML = originalContent;
-                    DOM.logoBack.className = originalClass;
-                }, 1000);
-
+                setTimeout(() => { DOM.logoBackContent.innerHTML = originalContent; DOM.logoBack.className = originalClass; }, 1000);
             }, 27500);
         }
 
-        function scheduleValentineEvents() {
+        // EASTER
+        function triggerEasterSequence() {
+            if(state.isLocked || state.isClockRunning) return;
+
+            // Temp show if not perm
+            if(!DOM.easterIcon.classList.contains('permanent-visible')) {
+                DOM.globeIcon.classList.add('hidden');
+                DOM.easterIcon.classList.add('visible');
+            }
+
+            const originalContent = DOM.logoBackContent.innerHTML;
+            const originalClass = DOM.logoBack.className;
+            
+            // Prepare Back Face
+            DOM.logoBack.className = 'logo-back easter';
+            DOM.logoBackContent.innerHTML = `
+                <div class="val-msg" style="text-align:center; line-height:1.2;">
+                    <span style="font-family:var(--font-script); font-size:1.6rem; color:#ffd700;">Boldog</span><br>
+                    <span style="font-family:var(--font-main); font-weight:800; font-size:1.1rem; color:#fff; text-shadow:0 2px 4px #000;">HÚSVÉTI ÜNNEPEKET</span><br>
+                    <span style="font-family:var(--font-script); font-size:1.3rem; color:#ffd700;">kíván a</span><br>
+                    <div style="display:flex; align-items:center; justify-content:center; gap:5px; margin-top:4px;">
+                        <svg viewBox="0 0 24 24" style="width:18px; fill:#fff;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                        <span style="font-family:var(--font-tech); font-size:0.8rem; color:#fff; font-weight:bold;">TKP NEWS</span>
+                    </div>
+                </div>
+            `;
+
+            // Flip sequence
+            setTimeout(() => { DOM.logoBox.classList.add('flipped'); }, 2000);
+            setTimeout(() => { DOM.logoBox.classList.remove('flipped'); }, 22000); // 20s hold
+            
+            setTimeout(() => {
+                if(!DOM.easterIcon.classList.contains('permanent-visible')) {
+                    DOM.easterIcon.classList.remove('visible');
+                    DOM.globeIcon.classList.remove('hidden');
+                }
+                setTimeout(() => { DOM.logoBackContent.innerHTML = originalContent; DOM.logoBack.className = originalClass; }, 1000);
+            }, 23500);
+        }
+
+        // SCHEDULER FOR ANIMATIONS
+        function scheduleHolidayEvents() {
             setInterval(() => {
-                if (!checkValentineDate()) return;
+                const isVal = checkValentineDate();
+                const isEas = checkEasterDate() || state.testEaster;
+                
+                // Only schedule if a holiday is active
+                if (!isVal && !isEas) return;
+
                 if (state.valentineInterval) clearTimeout(state.valentineInterval);
+                if (state.easterInterval) clearTimeout(state.easterInterval);
+
+                // 3 times in 15 mins
                 for (let i = 0; i < 3; i++) {
                     const delay = Math.random() * 900000; 
                     setTimeout(() => {
                         if (!state.isLocked && !state.isClockRunning) {
-                            triggerValentineSequence();
+                            if (isEas) triggerEasterSequence();
+                            else if (isVal) triggerValentineSequence();
                         }
                     }, delay);
                 }
             }, 900000); 
 
-            if (checkValentineDate()) {
+            // Initial trigger setup
+            if (checkValentineDate() || checkEasterDate()) {
                  for (let i = 0; i < 3; i++) {
                     const delay = Math.random() * 900000;
                     setTimeout(() => {
-                        if (!state.isLocked && !state.isClockRunning) triggerValentineSequence();
+                        if (!state.isLocked && !state.isClockRunning) {
+                            if (checkEasterDate()) triggerEasterSequence();
+                            else triggerValentineSequence();
+                        }
                     }, delay);
                 }
             }
         }
-        /* --- VALENTINE LOGIC END --- */
 
         function generateHourlySchedule() { 
             const now = new Date(); 
@@ -1295,7 +1454,7 @@
                     }
                 } 
             }); 
-            state.schedule = state.schedule.filter(item => item.time > now - 360000); // Keep for display
+            state.schedule = state.schedule.filter(item => item.time > now - 360000); 
         }
 
         function updateNextEventCapsule() { 
@@ -2314,7 +2473,7 @@
             setInterval(() => { if(state.isNightMode) crawlNews(false); }, 120000);
             setInterval(checkWeatherAlerts, 45000); 
             cycleMain(); cycleTicker();
-            scheduleValentineEvents(); // Init Valentine Scheduler
+            scheduleHolidayEvents(); // Init Holiday Scheduler
         }
 
         document.addEventListener('DOMContentLoaded', init);
