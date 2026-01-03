@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V15.20 EASTER & KOKARDA UPGRADE</title>
+    <title>TKP NEWS - V15.35 EASTER BUNNY EDITION</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +17,7 @@
             --sport-main: #006622;
             --sport-light: #00cc44;
             --love: #ff0055;
-            --easter: #50c878; /* Húsvéti zöld */
+            --easter: #50c878;
             --glass: rgba(0, 15, 45, 0.95);
             --text: #ffffff;
             --footer-h: clamp(65px, 9vh, 95px);
@@ -257,8 +257,14 @@
         .ny-msg-title { font-family: var(--font-script); font-size: 1.4rem; color: #ffd700; margin-bottom: 2px; line-height: 1.1; }
         .ny-msg-sub { font-family: var(--font-main); font-size: 0.7rem; font-weight: bold; color: #fff; }
         
-        .val-msg { text-shadow: 0 0 5px rgba(255,0,85,0.5); }
-        .val-frame { border: 2px solid var(--love); padding: 4px 10px; border-radius: 4px; display:inline-block; margin: 4px 0; background: rgba(255,0,85,0.15); box-shadow: 0 0 10px rgba(255,0,85,0.2); }
+        /* Valentine Layout Optimized */
+        .val-container { height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:2px; }
+        .val-happy { font-family: var(--font-script); font-size: 0.9rem; color: #fff; line-height:1; }
+        .val-frame { border: 1px solid var(--love); padding: 2px 6px; border-radius: 2px; background: rgba(255,0,85,0.15); box-shadow: 0 0 5px rgba(255,0,85,0.2); }
+        .val-main { font-family: var(--font-main); font-weight: 800; font-size: 0.85rem; color: var(--love); letter-spacing: 1px; line-height:1; white-space:nowrap; }
+        .val-wish { font-family: var(--font-script); font-size: 0.8rem; color: #fff; line-height:1; margin-bottom:2px; }
+        .val-logo-row { display:flex; align-items:center; gap:4px; transform:scale(0.9); }
+        .val-logo-txt { font-family:var(--font-tech); font-size:0.7rem; color:#fff; font-weight:bold; }
         
         /* SIDEBAR */
         .sidebar { position: absolute; top: 15vh; right: 2vw; width: clamp(280px, 22vw, 420px); height: auto; pointer-events: auto; z-index: 40; perspective: 1000px; }
@@ -522,7 +528,7 @@
                 <button class="btn" onclick="safeTrigger(() => triggerBigClockSequence())">[⏰] NAGY ÓRA TESZT (1 PERC)</button>
                 <button class="btn" onclick="triggerValentineSequence()">[❤️] VALENTIN SEQ. TESZT</button>
                 <button class="btn" onclick="toggleKokardaTest()">[🇭🇺] MÁRCIUS 15. TESZT</button>
-                <button class="btn" onclick="triggerEasterSequence()">[🐰] HÚSVÉT TESZT</button>
+                <button class="btn" onclick="toggleEasterTest()">[🐰] HÚSVÉT TESZT (ON/OFF)</button>
                 <button class="btn" onclick="closeAllOverlays()">[X] MINDEN ABLAK BEZÁRÁSA</button>
                 <button class="btn" onclick="forceRefreshAll()">[⚡] AZONNALI FRISSÍTÉS</button>
                 <button class="btn" onclick="testBreaking()">[🔥] BREAKING NEWS TESZT</button>
@@ -641,7 +647,7 @@
                     <svg id="globe-icon" class="logo-svg-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
                     <!-- HEART ICON (VALENTINE) -->
                     <svg id="heart-icon" class="logo-svg-icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                    <!-- UPDATED KOKARDA ICON (MARCH 15) - REALISTIC -->
+                    <!-- KOKARDA ICON (MARCH 15) -->
                     <svg id="kokarda-icon" class="logo-svg-icon" viewBox="0 0 50 50">
                         <defs>
                             <radialGradient id="gradRed" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
@@ -656,25 +662,35 @@
                                 <feDropShadow dx="1" dy="1" stdDeviation="1" flood-color="#000" flood-opacity="0.5"/>
                             </filter>
                         </defs>
-                        <!-- Ribbons -->
                         <path d="M18 35 Q15 45 10 50 L22 48 L25 35" fill="#ce2939" filter="url(#shadow)"/>
                         <path d="M32 35 Q35 45 40 50 L28 48 L25 35" fill="#ce2939" filter="url(#shadow)"/>
-                        
-                        <!-- Rosette Layers -->
                         <circle cx="25" cy="25" r="18" fill="url(#gradRed)" filter="url(#shadow)" />
                         <circle cx="25" cy="25" r="11" fill="#f0f0f0" />
                         <circle cx="25" cy="25" r="5" fill="url(#gradGreen)" />
                     </svg>
-                    <!-- EASTER ICON (EGGS + BUNNY) -->
+                    <!-- EASTER ICON - BUNNY & EGGS -->
                     <svg id="easter-icon" class="logo-svg-icon" viewBox="0 0 50 50">
-                        <!-- Egg 1 (Reddish) -->
-                        <ellipse cx="15" cy="30" rx="9" ry="12" fill="#ff6b6b" transform="rotate(-15 15 30)" />
-                        <path d="M10 25 Q15 28 20 25" stroke="white" stroke-width="1" fill="none" transform="rotate(-15 15 30)"/>
-                        <!-- Egg 2 (Goldish) -->
-                        <ellipse cx="25" cy="32" rx="9" ry="12" fill="#ffd700" />
-                        <path d="M20 27 Q25 30 30 27" stroke="#b8860b" stroke-width="1" fill="none"/>
-                        <!-- Bunny Silhouette (White) -->
-                        <path d="M40 38 C35 38 32 35 32 30 C32 25 34 20 34 15 C34 10 32 5 35 5 C36 5 37 8 37 12 C38 8 40 5 42 5 C44 5 43 10 42 15 C44 20 45 25 45 30 C45 35 43 38 40 38 Z" fill="#fff"/>
+                        <!-- Grass Background -->
+                        <path d="M0 42 Q5 35 10 42 T20 42 T30 42 T40 42 T50 42 V50 H0 Z" fill="#2e8b57"/>
+
+                        <!-- Bunny (White, Peeking from back left) -->
+                        <g transform="translate(5, 15)">
+                            <ellipse cx="10" cy="15" rx="8" ry="10" fill="#fff"/> <!-- Head -->
+                            <ellipse cx="6" cy="5" rx="2.5" ry="8" fill="#fff" transform="rotate(-15 6 10)"/> <!-- Left Ear -->
+                            <ellipse cx="14" cy="5" rx="2.5" ry="8" fill="#fff" transform="rotate(15 14 10)"/> <!-- Right Ear -->
+                            <!-- Pink inner ears -->
+                            <ellipse cx="6" cy="5" rx="1" ry="5" fill="#ffb6c1" transform="rotate(-15 6 10)"/>
+                            <ellipse cx="14" cy="5" rx="1" ry="5" fill="#ffb6c1" transform="rotate(15 14 10)"/>
+                        </g>
+
+                        <!-- Egg 1 (Red, Large, Front Right) -->
+                        <ellipse cx="32" cy="32" rx="11" ry="14" fill="#ff4d4d" transform="rotate(10 32 32)" stroke="#fff" stroke-width="0.5"/>
+                        <path d="M26 25 Q32 20 38 25" stroke="white" stroke-width="1.5" fill="none" transform="rotate(10 32 32)"/>
+                        <circle cx="32" cy="35" r="2" fill="white" transform="rotate(10 32 32)"/>
+
+                        <!-- Egg 2 (Gold, Large, Front Left) -->
+                        <ellipse cx="18" cy="34" rx="11" ry="14" fill="#ffd700" transform="rotate(-10 18 34)" stroke="#fff" stroke-width="0.5"/>
+                        <path d="M12 30 L24 30" stroke="#b8860b" stroke-width="2" stroke-dasharray="2,2" transform="rotate(-10 18 34)"/>
                     </svg>
                 </div>
                 <div class="logo-col-text">
@@ -741,7 +757,7 @@
                     RÉGI OLDAL (KLIKK.HU) &#10138;
                 </a>
                 
-                <div style="font-family:var(--font-tech); font-weight:bold; color:var(--accent); font-size:0.8rem; letter-spacing:1px;">V15.20 EASTER</div>
+                <div style="font-family:var(--font-tech); font-weight:bold; color:var(--accent); font-size:0.8rem; letter-spacing:1px;">V15.35</div>
             </div>
         </div>
 
@@ -1204,7 +1220,9 @@
         // --- VALENTINE (FEB 14) ---
         function checkValentineDate() {
             const now = new Date();
-            return (now.getMonth() === 1 && now.getDate() === 14);
+            // Month is 0-indexed (Jan=0, Feb=1)
+            const isValentine = (now.getMonth() === 1 && now.getDate() === 14);
+            return isValentine;
         }
 
         // --- NATIONAL DAY (MAR 15) ---
@@ -1250,7 +1268,7 @@
             DOM.kokardaIcon.classList.remove('permanent-visible');
             DOM.easterIcon.classList.remove('permanent-visible');
 
-            // Priority: Easter > Mar 15 > Valentine (Unlikely to overlap, but hierarchy helps)
+            // Priority: Easter > Mar 15 > Valentine
             if (isEas) {
                 DOM.globeIcon.classList.add('permanent-hidden');
                 DOM.easterIcon.classList.add('permanent-visible');
@@ -1265,21 +1283,23 @@
 
         function toggleKokardaTest() {
             state.testKokarda = !state.testKokarda;
-            state.testEaster = false; // Reset others
+            state.testEaster = false; 
             updateHolidayIcons();
             updateDevMonitor();
         }
 
         function toggleEasterTest() {
             state.testEaster = !state.testEaster;
-            state.testKokarda = false; // Reset others
+            state.testKokarda = false; 
             updateHolidayIcons();
             updateDevMonitor();
+            // Also trigger the animation once so they see it works
+            if(state.testEaster) triggerEasterSequence();
         }
 
         /* --- ANIMATION SEQUENCES --- */
 
-        // VALENTINE
+        // VALENTINE (OPTIMIZED LAYOUT)
         function triggerValentineSequence() {
             if(state.isLocked || state.isClockRunning) return;
 
@@ -1294,15 +1314,15 @@
             
             DOM.logoBack.className = 'logo-back valentine';
             DOM.logoBackContent.innerHTML = `
-                <div class="val-msg" style="text-align:center; line-height:1.2;">
-                    <span style="font-family:var(--font-script); font-size:1.6rem; color:#fff;">Boldog</span><br>
+                <div class="val-container">
+                    <span class="val-happy">Boldog</span>
                     <div class="val-frame">
-                        <span style="font-family:var(--font-main); font-weight:800; font-size:1.1rem; color:var(--love); letter-spacing:1px;">VALENTIN NAPOT</span>
-                    </div><br>
-                    <span style="font-family:var(--font-script); font-size:1.3rem; color:#fff;">kíván a</span><br>
-                    <div style="display:flex; align-items:center; justify-content:center; gap:5px; margin-top:4px;">
-                        <svg viewBox="0 0 24 24" style="width:18px; fill:#fff;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                        <span style="font-family:var(--font-tech); font-size:0.8rem; color:#fff; font-weight:bold;">TKP NEWS</span>
+                        <span class="val-main">VALENTIN NAPOT</span>
+                    </div>
+                    <span class="val-wish">kíván a</span>
+                    <div class="val-logo-row">
+                        <svg viewBox="0 0 24 24" style="width:14px; fill:#fff;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                        <span class="val-logo-txt">TKP NEWS</span>
                     </div>
                 </div>
             `;
@@ -1336,13 +1356,15 @@
             // Prepare Back Face
             DOM.logoBack.className = 'logo-back easter';
             DOM.logoBackContent.innerHTML = `
-                <div class="val-msg" style="text-align:center; line-height:1.2;">
-                    <span style="font-family:var(--font-script); font-size:1.6rem; color:#ffd700;">Boldog</span><br>
-                    <span style="font-family:var(--font-main); font-weight:800; font-size:1.1rem; color:#fff; text-shadow:0 2px 4px #000;">HÚSVÉTI ÜNNEPEKET</span><br>
-                    <span style="font-family:var(--font-script); font-size:1.3rem; color:#ffd700;">kíván a</span><br>
-                    <div style="display:flex; align-items:center; justify-content:center; gap:5px; margin-top:4px;">
-                        <svg viewBox="0 0 24 24" style="width:18px; fill:#fff;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                        <span style="font-family:var(--font-tech); font-size:0.8rem; color:#fff; font-weight:bold;">TKP NEWS</span>
+                <div class="val-container">
+                    <span class="val-happy" style="color:#ffd700;">Boldog</span>
+                    <div style="border:1px solid #50c878; padding:2px 6px; border-radius:2px; background:rgba(80,200,120,0.2);">
+                        <span class="val-main" style="color:#fff; text-shadow:0 1px 3px #000;">HÚSVÉTI ÜNNEPEKET</span>
+                    </div>
+                    <span class="val-wish" style="color:#ffd700;">kíván a</span>
+                    <div class="val-logo-row">
+                        <svg viewBox="0 0 24 24" style="width:14px; fill:#fff;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                        <span class="val-logo-txt">TKP NEWS</span>
                     </div>
                 </div>
             `;
@@ -1366,13 +1388,11 @@
                 const isVal = checkValentineDate();
                 const isEas = checkEasterDate() || state.testEaster;
                 
-                // Only schedule if a holiday is active
                 if (!isVal && !isEas) return;
 
                 if (state.valentineInterval) clearTimeout(state.valentineInterval);
                 if (state.easterInterval) clearTimeout(state.easterInterval);
 
-                // 3 times in 15 mins
                 for (let i = 0; i < 3; i++) {
                     const delay = Math.random() * 900000; 
                     setTimeout(() => {
@@ -1384,7 +1404,6 @@
                 }
             }, 900000); 
 
-            // Initial trigger setup
             if (checkValentineDate() || checkEasterDate()) {
                  for (let i = 0; i < 3; i++) {
                     const delay = Math.random() * 900000;
@@ -2473,7 +2492,7 @@
             setInterval(() => { if(state.isNightMode) crawlNews(false); }, 120000);
             setInterval(checkWeatherAlerts, 45000); 
             cycleMain(); cycleTicker();
-            scheduleHolidayEvents(); // Init Holiday Scheduler
+            scheduleHolidayEvents(); 
         }
 
         document.addEventListener('DOMContentLoaded', init);
