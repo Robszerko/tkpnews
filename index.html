@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V18.2 BROADCAST ENGINE [NIGHT-LOGIC-PLUS]</title>
+    <title>TKP NEWS - V19.2 BROADCAST ENGINE [COMPACT CLOCK]</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600;700&family=Roboto+Condensed:wght@300;400;700&family=Chakra+Petch:wght@400;500;600;700&family=Roboto+Mono:wght@500;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600;700&family=Roboto+Condensed:wght@300;400;700&family=Chakra+Petch:wght@400;500;600;700;800&family=Roboto+Mono:wght@500;700&family=Great+Vibes&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -86,13 +86,47 @@
         .ny-temp-box { display: flex; align-items: center; gap: 8px; border-left: 1px solid rgba(255,255,255,0.2); padding-left: 12px; font-family: var(--font-tech); font-weight: bold; font-size: 1.05rem; }
         .wind-badge { font-size: 0.8rem; padding-left: 10px; border-left: 1px solid rgba(255,255,255,0.2); font-weight: 700; font-family: var(--font-tech); color: #00d4ff; text-transform: uppercase; white-space: nowrap; }
 
-        /* --- NEXT EVENT TONGUE --- */
+        /* --- REFRESH BUTTON (SIDEBAR) - UPDATED FOR DISCRETION --- */
+        .sidebar-ctrl-panel { 
+            margin-top: 5px; 
+            width: 100%; 
+            pointer-events: auto; 
+        }
+        .refresh-btn-side {
+            width: 100%;
+            background: rgba(0, 10, 20, 0.4); /* More transparent */
+            border: 1px solid rgba(255,255,255,0.05);
+            color: rgba(255, 204, 0, 0.7); /* Muted accent */
+            padding: 4px; /* Smaller padding */
+            font-family: var(--font-tech);
+            font-weight: 600;
+            font-size: 0.7rem; /* Smaller font */
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-top: 2px solid rgba(0, 51, 153, 0.5); /* Subtle primary line */
+            border-left: none; /* Removed heavy left border */
+            text-align: center;
+            backdrop-filter: blur(2px);
+            text-transform: uppercase;
+        }
+        .refresh-btn-side:hover { 
+            background: rgba(255,255,255,0.1); 
+            color: #fff; 
+            border-top-color: var(--accent);
+            box-shadow: 0 0 10px rgba(0,0,0,0.3); 
+        }
+        .refresh-btn-side.loading { color: #888; pointer-events: none; animation: pulse 1s infinite; }
+
+        /* --- NEXT EVENT TONGUE (TRANSPARENT) --- */
         .next-event-tongue {
             position: absolute; 
             top: 13.5vh; 
             left: 4vw;
-            background: linear-gradient(180deg, rgba(0, 15, 30, 0.95) 0%, rgba(0,0,0,0.95) 100%);
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0, 20, 40, 0.3); /* Transparent */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.1);
             border-top: none;
             border-radius: 0 0 4px 4px;
             display: flex; flex-direction: column;
@@ -101,18 +135,18 @@
             transform: translateY(-120%); opacity: 0;
             transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
             z-index: 900; 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2); 
             pointer-events: none;
             border-left: 4px solid var(--accent);
         }
         .next-event-tongue.visible { transform: translateY(0); opacity: 1; }
         
         .nt-label {
-            font-family: var(--font-tech); font-size: 0.6rem; color: var(--accent);
+            font-family: var(--font-tech); font-size: 0.6rem; color: rgba(255, 204, 0, 0.8); 
             text-transform: uppercase; letter-spacing: 2px; font-weight: bold; margin-bottom: 2px;
         }
         .nt-content {
-            font-family: var(--font-main); font-size: 1.1rem; color: #fff;
+            font-family: var(--font-main); font-size: 1.1rem; color: rgba(255, 255, 255, 0.9);
             text-transform: uppercase; font-weight: 700; white-space: nowrap;
             display: flex; gap: 8px;
         }
@@ -127,7 +161,7 @@
         .mini-countdown.visible { opacity: 1; }
         .mc-val { position: absolute; font-family: var(--font-mono); font-weight: bold; font-size: 0.8rem; color: #fff; text-align: center; width: 100%; top: 50%; transform: translateY(-50%); }
         .mc-svg { width: 40px; height: 40px; transform: rotate(-90deg); }
-        .mc-circle-bg { fill: none; stroke: rgba(255,255,255,0.15); stroke-width: 3; }
+        .mc-circle-bg { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 3; }
         .mc-circle-fg { 
             fill: none; 
             stroke: var(--accent); 
@@ -138,7 +172,7 @@
             transition: stroke-dashoffset 1s linear; 
         }
 
-        .search-container { flex-grow: 1; display: flex; justify-content: center; padding: 0 2vw; }
+        .search-container { flex-grow: 1; display: flex; justify-content: flex-end; padding: 0 2vw; }
         .search-form { display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 350px; height: 3.5vh; padding: 0 15px; transition: 0.3s; pointer-events: auto; }
         .search-form:focus-within { border-color: var(--accent); background: #000; box-shadow: 0 0 15px rgba(255,204,0,0.2); }
         .search-form input { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-size: 0.9rem; }
@@ -155,7 +189,7 @@
         }
         .legacy-btn:hover { background: #fff; color: #000; border-color: #fff; box-shadow: 0 0 15px rgba(255,255,255,0.5); }
 
-        /* LOGO BOX */
+        /* LOGO BOX - SHARPENED */
         @keyframes hyperStrobeIn {
             0% { opacity: 0; transform: scale(1.5); filter: brightness(10) blur(5px); }
             5% { opacity: 1; filter: brightness(5); transform: scale(1.1); }
@@ -199,67 +233,71 @@
             -webkit-backface-visibility: hidden; backface-visibility: hidden;
         }
         
-        .logo-col-icon { display: flex; align-items: center; justify-content: center; margin-right: 12px; position: relative; width: 38px; height: 38px; }
-        .logo-svg-icon { width: 38px; height: 38px; fill: rgba(255, 255, 255, 0.9); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9)); position: absolute; top: 0; left: 0; transition: opacity 0.5s, transform 0.5s; opacity: 1; }
+        .logo-col-icon { display: flex; align-items: center; justify-content: center; margin-right: 12px; position: relative; width: 42px; height: 42px; }
+        .logo-svg-icon { width: 100%; height: 100%; fill: #fff; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.8)); position: absolute; top: 0; left: 0; transition: opacity 0.5s, transform 0.5s; opacity: 1; }
         .logo-svg-icon.hidden { opacity: 0; transform: scale(0.5); }
         .logo-svg-icon.visible { opacity: 1; transform: scale(1); }
-        .logo-svg-icon.permanent-hidden { display: none; }
-        .logo-svg-icon.permanent-visible { display: block; }
         
         .logo-col-text { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; position: relative; }
-        .logo-text-inline { font-family: var(--font-main); font-weight: 800; font-size: 1.3rem; color: rgba(255, 255, 255, 0.9); letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.9); line-height: 0.9; margin-bottom: 2px; display: flex; align-items: center; }
+        
+        /* SHARPENED LOGO TEXT */
+        .logo-text-inline { 
+            font-family: var(--font-main); font-weight: 800; font-size: 1.45rem; 
+            color: #fff; /* Fully opaque white for sharpness */
+            letter-spacing: 0.5px; 
+            text-shadow: 0 2px 4px rgba(0,0,0,0.9); /* Hard shadow */
+            line-height: 0.9; margin-bottom: 2px; display: flex; align-items: center; 
+        }
         
         .live-tag {
             background: #cc0000;
             color: #fff;
             font-family: var(--font-main);
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             padding: 2px 6px;
-            border-radius: 3px;
+            border-radius: 2px;
             margin-left: 8px;
             font-weight: 900;
             letter-spacing: 1px;
             opacity: 0;
             transition: opacity 0.5s;
             text-shadow: none;
-            box-shadow: 0 0 10px rgba(204, 0, 0, 0.6);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
         }
         .live-tag.visible { opacity: 1; }
 
-        .logo-row-time { font-family: var(--font-tech); font-weight: 700; font-size: 1.0rem; color: rgba(255, 255, 255, 0.9); text-shadow: 0 2px 3px rgba(0,0,0,0.9); line-height: 1; margin-bottom: 1px; }
-        .mc-sec { font-size: 0.7em; color: rgba(255, 204, 0, 0.9); margin-left: 5px; font-weight: 400; text-shadow: 0 1px 2px #000; }
+        .logo-row-time { 
+            font-family: var(--font-tech); font-weight: 700; font-size: 1.1rem; 
+            color: #f0f0f0; 
+            text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+            line-height: 1; margin-bottom: 1px; 
+        }
+        .mc-sec { font-size: 0.75em; color: var(--accent); margin-left: 5px; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
         
-        .logo-row-date { font-family: var(--font-data); font-weight: 700; font-size: 0.75rem; color: rgba(255, 255, 255, 0.75); text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 1px 3px rgba(0,0,0,0.9); line-height: 1; }
+        .logo-row-date { 
+            font-family: var(--font-data); font-weight: 700; font-size: 0.8rem; 
+            color: #ddd; 
+            text-transform: uppercase; letter-spacing: 0.5px; 
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8); line-height: 1; 
+        }
         
-        .mini-status-container { display: flex; gap: 5px; margin-top: 2px; }
-        .mini-widget { display: none; align-items: center; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); border-radius: 2px; padding: 1px 4px; }
+        .mini-status-container { display: flex; gap: 5px; margin-top: 3px; }
+        .mini-widget { display: none; align-items: center; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); border-radius: 2px; padding: 1px 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
         .mini-widget.active { display: flex; }
         .mw-rain { border-left: 3px solid #00d4ff; }
         .mw-alert { border-left: 3px solid #ff0000; }
         .mini-icon { font-size: 0.7rem; margin-right: 3px; }
-        .mini-text { font-family: var(--font-tech); font-size: 0.6rem; color: #fff; text-transform: uppercase; }
-        .mini-sub { color: #aaa; margin-left: 3px; }
+        .mini-text { font-family: var(--font-tech); font-size: 0.65rem; color: #fff; text-transform: uppercase; font-weight: 700; }
+        .mini-sub { color: #ccc; margin-left: 3px; }
 
         .logo-back { position: absolute; top:0; left:0; width: 100%; height: 100%; transform: rotateY(180deg); border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px; background: linear-gradient(135deg, #001a4d 0%, #000022 100%); border: 2px solid #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); text-align: center; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
-        .logo-back.valentine { background: linear-gradient(135deg, #4d000f 0%, #220000 100%); border-color: #ff0033; box-shadow: 0 0 20px rgba(255, 0, 51, 0.4); }
-        .logo-back.easter { background: linear-gradient(135deg, #004d1a 0%, #002200 100%); border-color: #50c878; box-shadow: 0 0 20px rgba(80, 200, 120, 0.4); }
 
         .ny-msg-title { font-family: var(--font-script); color: #ffd700; font-size: 1.2rem; line-height: 1; margin-bottom: 5px; }
         .ny-msg-sub { font-family: var(--font-main); color: #fff; font-size: 0.7rem; display: flex; align-items: center; gap: 5px; }
         .ny-msg-sub svg { width: 14px; fill: #fff; }
 
-        .val-container { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; }
-        .val-happy { font-family: var(--font-script); color: #ff3366; font-size: 1.4rem; line-height: 0.8; margin-bottom: 4px; }
-        .val-frame { border: 1px solid #ff3366; padding: 3px 8px; border-radius: 4px; margin: 4px 0; background: rgba(255, 51, 102, 0.15); width: 100%; }
-        .val-main { font-family: var(--font-main); font-weight: 700; color: #fff; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; display:block; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-        .val-wish { font-family: var(--font-script); color: #ff3366; font-size: 1.1rem; margin-top: 2px; }
-        .val-logo-row { display: flex; align-items: center; gap: 4px; margin-top: 6px; padding-top:4px; border-top: 1px solid rgba(255,255,255,0.1); }
-        .val-logo-txt { font-family: var(--font-tech); font-size: 0.7rem; color: #ccc; letter-spacing: 1px; }
-        .beating { animation: heartBeat 1.2s infinite ease-in-out; transform-origin: center; }
-        @keyframes heartBeat { 0% { transform: scale(1); } 15% { transform: scale(1.2); } 30% { transform: scale(1); } 45% { transform: scale(1.1); } 60% { transform: scale(1); } }
-
         /* SIDEBAR */
-        .sidebar { position: absolute; top: 15vh; right: 2vw; width: clamp(280px, 22vw, 420px); height: auto; pointer-events: auto; z-index: 40; perspective: 1000px; }
+        .sidebar { position: absolute; top: 12vh; right: 2vw; width: clamp(280px, 22vw, 420px); height: auto; pointer-events: auto; z-index: 40; perspective: 1000px; }
         .sidebar-flipper { position: relative; width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1); transform-style: preserve-3d; }
         .sidebar.breaking-active .sidebar-flipper { transform: rotateY(180deg); }
         .sidebar-front, .sidebar-back { position: relative; width: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
@@ -413,48 +451,50 @@
         .nm-t-item.active { background: linear-gradient(180deg, rgba(255,204,0,0.1), rgba(255,204,0,0.05)); color: var(--accent); border-color: var(--accent); box-shadow: 0 0 15px rgba(255,204,0,0.15); }
         .nm-t-item.active::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: var(--accent); }
         
-        /* NEW BIG CLOCK SHOW OVERLAY (TV SHOW STYLE SPLIT) */
+        /* --- NEW BIG CLOCK SHOW (COMPACT & CONTAINED) --- */
         #big-clock-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: radial-gradient(circle at 60% 50%, #001a33 0%, #000 80%); 
+            background: radial-gradient(circle at 70% 50%, #001a4d 0%, #000 80%); 
             z-index: 9000; 
             display: none; 
             opacity: 0; 
-            transition: opacity 0.5s ease-in-out; 
+            transition: opacity 0.8s ease-in-out; 
             overflow: hidden;
             grid-template-columns: 1fr 1.5fr; /* Split view */
         }
         #big-clock-overlay.active { display: grid; opacity: 1; }
         
-        /* Left/Bottom: Schedule List */
+        /* Left Panel: Schedule List */
         .bc-schedule-panel {
-            padding: 50px;
+            padding: 80px 50px;
             display: flex; flex-direction: column;
             justify-content: center;
-            background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, transparent 100%);
-            border-right: 1px solid rgba(255,255,255,0.1);
-            transition: opacity 0.5s;
+            background: linear-gradient(90deg, rgba(0,0,0,0.9) 0%, transparent 100%);
+            border-right: 1px solid rgba(255,255,255,0.05);
+            transition: opacity 0.5s, transform 0.5s;
         }
         .bc-sched-title {
             font-family: var(--font-main); color: var(--accent);
-            font-size: 1.5rem; letter-spacing: 2px; text-transform: uppercase;
-            margin-bottom: 20px; border-bottom: 2px solid var(--primary);
-            padding-bottom: 10px; width: fit-content;
+            font-size: 1.8rem; letter-spacing: 3px; text-transform: uppercase;
+            margin-bottom: 30px; border-bottom: 4px solid var(--primary);
+            padding-bottom: 10px; width: fit-content; opacity: 0; transform: translateX(-30px);
+            animation: slideInLeft 0.8s forwards 0.2s;
         }
-        .bc-sched-list { display: flex; flex-direction: column; gap: 15px; }
+        .bc-sched-list { display: flex; flex-direction: column; gap: 20px; }
         
-        /* Schedule Item with Flip/Fade capability */
         .bc-sched-item { 
-            display: flex; align-items: center; gap: 15px; 
-            font-family: var(--font-tech); font-size: 3rem; color: #ccc;
-            opacity: 0; transform: translateY(20px);
+            display: flex; align-items: center; gap: 20px; 
+            font-family: var(--font-tech); font-size: 2.5rem; color: #ccc;
+            opacity: 0; transform: translateX(-50px);
             transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-left: 3px solid transparent; padding-left: 15px;
         }
-        .bc-sched-item.visible { opacity: 1; transform: translateY(0); }
-        .bc-sched-time { color: #fff; font-weight: 800; width: 120px; text-shadow: 0 0 10px rgba(255,255,255,0.5); font-size: 2.2rem;}
+        .bc-sched-item.visible { opacity: 1; transform: translateX(0); }
+        .bc-sched-item.active { border-left-color: var(--accent); color: #fff; text-shadow: 0 0 15px rgba(255,255,255,0.3); }
+        .bc-sched-time { color: #fff; font-weight: 800; width: 140px; text-shadow: 0 0 10px rgba(0, 51, 153, 0.5); font-size: 2.2rem; }
         .bc-sched-name { text-transform: uppercase; letter-spacing: 1px; color: var(--accent); font-weight: bold; font-size: 1.8rem; }
         
-        /* Right/Center: Big Clock & Logo */
+        /* Right Panel: Clock & Graphics */
         .bc-main-panel {
             position: relative;
             display: flex; justify-content: center; align-items: center;
@@ -462,66 +502,109 @@
             transition: all 1s ease-in-out;
         }
         
-        .bc-center-logo {
-            width: 150px; height: 150px;
-            margin-bottom: 20px;
-            animation: bcLogoFloat 4s ease-in-out infinite;
+        /* NEW CLOCK CONTAINER STRUCTURE */
+        .bc-clock-wrapper {
+            position: relative;
+            width: 55vh; height: 55vh; /* Square */
+            display: flex; justify-content: center; align-items: center;
             transition: transform 1s;
-        }
-        .bc-center-logo svg {
-            width: 100%; height: 100%; fill: #fff;
-            filter: drop-shadow(0 0 20px rgba(0, 51, 153, 0.8));
         }
 
-        .bc-digital-display {
-            font-family: var(--font-tech); font-weight: 900;
-            font-size: 12rem; color: #fff;
-            text-shadow: 0 0 40px rgba(255, 255, 255, 0.5);
-            letter-spacing: 5px; line-height: 1;
-            position: relative; z-index: 10;
-            transition: transform 1s;
-        }
-        
-        /* SVG Circle Implementation */
+        /* The Ring SVG */
         .bc-circle-svg-container {
-             position: absolute; top: 50%; left: 50%;
-             transform: translate(-50%, -50%) rotate(-90deg);
-             width: 60vh; height: 60vh;
+             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+             transform: rotate(-90deg); /* Start at top */
              z-index: 0;
-             transition: opacity 1s;
         }
         .bc-circle-svg-container circle {
              fill: none;
-             stroke-width: 6;
+             stroke-width: 8;
              stroke-linecap: round;
         }
-        .bc-circle-bg { stroke: rgba(255,255,255,0.05); }
+        .bc-circle-bg { stroke: rgba(255,255,255,0.03); }
         .bc-circle-fg { 
              stroke: var(--accent);
              /* Radius 90 -> Circumference ~565 */
              stroke-dasharray: 565; 
              stroke-dashoffset: 565; 
              transition: stroke-dashoffset 1s linear;
+             filter: drop-shadow(0 0 15px rgba(255, 204, 0, 0.5));
+             animation: glowPulse 1s infinite alternate;
+        }
+
+        /* Inner Content - Absolutely Centered & Stacked */
+        .bc-inner-content {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; 
+            justify-content: center; align-items: center;
+            z-index: 10;
+        }
+
+        /* Item 1: Logo & Text */
+        .bc-logo-group {
+            display: flex; flex-direction: column; align-items: center;
+            transform: translateY(-20px); /* Adjust positioning slightly up */
+        }
+        .bc-logo-group svg {
+            width: 70px; height: 70px; fill: #fff;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
+            animation: bcLogoFloat 4s ease-in-out infinite;
+        }
+        .bc-logo-text {
+            font-family: var(--font-main); font-weight: 800; color: #fff; 
+            font-size: 1.8rem; letter-spacing: 2px; margin-top: 5px;
+            text-shadow: 0 2px 5px #000;
+        }
+
+        /* Item 2: Time */
+        #bc-big-time {
+            font-family: var(--font-tech); font-weight: 800;
+            font-size: 6rem; color: #fff;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
+            letter-spacing: 2px; line-height: 0.9;
+            margin: 0;
+        }
+
+        /* Item 3: Seconds */
+        #bc-big-secs {
+            font-family: var(--font-mono);
+            font-size: 3rem; color: var(--accent); font-weight:bold; 
+            animation: pulseBeat 1s cubic-bezier(0.1, 0.7, 1.0, 0.1) infinite;
+            text-shadow: 0 0 20px rgba(255, 204, 0, 0.6);
+            margin-top: -10px;
+        }
+        
+        @keyframes pulseBeat { 
+            0% { transform: scale(1); opacity: 0.9; } 
+            10% { transform: scale(1.15); opacity: 1; }
+            20% { transform: scale(1); opacity: 0.9; }
+            100% { transform: scale(1); opacity: 0.9; }
+        }
+        
+        @keyframes glowPulse {
+            from { filter: drop-shadow(0 0 10px rgba(255,204,0,0.4)); stroke-width: 8; }
+            to { filter: drop-shadow(0 0 20px rgba(255,204,0,0.8)); stroke-width: 10; }
         }
 
         .bc-next-show-text {
-            position: absolute; bottom: 10%;
-            font-family: var(--font-main); font-size: 2rem; color: #fff;
-            text-transform: uppercase; letter-spacing: 2px; font-weight: 800;
-            opacity: 0; transform: translateY(20px);
+            position: absolute; bottom: 5%;
+            font-family: var(--font-main); font-size: 1.2rem; color: #fff;
+            text-transform: uppercase; letter-spacing: 4px; font-weight: 800;
+            opacity: 0; transform: translateY(30px);
             transition: all 0.5s;
-            background: rgba(0,0,0,0.6); padding: 10px 30px;
-            border-left: 5px solid var(--alert);
+            background: rgba(0,0,0,0.8); padding: 15px 40px;
+            border-left: 8px solid var(--alert);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         .bc-next-show-text.visible { opacity: 1; transform: translateY(0); }
 
-        /* Mode: Center Everything */
-        .bc-layout-center .bc-schedule-panel { opacity: 0; pointer-events: none; }
-        .bc-layout-center .bc-main-panel { transform: translateX(-33%); } /* Center it relative to full width approx */
-        .bc-layout-center .bc-digital-display { transform: scale(1.2); }
-        .bc-layout-center .bc-center-logo { transform: scale(1.5); }
+        /* Mode: Center Everything (Final 20s) */
+        .bc-layout-center .bc-schedule-panel { opacity: 0; transform: translateX(-100px); pointer-events: none; }
+        .bc-layout-center .bc-main-panel { transform: translateX(-33%); } 
+        .bc-layout-center .bc-clock-wrapper { transform: scale(1.3); }
         
-        @keyframes bcLogoFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes bcLogoFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        @keyframes slideInLeft { from { opacity:0; transform:translateX(-30px); } to { opacity:1; transform:translateX(0); } }
 
 
         #special-meteo { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: transparent; z-index: 5000; display: none; flex-direction: column; align-items: center; padding-top: 15vh; opacity: 0; transition: opacity 0.8s; pointer-events: none; }
@@ -654,9 +737,6 @@
         #dev-schedule-table td { border-bottom: 1px solid #222; padding: 6px 4px; color: #bbb; }
         .sch-time { color: var(--accent); font-weight: bold; }
         .sch-live { color: #f00; font-weight: 900; animation: blink 1s infinite; letter-spacing: 1px; }
-        .sch-val { color: var(--love); font-weight: bold; }
-        .sch-nat { color: #ce2939; font-weight: bold; }
-        .sch-eas { color: #50c878; font-weight: bold; }
         .sch-off { color: #555; font-style: italic; }
 
         .btn { background: #222; border: 1px solid #444; color: #fff; padding: 8px 15px; cursor: pointer; font-family: var(--font-mono); font-size: 0.8rem; margin-bottom: 5px; width: 100%; text-align: left; transition: 0.2s; }
@@ -707,25 +787,13 @@
                         <!-- Populated by JS -->
                     </tbody>
                 </table>
-                <div style="font-size:0.7rem; color:#666; margin-top:5px; border-top:1px solid #333; padding-top:5px;">
-                    VALENTIN NAPI ÜZEMMÓD: <span id="dev-val-status" style="color:#888;">INAKTÍV</span>
-                </div>
-                <div style="font-size:0.7rem; color:#666;">
-                    MÁRCIUS 15. ÜZEMMÓD: <span id="dev-nat-status" style="color:#888;">INAKTÍV</span>
-                </div>
-                <div style="font-size:0.7rem; color:#666;">
-                    HÚSVÉTI ÜZEMMÓD: <span id="dev-eas-status" style="color:#888;">INAKTÍV</span>
-                </div>
                 
                 <div class="dev-h" style="margin-top:20px;">MANUÁLIS VEZÉRLÉS</div>
                 <button class="btn" onclick="safeTrigger(() => triggerSummaryMode(3, 'half'))">[►] FÉLÓRÁS HÍRADÓ (3p)</button>
                 <button class="btn" onclick="safeTrigger(() => triggerSummaryMode(5, 'hourly'))">[►] ÓRÁS HÍRADÓ (5p)</button>
                 <button class="btn" onclick="safeTrigger(() => triggerSummaryMode(2, 'sport'))">[►] SPORTHÍREK (2p)</button>
-                <button class="btn" onclick="safeTrigger(() => triggerBigClockSequence())">[⏰] NAGY ÓRA SHOW TESZT</button>
-                <button class="btn" onclick="safeTrigger(() => triggerEconomyMode())">[💰] GAZDASÁGI BLOKK TESZT</button>
-                <button class="btn" onclick="triggerValentineSequence()">[❤️] VALENTIN SEQ. TESZT</button>
-                <button class="btn" onclick="toggleKokardaTest()">[🇭🇺] MÁRCIUS 15. TESZT</button>
-                <button class="btn" onclick="toggleEasterTest()">[🐰] HÚSVÉT TESZT (ON/OFF)</button>
+                <button class="btn" onclick="safeTrigger(() => triggerBigClockSequence())">[⏰] NAGY ÓRA SHOW</button>
+                <button class="btn" onclick="safeTrigger(() => triggerEconomyMode())">[💰] GAZDASÁGI BLOKK</button>
                 <button class="btn" onclick="closeAllOverlays()">[X] MINDEN ABLAK BEZÁRÁSA</button>
                 <button class="btn" onclick="forceRefreshAll()">[⚡] AZONNALI FRISSÍTÉS</button>
                 <button class="btn" onclick="testBreaking()">[🔥] BREAKING NEWS TESZT</button>
@@ -774,17 +842,25 @@
             </div>
         </div>
         <div class="bc-main-panel">
-            <div class="bc-center-logo">
-                 <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-            </div>
-            <div class="bc-digital-display" id="bc-big-time">59</div>
-            
-            <!-- SVG Circle Implementation -->
-            <div class="bc-circle-svg-container">
-                <svg viewBox="0 0 200 200" width="100%" height="100%">
-                    <circle class="bc-circle-bg" cx="100" cy="100" r="90"></circle>
-                    <circle class="bc-circle-fg" id="bc-progress-circle" cx="100" cy="100" r="90"></circle>
-                </svg>
+            <div class="bc-clock-wrapper">
+                <!-- SVG Circle Implementation -->
+                <div class="bc-circle-svg-container">
+                    <svg viewBox="0 0 200 200" width="100%" height="100%">
+                        <circle class="bc-circle-bg" cx="100" cy="100" r="90"></circle>
+                        <circle class="bc-circle-fg" id="bc-progress-circle" cx="100" cy="100" r="90"></circle>
+                    </svg>
+                </div>
+
+                <!-- NEW STRUCTURE: Everything inside the wrapper, stacked -->
+                <div class="bc-inner-content">
+                    <div class="bc-logo-group">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                        <div class="bc-logo-text">TKP NEWS</div>
+                    </div>
+                    
+                    <div id="bc-big-time">59</div>
+                    <div id="bc-big-secs">00</div>
+                </div>
             </div>
 
             <div class="bc-next-show-text" id="bc-next-show-text">KÖVETKEZIK: HÍRÖSSZEFOGLALÓ</div>
@@ -865,32 +941,6 @@
             <div class="logo-front">
                 <div class="logo-col-icon">
                     <svg id="globe-icon" class="logo-svg-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                    <svg id="heart-icon" class="logo-svg-icon hidden" viewBox="0 0 24 24" style="fill:#ff3366;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                    <svg id="kokarda-icon" class="logo-svg-icon hidden" viewBox="0 0 50 50">
-                        <defs>
-                            <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-                                <feDropShadow dx="1" dy="1" stdDeviation="1" flood-color="#000" flood-opacity="0.5"/>
-                            </filter>
-                        </defs>
-                        <!-- Ribbons -->
-                        <path d="M18 35 Q15 45 10 50 L22 48 L25 35" fill="#ce2939" filter="url(#shadow)"/>
-                        <path d="M32 35 Q35 45 40 50 L28 48 L25 35" fill="#ce2939" filter="url(#shadow)"/>
-                        <!-- Circles -->
-                        <circle cx="25" cy="25" r="18" fill="#ce2939" filter="url(#shadow)" />
-                        <circle cx="25" cy="25" r="12" fill="#fff" />
-                        <circle cx="25" cy="25" r="6" fill="#477050" />
-                    </svg>
-                    <svg id="easter-icon" class="logo-svg-icon hidden" viewBox="0 0 50 50">
-                         <!-- Simplified Egg Shape -->
-                        <ellipse cx="25" cy="25" rx="18" ry="22" fill="#2e8b57" stroke="#fff" stroke-width="1"/>
-                        <!-- Decorations -->
-                        <path d="M10 25 Q 25 15 40 25" stroke="#ffcc00" stroke-width="2" fill="none" />
-                        <path d="M10 32 Q 25 22 40 32" stroke="#ff3366" stroke-width="2" fill="none" />
-                        <!-- Dots -->
-                        <circle cx="20" cy="15" r="2" fill="#fff" />
-                        <circle cx="30" cy="15" r="2" fill="#fff" />
-                        <circle cx="25" cy="40" r="2" fill="#fff" />
-                    </svg>
                 </div>
                 <div class="logo-col-text">
                     <div class="logo-text-inline">TKP NEWS <span id="live-badge" class="live-tag">ÉLŐ</span></div>
@@ -950,13 +1000,14 @@
                     RÉGI OLDAL (KLIKK.HU) &#10138;
                 </a>
                 
-                <div style="font-family:var(--font-tech); font-weight:bold; color:var(--accent); font-size:0.8rem; letter-spacing:1px;">V18.2</div>
+                <div style="font-family:var(--font-tech); font-weight:bold; color:var(--accent); font-size:0.8rem; letter-spacing:1px;">V19.2</div>
             </div>
         </div>
 
         <div class="sidebar ui-element" id="ui-right">
             <div class="sidebar-flipper">
                 <div class="sidebar-front">
+                    <!-- Cards moved higher as requested -->
                     <div class="card">
                         <div class="card-title">DEVIZA ÁRFOLYAMOK</div>
                         <div id="finance-rows"></div>
@@ -972,6 +1023,13 @@
                             <div class="footer-pill">FRISSÍTVE: <strong id="wx-stamp">00:00:00</strong></div>
                             <div class="footer-pill">DATA: <strong>WEATHER.COM</strong></div>
                         </div>
+                    </div>
+
+                    <!-- REFRESH BUTTON MOVED TO BOTTOM (Discreet) -->
+                    <div class="sidebar-ctrl-panel">
+                        <button id="manual-refresh-btn" class="refresh-btn-side" onclick="manualRefresh()">
+                           [ ↻ FRISSÍTÉS ]
+                        </button>
                     </div>
                 </div>
                 
@@ -1244,14 +1302,14 @@
             bigClockTimeout: null,
             isLocked: false,
             isClockRunning: false,
-            valentineInterval: null,
-            easterInterval: null,
             testKokarda: false,
             testEaster: false,
             testMiniRainState: false,
             testMiniAlertState: false,
             stationPointer: 0,
-            nightSummaryQueue: [] 
+            nightSummaryQueue: [],
+            hasFreshNews: false,
+            manualRefreshRequested: false
         };
 
         const DOM = {
@@ -1267,9 +1325,9 @@
             progGuide: document.getElementById('prog-guide-overlay'), pgContainer: document.getElementById('pg-container'), pgBg: document.getElementById('pg-bg'),
             devWxNext: document.getElementById('dev-wx-next'), devWxSrc: document.getElementById('dev-wx-src'), 
             devBkQueue: document.getElementById('dev-bk-queue'),
-            devScheduleTable: document.getElementById('dev-schedule-table').querySelector('tbody'), devValStatus: document.getElementById('dev-val-status'), devNatStatus: document.getElementById('dev-nat-status'), devEasStatus: document.getElementById('dev-eas-status'),
+            devScheduleTable: document.getElementById('dev-schedule-table').querySelector('tbody'),
             logoBox: document.getElementById('logo-box'), logoBack: document.getElementById('logo-back-face'), logoBackContent: document.getElementById('logo-back-content'), logoFront: document.getElementById('logo-front'),
-            globeIcon: document.getElementById('globe-icon'), heartIcon: document.getElementById('heart-icon'), kokardaIcon: document.getElementById('kokarda-icon'), easterIcon: document.getElementById('easter-icon'),
+            globeIcon: document.getElementById('globe-icon'),
             liveBadge: document.getElementById('live-badge'),
             
             // Fixed mappings
@@ -1290,7 +1348,7 @@
             mcCircleFg: document.querySelector('.mc-circle-fg'),
             
             bigClockOverlay: document.getElementById('big-clock-overlay'),
-            bcDigitalDisplay: document.getElementById('bc-big-time'),
+            // Removed bcDigitalDisplay simple mapping as we now have separate elements
 
             // Map fcAlert to ticker bar to hide it during breaking news
             fcAlert: document.getElementById('ui-bottom'),
@@ -1461,188 +1519,7 @@
                 </tr>`;
             });
             DOM.devScheduleTable.innerHTML = html;
-
-            const isVal = checkValentineDate();
-            DOM.devValStatus.innerHTML = isVal ? "<span class='sch-val'>AKTÍV</span> (MA)" : "INAKTÍV <span style='font-size:0.6rem;'>(FEB 14. 00:00 - FEB 15. 00:00)</span>";
-
-            const isNat = checkMarch15Date() || state.testKokarda;
-            DOM.devNatStatus.innerHTML = isNat ? "<span class='sch-nat'>AKTÍV</span> (MA)" : "INAKTÍV <span style='font-size:0.6rem;'>(MÁR 15. 00:00 - MÁR 16. 00:00)</span>";
-
-            const isEas = checkEasterDate() || state.testEaster;
-            DOM.devEasStatus.innerHTML = isEas ? "<span class='sch-eas'>AKTÍV</span> (MA)" : "INAKTÍV <span style='font-size:0.6rem;'>(HÚSVÉT V. - HÚSVÉT K.)</span>";
-
             DOM.devBkQueue.innerText = state.breakingQueue.length; 
-        }
-
-        /* --- HOLIDAY DATE CHECKERS & LOGIC --- */
-        
-        function checkValentineDate() {
-            const now = new Date();
-            const isValentine = (now.getMonth() === 1 && now.getDate() === 14);
-            return isValentine;
-        }
-
-        function checkMarch15Date() {
-            const now = new Date();
-            return (now.getMonth() === 2 && now.getDate() === 15);
-        }
-
-        function calculateEasterSunday(year) {
-            const f = Math.floor,
-                G = year % 19,
-                C = f(year / 100),
-                H = (C - f(C / 4) - f((8 * C + 13) / 25) + 19 * G + 15) % 30,
-                I = H - f(H / 28) * (1 - f(29 / (H + 1)) * f((21 - G) / 11)),
-                J = (year + f(year / 4) + I + 2 - C + f(C / 4)) % 7,
-                L = I - J,
-                month = 3 + f((L + 40) / 44),
-                day = L + 28 - 31 * f(month / 4);
-            return { month: month - 1, day: day }; 
-        }
-
-        function checkEasterDate() {
-            const now = new Date();
-            const year = now.getFullYear();
-            const easter = calculateEasterSunday(year);
-            const start = new Date(year, easter.month, easter.day, 0, 0, 0);
-            const end = new Date(year, easter.month, easter.day + 2, 0, 0, 0); 
-            return (now >= start && now < end);
-        }
-
-        function updateHolidayIcons() {
-            const isVal = checkValentineDate();
-            const isNat = checkMarch15Date() || state.testKokarda;
-            const isEas = checkEasterDate() || state.testEaster;
-            DOM.globeIcon.classList.remove('permanent-hidden');
-            DOM.heartIcon.classList.remove('permanent-visible');
-            DOM.kokardaIcon.classList.remove('permanent-visible');
-            DOM.easterIcon.classList.remove('permanent-visible');
-            if (isEas) {
-                DOM.globeIcon.classList.add('permanent-hidden');
-                DOM.easterIcon.classList.add('permanent-visible');
-            } else if (isNat) {
-                DOM.globeIcon.classList.add('permanent-hidden');
-                DOM.kokardaIcon.classList.add('permanent-visible');
-            } else if (isVal) {
-                DOM.globeIcon.classList.add('permanent-hidden');
-                DOM.heartIcon.classList.add('permanent-visible');
-            }
-        }
-
-        function toggleKokardaTest() {
-            state.testKokarda = !state.testKokarda;
-            state.testEaster = false; 
-            updateHolidayIcons();
-            updateDevMonitor();
-        }
-
-        function toggleEasterTest() {
-            state.testEaster = !state.testEaster;
-            state.testKokarda = false; 
-            updateHolidayIcons();
-            updateDevMonitor();
-            if(state.testEaster) triggerEasterSequence();
-        }
-
-        /* --- ANIMATION SEQUENCES --- */
-
-        function triggerValentineSequence() {
-            if(state.isLocked || state.isClockRunning) return;
-            if(!DOM.heartIcon.classList.contains('permanent-visible')) {
-                DOM.globeIcon.classList.add('hidden');
-                DOM.heartIcon.classList.add('visible');
-            }
-            setTimeout(() => { DOM.heartIcon.classList.add('beating'); }, 500);
-            const originalContent = DOM.logoBackContent.innerHTML;
-            const originalClass = DOM.logoBack.className;
-            DOM.logoBack.className = 'logo-back valentine';
-            DOM.logoBackContent.innerHTML = `
-                <div class="val-container">
-                    <span class="val-happy">Boldog</span>
-                    <div class="val-frame">
-                        <span class="val-main">VALENTIN NAPOT</span>
-                    </div>
-                    <span class="val-wish">kíván a</span>
-                    <div class="val-logo-row">
-                        <svg viewBox="0 0 24 24" style="width:14px; fill:#ccc;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                        <span class="val-logo-txt">TKP NEWS</span>
-                    </div>
-                </div>
-            `;
-            setTimeout(() => { DOM.heartIcon.classList.remove('beating'); DOM.logoBox.classList.add('flipped'); }, 3500);
-            setTimeout(() => { DOM.logoBox.classList.remove('flipped'); }, 23500);
-            setTimeout(() => { DOM.heartIcon.classList.add('beating'); }, 24500);
-            setTimeout(() => {
-                DOM.heartIcon.classList.remove('beating');
-                if(!DOM.heartIcon.classList.contains('permanent-visible')) {
-                    DOM.heartIcon.classList.remove('visible');
-                    DOM.globeIcon.classList.remove('hidden');
-                }
-                setTimeout(() => { DOM.logoBackContent.innerHTML = originalContent; DOM.logoBack.className = originalClass; }, 1000);
-            }, 27500);
-        }
-
-        function triggerEasterSequence() {
-            if(state.isLocked || state.isClockRunning) return;
-            if(!DOM.easterIcon.classList.contains('permanent-visible')) {
-                DOM.globeIcon.classList.add('hidden');
-                DOM.easterIcon.classList.add('visible');
-            }
-            const originalContent = DOM.logoBackContent.innerHTML;
-            const originalClass = DOM.logoBack.className;
-            DOM.logoBack.className = 'logo-back easter';
-            DOM.logoBackContent.innerHTML = `
-                <div class="val-container">
-                    <span class="val-happy" style="color:#ffd700;">Áldott</span>
-                    <div style="border:1px solid #50c878; padding:3px 8px; border-radius:4px; background:rgba(80,200,120,0.15); width:100%;">
-                        <span class="val-main" style="color:#fff; text-shadow:0 1px 3px #000; font-size:0.8rem;">HÚSVÉTI ÜNNEPEKET</span>
-                    </div>
-                    <span class="val-wish" style="color:#ffd700;">kíván a</span>
-                    <div class="val-logo-row">
-                        <svg viewBox="0 0 24 24" style="width:14px; fill:#ccc;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                        <span class="val-logo-txt">TKP NEWS</span>
-                    </div>
-                </div>
-            `;
-            setTimeout(() => { DOM.logoBox.classList.add('flipped'); }, 2000);
-            setTimeout(() => { DOM.logoBox.classList.remove('flipped'); }, 22000); 
-            setTimeout(() => {
-                if(!DOM.easterIcon.classList.contains('permanent-visible')) {
-                    DOM.easterIcon.classList.remove('visible');
-                    DOM.globeIcon.classList.remove('hidden');
-                }
-                setTimeout(() => { DOM.logoBackContent.innerHTML = originalContent; DOM.logoBack.className = originalClass; }, 1000);
-            }, 23500);
-        }
-
-        function scheduleHolidayEvents() {
-            setInterval(() => {
-                const isVal = checkValentineDate();
-                const isEas = checkEasterDate() || state.testEaster;
-                if (!isVal && !isEas) return;
-                if (state.valentineInterval) clearTimeout(state.valentineInterval);
-                if (state.easterInterval) clearTimeout(state.easterInterval);
-                for (let i = 0; i < 3; i++) {
-                    const delay = Math.random() * 900000; 
-                    setTimeout(() => {
-                        if (!state.isLocked && !state.isClockRunning) {
-                            if (isEas) triggerEasterSequence();
-                            else if (isVal) triggerValentineSequence();
-                        }
-                    }, delay);
-                }
-            }, 900000); 
-            if (checkValentineDate() || checkEasterDate()) {
-                 for (let i = 0; i < 3; i++) {
-                    const delay = Math.random() * 900000;
-                    setTimeout(() => {
-                        if (!state.isLocked && !state.isClockRunning) {
-                            if (checkEasterDate()) triggerEasterSequence();
-                            else triggerValentineSequence();
-                        }
-                    }, delay);
-                }
-            }
         }
 
         function generateHourlySchedule() { 
@@ -1805,7 +1682,7 @@
             // Placeholder
         }
 
-        /* --- BIG CLOCK SEQUENCE (TV SHOW STYLE) --- */
+        /* --- BIG CLOCK SEQUENCE (NEW COMPACT SHOW) --- */
         function triggerBigClockSequence() {
             state.isSpecial = true; state.isLocked = true; state.isClockRunning = true; 
             clearNewsBackgrounds();
@@ -1831,18 +1708,15 @@
             listContainer.innerHTML = '';
             
             let hour1Items = [];
-            let hour2Items = [];
 
             if (state.isNightMode) {
                 // Special Night Schedule logic
                 hour1Items = [
                     { t: "00:00", n: "HÍRÖSSZEFOGLALÓ" },
                     { t: "00:30", n: "HÍRÖSSZEFOGLALÓ" },
-                    { t: "02-04", n: "DÉLUTÁNI ADÁS" },
-                    { t: "04-06", n: "ESTI ADÁS" }
+                    { t: "02:00", n: "DÉLUTÁNI HÍREK" },
+                    { t: "04:00", n: "ESTI HÍREK" }
                 ];
-                // Loop same items just for visual continuity if needed, or keep static
-                hour2Items = hour1Items; 
             } else {
                  hour1Items = [
                     { t: `${hStr1}:00`, n: "HÍRÖSSZEFOGLALÓ" },
@@ -1850,63 +1724,64 @@
                     { t: `${hStr1}:30`, n: "HÍRÖSSZEFOGLALÓ" },
                     { t: `${hStr1}:45`, n: "METEO ÁTTEKINTÉS" }
                 ];
-                
-                 hour2Items = [
-                    { t: `${hStr2}:00`, n: "HÍRÖSSZEFOGLALÓ" },
-                    { t: `${hStr2}:15`, n: "METEO ÁTTEKINTÉS" },
-                    { t: `${hStr2}:30`, n: "HÍRÖSSZEFOGLALÓ" },
-                    { t: `${hStr2}:45`, n: "METEO ÁTTEKINTÉS" }
-                ];
             }
 
-            // FIX: Set Display flex first
+            // Init Overlay
             DOM.bigClockOverlay.style.display = 'grid';
             DOM.bigClockOverlay.classList.remove('bc-layout-center');
             
-            // Delay adding 'active' to ensure CSS opacity transition works
+            // Activate Animation
             setTimeout(() => {
                 DOM.bigClockOverlay.classList.add('active');
             }, 50);
             
             document.getElementById('bc-next-show-text').classList.remove('visible'); 
 
-            const renderItems = (items) => {
-                listContainer.innerHTML = '';
-                items.forEach((item, idx) => {
-                    const div = document.createElement('div');
-                    div.className = 'bc-sched-item';
-                    div.style.transitionDelay = `${idx * 0.1}s`; 
-                    div.innerHTML = `<span class="bc-sched-time">${item.t}</span><span class="bc-sched-name">${item.n}</span>`;
-                    listContainer.appendChild(div);
-                    setTimeout(() => div.classList.add('visible'), 50);
-                });
-            };
-
-            renderItems(hour1Items); 
+            // Render List Items with stagger
+            hour1Items.forEach((item, idx) => {
+                const div = document.createElement('div');
+                div.className = 'bc-sched-item';
+                div.style.transitionDelay = `${idx * 0.15 + 0.5}s`; // Delayed entry
+                div.innerHTML = `<span class="bc-sched-time">${item.t}</span><span class="bc-sched-name">${item.n}</span>`;
+                listContainer.appendChild(div);
+                setTimeout(() => div.classList.add('visible'), 50);
+            });
             
-            document.getElementById('bc-progress-circle').style.transition = 'none';
-            document.getElementById('bc-progress-circle').style.strokeDashoffset = 565; 
+            // Highlight the first item as active
+            setTimeout(() => {
+                if(listContainer.children[0]) listContainer.children[0].classList.add('active');
+            }, 1000);
 
-            let secondsLeft = 60;
+            // Calculate countdown
+            let secondsLeft = 60 - new Date().getSeconds();
+            if(secondsLeft === 60) secondsLeft = 60; 
+            
             const circle = document.getElementById('bc-progress-circle');
-            circle.style.strokeDasharray = "565";
+            const bigTime = document.getElementById('bc-big-time');
+            const bigSecs = document.getElementById('bc-big-secs');
+            
+            // Start State
+            circle.style.strokeDashoffset = 565; 
             circle.style.transition = "stroke-dashoffset 1s linear"; 
 
             const bcInterval = setInterval(() => {
-                secondsLeft--;
-                DOM.bcDigitalDisplay.innerText = secondsLeft;
+                const nowBC = new Date();
+                const h = String(nowBC.getHours()).padStart(2, '0');
+                const m = String(nowBC.getMinutes()).padStart(2, '0');
+                const s = String(nowBC.getSeconds()).padStart(2, '0');
                 
+                // Show Real Time
+                bigTime.innerText = `${h}:${m}`;
+                bigSecs.innerText = s;
+                
+                secondsLeft--;
+                
+                // SVG Circle Progress
                 const progress = (60 - secondsLeft) / 60; 
                 const offset = 565 - (progress * 565);
                 circle.style.strokeDashoffset = offset;
                 
-                if(secondsLeft === 40 && !state.isNightMode) { // Only switch pages if not night mode
-                    Array.from(listContainer.children).forEach(c => c.classList.remove('visible'));
-                    setTimeout(() => {
-                        renderItems(hour2Items); 
-                    }, 600);
-                }
-                
+                // Transition to Center Focus at 20 seconds left
                 if(secondsLeft === 20) {
                     DOM.bigClockOverlay.classList.add('bc-layout-center');
                     setTimeout(() => {
@@ -1914,36 +1789,28 @@
                     }, 1000);
                 }
 
-                if(secondsLeft <= 10) {
-                     DOM.bcDigitalDisplay.style.color = "var(--accent)";
-                }
-
                 if(secondsLeft <= 0) {
                     clearInterval(bcInterval);
-                    DOM.bigClockOverlay.style.background = "#fff";
+                    // Fade out effects
                     document.querySelector('.bc-main-panel').style.opacity = 0;
                     document.querySelector('.bc-schedule-panel').style.opacity = 0;
                     
                     setTimeout(() => {
                         DOM.bigClockOverlay.classList.remove('active', 'bc-layout-center');
-                        DOM.bigClockOverlay.style.background = ""; 
-                        DOM.bigClockOverlay.style.display = 'none'; // HIDE
+                        DOM.bigClockOverlay.style.display = 'none'; 
                         
+                        // Reset opacity for next time
                         document.querySelector('.bc-main-panel').style.opacity = 1;
                         document.querySelector('.bc-schedule-panel').style.opacity = 1;
-                        document.querySelector('.bc-center-logo').style.animationDuration = "4s"; 
-                        DOM.bcDigitalDisplay.style.color = "#fff"; 
                         
                         state.isClockRunning = false;
                         if (!state.isNightMode) {
                              triggerSummaryMode(5, 'hourly'); 
                         } else {
-                             // If night mode, trigger night summary explicitly if scheduled, otherwise regular close
-                             // But checkScheduleExecution will catch it.
                              closeAllOverlays();
                         }
                         crawlNews(true);
-                    }, 300);
+                    }, 800);
                 }
             }, 1000);
 
@@ -1952,6 +1819,34 @@
 
         function forceRefreshAll() { crawlNews(true); fetchCurrency(); fetchWunderground(); alert("FRISSÍTÉS ELKÜLDVE"); }
         
+        function manualRefresh() {
+             const btn = document.getElementById('manual-refresh-btn');
+             btn.innerHTML = '[ FRISSÍTÉS... ]';
+             btn.classList.add('loading');
+             
+             // Request background refresh
+             state.manualRefreshRequested = true;
+             
+             // RESET INDICES to ensure we start from the newest item
+             state.tickerIdx = -1; // Next tick will be 0
+             state.mainIdx = -1;   // Next main cycle will be 0
+             
+             crawlNews(false); // Fetch
+             fetchCurrency();
+             fetchWunderground();
+             
+             // Force Main Section Update Immediately
+             setTimeout(() => {
+                 cycleMain(true); // Force manual cycle to index 0
+             }, 1500);
+
+             // Visual reset
+             setTimeout(() => {
+                 btn.innerHTML = `[ ↻ FRISSÍTÉS ]`;
+                 btn.classList.remove('loading');
+             }, 5000);
+        }
+
         function testBreaking() { 
             const now = new Date(); 
             const longDesc = "EZ EGY TESZT ÜZENET, AMELY A GÖRGETÉSI FUNKCIÓT DEMONSTRÁLJA. Ez a szöveg szándékosan hosszúra lett nyújtva, hogy meghaladja a rendelkezésre álló keret méretét.";
@@ -2102,6 +1997,7 @@
         function parseAndAdd(xmlText, sourceName) {
             try {
                 const xml = new DOMParser().parseFromString(xmlText, "text/xml");
+                let hasNew = false;
                 xml.querySelectorAll("item").forEach(item => {
                     const title = item.querySelector("title")?.textContent.trim(); const link = item.querySelector("link")?.textContent.trim();
                     const pubDate = new Date(item.querySelector("pubDate")?.textContent || new Date());
@@ -2110,9 +2006,11 @@
                     if(!img) { const content = item.getElementsByTagNameNS("*", "content")[0]?.textContent || item.querySelector("description")?.textContent; img = content?.match(/src="([^"]+)"/)?.[1]; }
                     if (title && link && !state.allNews.find(n => n.link === link)) {
                         state.allNews.push({ title, link, date: pubDate, desc, source: sourceName, img: img });
+                        hasNew = true;
                         if(!state.initialLoadComplete) state.seenBreaking.add(link);
                     }
                 });
+                if(hasNew) state.hasFreshNews = true;
                 updateLists(); updateDevLog();
                 if(state.mainItems.length > 0 && !state.mainStarted) {
                     state.mainStarted = true; DOM.loader.style.opacity = 0; setTimeout(() => DOM.loader.remove(), 1000);
@@ -2162,7 +2060,7 @@
         
         function renderBreakingItemContent() {
              const item = state.breakingQueue.shift(); 
-             state.currentBreakingLink = item.link;
+             state.currentBreakingItem = item; // Store full item for accurate linking
 
             const timeStr = item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'});
             DOM.bkCardHeadline.innerText = item.title;
@@ -2216,6 +2114,9 @@
 
         /* --- METEO SEQUENCE (HYBRID API + MOCK) --- */
         async function triggerSpecialMeteoSequence(startPhase = 0) {
+            // Trigger background refresh of news immediately
+            crawlNews(false);
+
             state.isSpecial = true; state.isLocked = true;
             toggleLiveBadge(true);
             clearNewsBackgrounds();
@@ -2240,7 +2141,15 @@
 
             let phase = startPhase;
             const runPhase = async () => {
-                if (phase >= sequence.length) { state.specialMeteoInterval = setTimeout(() => closeAllOverlays(), 2000); return; }
+                if (phase >= sequence.length) { 
+                    state.specialMeteoInterval = setTimeout(() => {
+                        // Reset indices to start fresh after update
+                        state.mainIdx = -1;
+                        state.tickerIdx = -1;
+                        closeAllOverlays();
+                    }, 2000); 
+                    return; 
+                }
                 const currentTheme = sequence[phase]; 
                 DOM.smGrid.style.opacity = 0;
                 document.getElementById('sm-source-footer').innerText = "FORRÁS: WEATHER.COM / IBM CLOUD / OPEN-METEO";
@@ -2550,8 +2459,9 @@
             
             let durationSeconds = (type === 'hourly' ? 300 : (type === 'sport' ? 120 : 180)); 
             
+            // LOGIC CHANGE: 30 seconds per slide
+            const secondsPerPage = 30;
             const itemsPerPage = 4;
-            const secondsPerPage = 20;
             const totalPagesNeeded = Math.ceil(durationSeconds / secondsPerPage);
             const totalItemsNeeded = totalPagesNeeded * itemsPerPage;
 
@@ -2585,11 +2495,23 @@
 
             const placeholderLogo = `<svg viewBox="0 0 24 24" style="width:50%; fill:var(--accent);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`;
             pages.forEach((p, idx) => {
-                const d = document.createElement('div'); d.className = `summary-page ${idx === 0 ? 'active' : ''}`; d.id = `sum-page-${idx}`;
+                const d = document.createElement('div'); 
+                d.className = `summary-page ${idx === 0 ? 'active' : ''}`; 
+                d.id = `sum-page-${idx}`;
+                
                 p.forEach(item => { 
                     const imgHtml = item.img ? `<img src="${item.img}" class="sum-img">` : `<div class="sum-img placeholder">${placeholderLogo}</div>`;
                     const logo = getLogoHtml(item.source);
-                    d.innerHTML += `<div class="sum-item" onclick="window.open('${item.link}','_blank')">${imgHtml}<div class="sum-text"><div class="sum-time">${logo} ${item.date.toLocaleTimeString('hu-HU',{hour:'2-digit',minute:'2-digit'})} • ${item.source}</div><div class="sum-h">${item.title}</div><div class="sum-d">${item.desc}</div></div></div>`; 
+                    
+                    // Create element via DOM to attach event listener properly (Fixes Click Accuracy)
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'sum-item';
+                    itemDiv.innerHTML = `${imgHtml}<div class="sum-text"><div class="sum-time">${logo} ${item.date.toLocaleTimeString('hu-HU',{hour:'2-digit',minute:'2-digit'})} • ${item.source}</div><div class="sum-h">${item.title}</div><div class="sum-d">${item.desc}</div></div>`;
+                    itemDiv.addEventListener('click', () => {
+                        window.open(item.link, '_blank');
+                    });
+                    
+                    d.appendChild(itemDiv);
                 });
                 DOM.sumContent.appendChild(d);
             });
@@ -2598,7 +2520,7 @@
             let cPage = 0; 
             if (pages.length > 1) state.summaryInterval = setInterval(() => { 
                 if(state.isSummary) { const oldPage = document.getElementById(`sum-page-${cPage}`); if(oldPage) oldPage.classList.remove('active'); cPage = (cPage + 1) % pages.length; const newPage = document.getElementById(`sum-page-${cPage}`); if(newPage) newPage.classList.add('active'); } 
-            }, 20000);
+            }, 30000); // 30 seconds per page
         }
 
         function closeAllOverlays() {
@@ -2631,15 +2553,31 @@
             if(card) card.classList.remove('night-summary-card');
             DOM.sidebar.classList.remove('breaking-active');
 
-            if (state.isNightMode) checkNightMode(); else { cycleMain(); }
+            if (state.isNightMode) { 
+                checkNightMode(); 
+            } else { 
+                // FORCE RESTART OF NEWS CYCLES
+                cycleMain(true); 
+                cycleTicker(1);
+            }
         }
 
         function cycleTicker(dir = 1) {
             if (state.isNightMode) return; state.lastTickerUpdate = Date.now();
             if (!state.tickerItems.length) { clearTimeout(state.tickerTimer); state.tickerTimer = setTimeout(() => cycleTicker(dir), 1000); return; }
+            
+            // Auto refresh logic integration
+            if (state.tickerIdx === 0 && state.hasFreshNews && dir === 1) {
+                 updateLists();
+                 state.hasFreshNews = false;
+                 // Force refresh of Main section as well to match freshness
+                 cycleMain(true);
+            }
+            
             let nextIdx = (state.tickerIdx + dir + state.tickerItems.length) % state.tickerItems.length;
-            if (nextIdx === 0 && dir === 1) crawlNews(false);
+            if (nextIdx === 0 && dir === 1 && state.tickerItems.length === 0) crawlNews(false); // Safety fallback
             state.tickerIdx = nextIdx; const item = state.tickerItems[state.tickerIdx];
+            if (!item) return; // safety
             const old = DOM.tickerWindow.querySelector('.ticker-item.active'); if (old) { old.classList.remove('active'); setTimeout(() => old.remove(), 600); }
             const el = document.createElement('div'); el.className = 'ticker-item active'; el.onclick = () => window.open(item.link, '_blank');
             const logo = getLogoHtml(item.source);
@@ -2652,7 +2590,12 @@
 
         function cycleMain(manual = false) {
             if (!state.mainItems.length || state.isSpecial || state.isSummary || state.isLocked) return;
-            if (!manual) { if (state.mainIdx >= state.mainItems.length) state.mainIdx = 0; if (state.mainIdx < 0) state.mainIdx = state.mainItems.length - 1; }
+            if (!manual) { 
+                if (state.mainIdx >= state.mainItems.length) state.mainIdx = 0; 
+                if (state.mainIdx < 0) state.mainIdx = state.mainItems.length - 1; 
+            } else {
+                state.mainIdx = 0; // Reset to start if forced
+            }
             const item = state.mainItems[state.mainIdx]; state.currentMainLink = item.link;
             DOM.mTextContainer.classList.add('faded-out');
             setTimeout(() => {
@@ -2688,21 +2631,16 @@
                 if (m === 0 && s === 0) { fetchCurrency(); generateHourlySchedule(); } 
                 updateDevMonitor(); 
                 
-                // DAY MODE TICKER: Update every 20 mins (XX:00, XX:20, XX:40)
-                // Pre-fetch 30 seconds early (XX:19:30, XX:39:30, XX:59:30)
-                if (s === 30) {
-                    if (!state.isNightMode && (m === 19 || m === 39 || m === 59)) {
-                        crawlNews(false); // Refreshes data array for next cycle
-                    }
-                    // NIGHT MODE: Pre-fetch next block 30s early (at 01:59:30 etc)
-                    if (state.isNightMode && m === 59) {
-                        crawlNews(false);
-                    }
+                // DAY MODE AUTO-REFRESH at :01, :20, :40
+                if (!state.isNightMode && s === 0) {
+                     if (m === 1 || m === 20 || m === 40) {
+                         crawlNews(false); // Background update
+                     }
                 }
                 
                 // CYCLE TICKER ONLY IN DAY MODE
                 if (!state.isNightMode && (Date.now() - state.lastTickerUpdate > 12000) && !state.isSpecial && !state.isSummary) { 
-                     // Only auto-cycle visually, data update is handled by the 20-min rule above
+                     // Only auto-cycle visually
                      cycleTicker(1); 
                 } 
 
@@ -2742,14 +2680,20 @@
 
         async function fetchCurrency() { 
             let success = false;
-            // Only try first 2 keys from CurrencyAPI
-            for (const key of FX_KEYS) { 
+            // Key 1: 8258c9489622103635e16227fd9dadd7b8d1
+            // Key 2: 426709d24c8d4420f140ac7c451db300edfa
+            const keys = [
+                {k:'8258c9489622103635e16227fd9dadd7b8d1', n:'API1'},
+                {k:'426709d24c8d4420f140ac7c451db300edfa', n:'API2'}
+            ];
+            
+            for (const item of keys) { 
                 try { 
-                    const res = await fetch(`https://currencyapi.net/api/v1/rates?key=${key}&output=JSON`); 
+                    const res = await fetch(`https://currencyapi.net/api/v1/rates?key=${item.k}&output=JSON`); 
                     if(res.ok) { 
                         const data = await res.json(); 
                         if(data.valid) { 
-                            renderCurrency(data.rates, 'CURRENCYAPI.NET'); 
+                            renderCurrency(data.rates, item.n); 
                             success = true;
                             break; 
                         } 
@@ -2831,7 +2775,26 @@
         function checkNightMode() {
             const now = new Date(); const h = now.getHours(); const isNight = state.forcedNightMode || (h >= 0 && h < 6);
             const labelBox = document.getElementById('ticker-label-box');
-            if (isNight !== state.isNightMode) { state.isNightMode = isNight; if (isNight) { DOM.tickerWindow.style.display = 'none'; DOM.tickerNav.style.display = 'none'; DOM.nightMsg.classList.add('active'); labelBox.innerText = "ISMÉTLÉS"; labelBox.classList.add('night-mode'); DOM.mainDesc.innerText = "Kérjük várjon, amíg a rendszer betölti az előző nap híreit."; } else { DOM.tickerWindow.style.display = 'block'; DOM.tickerNav.style.display = 'flex'; DOM.nightMsg.classList.remove('active'); labelBox.innerText = "FRISS"; labelBox.classList.remove('night-mode'); updateLists(); cycleMain(); cycleTicker(1); } }
+            if (isNight !== state.isNightMode) { 
+                state.isNightMode = isNight; 
+                if (isNight) { 
+                    DOM.tickerWindow.style.display = 'none'; 
+                    DOM.tickerNav.style.display = 'none'; 
+                    DOM.nightMsg.classList.add('active'); 
+                    labelBox.innerText = "ISMÉTLÉS"; 
+                    labelBox.classList.add('night-mode'); 
+                    DOM.mainDesc.innerText = "Kérjük várjon, amíg a rendszer betölti az előző nap híreit."; 
+                } else { 
+                    DOM.tickerWindow.style.display = 'block'; 
+                    DOM.tickerNav.style.display = 'flex'; 
+                    DOM.nightMsg.classList.remove('active'); 
+                    labelBox.innerText = "FRISS"; 
+                    labelBox.classList.remove('night-mode'); 
+                    updateLists(); 
+                    cycleMain(); 
+                    cycleTicker(1); 
+                } 
+            }
             
             if (isNight) { 
                 let slot = 0, startHour = 6, endHour = 12, timeText = "REGGELI HÍREK 06:00 - 12:00"; 
@@ -2857,6 +2820,26 @@
             }
         }
 
+        // --- VISIBILITY API & TIME DRIFT FIX ---
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                // User came back to tab
+                // Refresh time display immediately
+                const now = new Date();
+                const m = now.getMinutes();
+                const s = now.getSeconds();
+                const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(m).padStart(2,'0')}`; 
+                DOM.cTime.innerHTML = `${timeStr}<span class="mc-sec">${String(s).padStart(2,'0')}</span>`; 
+                
+                // Force ticker cycle if stuck
+                if (!state.isNightMode && !state.isSpecial) {
+                    if (Date.now() - state.lastTickerUpdate > 15000) {
+                        cycleTicker(1);
+                    }
+                }
+            }
+        });
+
         function init() {
             if(DOM.bkCardClickable) DOM.bkCardClickable.onclick = () => { if(state.currentBreakingLink) window.open(state.currentBreakingLink, '_blank'); };
             const uiLeft = document.getElementById('ui-left'); if(uiLeft) uiLeft.onclick = () => { if(state.currentMainLink) window.open(state.currentMainLink, '_blank'); };
@@ -2870,7 +2853,7 @@
             setInterval(fetchOther, 120000); // 2 mins refresh for sidebar data
 
             setInterval(fetchWunderground, 30000); setInterval(checkBreaking, 45000); 
-            cycleMain(); cycleTicker(); scheduleHolidayEvents(); 
+            cycleMain(); cycleTicker(); 
         }
 
         document.addEventListener('DOMContentLoaded', init);
