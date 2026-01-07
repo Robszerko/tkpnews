@@ -2660,8 +2660,7 @@
                 DOM.mainTitle.innerText = item.title; DOM.mainDesc.innerText = item.desc; 
                 const idx = state.mainIdx + 1; document.getElementById('nav-count').innerText = `${idx} / ${state.mainItems.length}`;
                 
-                DOM.mainTitle.onclick = () => window.open(item.link, '_blank');
-                DOM.mainDesc.onclick = () => window.open(item.link, '_blank');
+                // Event listeners removed here to prevent double-opening (handled by parent #ui-left in init())
                 
                 const logo = getLogoHtml(item.source); DOM.mainCat.innerHTML = `${logo} ${item.source} • ${item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'})}`;
                 DOM.mTextContainer.classList.remove('faded-out');
@@ -2671,6 +2670,43 @@
                 DOM.mainPrg.style.transition = 'none'; DOM.mainPrg.style.width = '0%'; setTimeout(() => { DOM.mainPrg.style.transition = 'width 21.8s linear'; DOM.mainPrg.style.width = '100%'; }, 50);
             }, 400); 
             if(!manual) state.mainIdx++;
+        }
+
+        function startClock() {
+            setInterval(() => { 
+                const now = new Date(); 
+                const m = now.getMinutes(); const s = now.getSeconds();
+                const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(m).padStart(2,'0')}`; 
+                DOM.cTime.innerHTML = `${timeStr}<span class="mc-sec">${String(s).padStart(2,'0')}</span>`; 
+                const days = ['VASÁRNAP','HÉTFŐ','KEDD','SZERDA','CSÜTÖRTÖK','PÉNTEK','SZOMBAT']; 
+                DOM.cDate.innerText = `${now.getFullYear()}. ${String(now.getMonth()+1).padStart(2,'0')}. ${String(now.getDate()).padStart(2,'0')}. - ${days[now.getDay()]}`; 
+                
+                checkScheduleExecution(); 
+                updateNextEventCapsule(); 
+                checkNightMode(); 
+                
+                if (m === 0 && s === 0) { fetchCurrency(); generateHourlySchedule(); } 
+                updateDevMonitor(); 
+                
+                // DAY MODE TICKER: Update every 20 mins (XX:00, XX:20, XX:40)
+                // Pre-fetch 30 seconds early (XX:19:30, XX:39:30, XX:59:30)
+                if (s === 30) {
+                    if (!state.isNightMode && (m === 19 || m === 39 || m === 59)) {
+                        crawlNews(false); // Refreshes data array for next cycle
+                    }
+                    // NIGHT MODE: Pre-fetch next block 30s early (at 01:59:30 etc)
+                    if (state.isNightMode && m === 59) {
+                        crawlNews(false);
+                    }
+                }
+                
+                // CYCLE TICKER ONLY IN DAY MODE
+                if (!state.isNightMode && (Date.now() - state.lastTickerUpdate > 12000) && !state.isSpecial && !state.isSummary) { 
+                     // Only auto-cycle visually, data update is handled by the 20-min rule above
+                     cycleTicker(1); 
+                } 
+
+            }, 1000);
         }
 
         function startMainLoop() { if (state.mainTimer) clearInterval(state.mainTimer); state.mainTimer = setInterval(() => { if(!state.isSpecial && !state.isSummary) cycleMain(); }, 22000); } 
@@ -2819,43 +2855,6 @@
                 state.mainItems = nightItems; 
                 DOM.nightMsg.innerHTML = `<div class="nm-left"><div class="nm-icon-box">🌙</div><div class="nm-text"><div class="nm-title">ÉJSZAKAI ADÁS - AZ ELŐZŐ NAP HÍREI</div><div class="nm-desc">${timeText}</div></div></div><div class="nm-timeline"><div class="nm-t-item ${slot===0?'active':''}">00-02<br>REGGEL</div><div class="nm-t-item ${slot===1?'active':''}">02-04<br>DÉLUTÁN</div><div class="nm-t-item ${slot===2?'active':''}">04-06<br>ESTE</div></div>`; 
             }
-        }
-
-        function startClock() {
-            setInterval(() => { 
-                const now = new Date(); 
-                const m = now.getMinutes(); const s = now.getSeconds();
-                const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(m).padStart(2,'0')}`; 
-                DOM.cTime.innerHTML = `${timeStr}<span class="mc-sec">${String(s).padStart(2,'0')}</span>`; 
-                const days = ['VASÁRNAP','HÉTFŐ','KEDD','SZERDA','CSÜTÖRTÖK','PÉNTEK','SZOMBAT']; 
-                DOM.cDate.innerText = `${now.getFullYear()}. ${String(now.getMonth()+1).padStart(2,'0')}. ${String(now.getDate()).padStart(2,'0')}. - ${days[now.getDay()]}`; 
-                
-                checkScheduleExecution(); 
-                updateNextEventCapsule(); 
-                checkNightMode(); 
-                
-                if (m === 0 && s === 0) { fetchCurrency(); generateHourlySchedule(); } 
-                updateDevMonitor(); 
-                
-                // DAY MODE TICKER: Update every 20 mins (XX:00, XX:20, XX:40)
-                // Pre-fetch 30 seconds early (XX:19:30, XX:39:30, XX:59:30)
-                if (s === 30) {
-                    if (!state.isNightMode && (m === 19 || m === 39 || m === 59)) {
-                        crawlNews(false); // Refreshes data array for next cycle
-                    }
-                    // NIGHT MODE: Pre-fetch next block 30s early (at 01:59:30 etc)
-                    if (state.isNightMode && m === 59) {
-                        crawlNews(false);
-                    }
-                }
-                
-                // CYCLE TICKER ONLY IN DAY MODE
-                if (!state.isNightMode && (Date.now() - state.lastTickerUpdate > 12000) && !state.isSpecial && !state.isSummary) { 
-                     // Only auto-cycle visually, data update is handled by the 20-min rule above
-                     cycleTicker(1); 
-                } 
-
-            }, 1000);
         }
 
         function init() {
