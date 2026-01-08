@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V19.7 BROADCAST ENGINE [NIGHT FIX & REAL METEO]</title>
+    <title>TKP NEWS - V19.12 BROADCAST ENGINE [HOURLY FIX]</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -135,7 +135,7 @@
         }
         .legacy-btn:hover { background: #fff; color: #000; border-color: #fff; box-shadow: 0 0 15px rgba(255,255,255,0.5); }
 
-        /* LOGO BOX - SHARPENED */
+        /* LOGO BOX - SHARPENED & RESIZED */
         @keyframes hyperStrobeIn {
             0% { opacity: 0; transform: scale(1.5); filter: brightness(10) blur(5px); }
             5% { opacity: 1; filter: brightness(5); transform: scale(1.1); }
@@ -165,6 +165,8 @@
             opacity: 1; transform-origin: center center;
         }
         
+        .logo-box.high-z { z-index: 6000 !important; } /* FORCE TOP LAYER FOR METEO */
+
         .logo-box.logo-fade-out { animation: hyperStrobeOut 0.5s ease-in forwards; }
         .logo-box:not(.logo-fade-out) { animation: hyperStrobeIn 0.7s cubic-bezier(0.1, 0.9, 0.2, 1) both; }
         
@@ -179,16 +181,16 @@
             -webkit-backface-visibility: hidden; backface-visibility: hidden;
         }
         
-        .logo-col-icon { display: flex; align-items: center; justify-content: center; margin-right: 12px; position: relative; width: 42px; height: 42px; margin-top:5px; }
+        /* SCALED DOWN LOGO ELEMENTS */
+        .logo-col-icon { display: flex; align-items: center; justify-content: center; margin-right: 10px; position: relative; width: 36px; height: 36px; margin-top:3px; }
         .logo-svg-icon { width: 100%; height: 100%; fill: #fff; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.8)); position: absolute; top: 0; left: 0; transition: opacity 0.5s, transform 0.5s; opacity: 1; }
         .logo-svg-icon.hidden { opacity: 0; transform: scale(0.5); }
         .logo-svg-icon.visible { opacity: 1; transform: scale(1); }
         
         .logo-col-text { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; position: relative; }
         
-        /* SHARPENED LOGO TEXT */
         .logo-text-inline { 
-            font-family: var(--font-main); font-weight: 800; font-size: 1.45rem; 
+            font-family: var(--font-main); font-weight: 800; font-size: 1.2rem; /* Smaller */
             color: #fff; 
             letter-spacing: 0.5px; 
             text-shadow: 0 2px 4px rgba(0,0,0,0.9); 
@@ -199,29 +201,28 @@
             background: #cc0000;
             color: #fff;
             font-family: var(--font-main);
-            font-size: 0.75rem;
-            padding: 2px 6px;
+            font-size: 0.65rem; /* Smaller */
+            padding: 1px 5px;
             border-radius: 2px;
-            margin-left: 8px;
+            margin-left: 6px;
             font-weight: 900;
             letter-spacing: 1px;
             opacity: 0;
             transition: opacity 0.5s;
             text-shadow: none;
             box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-            display: none; /* Controlled via class */
+            display: none; 
         }
         .live-tag.visible { display: inline-block; opacity: 1; }
 
-        /* REPLAY LABEL FOR NIGHT MODE */
         .replay-tag {
             background: #444;
             color: #ccc;
             font-family: var(--font-main);
-            font-size: 0.75rem;
-            padding: 2px 6px;
+            font-size: 0.65rem; /* Smaller */
+            padding: 1px 5px;
             border-radius: 2px;
-            margin-left: 8px;
+            margin-left: 6px;
             font-weight: 900;
             letter-spacing: 1px;
             display: none;
@@ -232,7 +233,7 @@
         .replay-tag.visible { display: inline-block; }
 
         .logo-row-time { 
-            font-family: var(--font-tech); font-weight: 700; font-size: 1.1rem; 
+            font-family: var(--font-tech); font-weight: 700; font-size: 0.95rem; /* Smaller */
             color: #f0f0f0; 
             text-shadow: 0 1px 3px rgba(0,0,0,0.9);
             line-height: 1; margin-bottom: 1px; 
@@ -240,10 +241,10 @@
         .mc-sec { font-size: 0.75em; color: var(--accent); margin-left: 5px; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
         
         .logo-row-date { 
-            font-family: var(--font-data); font-weight: 700; font-size: 0.8rem; 
+            font-family: var(--font-data); font-weight: 700; font-size: 0.7rem; /* Smaller */
             color: #ddd; 
             text-transform: uppercase; letter-spacing: 0.5px; 
-            text-shadow: 0 1px 2px rgba(0,0,0,0.8); line-height: 1; margin-bottom: 5px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8); line-height: 1; margin-bottom: 3px;
         }
         
         /* --- NEW "UP NEXT" BAR UNDER DATE --- */
@@ -279,18 +280,26 @@
             font-weight: 700; white-space: nowrap; letter-spacing: 0.5px;
         }
 
+        /* --- UPDATED YELLOW RING WITH NUMBER (REVERSED) --- */
         .nb-timer-ring {
-            width: 20px; height: 20px; position: relative; display: none; margin-left: 5px;
+            width: 26px; height: 26px; position: relative; display: none; margin-left: 8px;
         }
         .nb-timer-ring.active { display: block; }
         .nb-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
-        .nb-circle-bg { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 10; }
+        .nb-circle-bg { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 3; }
         .nb-circle-fg { 
             fill: none; 
             stroke: var(--accent); /* YELLOW ACCENT */
-            stroke-width: 10; 
+            stroke-width: 3; 
             stroke-dasharray: 63; /* 2*PI*r (r=10) approx */
-            stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear;
+            stroke-dashoffset: 63; /* Starts Empty */
+            transition: stroke-dashoffset 1s linear;
+        }
+        .nb-ring-text {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+            font-family: var(--font-mono); font-size: 0.65rem; color: var(--accent);
+            font-weight: bold;
         }
 
 
@@ -406,7 +415,7 @@
         .text-fade.faded-out { opacity: 0; }
         .cat-tag { background: var(--accent); color: #000; font-family: var(--font-main); font-weight: 800; padding: 0.8vh 2.5vw; font-size: 1.3rem; clip-path: polygon(0 0, 100% 0, 95% 100%, 0% 100%); display: inline-flex; align-items: center; gap: 12px; }
         
-        .main-nav-bar { display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.7); width: fit-content; padding: 5px 15px; margin-bottom: 5px; border-left: 4px solid var(--primary); pointer-events: auto; z-index: 100; }
+        .main-nav-bar { display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.7); width: fit-content; padding: 5px 15px; margin-bottom: 5px; border-left: 4px solid var(--primary); pointer-events: auto; z-index: 1000; }
         .mn-btn { cursor: pointer; color: var(--accent); font-weight: bold; font-size: 1.2rem; padding: 0 10px; transition: color 0.2s; user-select: none; }
         .mn-btn:hover { color: #fff; }
         .mn-counter { font-family: var(--font-mono); font-size: 0.9rem; color: #fff; margin: 0 10px; font-weight: bold; }
@@ -609,13 +618,28 @@
 
         #special-meteo { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: transparent; z-index: 5000; display: none; flex-direction: column; align-items: center; padding-top: 15vh; opacity: 0; transition: opacity 0.8s; pointer-events: none; }
         #special-meteo.active { display: flex; opacity: 1; }
-        .sm-bg { position: absolute; top:0; left:0; width:100%; height:100%; z-index:-1; object-fit: cover; filter: brightness(0.4); transition: background-image 1s ease-in-out; }
+        
+        /* GENERATED ANIMATED BACKGROUND FOR METEO */
+        .sm-bg { 
+            position: absolute; top:0; left:0; width:100%; height:100%; z-index:-1; 
+            /* Base gradient fallback */
+            background: linear-gradient(135deg, #001a4d 0%, #000 100%);
+            transition: opacity 1s ease-in-out;
+        }
+        /* Pattern Overlay */
+        .sm-pattern {
+            position: absolute; top:0; left:0; width:100%; height:100%; z-index:0;
+            background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            animation: panBg 60s linear infinite;
+        }
+        @keyframes panBg { from { background-position: 0 0; } to { background-position: 100px 100px; } }
 
-        .sm-header { width: 92%; border-bottom: 6px solid var(--accent); display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 15px; margin-bottom: 2vh; }
+        .sm-header { width: 92%; border-bottom: 6px solid var(--accent); display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 15px; margin-bottom: 2vh; position: relative; z-index: 2; }
         .sm-title { font-family: var(--font-main); font-size: clamp(2rem, 4vh, 3.5rem); font-weight: 900; }
         
         /* DYNAMIC GRID - will be adjusted by JS based on content type */
-        .sm-grid { width: 92%; height: 65vh; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(3, 1fr); gap: 10px; overflow: hidden; align-content: start; }
+        .sm-grid { width: 92%; height: 65vh; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(3, 1fr); gap: 10px; overflow: hidden; align-content: start; position: relative; z-index: 2; }
         
         .sm-card-item { background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.1); border-left: 6px solid var(--accent); padding: 10px 15px; display: flex; flex-direction: column; justify-content: center; opacity: 0; animation: slideInCard 0.6s forwards; backdrop-filter: blur(5px); }
         .ny-detail-card { background: linear-gradient(135deg, #001a4d 0%, #000 100%); border: 1px solid rgba(255,255,255,0.2); border-left: 5px solid #00d4ff; }
@@ -626,6 +650,21 @@
         .astro-card { background: linear-gradient(135deg, #220033 0%, #000 100%); border-left: 5px solid #d400ff; }
         .extreme-card { background: linear-gradient(135deg, #330000 0%, #1a0000 100%); border-left: 5px solid #ff4444; }
         
+        /* HOURLY DETAILED CARD */
+        .hourly-detailed-card {
+            grid-column: span 4;
+            grid-row: span 3; /* Full space */
+            background: linear-gradient(180deg, rgba(0,20,40,0.95), rgba(0,10,20,0.98));
+            border-left: 6px solid #00d4ff;
+            display: flex; flex-direction: column; padding: 20px;
+        }
+        .hd-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); flex-grow: 1; padding: 0 20px; }
+        .hd-row:last-child { border-bottom: none; }
+        .hd-time { font-family: var(--font-tech); font-size: 2rem; color: var(--accent); font-weight: bold; }
+        .hd-icon { font-size: 3rem; }
+        .hd-temp { font-family: var(--font-main); font-size: 2.5rem; font-weight: bold; color: #fff; }
+        .hd-meta { font-family: var(--font-mono); font-size: 1.1rem; color: #ccc; text-align: right; }
+
         /* FORECAST VERTICAL PILLARS */
         .forecast-pillar { 
             grid-row: span 3; /* Full height of grid */
@@ -889,7 +928,7 @@
                 <svg viewBox="0 0 24 24" style="width:40px; height:40px; fill:var(--primary); margin-bottom:5px;">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
                 </svg>
-                <div class="holiday-logo-text" style="font-size:1.1rem; color:#fff;">TKP NEWS</div>
+                <div class="holiday-logo-text" style="font-size:1.1rem; color:#fff;" id="sum-source">ADAT: OPEN-ER</div>
             </div>
             <div class="sum-timer-capsule" id="sum-clock">03:00</div>
         </div>
@@ -906,7 +945,9 @@
 
     <!-- SPECIAL METEO (MULTI CARD) -->
     <div id="special-meteo">
-        <div class="sm-bg" id="sm-bg"></div>
+        <div class="sm-bg" id="sm-bg">
+            <div class="sm-pattern"></div>
+        </div>
         <div class="sm-header">
             <div class="sm-title" id="sm-main-title">METEO ÁTTEKINTÉS</div>
             <div style="display:flex; align-items:center; gap:10px;">
@@ -958,6 +999,7 @@
                                     <circle class="nb-circle-bg" cx="12" cy="12" r="10"></circle>
                                     <circle class="nb-circle-fg" id="nb-ring-fg" cx="12" cy="12" r="10"></circle>
                                 </svg>
+                                <div class="nb-ring-text" id="nb-ring-val">60</div>
                             </div>
                         </div>
                     </div>
@@ -1015,7 +1057,7 @@
                     RÉGI OLDAL (KLIKK.HU) &#10138;
                 </a>
                 
-                <div style="font-family:var(--font-tech); font-weight:bold; color:var(--accent); font-size:0.8rem; letter-spacing:1px;">V19.7</div>
+                <div style="font-family:var(--font-tech); font-weight:bold; color:var(--accent); font-size:0.8rem; letter-spacing:1px;">V19.12</div>
             </div>
         </div>
 
@@ -1066,9 +1108,9 @@
 
         <div class="main-news ui-element" id="ui-left">
             <div class="main-nav-bar" id="main-nav-layer">
-                <span class="mn-btn" onclick="event.stopPropagation(); stepMain(-1)">◀</span>
+                <span class="mn-btn" onclick="event.stopPropagation(); stepMain(-1); return false;">◀</span>
                 <span class="mn-counter" id="nav-count">0 / 0</span>
-                <span class="mn-btn" onclick="event.stopPropagation(); stepMain(1)">▶</span>
+                <span class="mn-btn" onclick="event.stopPropagation(); stepMain(1); return false;">▶</span>
             </div>
 
             <div class="text-fade" id="m-text-container">
@@ -1149,6 +1191,17 @@
             "https://api.cors.lol/?url=",
             "https://cors-anywhere.herokuapp.com/" 
         ];
+        
+        const CURRENCY_NAMES = {
+            'EUR': 'Euró', 'USD': 'Amerikai Dollár', 'CHF': 'Svájci Frank', 'GBP': 'Angol Font',
+            'JPY': 'Japán Jen', 'CNY': 'Kínai Jüan', 'PLN': 'Lengyel Zloty', 'CZK': 'Cseh Korona',
+            'RON': 'Román Lej', 'HRK': 'Horvát Kuna', 'CAD': 'Kanadai Dollár', 'AUD': 'Ausztrál Dollár',
+            'SEK': 'Svéd Korona', 'NOK': 'Norvég Korona', 'TRY': 'Török Líra', 'RUB': 'Orosz Rubel',
+            'DKK': 'Dán Korona', 'BGN': 'Bolgár Leva', 'RSD': 'Szerb Dínár', 'UAH': 'Ukrán Hrivnya',
+            'BRL': 'Brazil Real', 'MXN': 'Mexikói Peso', 'ZAR': 'Dél-Afrikai Rand', 'ILS': 'Izraeli Sékel',
+            'INR': 'Indiai Rúpia', 'KRW': 'Dél-Koreai Won', 'SGD': 'Szingapúri Dollár', 'NZD': 'Új-Zélandi Dollár',
+            'HKD': 'Hongkongi Dollár', 'IDR': 'Indonéz Rúpia'
+        };
 
         const WU_KEY = 'e1f10a1e78da46f5b10a1e78da96f525';
         const WU_STATIONS = ['INYREG42', 'INYREG51', 'INYREG26', 'INYREG47', 'INYREG30', 'INYREG19', 'INYREG12']; 
@@ -1196,6 +1249,19 @@
             { name: "Ushuaia", lat: -54.80, lon: -68.30, code: "ar" },
             { name: "Szahara (Közép)", lat: 23.41, lon: 25.66, code: "eg" },
             { name: "Csernobil (Pripjaty)", lat: 51.40, lon: 30.05, code: "ua" }
+        ];
+
+        const EXOTIC_STATIONS_2 = [
+             { name: "Mariana-árok", lat: 11.35, lon: 142.20, code: "mp" },
+             { name: "Mount Everest", lat: 27.98, lon: 86.92, code: "np" },
+             { name: "Amazonas (Manaus)", lat: -3.11, lon: -60.02, code: "br" },
+             { name: "Gobi Sivatag", lat: 42.60, lon: 103.43, code: "mn" },
+             { name: "Húsvét-sziget", lat: -27.11, lon: -109.35, code: "cl" },
+             { name: "Galápagos", lat: -0.74, lon: -90.31, code: "ec" },
+             { name: "Svalbard", lat: 78.22, lon: 15.65, code: "no" },
+             { name: "Mekka", lat: 21.38, lon: 39.85, code: "sa" },
+             { name: "Grand Canyon", lat: 36.10, lon: -112.11, code: "us" },
+             { name: "Fudzsi-hegy", lat: 35.36, lon: 138.72, code: "jp" }
         ];
 
         const SIDEBAR_STATIONS = shuffle([...HU_MAJOR_STATIONS, ...WORLD_MAJOR_STATIONS]);
@@ -1274,6 +1340,7 @@
             nbTitle: document.getElementById('nb-title-text'),
             nbRing: document.getElementById('nb-timer-ring'),
             nbRingFg: document.getElementById('nb-ring-fg'),
+            nbRingVal: document.getElementById('nb-ring-val'),
             
             nightMsg: document.getElementById('night-msg'), tickerNav: document.getElementById('ticker-nav'), 
             
@@ -1283,9 +1350,11 @@
             miniRain: document.getElementById('mini-rain'), miniRainTxt: document.getElementById('mini-rain-txt'),
             miniAlert: document.getElementById('mini-alert'), miniAlertTxt: document.getElementById('mini-alert-txt'),
             fxSourceContainer: document.getElementById('fx-source-container'),
+            sumSource: document.getElementById('sum-source'),
             
             bigClockOverlay: document.getElementById('big-clock-overlay'),
-            fcAlert: document.getElementById('ui-bottom')
+            fcAlert: document.getElementById('ui-bottom'),
+            uiLeft: document.getElementById('ui-left')
         };
 
         function getTime() { return new Date().toLocaleTimeString('hu-HU'); }
@@ -1403,21 +1472,16 @@
         
         function forceDayTest() {
             state.forcedNightMode = false;
-            state.isNightMode = false; // Force internal state override
-            
-            // UI Reset
+            state.isNightMode = false; 
             DOM.tickerWindow.style.display = 'block'; 
             DOM.tickerNav.style.display = 'flex'; 
             DOM.nightMsg.classList.remove('active'); 
             DOM.tickerLabelBox.innerText = "FRISS"; 
             DOM.tickerLabelBox.classList.remove('night-mode'); 
             DOM.tickerLabelBox.style.display = 'flex';
-            
-            // Badge reset
             DOM.replayBadge.classList.remove('visible');
-            
             alert("Nappali mód kényszerítve! (UI frissítve)");
-            checkNightMode(); // Will verify but forced mode is off, relies on time now unless manipulated
+            checkNightMode(); 
             updateDevMonitor();
         }
 
@@ -1540,7 +1604,7 @@
             state.schedule = state.schedule.filter(item => item.time > now - 360000); 
         }
 
-        /* --- REDESIGNED "UP NEXT" LOGIC --- */
+        /* --- REDESIGNED "UP NEXT" LOGIC (REVERSED RING) --- */
         function updateNextEventCapsule() { 
             // Hide in Night Mode completely
             if (state.isNightMode) { DOM.nextBarContainer.classList.remove('visible'); return; }
@@ -1564,13 +1628,13 @@
                 
                 DOM.nbTitle.innerText = titleText;
 
-                // Countdown Ring Logic (Last 60 seconds) - YELLOW
+                // Countdown Ring Logic (Last 60 seconds) - YELLOW GROWS (gray to yellow)
+                // At 60s left: offset 63 (Empty)
+                // At 0s left: offset 0 (Full)
                 if (diffSeconds <= 60 && diffSeconds > 0) {
                     DOM.nbRing.classList.add('active');
-                    // 63 is approx circumference of r=10 circle
-                    // 60 sec -> 0 dashoffset (full)
-                    // 0 sec -> 63 dashoffset (empty)
-                    const progress = 63 - (diffSeconds / 60) * 63; 
+                    DOM.nbRingVal.innerText = Math.floor(diffSeconds);
+                    const progress = (diffSeconds / 60) * 63; // 60s -> 63 (empty), 0s -> 0 (full)
                     DOM.nbRingFg.style.strokeDashoffset = progress;
                 } else {
                     DOM.nbRing.classList.remove('active');
@@ -1698,6 +1762,9 @@
             document.getElementById('bk-card-headline').innerText = "RENDKÍVÜLI HÍR: TESZT ÜZEMMÓD";
             document.getElementById('bk-card-body').innerHTML = `<div class="bk-scroll-wrapper">${longDesc}</div>`;
             document.getElementById('bk-card-meta').innerText = `${now.toLocaleTimeString('hu-HU')} • TESZT`;
+            // FIX CLICK
+            DOM.bkCardClickable.dataset.link = "#";
+            
             state.isBreakingActive = true;
             DOM.sidebar.classList.add('breaking-active'); 
             setTimeout(() => { const wrapper = document.querySelector('.bk-scroll-wrapper'); if(wrapper) wrapper.style.transform = `translateY(-50px)`; }, 2000);
@@ -1727,6 +1794,9 @@
                 return;
             }
             const item = state.nightSummaryQueue.shift();
+            // FIX CLICK
+            DOM.bkCardClickable.dataset.link = item.link;
+
             const timeStr = item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'});
             DOM.bkCardHeadline.innerText = item.title;
             const logo = getLogoHtml(item.source);
@@ -1807,6 +1877,10 @@
         
         function renderBreakingItemContent() {
              const item = state.breakingQueue.shift(); state.currentBreakingItem = item;
+             
+             // Fix Click Handler
+             DOM.bkCardClickable.dataset.link = item.link; // Store link on element
+             
             const timeStr = item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'});
             DOM.bkCardHeadline.innerText = item.title;
             const logo = getLogoHtml(item.source);
@@ -1832,21 +1906,30 @@
         /* --- METEO SEQUENCE (UPDATED FOR 8 ASTRO & VERTICAL FORECAST) --- */
         async function triggerSpecialMeteoSequence(startPhase = 0) {
             crawlNews(false);
-            state.isSpecial = true; state.isLocked = true; toggleLiveBadge(true); clearNewsBackgrounds();
+            state.isSpecial = true; state.isLocked = true; 
+            toggleLiveBadge(true); // FORCE LIVE BADGE
+            clearNewsBackgrounds();
+            
             [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ].forEach(ui => document.getElementById(ui.id).classList.add(`hide-${ui.t}`));
             DOM.nextBarContainer.classList.remove('visible');
-            DOM.logoBox.classList.remove('force-hide'); 
             
-            // Set Dynamic BG based on Weather Condition logic
-            DOM.smBg.style.backgroundImage = `url('${getHighQualityBg()}')`;
+            // LOGO MUST BE VISIBLE - FORCE IT ON TOP
+            DOM.logoBox.classList.remove('force-hide'); 
+            DOM.logoBox.classList.add('high-z'); 
+            
+            // GENERATED BACKGROUND - SEASONAL
+            setMeteoBackground();
+            
             DOM.special.style.display = 'flex'; setTimeout(() => DOM.special.classList.add('active'), 50);
 
             const sequence = [
                 { type: "list", title: "SZABOLCS-SZATMÁR-BEREG VÁRMEGYE", list: shuffle([...SZABOLCS_STATIONS]).slice(0, 12) },
                 { type: "ny_detailed", title: "NYÍREGYHÁZA RÉSZLETES ADATOK" },
+                { type: "hourly", title: "NYÍREGYHÁZA - KÖVETKEZŐ ÓRÁK" }, // NEW CARD
                 { type: "forecast", title: "ELŐREJELZÉS - KÖVETKEZŐ 4 NAP" },
                 { type: "astro", title: "ASZTROLÓGIAI ÉS EGÉSZSÉGÜGYI ADATOK" },
-                { type: "list", title: "EXTRÉM VILÁGTÁJAK", list: shuffle([...EXOTIC_STATIONS]).slice(0, 12) },
+                { type: "list", title: "EXTRÉM VILÁGTÁJAK I.", list: shuffle([...EXOTIC_STATIONS]).slice(0, 12) },
+                { type: "list", title: "EXTRÉM VILÁGTÁJAK II.", list: shuffle([...EXOTIC_STATIONS_2]).slice(0, 10) },
                 { type: "list", title: "VILÁGVÁROSOK", list: shuffle([...WORLD_MAJOR_STATIONS]).slice(0, 12) }
             ];
 
@@ -1865,8 +1948,14 @@
                 setTimeout(async () => {
                     if (currentTheme.type === "list") { await renderSpecialBatch(currentTheme.list, currentTheme.title); } 
                     else if (currentTheme.type === "ny_detailed") { await renderNyiregyhazaDetailed(); }
+                    else if (currentTheme.type === "hourly") { 
+                        // Hourly Forecast Logic - Single large card
+                         DOM.smGrid.style.gridTemplateRows = "repeat(1, 1fr)"; 
+                         await renderHourlyForecast(); 
+                         DOM.smTitle.innerText = currentTheme.title;
+                    }
                     else if (currentTheme.type === "forecast") { 
-                        // Set Grid for Vertical Pillars (1 row needed to span height)
+                        // Set Grid for Vertical Pillars
                         DOM.smGrid.style.gridTemplateRows = "1fr"; 
                         await renderRealForecast(); DOM.smTitle.innerText = currentTheme.title; 
                     }
@@ -1882,6 +1971,30 @@
             };
             runPhase();
         }
+        
+        // NEW BACKGROUND GENERATOR FOR METEO
+        function setMeteoBackground() {
+            const now = new Date();
+            const month = now.getMonth();
+            let colors = [];
+            
+            // Winter (Dec-Feb)
+            if (month === 11 || month <= 1) colors = ['#001a4d', '#004d66']; 
+            // Spring (Mar-May)
+            else if (month >= 2 && month <= 4) colors = ['#003300', '#004d1a'];
+            // Summer (Jun-Aug)
+            else if (month >= 5 && month <= 7) colors = ['#663300', '#996600'];
+            // Autumn (Sep-Nov)
+            else colors = ['#331100', '#662200'];
+            
+            DOM.smBg.style.backgroundImage = `none`; // Remove image
+            DOM.smBg.style.background = `linear-gradient(135deg, ${colors[0]} 0%, #000 100%)`;
+            // Ensure pattern exists
+            if(!document.querySelector('.sm-pattern')) {
+                const pat = document.createElement('div'); pat.className = 'sm-pattern';
+                DOM.smBg.appendChild(pat);
+            }
+        }
 
         async function fetchWeatherDotCom(lat, lon) {
              try {
@@ -1892,10 +2005,141 @@
             } catch(e) { return null; }
         }
         
+        // --- ROBUST METEO FETCHING ENGINE ---
+
+        function mapOpenMeteoToWUCode(wmoCode) {
+            if (wmoCode === 0) return 32; // Sunny
+            if ([1, 2, 3].includes(wmoCode)) return 30; // Partly cloudy
+            if ([45, 48].includes(wmoCode)) return 20; // Foggy
+            if ([51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82].includes(wmoCode)) return 11; // Rain
+            if ([71, 73, 75, 77, 85, 86].includes(wmoCode)) return 16; // Snow
+            if ([95, 96, 99].includes(wmoCode)) return 4; // Thunderstorm
+            return 26; // Cloudy fallback
+        }
+
+        function normalizeOpenMeteo(omData) {
+            return {
+                temperature: omData.current.temperature_2m,
+                temperatureFeelsLike: omData.current.apparent_temperature,
+                iconCode: mapOpenMeteoToWUCode(omData.current.weathercode),
+                windSpeed: omData.current.windspeed_10m,
+                relativeHumidity: omData.current.relative_humidity_2m,
+                windDirection: omData.current.wind_direction_10m || 0,
+                precip24Hour: 0, 
+                dayOrNight: omData.current.is_day === 1 ? 'D' : 'N',
+                provider: 'OPEN-METEO (BACKUP)'
+            };
+        }
+
+        async function fetchMeteoRobust(lat, lon) {
+            const urls = [];
+            
+            // 1. Weather.com Direct
+            urls.push({ 
+                url: `https://api.weather.com/v3/wx/observations/current?geocode=${lat},${lon}&format=json&units=m&language=hu-HU&apiKey=${WU_KEY}`,
+                type: 'WU',
+                useProxy: false
+            });
+
+            // 2. Weather.com Proxies
+            const shuffledProxies = shuffle([...PROXIES]).slice(0, 3);
+            shuffledProxies.forEach(proxy => {
+                urls.push({
+                    url: `https://api.weather.com/v3/wx/observations/current?geocode=${lat},${lon}&format=json&units=m&language=hu-HU&apiKey=${WU_KEY}`,
+                    type: 'WU',
+                    useProxy: true,
+                    proxyUrl: proxy
+                });
+            });
+
+            // 3. Open-Meteo Direct (Backup)
+            urls.push({
+                url: `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,rain,showers,snowfall,weathercode,cloud_cover,pressure_msl,surface_pressure,windspeed_10m,wind_direction_10m&timezone=auto`,
+                type: 'OM',
+                useProxy: false
+            });
+
+            // 4. Open-Meteo Proxy
+            urls.push({
+                url: `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,rain,showers,snowfall,weathercode,cloud_cover,pressure_msl,surface_pressure,windspeed_10m,wind_direction_10m&timezone=auto`,
+                type: 'OM',
+                useProxy: true,
+                proxyUrl: shuffledProxies[0]
+            });
+
+            for (const attempt of urls) {
+                try {
+                    let fetchUrl = attempt.url;
+                    if (attempt.useProxy) {
+                        fetchUrl = attempt.proxyUrl + encodeURIComponent(attempt.url);
+                    }
+
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 3000); // 3s Timeout
+
+                    const res = await fetch(fetchUrl, { signal: controller.signal });
+                    clearTimeout(timeoutId);
+
+                    if (res.ok) {
+                        let data = await res.json();
+                        if (attempt.useProxy && data.contents) {
+                            try { data = JSON.parse(data.contents); } catch(e) {}
+                        }
+
+                        if (attempt.type === 'WU') {
+                            if (data.temperature !== undefined) {
+                                data.provider = 'WEATHER.COM';
+                                return data; 
+                            }
+                        } else if (attempt.type === 'OM') {
+                            if (data.current) {
+                                return normalizeOpenMeteo(data); 
+                            }
+                        }
+                    }
+                } catch (e) { continue; }
+            }
+            return null; 
+        }
+
+        /* --- NEW HOURLY FETCH ROBUST LOGIC --- */
+        async function fetchHourlyRobust(lat, lon) {
+            // STRATEGY: Try Weather.com Forecast endpoint FIRST
+            const wuUrl = `https://api.weather.com/v3/wx/forecast/hourly/12hour?geocode=${lat},${lon}&format=json&units=m&language=hu-HU&apiKey=${WU_KEY}`;
+            
+            // 1. Direct WU Forecast
+            try {
+                const res = await fetch(wuUrl, { signal: AbortSignal.timeout(3000) });
+                if(res.ok) {
+                    const data = await res.json();
+                    if(data.temperature) return { source: 'WU', data: data };
+                }
+            } catch(e) {}
+
+            // 2. Proxy WU Forecast (Random selection to distribute load)
+            const proxies = shuffle([...PROXIES]).slice(0, 2);
+            for(const proxy of proxies) {
+                try {
+                    const res = await fetch(proxy + encodeURIComponent(wuUrl), { signal: AbortSignal.timeout(3500) });
+                    if(res.ok) {
+                        let text = await res.text();
+                        try { const json = JSON.parse(text); if(json.contents) text = json.contents; } catch(e){}
+                        const data = (typeof text === 'string') ? JSON.parse(text) : text;
+                        if(data.temperature) return { source: 'WU', data: data };
+                    }
+                } catch(e) {}
+            }
+
+            // 3. Fallback: Open-Meteo
+            const omData = await fetchOpenMeteoForecast(lat, lon);
+            if(omData && omData.hourly) return { source: 'OM', data: omData };
+
+            return null;
+        }
+
         async function fetchOpenMeteoForecast(lat, lon) {
             try {
-                // FIXED: API URL adjusted
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum,precipitation_probability_max,windspeed_10m_max,sunshine_duration&current=surface_pressure,visibility&timezone=auto`;
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum,precipitation_probability_max,windspeed_10m_max,sunshine_duration&current=surface_pressure,visibility&hourly=temperature_2m,weathercode,precipitation_probability,windspeed_10m&timezone=auto`;
                 const res = await fetch(url);
                 if(res.ok) return await res.json();
                 return null;
@@ -1905,29 +2149,75 @@
         async function renderSpecialBatch(stations, title) {
             DOM.smTitle.innerText = title; 
             DOM.smGrid.innerHTML = '';
+            
+            // 1. SKELETON UI (Instant)
             stations.forEach((s, idx) => {
                 const div = document.createElement('div'); 
                 div.className = title.includes('EXTRÉM') ? 'sm-card-item extreme-card' : 'sm-card-item';
                 div.id = `wx-card-${idx}`;
-                div.innerHTML = `<div class="sm-top"><div class="sm-name">${s.name}</div></div><div class="sm-body"><div class="sm-temp-box">...</div></div>`;
+                div.innerHTML = `
+                    <div class="sm-top">
+                        <div class="sm-name">
+                            <img src="https://flagcdn.com/24x18/${s.code}.png" style="margin-right:8px; border-radius:2px;">
+                            ${s.name}
+                        </div>
+                    </div>
+                    <div class="sm-body" style="opacity:0.5; animation: blink 1s infinite;">
+                        <div class="sm-temp-box">--°</div>
+                        <div class="sm-details">ADATKERESÉS...</div>
+                    </div>`;
                 DOM.smGrid.appendChild(div);
             });
 
-            const promises = stations.map(station => fetchWeatherDotCom(station.lat, station.lon));
-            const results = await Promise.allSettled(promises);
-            results.forEach((res, i) => {
-                const c = stations[i];
-                let d = null; if(res.status === 'fulfilled') d = res.value;
+            // 2. ASYNC UPDATE
+            stations.forEach(async (station, i) => {
+                const d = await fetchMeteoRobust(station.lat, station.lon);
+                
                 const card = document.getElementById(`wx-card-${i}`);
-                if(card) {
-                    if (d) {
-                        const wmo = getWmoDesc(d.iconCode, d.dayOrNight);
-                        const temp = formatVal(d.temperature); const feel = formatVal(d.temperatureFeelsLike);
-                        const hum = d.relativeHumidity; const wind = formatVal(d.windSpeed);
-                        card.innerHTML = `<div class="sm-top"><div class="sm-name"><img src="https://flagcdn.com/24x18/${c.code}.png" style="margin-right:8px; border-radius:2px;">${c.name}</div><div class="sm-cond">${wmo.i} ${wmo.t}</div></div><div class="sm-body"><div class="sm-temp-box">${temp}°</div><div class="sm-details">ÉRZET: ${feel}°<br>PÁRA: ${hum}%<br>SZÉL: ${wind} km/h</div></div><div class="sm-watermark">DATA: WEATHER.COM</div>`;
-                    } else {
-                        card.innerHTML = `<div class="sm-top"><div class="sm-name"><img src="https://flagcdn.com/24x18/${c.code}.png" style="margin-right:8px; border-radius:2px;">${c.name}</div></div><div class="sm-body"><div class="sm-temp-box" style="font-size:1.5rem; color:#666;">N/A</div></div>`;
-                    }
+                if (!card) return;
+
+                if (d) {
+                    const wmo = getWmoDesc(d.iconCode, d.dayOrNight);
+                    const temp = formatVal(d.temperature); 
+                    const feel = formatVal(d.temperatureFeelsLike);
+                    const hum = d.relativeHumidity; 
+                    const wind = formatVal(d.windSpeed);
+                    const prov = d.provider || 'N/A';
+
+                    card.innerHTML = `
+                        <div class="sm-top">
+                            <div class="sm-name">
+                                <img src="https://flagcdn.com/24x18/${station.code}.png" style="margin-right:8px; border-radius:2px;">
+                                ${station.name}
+                            </div>
+                            <div class="sm-cond" style="color:${d.provider === 'OPEN-METEO (BACKUP)' ? '#ffcc00' : '#aaa'}">
+                                ${wmo.i} ${wmo.t}
+                            </div>
+                        </div>
+                        <div class="sm-body">
+                            <div class="sm-temp-box">${temp}°</div>
+                            <div class="sm-details">
+                                ÉRZET: ${feel}°<br>
+                                PÁRA: ${hum}%<br>
+                                SZÉL: ${wind} km/h
+                            </div>
+                        </div>
+                        <div class="sm-watermark">FORRÁS: ${prov}</div>`;
+                    
+                    const body = card.querySelector('.sm-body');
+                    if(body) { body.style.opacity = '1'; body.style.animation = 'none'; }
+
+                } else {
+                    card.innerHTML = `
+                        <div class="sm-top">
+                            <div class="sm-name">
+                                <img src="https://flagcdn.com/24x18/${station.code}.png" style="margin-right:8px; border-radius:2px;">
+                                ${station.name}
+                            </div>
+                        </div>
+                        <div class="sm-body">
+                            <div class="sm-temp-box" style="font-size:1.5rem; color:#666;">OFFLINE</div>
+                        </div>`;
                 }
             });
             document.getElementById('sm-update-time').innerText = getTime();
@@ -1962,6 +2252,88 @@
             } else { DOM.smGrid.innerHTML = '<div style="color:#fff; font-size:2rem; width:100%; text-align:center;">ADATÁTVITELI HIBA (PWS OFFLINE)</div>'; }
             document.getElementById('sm-update-time').innerText = getTime();
         }
+        
+        async function renderHourlyForecast() {
+             DOM.smGrid.innerHTML = '';
+             const result = await fetchHourlyRobust(47.95, 21.71);
+             
+             if(result && result.data) {
+                 const div = document.createElement('div');
+                 div.className = 'hourly-detailed-card';
+                 let html = "";
+                 
+                 // WEATHER.COM RENDERING LOGIC
+                 if (result.source === 'WU') {
+                     const d = result.data;
+                     // Show next 6 hours
+                     for(let i=0; i<6; i++) {
+                         if (!d.temperature[i]) break;
+                         
+                         const t = d.temperature[i];
+                         const iconCode = d.iconCode[i];
+                         const wmo = getWmoDesc(iconCode); // Reuse existing helper
+                         const p = d.precipChance[i] || 0;
+                         const w = d.windSpeed[i] || 0;
+                         // Extract time from validTimeLocal (ISO string)
+                         const dateObj = new Date(d.validTimeLocal[i]);
+                         const timeStr = dateObj.getHours() + ":00";
+                         
+                         html += `
+                         <div class="hd-row">
+                            <div class="hd-time">${timeStr}</div>
+                            <div class="hd-icon">${wmo.i}</div>
+                            <div class="hd-temp">${Math.round(t)}°</div>
+                            <div class="hd-meta">
+                                <div>CSAP: ${p}%</div>
+                                <div>SZÉL: ${Math.round(w)}</div>
+                            </div>
+                         </div>`;
+                     }
+                     div.innerHTML = html + `<div class="sm-watermark">DATA: WEATHER.COM HOURLY</div>`;
+                 }
+                 // OPEN-METEO FALLBACK RENDERING LOGIC
+                 else {
+                     const d = result.data;
+                     const currentHour = new Date().getHours();
+                     for(let i=1; i<=6; i++) {
+                         const targetIdx = currentHour + i;
+                         if(targetIdx >= d.hourly.time.length) break;
+                         
+                         const t = d.hourly.temperature_2m[targetIdx];
+                         const c = d.hourly.weathercode[targetIdx];
+                         const p = d.hourly.precipitation_probability[targetIdx];
+                         const w = d.hourly.windspeed_10m[targetIdx];
+                         const timeStr = new Date(d.hourly.time[targetIdx]).getHours() + ":00";
+                         
+                         // Map OpenMeteo codes to icons
+                         const getOMDesc = (code) => {
+                            if(code === 0) return "☀️";
+                            if([1,2,3].includes(code)) return "⛅";
+                            if([45,48].includes(code)) return "🌫️";
+                            if([51,53,55,61,63,65].includes(code)) return "🌧️";
+                            if([71,73,75,77].includes(code)) return "❄️";
+                            return "🌥️";
+                         };
+                         
+                         html += `
+                         <div class="hd-row">
+                            <div class="hd-time">${timeStr}</div>
+                            <div class="hd-icon">${getOMDesc(c)}</div>
+                            <div class="hd-temp">${Math.round(t)}°</div>
+                            <div class="hd-meta">
+                                <div>CSAP: ${p}%</div>
+                                <div>SZÉL: ${Math.round(w)}</div>
+                            </div>
+                         </div>`;
+                     }
+                     div.innerHTML = html + `<div class="sm-watermark" style="color:#ffcc00;">DATA: OPEN-METEO (BACKUP)</div>`;
+                 }
+                 
+                 DOM.smGrid.appendChild(div);
+             } else {
+                 DOM.smGrid.innerHTML = '<div style="color:#fff; font-size:2rem; width:100%; text-align:center; padding-top:20px;">NINCS ELÉRHETŐ ELŐREJELZÉS</div>';
+             }
+        }
 
         /* --- VERTICAL FORECAST (4 Days, Pillars) --- */
         async function renderRealForecast() {
@@ -1991,10 +2363,22 @@
                     
                     const min = Math.round(data.daily.temperature_2m_min[i]);
                     const max = Math.round(data.daily.temperature_2m_max[i]);
-                    const wmo = getOMDesc(data.daily.weathercode[i]);
+                    const wmoCode = data.daily.weathercode[i];
+                    const wmo = getOMDesc(wmoCode);
                     const precip = data.daily.precipitation_sum[i] || 0;
                     const uv = data.daily.uv_index_max[i] || 0;
                     const wind = data.daily.windspeed_10m_max[i] || 0;
+                    
+                    // SMART PRECIPITATION LABEL LOGIC
+                    let precipLabel = "CSAP."; // Fallback
+                    // Check WMO Code for Snow codes: 71, 73, 75, 77 (Snow fall), 85, 86 (Snow showers)
+                    if ([71, 73, 75, 77, 85, 86].includes(wmoCode)) {
+                        precipLabel = "HÓ";
+                    } 
+                    // Check for Rain codes (most others involving water)
+                    else if ([51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82, 95, 96, 99].includes(wmoCode)) {
+                        precipLabel = "ESŐ";
+                    }
                     
                     const div = document.createElement('div');
                     div.className = 'sm-card-item forecast-pillar';
@@ -2010,7 +2394,7 @@
                             <div class="fp-min">${min}°</div>
                         </div>
                         <div class="fp-detail-row">
-                             <div class="fp-d-item"><span>ESŐ:</span><span>${precip} mm</span></div>
+                             <div class="fp-d-item"><span>${precipLabel}:</span><span>${precip} mm</span></div>
                              <div class="fp-d-item"><span>UV:</span><span>${uv}</span></div>
                              <div class="fp-d-item"><span>SZÉL:</span><span>${Math.round(wind)} km/h</span></div>
                         </div>
@@ -2067,28 +2451,64 @@
             [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ].forEach(ui => document.getElementById(ui.id).classList.add(`hide-${ui.t}`));
             DOM.logoBox.classList.remove('force-hide'); DOM.summary.classList.add('economy-overlay'); DOM.nextBarContainer.classList.remove('visible');
             document.getElementById('sum-live-badge').classList.remove('visible'); DOM.sumMainTitle.innerText = "GAZDASÁGI BLOKK"; DOM.sumSubTitle.innerText = "NEMZETKÖZI VALUTAÁRFOLYAMOK";
-            DOM.sumClock.innerText = "01:00"; 
+            DOM.sumClock.style.display = 'none'; // HIDE CLOCK
+            DOM.sumSource.style.display = 'flex'; // SHOW SOURCE
             DOM.sumContent.innerHTML = `<div class="summary-header"></div><div id="eco-grid-container" class="eco-grid"></div>`;
             DOM.summary.style.display = 'grid'; setTimeout(() => DOM.summary.classList.add('active'), 50);
 
             let rates = null;
-            try { const res = await fetch("https://open.er-api.com/v6/latest/HUF"); const data = await res.json(); if(data.result === "success") rates = data.rates; } catch(e) {}
-            const currencies = [ ['EUR', 'USD', 'CHF', 'GBP'], ['JPY', 'CNY', 'PLN', 'CZK'], ['RON', 'HRK', 'CAD', 'AUD'], ['SEK', 'NOK', 'TRY', 'RUB'] ];
+            // Use dummy data first to prevent black screen if fetch fails
+            const mockRates = { "EUR": 395, "USD": 365, "CHF": 410, "GBP": 460 }; 
+            
+            try { 
+                const res = await fetch("https://open.er-api.com/v6/latest/HUF"); 
+                const data = await res.json(); 
+                if(data.result === "success") rates = data.rates; 
+            } catch(e) {}
+            
+            // EXPANDED CURRENCY LIST (~20)
+            const allCurrencies = Object.keys(CURRENCY_NAMES);
+            const itemsPerPage = 4;
+            const totalPages = Math.ceil(allCurrencies.length / itemsPerPage);
             
             let pageIdx = 0;
             const renderEcoPage = () => {
                 const container = document.getElementById('eco-grid-container'); if(!container) return; container.innerHTML = '';
-                currencies[pageIdx].forEach(curr => {
-                    let val = "---"; if(rates && rates[curr]) val = (1 / rates[curr]).toFixed(2);
+                const start = pageIdx * itemsPerPage;
+                const end = start + itemsPerPage;
+                const currentSet = allCurrencies.slice(start, end);
+                
+                currentSet.forEach(curr => {
+                    let val = "---"; 
+                    if(rates && rates[curr]) val = (1 / rates[curr]).toFixed(2); // Real API
+                    else if (mockRates[curr]) val = mockRates[curr].toFixed(2); // Fallback
+                    
+                    const name = CURRENCY_NAMES[curr] || curr;
                     const div = document.createElement('div'); div.className = 'eco-card';
-                    div.innerHTML = `<div class="eco-curr"><img src="https://flagcdn.com/48x36/${curr.substring(0,2).toLowerCase()}.png" style="border-radius:2px;">${curr}</div><div class="eco-val">${val} FT</div>`;
+                    div.innerHTML = `<div class="eco-curr"><img src="https://flagcdn.com/48x36/${curr.substring(0,2).toLowerCase()}.png" style="border-radius:2px;">${curr} (${name})</div><div class="eco-val">${val} FT</div>`;
                     container.appendChild(div);
                 });
             };
             renderEcoPage();
-            let timeLeft = 60;
-            state.summaryTimerInterval = setInterval(() => { timeLeft--; if(timeLeft < 0) { clearInterval(state.summaryTimerInterval); clearInterval(state.summaryInterval); DOM.summary.classList.remove('economy-overlay'); closeAllOverlays(); } else { DOM.sumClock.innerText = `00:${timeLeft.toString().padStart(2,'0')}`; } }, 1000);
-            state.summaryInterval = setInterval(() => { pageIdx = (pageIdx + 1) % 4; renderEcoPage(); }, 15000);
+            
+            // Total Duration logic: 15s per page
+            const duration = totalPages * 15; 
+            let elapsed = 0;
+            
+            // Timer & Loop
+            state.summaryTimerInterval = setInterval(() => { 
+                elapsed++;
+                if (elapsed >= duration) {
+                     clearInterval(state.summaryTimerInterval); clearInterval(state.summaryInterval); DOM.summary.classList.remove('economy-overlay'); closeAllOverlays();
+                     DOM.sumClock.style.display = 'flex'; // Reset for next usage
+                     DOM.sumSource.style.display = 'none';
+                }
+            }, 1000);
+
+            state.summaryInterval = setInterval(() => { 
+                pageIdx = (pageIdx + 1) % totalPages;
+                renderEcoPage(); 
+            }, 15000);
         }
 
         function triggerSummaryMode(mins, type = 'half') {
@@ -2119,7 +2539,14 @@
                     const logo = getLogoHtml(item.source);
                     const itemDiv = document.createElement('div'); itemDiv.className = 'sum-item';
                     itemDiv.innerHTML = `${imgHtml}<div class="sum-text"><div class="sum-time">${logo} ${item.date.toLocaleTimeString('hu-HU',{hour:'2-digit',minute:'2-digit'})} • ${item.source}</div><div class="sum-h">${item.title}</div><div class="sum-d">${item.desc}</div></div>`;
-                    itemDiv.addEventListener('click', () => { window.open(item.link, '_blank'); }); d.appendChild(itemDiv);
+                    
+                    const itemLink = item.link; // FIX CLICK SCOPE
+                    itemDiv.onclick = (e) => { 
+                        e.stopPropagation();
+                        window.open(itemLink, '_blank'); 
+                    }; 
+                    
+                    d.appendChild(itemDiv);
                 }); DOM.sumContent.appendChild(d);
             });
             DOM.summary.style.display = 'grid'; setTimeout(() => DOM.summary.classList.add('active'), 50);
@@ -2187,7 +2614,18 @@
                 checkScheduleExecution(); updateNextEventCapsule(); checkNightMode(); 
                 if (m === 0 && s === 0) { fetchCurrency(); generateHourlySchedule(); } 
                 updateDevMonitor(); 
-                if (!state.isNightMode && s === 0) { if (m === 1 || m === 20 || m === 40) { crawlNews(false); } }
+                
+                // AUTO REFRESH LOGIC (:02, :22, :42) - FORCE RESET
+                if (!state.isNightMode && s === 0) { 
+                    if (m === 2 || m === 22 || m === 42) { 
+                        crawlNews(false); 
+                        setTimeout(() => {
+                            state.mainIdx = 0; state.tickerIdx = 0; 
+                            cycleMain(true); cycleTicker(1);
+                        }, 2000);
+                    } 
+                }
+                
                 if (!state.isNightMode && (Date.now() - state.lastTickerUpdate > 12000) && !state.isSpecial && !state.isSummary) { cycleTicker(1); } 
             }, 1000);
         }
@@ -2237,9 +2675,12 @@
                 const allStations = [...SIDEBAR_STATIONS, ...EXOTIC_STATIONS]; const batchSize = 10; const batch = [];
                 for(let i=0; i<batchSize; i++) { const idx = (state.stationPointer + i) % allStations.length; batch.push(allStations[idx]); }
                 state.stationPointer = (state.stationPointer + batchSize) % allStations.length;
-                const promises = batch.map(s => fetch(`https://api.weather.com/v3/wx/observations/current?geocode=${s.lat},${s.lon}&format=json&units=m&language=hu-HU&apiKey=${WU_KEY}`).then(r => r.json()).catch(e => null));
+                
+                // USE ROBUST FETCH FOR SIDEBAR AS WELL
+                const promises = batch.map(s => fetchMeteoRobust(s.lat, s.lon));
+                
                 const results = await Promise.all(promises); state.weatherData = [];
-                results.forEach((d, i) => { if(d) { state.weatherData.push({ name: batch[i].name, flagCode: batch[i].code, t: formatVal(d.temperature), f: formatVal(d.temperatureFeelsLike), h: d.relativeHumidity, w: formatVal(d.windSpeed), wd: d.windDirection, p: d.pressureAltimeter, uv: d.uvIndex, v: d.visibility, iconCode: d.iconCode, dayOrNight: d.dayOrNight }); } });
+                results.forEach((d, i) => { if(d) { state.weatherData.push({ name: batch[i].name, flagCode: batch[i].code, t: formatVal(d.temperature), f: formatVal(d.temperatureFeelsLike), h: d.relativeHumidity, w: formatVal(d.windSpeed), wd: d.windDirection, p: d.pressureAltimeter || 1013, uv: d.uvIndex || 0, v: d.visibility || 10000, iconCode: d.iconCode, dayOrNight: d.dayOrNight || 'D' }); } });
                 updateWeatherCard();
             } catch(e) {}
         }
@@ -2306,8 +2747,20 @@
         });
 
         function init() {
-            if(DOM.bkCardClickable) DOM.bkCardClickable.onclick = () => { if(state.currentBreakingLink) window.open(state.currentBreakingLink, '_blank'); };
-            const uiLeft = document.getElementById('ui-left'); if(uiLeft) uiLeft.onclick = () => { if(state.currentMainLink) window.open(state.currentMainLink, '_blank'); };
+            // FIX: Set specific link for click
+            if(DOM.bkCardClickable) DOM.bkCardClickable.onclick = () => { 
+                const link = DOM.bkCardClickable.dataset.link;
+                if(link && link !== "#") window.open(link, '_blank'); 
+            };
+            
+            // MAIN NEWS CLICK FIX
+            const uiLeft = document.getElementById('ui-left');
+            if(uiLeft) uiLeft.onclick = (e) => {
+                 // Prevent opening link if clicking nav buttons
+                 if (e.target.closest('.main-nav-bar')) return;
+                 if(state.currentMainLink) window.open(state.currentMainLink, '_blank');
+            };
+
             startClock(); startMainLoop(); generateHourlySchedule();
             const d = document.createElement('div'); d.className='term-line'; d.innerText = ">> RENDSZER KÉSZ"; DOM.term.appendChild(d); DOM.fill.style.width = "100%";
             crawlNews(false); fetchCurrency(); fetchOther(); fetchWunderground();
