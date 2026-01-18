@@ -909,8 +909,8 @@
                 </table>
                 
                 <div class="dev-h" style="margin-top:20px;">MANUÁLIS VEZÉRLÉS</div>
-                <button class="btn" onclick="safeTrigger(() => triggerSummaryMode(3, 'half'))">[►] FÉLÓRÁS HÍRADÓ (3p)</button>
-                <button class="btn" onclick="safeTrigger(() => triggerSummaryMode(5, 'hourly'))">[►] ÓRÁS HÍRADÓ (5p)</button>
+                <button class="btn" onclick="safeTrigger(() => triggerSummaryMode(3, 'half'))">[►] 3 PERCES HÍRÖSSZEFOGLALÓ (3p)</button>
+                <button class="btn" onclick="safeTrigger(() => triggerSummaryMode(5, 'hourly'))">[►] 5 PERCES HÍRÖSSZEFOGLALÓ (5p)</button>
                 <button class="btn" onclick="safeTrigger(() => triggerSummaryMode(1, 'sport'))">[►] SPORTHÍREK (1p)</button>
                 <button class="btn" onclick="safeTrigger(() => triggerBigClockSequence())">[⏰] NAGY ÓRA SHOW</button>
                 <button class="btn" onclick="safeTrigger(() => triggerEconomyMode())">[💰] TŐZSDE ÉS PÉNZÜGY (5p)</button>
@@ -1521,7 +1521,7 @@
             
             // UPDATE: Hourly News at XX:54
             let news54 = new Date(now); news54.setMinutes(54, 0, 0);
-            if(news54 > now) state.schedule.push({ time: news54.getTime(), type: 'summary60', label: "ÓRÁS HÍRADÓ (5p)" });
+            if(news54 > now) state.schedule.push({ time: news54.getTime(), type: 'summary60', label: "5 PERCES HÍRÖSSZEFOGLALÓ (5p)" });
 
             // The CLOCK triggers at XX:59
             let clock = new Date(now); clock.setMinutes(59, 0, 0); 
@@ -1607,7 +1607,7 @@
                 let titleText = ""; 
                 if(next.type === 'meteo') titleText = "METEO SHOW"; 
                 else if(next.type === 'summary30') titleText = "HÍRÖSSZEFOGLALÓ"; 
-                else if(next.type === 'summary60') titleText = "ÓRÁS HÍRADÓ"; 
+                else if(next.type === 'summary60') titleText = "5 PERCES HÍRÖSSZEFOGLALÓ"; 
                 else if(next.type === 'sport') titleText = "SPORTHÍREK"; 
                 else if(next.type === 'economy') titleText = "TŐZSDE ÉS PÉNZÜGY";
                 else if(next.type === 'closing_news') titleText = "ZÁRÓHÍRADÓ";
@@ -1760,7 +1760,7 @@
                 { t: `${hStr}:15`, n: "METEO SHOW" }, 
                 { t: `${hStr}:30`, n: "HÍRÖSSZEFOGLALÓ" }, 
                 { t: `${hStr}:45`, n: "METEO SHOW" },
-                { t: `${hStr}:54`, n: "ÓRÁS HÍRADÓ" }
+                { t: `${hStr}:54`, n: "5 PERCES HÍRÖSSZEFOGLALÓ" }
             ];
         }
 
