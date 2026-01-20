@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V19.46 STABLE (ECO & METEO FIX)</title>
+    <title>TKP NEWS - V20.6 COMPACT BROADCAST</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,15 +13,17 @@
     <style>
         :root {
             --primary: #003399;
+            --primary-dark: #001a4d;
             --accent: #ffcc00;
             --alert: #cc0000;
             --sport-main: #004d00;
             --sport-light: #00cc44;
             --economy-bg: #001a1a;
             --economy-accent: #00cc99;
-            --glass: rgba(0, 15, 45, 0.95);
+            --glass: rgba(0, 10, 25, 0.85);
             --text: #ffffff;
             --footer-h: clamp(65px, 9vh, 95px);
+            
             --font-main: 'Oswald', sans-serif;
             --font-data: 'Roboto Condensed', sans-serif;
             --font-tech: 'Chakra Petch', sans-serif;
@@ -59,7 +61,7 @@
         #stage { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; background: #010101; pointer-events: none; }
         .bg-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.1); transition: opacity 2s ease, transform 25s linear; z-index: 1; }
         .bg-img.active { opacity: 1; transform: scale(1); }
-        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 40%, rgba(0,0,0,0) 100%); z-index: 2; pointer-events: none; }
+        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0) 100%); z-index: 2; pointer-events: none; }
         .grid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 50px 50px; z-index: 3; opacity: 0.2; pointer-events: none;}
 
         /* --- UI LAYER --- */
@@ -75,7 +77,7 @@
         /* TOP BAR */
         .top-bar {
             position: absolute; top: 2vh; right: 2vw; left: clamp(320px, 25vw, 480px);
-            background: var(--glass); height: 8vh; min-height: 65px;
+            background: rgba(0, 15, 45, 0.95); height: 8vh; min-height: 65px;
             border-bottom: 4px solid var(--primary); 
             transform: skewX(-15deg) translateZ(0);
             display: flex; align-items: flex-start; padding: 0 1.5vw; box-shadow: 0 15px 35px rgba(0,0,0,0.6); 
@@ -234,52 +236,6 @@
             color: #ddd; text-transform: uppercase; letter-spacing: 0.5px; 
             text-shadow: 0 1px 2px rgba(0,0,0,0.8); line-height: 1; margin-bottom: 3px;
         }
-        
-        /* UP NEXT BAR - DISCRETE STYLE FIX */
-        .next-bar-container {
-            position: relative; width: auto; height: auto; 
-            margin-top: 4px; display: flex; flex-direction: column; 
-            opacity: 0; transform: translateX(-15px); /* Slide in from left */
-            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-            pointer-events: none;
-            border-left: 2px solid var(--accent);
-            padding-left: 8px;
-            background: linear-gradient(90deg, rgba(0,0,0,0.6) 0%, transparent 100%);
-        }
-        .next-bar-container.visible { opacity: 1; transform: translateX(0); pointer-events: auto; }
-        
-        .nb-row-1 {
-            font-family: var(--font-tech); font-size: 0.55rem; color: #888;
-            text-transform: uppercase; letter-spacing: 1px; font-weight: bold;
-            margin-bottom: 0px; 
-        }
-        .nb-row-2 {
-            display: flex; align-items: center; gap: 5px;
-        }
-        .nb-time {
-            font-family: var(--font-mono); font-weight: 700; font-size: 0.8rem;
-            color: var(--accent); letter-spacing: 0.5px;
-        }
-        .nb-title {
-            font-family: var(--font-main); font-weight: 600; font-size: 0.9rem;
-            color: #ddd; text-transform: uppercase; letter-spacing: 0.5px;
-            white-space: nowrap; text-shadow: 0 1px 2px rgba(0,0,0,0.8);
-        }
-        
-        /* PREMIUM DISCRETE COUNTDOWN */
-        .nb-countdown-box {
-            position: relative; width: 14px; height: 14px; margin-left: 4px;
-            display: none; align-items: center; justify-content: center;
-        }
-        .nb-countdown-box.active { display: flex; animation: fadeIn 0.5s; }
-        .nb-svg { width: 100%; height: 100%; transform: rotate(-90deg); filter: drop-shadow(0 0 1px rgba(255,204,0,0.3)); }
-        .nb-circle-bg { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 2; }
-        .nb-circle-fg { 
-            fill: none; stroke: var(--alert); stroke-width: 2; 
-            stroke-dasharray: 56; stroke-dashoffset: 0; 
-            transition: stroke-dashoffset 1s linear; 
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
 
         .logo-back { position: absolute; top:0; left:0; width: 100%; height: 100%; transform: rotateY(180deg); border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px; background: linear-gradient(135deg, #001a4d 0%, #000022 100%); border: 2px solid #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); text-align: center; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
         .ny-msg-title { font-family: var(--font-script); color: #ffd700; font-size: 1.2rem; line-height: 1; margin-bottom: 5px; }
@@ -346,35 +302,97 @@
         .wx-c-label { font-family: var(--font-mono); font-size: 0.6rem; color: #888; text-transform: uppercase; margin-bottom: 2px; white-space: nowrap; }
         .wx-c-val { font-family: var(--font-tech); font-size: 0.95rem; color: #e0e0e0; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        /* MAIN NEWS */
-        .main-news { position: absolute; bottom: 15vh; left: 4vw; width: clamp(400px, 60vw, 1300px); pointer-events: auto; cursor: pointer; z-index: 20; transition: transform 0.2s; }
+        /* --- MAIN NEWS (V20.6 COMPACT BROADCAST LOWER THIRD) --- */
+        .main-news { position: absolute; bottom: 15vh; left: 4vw; width: clamp(400px, 60vw, 1200px); pointer-events: auto; cursor: pointer; z-index: 20; transition: transform 0.2s; }
         .main-news:hover { transform: scale(1.01); }
+        
+        /* Container Structure */
+        .mn-container {
+            display: flex; flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            opacity: 0; transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .mn-container.active { opacity: 1; transform: translateY(0); }
+        
+        /* Row 1: Source & Time (Bright Accent) */
+        .mn-row-top {
+            background: var(--accent);
+            color: #000;
+            padding: 4px 15px;
+            display: flex; align-items: center; gap: 10px;
+            font-family: var(--font-tech); font-weight: 800; font-size: 0.9rem; text-transform: uppercase;
+            width: fit-content;
+            clip-path: polygon(0 0, 100% 0, 95% 100%, 0% 100%);
+            transform: translateX(-100%); transition: transform 0.5s 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .mn-container.active .mn-row-top { transform: translateX(0); }
+        .mn-row-top img { height: 16px; width: auto; vertical-align: middle; }
+
+        /* Row 2: Headline (Dark Glass) */
+        .mn-row-mid {
+            background: rgba(0, 10, 25, 0.95);
+            backdrop-filter: blur(15px);
+            padding: 12px 20px;
+            border-left: 5px solid var(--primary);
+            transform: translateX(-100%); transition: transform 0.6s 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .mn-container.active .mn-row-mid { transform: translateX(0); }
+        
+        .mn-headline {
+            font-family: var(--font-main); font-weight: 700; 
+            font-size: clamp(1.8rem, 3.5vh, 2.8rem); line-height: 1.1; 
+            text-transform: uppercase; color: #fff; letter-spacing: -0.5px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+
+        /* Row 3: Description (Lighter Glass) */
+        .mn-row-bot {
+            background: rgba(20, 30, 45, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 8px 20px;
+            border-left: 5px solid rgba(255,255,255,0.2);
+            transform: translateX(-100%); transition: transform 0.6s 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
+        }
+        .mn-container.active .mn-row-bot { transform: translateX(0); }
+
+        .mn-desc {
+            font-family: var(--font-data); font-weight: 400; 
+            font-size: clamp(0.9rem, 1.6vh, 1.1rem); color: #ddd;
+            line-height: 1.3; 
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+
+        /* Progress Bar */
+        .mn-progress-bar {
+            position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+            background: rgba(255,255,255,0.1); z-index: 10;
+        }
+        .mn-progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 21.8s linear; }
+
+        /* Nav Steppers */
+        .main-nav-overlay {
+            position: absolute; bottom: 10px; right: 10px; z-index: 50;
+            display: flex; gap: 5px; align-items: center;
+            opacity: 0; transition: opacity 1s 1s;
+        }
+        .mn-container.active .main-nav-overlay { opacity: 1; }
+
+        .nav-btn-mini {
+            background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.3);
+            color: #fff; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 0.6rem; transition: 0.2s; backdrop-filter: blur(5px);
+        }
+        .nav-btn-mini:hover { background: var(--primary); border-color: var(--primary); }
+        .nav-counter-mini { font-family: var(--font-mono); font-size: 0.7rem; color: #ccc; margin: 0 5px; text-shadow: 0 1px 2px #000; }
+
+        /* Text Fade Logic */
         .text-fade { transition: opacity 0.4s ease-out; opacity: 1; }
         .text-fade.faded-out { opacity: 0; }
-        .cat-tag { background: var(--accent); color: #000; font-family: var(--font-main); font-weight: 800; padding: 0.8vh 2.5vw; font-size: 1.3rem; clip-path: polygon(0 0, 100% 0, 95% 100%, 0% 100%); display: inline-flex; align-items: center; gap: 12px; }
-        
-        .main-nav-bar { 
-            display: flex; align-items: center; justify-content: space-between; 
-            background: transparent; /* DISCREET: NO BACKGROUND */
-            width: fit-content; padding: 4px 10px; margin-bottom: 0; 
-            border: none;
-            position: absolute;
-            top: 10px; right: 0;
-            pointer-events: auto; z-index: 1000; 
-        }
-        .mn-btn { 
-            cursor: pointer; color: #ddd; font-weight: 900; font-size: 1.1rem; 
-            padding: 2px 8px; transition: color 0.2s; user-select: none;
-            pointer-events: auto; z-index: 1001; text-shadow: 0 1px 2px #000;
-        }
-        .mn-btn:hover { color: var(--accent); transform: scale(1.1); }
-        .mn-counter { font-family: var(--font-mono); font-size: 0.85rem; color: #fff; margin: 0 8px; font-weight: bold; text-shadow: 0 1px 2px #000; }
-
-        .headline-box { background: var(--glass); border-left: 10px solid var(--primary); padding: 2.5vh 2.5vw; box-shadow: 0 20px 50px rgba(0,0,0,0.7); position: relative; }
-        .headline { font-family: var(--font-main); font-weight: 700; font-size: clamp(1.8rem, 3.8vh, 3.5rem); line-height: 1.1; text-transform: uppercase; color: #fff; letter-spacing: -1px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-        .subline-box { background: rgba(255, 255, 255, 0.98); padding: 1.5vh 3vw; width: fit-content; max-width: 100%; border-radius: 0 0 4px 4px; }
-        .subline { font-family: var(--font-data); font-weight: 600; font-size: clamp(0.9rem, 1.8vh, 1.3rem); color: #000; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3; }
-        .progress-bar { position: absolute; bottom: 0; left: 0; height: 6px; background: var(--accent); width: 0%; }
         
         .ticker-bar { 
             position: absolute; bottom: 0; left: 0; width: 100%; height: var(--footer-h); 
@@ -479,17 +497,14 @@
             background: linear-gradient(90deg, rgba(0,0,0,0.9) 0%, transparent 100%);
             border-right: 1px solid rgba(255,255,255,0.05); transition: opacity 0.5s, transform 0.5s;
         }
-        .bc-sched-title { font-family: var(--font-main); color: var(--accent); font-size: 1.8rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 30px; border-bottom: 4px solid var(--primary); padding-bottom: 10px; width: fit-content; opacity: 0; transform: translateX(-30px); animation: slideInLeft 0.8s forwards 0.2s; transition: opacity 0.5s; }
-        .bc-sched-list { display: flex; flex-direction: column; gap: 20px; }
-        
-        .bc-sched-item { display: flex; align-items: center; gap: 20px; font-family: var(--font-tech); font-size: 2.5rem; color: #ccc; opacity: 0; transform: translateX(-50px); transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); border-left: 3px solid transparent; padding-left: 15px; }
-        .bc-sched-item.visible { opacity: 1; transform: translateX(0); }
-        .bc-sched-item.active { border-left-color: var(--accent); color: #fff; text-shadow: 0 0 15px rgba(255,255,255,0.3); }
-        .bc-sched-item.exit-anim { transform: translateX(-100px); opacity: 0; }
-        .bc-sched-time { color: #fff; font-weight: 800; width: 140px; text-shadow: 0 0 10px rgba(0, 51, 153, 0.5); font-size: 2.2rem; }
-        .bc-sched-name { text-transform: uppercase; letter-spacing: 1px; color: var(--accent); font-weight: bold; font-size: 1.8rem; }
-        
-        .bc-sched-title.exit-anim { opacity: 0; transform: translateX(-50px); }
+        /* New Informative Text Style */
+        .bc-info-text {
+            font-family: var(--font-main); font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            color: #ddd; line-height: 1.4; opacity: 0; transform: translateX(-30px);
+            animation: slideInLeft 0.8s forwards 0.2s; transition: opacity 0.5s;
+            border-left: 4px solid var(--accent); padding-left: 20px;
+        }
+        .bc-info-highlight { color: var(--accent); font-weight: bold; text-transform: uppercase; }
 
         .bc-main-panel { position: relative; display: flex; justify-content: center; align-items: center; flex-direction: column; transition: all 1s ease-in-out; }
         .bc-clock-wrapper { position: relative; width: 60vh; height: 60vh; display: flex; justify-content: center; align-items: center; transition: transform 1s; }
@@ -600,8 +615,6 @@
             z-index: 15; box-shadow: 0 2px 5px rgba(0,0,0,0.8); border: 1px solid #666;
         }
 
-        .bc-next-show-text { position: absolute; bottom: 5%; font-family: var(--font-main); font-size: 1.2rem; color: #fff; text-transform: uppercase; letter-spacing: 4px; font-weight: 800; opacity: 0; transform: translateY(30px); transition: all 0.5s; background: rgba(0,0,0,0.8); padding: 15px 40px; border-left: 8px solid var(--alert); box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: none; }
-        .bc-next-show-text.visible { opacity: 1; transform: translateY(0); }
         .bc-layout-center .bc-schedule-panel { opacity: 0; transform: translateX(-100px); pointer-events: none; }
         .bc-layout-center .bc-main-panel { transform: translateX(-33%); } 
         .bc-layout-center .bc-clock-wrapper { transform: scale(1.3); }
@@ -609,7 +622,7 @@
         @keyframes slideInLeft { from { opacity:0; transform:translateX(-30px); } to { opacity:1; transform:translateX(0); } }
 
         #special-meteo { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: transparent; z-index: 5000; display: none; flex-direction: column; align-items: center; padding-top: 15vh; opacity: 0; transition: opacity 0.8s; pointer-events: none; }
-        #special-meteo.active { display: flex; opacity: 1; }
+        #special-meteo.active { display: flex; opacity: 1; pointer-events: auto; }
         .sm-bg { position: absolute; top:0; left:0; width:100%; height:100%; z-index:-1; background: linear-gradient(135deg, #001a4d 0%, #000 100%); transition: opacity 1s ease-in-out; }
         .sm-pattern { position: absolute; top:0; left:0; width:100%; height:100%; z-index:0; background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 30px 30px; animation: panBg 60s linear infinite; }
         @keyframes panBg { from { background-position: 0 0; } to { background-position: 100px 100px; } }
@@ -874,6 +887,148 @@
         .load-fill { height: 100%; width: 0%; background: #0f0; transition: width 0.1s linear; }
         @keyframes slideIn { from { transform: translateX(-100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.1; } }
+
+        /* --- NEW PROGRAM DOCK (Top Left, Below Logo) --- */
+        .program-dock {
+            position: absolute; 
+            top: 13vh; left: 4vw; 
+            z-index: 200;
+            display: flex; 
+            gap: 8px; 
+            align-items: flex-start;
+            pointer-events: auto;
+        }
+        .dock-btn {
+            background: rgba(0, 15, 30, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ccc;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: var(--font-tech);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(5px);
+            display: flex; align-items: center; gap: 6px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .dock-btn i { font-size: 0.85rem; color: var(--accent); transition: color 0.2s; }
+        .dock-btn:hover { 
+            transform: translateY(-2px);
+            background: rgba(0, 40, 80, 0.9);
+            border-color: var(--accent);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(0, 204, 255, 0.3);
+        }
+        .dock-btn:hover i { color: #fff; }
+        .dock-btn:active { transform: scale(0.98); }
+
+        /* --- CLOSE BUTTON STYLES FOR OVERLAYS (V20.6 FIXED) --- */
+        .overlay-close-abs {
+            position: absolute; top: 30px; right: 30px;
+            background: rgba(200, 0, 0, 0.9);
+            color: #fff; border: 2px solid rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            font-family: var(--font-tech); font-weight: bold; font-size: 1rem;
+            cursor: pointer; z-index: 10000;
+            transition: 0.2s; border-radius: 4px;
+            text-transform: uppercase; letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            pointer-events: auto;
+        }
+        .overlay-close-abs:hover { background: #ff0000; transform: scale(1.05); box-shadow: 0 0 25px rgba(255,0,0,0.6); border-color: #fff; }
+
+        /* --- MAIN NEWS (V20.6 COMPACT BROADCAST LOWER THIRD) --- */
+        .main-news { position: absolute; bottom: 15vh; left: 4vw; width: clamp(400px, 60vw, 1200px); pointer-events: auto; cursor: pointer; z-index: 20; transition: transform 0.2s; }
+        .main-news:hover { transform: scale(1.01); }
+        
+        /* Container Structure */
+        .mn-container {
+            display: flex; flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            opacity: 0; transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .mn-container.active { opacity: 1; transform: translateY(0); }
+        
+        /* Row 1: Source & Time (Bright Accent) */
+        .mn-row-top {
+            background: var(--accent);
+            color: #000;
+            padding: 4px 15px;
+            display: flex; align-items: center; gap: 10px;
+            font-family: var(--font-tech); font-weight: 800; font-size: 0.9rem; text-transform: uppercase;
+            width: fit-content;
+            clip-path: polygon(0 0, 100% 0, 95% 100%, 0% 100%);
+            transform: translateX(-100%); transition: transform 0.5s 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .mn-container.active .mn-row-top { transform: translateX(0); }
+        .mn-row-top img { height: 16px; width: auto; vertical-align: middle; }
+
+        /* Row 2: Headline (Dark Glass) */
+        .mn-row-mid {
+            background: rgba(0, 10, 25, 0.95);
+            backdrop-filter: blur(15px);
+            padding: 12px 20px;
+            border-left: 5px solid var(--primary);
+            transform: translateX(-100%); transition: transform 0.6s 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .mn-container.active .mn-row-mid { transform: translateX(0); }
+        
+        .mn-headline {
+            font-family: var(--font-main); font-weight: 700; 
+            font-size: clamp(1.8rem, 3.5vh, 2.8rem); line-height: 1.1; 
+            text-transform: uppercase; color: #fff; letter-spacing: -0.5px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+
+        /* Row 3: Description (Lighter Glass) */
+        .mn-row-bot {
+            background: rgba(20, 30, 45, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 8px 20px;
+            border-left: 5px solid rgba(255,255,255,0.2);
+            transform: translateX(-100%); transition: transform 0.6s 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
+        }
+        .mn-container.active .mn-row-bot { transform: translateX(0); }
+
+        .mn-desc {
+            font-family: var(--font-data); font-weight: 400; 
+            font-size: clamp(0.9rem, 1.6vh, 1.1rem); color: #ddd;
+            line-height: 1.3; 
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+
+        /* Progress Bar */
+        .mn-progress-bar {
+            position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+            background: rgba(255,255,255,0.1); z-index: 10;
+        }
+        .mn-progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 21.8s linear; }
+
+        /* Nav Steppers */
+        .main-nav-overlay {
+            position: absolute; bottom: 10px; right: 10px; z-index: 50;
+            display: flex; gap: 5px; align-items: center;
+            opacity: 0; transition: opacity 1s 1s;
+        }
+        .mn-container.active .main-nav-overlay { opacity: 1; }
+
+        .nav-btn-mini {
+            background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.3);
+            color: #fff; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 0.6rem; transition: 0.2s; backdrop-filter: blur(5px);
+        }
+        .nav-btn-mini:hover { background: var(--primary); border-color: var(--primary); }
+        .nav-counter-mini { font-family: var(--font-mono); font-size: 0.7rem; color: #ccc; margin: 0 5px; text-shadow: 0 1px 2px #000; }
+
     </style>
 </head>
 <body>
@@ -949,12 +1104,16 @@
         <div class="load-bar-wrap"><div class="load-fill" id="load-fill"></div></div>
     </div>
 
-    <!-- BIG CLOCK SHOW OVERLAY (REDESIGNED LUXURY ANALOG) -->
+    <!-- BIG CLOCK SHOW OVERLAY (REDESIGNED) -->
     <div id="big-clock-overlay">
         <div class="bc-schedule-panel">
-            <div class="bc-sched-title" id="bc-sched-main-title">MŰSORAJÁNLÓ</div>
-            <div class="bc-sched-list" id="bc-sched-list">
-                <!-- JS populated -->
+            <!-- REPLACED LIST WITH INFORMATIVE TEXT -->
+            <div class="bc-info-text" id="bc-info-text">
+                <span style="font-size:1.4em; font-weight:bold;">Szia!</span><br><br>
+                Ez itt a <span class="bc-info-highlight">TKP NEWS</span>, a te személyes hírközpontod.<br>
+                Mi összegyűjtjük a legfrissebb híreket, időjárást és árfolyamokat, hogy neked csak hátra kelljen dőlnöd.<br><br>
+                <i class="fas fa-rss" style="color:#00d4ff;"></i> Friss információk percről percre. <br>
+                <span style="font-size:0.8em; color:#888;">Jó böngészést kívánunk!</span>
             </div>
         </div>
         <div class="bc-main-panel">
@@ -977,13 +1136,14 @@
                     <div class="clock-center"></div>
                 </div>
             </div>
-
-            <div class="bc-next-show-text" id="bc-next-show-text">KÖVETKEZIK: HÍRÖSSZEFOGLALÓ</div>
         </div>
     </div>
 
     <!-- SUMMARY OVERLAY (WITH EMBEDDED LOGO) -->
     <div id="summary-overlay">
+        <!-- Close Button for Economy/Summary -->
+        <div class="overlay-close-abs" onclick="closeAllOverlays()">[X] KILÉPÉS</div>
+
         <div class="summary-brand-side" id="sum-sidebar">
             <div class="sum-live-badge" id="sum-live-badge">ÉLŐ</div>
             <div class="summary-title" id="sum-main-title">HÍRÖSSZEFOGLALÓ</div>
@@ -1021,9 +1181,11 @@
 
     <!-- NEW: HOURLY ARCHIVE OVERLAY -->
     <div id="hourly-archive-overlay">
+        <!-- Close Button for Archive -->
+        <div class="overlay-close-abs" onclick="document.getElementById('hourly-archive-overlay').classList.remove('active')">[X] KILÉPÉS</div>
+
         <div class="ha-header">
             <div class="ha-title" id="ha-title-text">...</div>
-            <button class="ha-close-btn" onclick="document.getElementById('hourly-archive-overlay').classList.remove('active')">BEZÁRÁS</button>
         </div>
         <div class="ha-list" id="ha-list-container"></div>
     </div>
@@ -1038,6 +1200,9 @@
 
     <!-- SPECIAL METEO (MULTI CARD) -->
     <div id="special-meteo">
+        <!-- Close Button for Meteo -->
+        <div class="overlay-close-abs" onclick="closeAllOverlays()">[X] KILÉPÉS</div>
+
         <div class="sm-bg" id="sm-bg">
             <div class="sm-pattern"></div>
         </div>
@@ -1081,22 +1246,6 @@
                     </div>
                     <div class="logo-row-time" id="clock-time">00:00<span class="mc-sec">00</span></div>
                     <div class="logo-row-date" id="clock-date">----. --. --.</div>
-
-                    <!-- NEW: UP NEXT BAR (MINI BIG CLOCK STYLE) -->
-                    <div class="next-bar-container" id="next-bar-container">
-                        <div class="nb-row-1">KÖVETKEZIK:</div>
-                        <div class="nb-row-2">
-                            <span class="nb-time" id="nb-time-display">--:--</span>
-                            <span class="nb-title" id="nb-title-text">HÍREK</span>
-                            <!-- PREMIUM DISCRETE COUNTDOWN -->
-                            <div class="nb-countdown-box" id="nb-timer-ring">
-                                <svg class="nb-svg" viewBox="0 0 24 24">
-                                    <circle class="nb-circle-bg" cx="12" cy="12" r="9"></circle>
-                                    <circle class="nb-circle-fg" id="nb-ring-fg" cx="12" cy="12" r="9"></circle>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
             <div class="logo-back" id="logo-back-face">
@@ -1142,7 +1291,7 @@
                     RÉGI OLDAL (KLIKK.HU) &#10138;
                 </a>
                 
-                <div style="font-family:var(--font-tech); font-weight:bold; color:var(--accent); font-size:0.8rem; letter-spacing:1px;">V19.46</div>
+                <div style="font-family:var(--font-tech); font-weight:bold; color:var(--accent); font-size:0.8rem; letter-spacing:1px;">V20.6</div>
             </div>
         </div>
 
@@ -1190,22 +1339,45 @@
             </div>
         </div>
 
+        <!-- NEW CREATIVE MAIN NEWS LAYER (V20.6 COMPACT BROADCAST LOWER THIRD) -->
         <div class="main-news ui-element" id="ui-left">
-            <div class="main-nav-bar" id="main-nav-layer">
-                <span class="mn-btn" onclick="event.stopPropagation(); stepMain(-1); return false;">◀</span>
-                <span class="mn-counter" id="nav-count">0 / 0</span>
-                <span class="mn-btn" onclick="event.stopPropagation(); stepMain(1); return false;">▶</span>
-            </div>
+            <div class="mn-container" id="mn-container-box">
+                <!-- Top Row: Source & Time (Gold) -->
+                <div class="mn-row-top" id="m-meta">
+                    <span id="m-cat-text">HÍRFORRÁS</span>
+                </div>
 
-            <div class="text-fade" id="m-text-container">
-                <div class="cat-tag" id="m-cat">HÍRFORRÁS</div>
-                <div class="headline-box">
-                    <div class="headline" id="m-title">ADATOK SZINKRONIZÁLÁSA...</div>
-                    <div class="progress-bar" id="m-prg"></div>
+                <!-- Middle Row: Headline (Dark) -->
+                <div class="mn-row-mid">
+                    <div class="mn-headline" id="m-title">ADATOK SZINKRONIZÁLÁSA...</div>
                 </div>
-                <div class="subline-box">
-                    <div class="subline" id="m-desc">Kérjük várjon, amíg a rendszer lekéri az elmúlt 2 órából a híreket.</div>
+
+                <!-- Bottom Row: Description (Lighter) -->
+                <div class="mn-row-bot">
+                    <div class="mn-desc" id="m-desc">Kérjük várjon, amíg a rendszer lekéri az elmúlt 2 órából a híreket.</div>
+                    
+                    <!-- Steppers inside the bottom row -->
+                    <div class="main-nav-overlay" id="main-nav-layer">
+                        <div class="nav-btn-mini" onclick="event.stopPropagation(); stepMain(-1); return false;">◀</div>
+                        <div class="nav-counter-mini" id="nav-count">0 / 0</div>
+                        <div class="nav-btn-mini" onclick="event.stopPropagation(); stepMain(1); return false;">▶</div>
+                    </div>
                 </div>
+
+                <div class="mn-progress-bar"><div class="mn-progress-fill" id="m-prg"></div></div>
+            </div>
+        </div>
+
+        <!-- NEW: PROGRAM DOCK (Top Left, Below Logo) -->
+        <div class="program-dock ui-element" id="program-dock">
+            <div class="dock-btn" onclick="safeTrigger(() => triggerSpecialMeteoSequence())">
+                <i class="fas fa-cloud-sun"></i> Meteo
+            </div>
+            <div class="dock-btn" onclick="safeTrigger(() => triggerSummaryMode(1, 'sport'))">
+                <i class="fas fa-futbol"></i> Sport
+            </div>
+            <div class="dock-btn" onclick="safeTrigger(() => triggerEconomyMode())">
+                <i class="fas fa-chart-line"></i> Tőzsde
             </div>
         </div>
 
@@ -1419,14 +1591,20 @@
             testMiniRainState: false, testMiniAlertState: false, stationPointer: 0, nightSummaryQueue: [], hasFreshNews: false,
             manualRefreshRequested: false, upNextVisible: false, clockPhase: 0,
             hourlyTriggered: false,
-            currencyRates: null, currencyBase: 'USD' 
+            currencyRates: null, currencyBase: 'USD',
+            refreshedThisShow: false
         };
 
         const DOM = {
             loader: document.getElementById('loader'), term: document.getElementById('term'), fill: document.getElementById('load-fill'),
             stage: document.getElementById('stage'), tickerWindow: document.getElementById('ticker-window'), tickerBar: document.getElementById('ui-bottom'),
             mTextContainer: document.getElementById('m-text-container'),
-            mainTitle: document.getElementById('m-title'), mainDesc: document.getElementById('m-desc'), mainCat: document.getElementById('m-cat'), mainPrg: document.getElementById('m-prg'),
+            
+            // Updated DOM Refs for V20.6 Main News
+            mainContainerBox: document.getElementById('mn-container-box'),
+            mainTitle: document.getElementById('m-title'), mainDesc: document.getElementById('m-desc'), 
+            mainCatText: document.getElementById('m-cat-text'), mainMeta: document.getElementById('m-meta'), mainPrg: document.getElementById('m-prg'),
+            
             cTime: document.getElementById('clock-time'), cDate: document.getElementById('clock-date'),
             nyWidget: document.getElementById('ny-widget'), nyTemp: document.getElementById('ny-temp'), nyWind: document.getElementById('ny-dynamic-slot'), nyTime: document.getElementById('ny-time-badge'), nyFeel: document.getElementById('ny-feel'),
             special: document.getElementById('special-meteo'), smGrid: document.getElementById('sm-grid'), smTitle: document.getElementById('sm-main-title'), smBg: document.getElementById('sm-bg'),
@@ -1440,12 +1618,6 @@
             globeIcon: document.getElementById('globe-icon'),
             liveBadge: document.getElementById('live-badge'),
             replayBadge: document.getElementById('replay-badge'),
-            nextBarContainer: document.getElementById('next-bar-container'),
-            nbTitle: document.getElementById('nb-title-text'),
-            nbRing: document.getElementById('nb-timer-ring'),
-            nbRingFg: document.getElementById('nb-ring-fg'),
-            nbRingVal: document.getElementById('nb-ring-val'),
-            nbTimeDisplay: document.getElementById('nb-time-display'), 
             nightMsg: document.getElementById('night-msg'), tickerNav: document.getElementById('ticker-nav'), 
             sidebar: document.querySelector('.sidebar'), sidebarFlipper: document.querySelector('.sidebar-flipper'), 
             bkCardHeadline: document.getElementById('bk-card-headline'), bkCardBody: document.getElementById('bk-card-body'), bkCardMeta: document.getElementById('bk-card-meta'),
@@ -1462,7 +1634,8 @@
             haList: document.getElementById('ha-list-container'),
             finNewsSlot: document.getElementById('financial-news-slot'),
             providerInstruction: document.getElementById('provider-instruction-text'),
-            bcSchedTitle: document.getElementById('bc-sched-main-title')
+            bcInfoText: document.getElementById('bc-info-text'),
+            programDock: document.getElementById('program-dock')
         };
 
         function getTime() { return new Date().toLocaleTimeString('hu-HU'); }
@@ -1503,52 +1676,17 @@
             if (DOM.dev.style.display === 'none') return; 
             const now = new Date().getTime(); const elapsedWx = now - state.lastWxUpdate; const nextWx = 120000 - elapsedWx; 
             DOM.devWxNext.innerText = nextWx > 0 ? (nextWx/1000).toFixed(0) + "s" : "MOST"; DOM.devWxSrc.innerText = state.currentWxSource; 
-            let html = ""; state.schedule.forEach(item => { let diff = item.time - now; let status = "VÁRAKOZÁS"; let duration = 0; if(item.type === 'summary60' || item.type === 'economy' || item.type === 'meteo') duration = 5 * 60000; else if(item.type === 'summary30') duration = 3 * 60000; else if(item.type === 'clock' || item.type === 'sport') duration = 60000; else if(item.type === 'closing_news') duration = 10 * 60000; else if(item.type === 'night_summary') duration = 180000; let timeStr = ""; let rowClass = ""; if (state.isNightMode && item.type !== 'clock' && !item.isNightEvent) { timeStr = "--:--"; status = "<span class='sch-off'>ÜZEMSZÜNET</span>"; rowClass = "opacity:0.5;"; } else { if (diff > 0) { let m = Math.floor(diff / 60000); let s = Math.floor((diff % 60000) / 1000); timeStr = `-${m}:${s.toString().padStart(2,'0')}`; status = "VÁRAKOZÁS"; } else if (diff > -duration) { timeStr = "00:00"; status = "<span class='sch-live'>ADÁSBAN</span>"; } else { timeStr = "---"; status = "VÉGE"; } } html += `<tr style="${rowClass}"><td>${item.label}</td><td class="sch-time">${timeStr}</td><td>${status}</td></tr>`; }); DOM.devScheduleTable.innerHTML = html; DOM.devBkQueue.innerText = state.breakingQueue.length; 
+            let html = ""; state.schedule.forEach(item => { let diff = item.time - now; let status = "VÁRAKOZÁS"; let duration = 0; if(item.type === 'clock') duration = 60000; else if(item.type === 'night_summary') duration = 180000; let timeStr = ""; let rowClass = ""; if (state.isNightMode && item.type !== 'clock' && !item.isNightEvent) { timeStr = "--:--"; status = "<span class='sch-off'>ÜZEMSZÜNET</span>"; rowClass = "opacity:0.5;"; } else { if (diff > 0) { let m = Math.floor(diff / 60000); let s = Math.floor((diff % 60000) / 1000); timeStr = `-${m}:${s.toString().padStart(2,'0')}`; status = "VÁRAKOZÁS"; } else if (diff > -duration) { timeStr = "00:00"; status = "<span class='sch-live'>ADÁSBAN</span>"; } else { timeStr = "---"; status = "VÉGE"; } } html += `<tr style="${rowClass}"><td>${item.label}</td><td class="sch-time">${timeStr}</td><td>${status}</td></tr>`; }); DOM.devScheduleTable.innerHTML = html; DOM.devBkQueue.innerText = state.breakingQueue.length; 
         }
 
         function generateHourlySchedule() { 
             const now = new Date(); state.schedule = []; 
             
-            // Standard Blocks
-            let meteo1 = new Date(now); meteo1.setMinutes(15, 0, 0); 
-            if(meteo1 > now) state.schedule.push({ time: meteo1.getTime(), type: 'meteo', label: "METEO SHOW (5p)" }); 
-            
-            let news30 = new Date(now); news30.setMinutes(30, 0, 0); 
-            if(news30 > now) state.schedule.push({ time: news30.getTime(), type: 'summary30', label: "HÍRÖSSZEFOGLALÓ (3p)" }); 
-            
-            let meteo2 = new Date(now); meteo2.setMinutes(45, 0, 0); 
-            if(meteo2 > now) state.schedule.push({ time: meteo2.getTime(), type: 'meteo', label: "METEO SHOW (5p)" }); 
-            
-            // UPDATE: Hourly News at XX:54
-            let news54 = new Date(now); news54.setMinutes(54, 0, 0);
-            if(news54 > now) state.schedule.push({ time: news54.getTime(), type: 'summary60', label: "5 PERCES HÍRÖSSZEFOGLALÓ (5p)" });
-
             // The CLOCK triggers at XX:59
             let clock = new Date(now); clock.setMinutes(59, 0, 0); 
             if(clock > now) state.schedule.push({ time: clock.getTime(), type: 'clock', label: "NAGY ÓRA" }); 
-            
-            // Sport News - Every Hour at xx:22
-            for(let i=0; i<=24; i++) {
-                let st = new Date(now); st.setHours(i, 22, 0, 0);
-                if(st.getHours() >= 6 && st.getHours() <= 23 && st > now) {
-                     state.schedule.push({ time: st.getTime(), type: 'sport', label: "SPORTHÍREK (1p)" });
-                }
-            }
-            
-            // Economy
-            let ecoTime = new Date(now); 
-            ecoTime.setMinutes(10, 0, 0); 
-            if (ecoTime <= now) ecoTime.setHours(ecoTime.getHours() + 1); 
-            
-            // Safety break for loop
-            let loopGuard = 0;
-            while(ecoTime.getHours() % 2 !== 0 && loopGuard < 24) {
-                 ecoTime.setHours(ecoTime.getHours() + 1);
-                 loopGuard++;
-            }
-            
-            if (ecoTime.getTime() - now.getTime() < 7200000 && ecoTime.getHours() !== 0) state.schedule.push({ time: ecoTime.getTime(), type: 'economy', label: "TŐZSDE ÉS PÉNZÜGY" });
 
+            // Night Logic remains
             if (state.isNightMode || state.forcedNightMode) {
                 let morning = new Date(now); morning.setHours(2,0,0,0);
                 if(morning > now) state.schedule.push({ time: morning.getTime(), type: 'night_block', label: "REGGELI HÍREK (06-12)", isNightEvent: true });
@@ -1572,72 +1710,9 @@
                     item.triggered = true; 
                     if(item.type === 'clock') { closeAllOverlays(); setTimeout(() => triggerBigClockSequence(), 1200); }
                     else if (state.isNightMode && item.type !== 'closing_news') { if (item.type === 'night_summary') { closeAllOverlays(); setTimeout(() => triggerNightSummary(), 1200); } }
-                    else if (!state.isNightMode || item.type === 'closing_news') { 
-                        closeAllOverlays();
-                        setTimeout(() => {
-                            if (item.type === 'meteo') { triggerSpecialMeteoSequence(); } 
-                            else if (item.type === 'summary30') { triggerSummaryMode(3, 'half'); } 
-                            else if (item.type === 'summary60') { triggerSummaryMode(5, 'hourly'); } // New explicit call for 54min
-                            else if (item.type === 'sport') { triggerSummaryMode(1, 'sport'); }
-                            else if (item.type === 'economy') { triggerEconomyMode(); }
-                            else if (item.type === 'closing_news') { triggerClosingNews(); } // Fallback
-                        }, 1200); 
-                    }
                 } 
             }); 
             state.schedule = state.schedule.filter(item => item.time > now - 600000); 
-        }
-
-        function updateNextEventCapsule() { 
-            if (state.isNightMode && !state.forcedNightMode) { DOM.nextBarContainer.classList.remove('visible'); return; }
-            const now = Date.now(); 
-            const next = state.schedule.find(item => item.time > now); 
-            
-            if (!next || next.type === 'clock') { 
-                if(!state.isSpecial && state.upNextVisible) { closeUpNext(); }
-                return; 
-            } 
-            
-            const diffMinutes = (next.time - now) / 60000; 
-            const diffSeconds = (next.time - now) / 1000;
-            const nextTimeDate = new Date(next.time);
-            const timeString = `${nextTimeDate.getHours()}:${String(nextTimeDate.getMinutes()).padStart(2, '0')}`;
-
-            if (diffMinutes <= 5 && diffMinutes > 0) { 
-                let titleText = ""; 
-                if(next.type === 'meteo') titleText = "METEO SHOW"; 
-                else if(next.type === 'summary30') titleText = "HÍRÖSSZEFOGLALÓ"; 
-                else if(next.type === 'summary60') titleText = "5 PERCES HÍRÖSSZEFOGLALÓ"; 
-                else if(next.type === 'sport') titleText = "SPORTHÍREK"; 
-                else if(next.type === 'economy') titleText = "TŐZSDE ÉS PÉNZÜGY";
-                else if(next.type === 'closing_news') titleText = "ZÁRÓHÍRADÓ";
-                
-                DOM.nbTitle.innerText = titleText;
-                DOM.nbTimeDisplay.innerText = timeString;
-
-                if(!state.upNextVisible) { openUpNext(); }
-
-                // PREMIUM COUNTDOWN LOGIC
-                if (diffSeconds <= 60 && diffSeconds > 0) {
-                    DOM.nbRing.classList.add('active');
-                    const progress = (diffSeconds / 60) * 56; 
-                    DOM.nbRingFg.style.strokeDashoffset = 56 - progress;
-                } else {
-                    DOM.nbRing.classList.remove('active');
-                }
-            } else { 
-                if(state.upNextVisible) closeUpNext();
-            } 
-        }
-
-        function openUpNext() {
-            state.upNextVisible = true;
-            DOM.nextBarContainer.classList.add('visible');
-        }
-
-        function closeUpNext() {
-            state.upNextVisible = false;
-            DOM.nextBarContainer.classList.remove('visible');
         }
 
         function updateHourlyCubes() {
@@ -1744,26 +1819,6 @@
             if(digi) digi.innerText = now.toLocaleTimeString('hu-HU');
         }
 
-        // --- Helper to Generate Schedule List for Specific Hour ---
-        function getScheduleForHour(h) {
-            const hStr = String(h).padStart(2, '0');
-            if (state.isNightMode) {
-                // Simplified night logic
-                return [ 
-                    { t: `${hStr}:00`, n: "ÉJSZAKAI HÍREK" },
-                    { t: `${hStr}:30`, n: "HÍRÖSSZEFOGLALÓ" }
-                ];
-            }
-            // UPDATED SCHEDULE LIST FOR BIG CLOCK
-            return [ 
-                { t: `${hStr}:00`, n: "FŐOLDAL / HÍREK" }, 
-                { t: `${hStr}:15`, n: "METEO SHOW" }, 
-                { t: `${hStr}:30`, n: "HÍRÖSSZEFOGLALÓ" }, 
-                { t: `${hStr}:45`, n: "METEO SHOW" },
-                { t: `${hStr}:54`, n: "5 PERCES HÍRÖSSZEFOGLALÓ" }
-            ];
-        }
-
         function getSunPhaseBackground() {
             const h = new Date().getHours();
             if (h >= 5 && h < 9) return 'linear-gradient(135deg, #ff9966 0%, #ff5e62 100%)'; // Morning/Sunrise
@@ -1772,16 +1827,26 @@
             return 'radial-gradient(circle at 70% 50%, #001a4d 0%, #000 80%)'; // Night
         }
 
+        // BACKGROUND REFRESH FUNCTION
+        function backgroundRefresh() {
+            console.log("TRIGGERING BACKGROUND REFRESH");
+            crawlNews(false); 
+            fetchCurrency(); 
+            fetchWunderground(true);
+        }
+
         function triggerBigClockSequence() {
-            state.isSpecial = true; state.isLocked = true; state.isClockRunning = true; state.clockPhase = 0;
+            state.isSpecial = true; state.isLocked = true; state.isClockRunning = true; state.clockPhase = 0; state.refreshedThisShow = false;
             clearNewsBackgrounds();
             
-            // Hide Standard UI
-            [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ].forEach(ui => document.getElementById(ui.id).classList.add(`hide-${ui.t}`));
+            // Hide Standard UI (including the Dock)
+            [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'}, {id:'program-dock', t:'bottom'} ].forEach(ui => {
+                const el = document.getElementById(ui.id);
+                if(el) el.classList.add(`hide-${ui.t}`);
+            });
             
             // Keep Logo Visible and High
             DOM.logoBox.classList.add('high-z'); 
-            if(state.upNextVisible) closeUpNext();
             
             // Initialize Overlay with ADAPTIVE Background
             DOM.bigClockOverlay.style.background = getSunPhaseBackground();
@@ -1789,37 +1854,13 @@
             DOM.bigClockOverlay.classList.remove('bc-layout-center');
             setTimeout(() => { DOM.bigClockOverlay.classList.add('active'); }, 50);
             
-            const nextText = document.getElementById('bc-next-show-text');
-            nextText.style.display = 'none'; // REMOVE OLD TEXT
-            
             // Generate Analog Face
             generateAnalogClockFace();
 
-            // Prepare Times
             const now = new Date();
             let nextHour = now.getHours() + 1; 
             if (nextHour > 23) nextHour = 0;
             
-            // Adjust logic for manual trigger
-            let followingHour = nextHour + 1;
-            if (followingHour > 23) followingHour = 0;
-
-            const listContainer = document.getElementById('bc-sched-list'); 
-            
-            // Initial Render (Phase 1)
-            const renderList = (items) => {
-                listContainer.innerHTML = '';
-                items.forEach((item, idx) => {
-                    const div = document.createElement('div'); 
-                    div.className = 'bc-sched-item'; 
-                    div.style.transitionDelay = `${idx * 0.1}s`;
-                    div.innerHTML = `<span class="bc-sched-time">${item.t}</span><span class="bc-sched-name">${item.n}</span>`;
-                    listContainer.appendChild(div); 
-                    setTimeout(() => div.classList.add('visible'), 50);
-                });
-                if(items.length > 0) setTimeout(() => { if(listContainer.children[0]) listContainer.children[0].classList.add('active'); }, 500);
-            };
-
             // Start Animation Loop based on SECONDS of the minute
             
             const bcInterval = setInterval(() => {
@@ -1827,56 +1868,34 @@
                 
                 const s = new Date().getSeconds();
                 
-                // PHASE 1: 0-20s (Next Hour Schedule)
-                if (s < 20 && state.clockPhase !== 1) {
+                // PHASE 1: 0-45s (Show Info Text + Clock Left)
+                if (s < 45 && state.clockPhase !== 1) {
                     state.clockPhase = 1;
-                    DOM.bcSchedTitle.style.opacity = 1;
                     DOM.bigClockOverlay.classList.remove('bc-layout-center');
-                    
-                    DOM.bcSchedTitle.innerText = "MŰSORAJÁNLÓ";
-                    
-                    let items = [];
-                    if(nextHour === 0) items = [ { t: "00:00", n: "ZÁRÓHÍRADÓ" }, { t: "00:10", n: "ÉJSZAKAI ADÁS" } ];
-                    else items = getScheduleForHour(nextHour);
-                    
-                    renderList(items);
+                    DOM.bcInfoText.style.opacity = 1;
                 }
                 
-                // PHASE 2: 20-40s (Later Schedule)
-                else if (s >= 20 && s < 40 && state.clockPhase !== 2) {
+                // PHASE 2: 45-50s (Fade Out Text)
+                else if (s >= 45 && s < 50 && state.clockPhase !== 2) {
                     state.clockPhase = 2;
-                    const items = document.querySelectorAll('.bc-sched-item');
-                    items.forEach(i => i.classList.remove('visible'));
-                    
-                    setTimeout(() => {
-                        DOM.bcSchedTitle.innerText = "KÉSŐBB";
-                        let futureItems = getScheduleForHour(followingHour);
-                        renderList(futureItems);
-                    }, 500);
+                    DOM.bcInfoText.style.opacity = 0; // Fade out info
                 }
                 
-                // PHASE 3: 40s (Exit Animation - SIMULTANEOUS)
-                else if (s >= 40 && s < 45 && state.clockPhase !== 3) {
+                // PHASE 3: 50s-58s (Center Clock)
+                else if (s >= 50 && s < 58 && state.clockPhase !== 3) {
                     state.clockPhase = 3;
-                    const items = document.querySelectorAll('.bc-sched-item');
-                    items.forEach((item, index) => {
-                        // Force simultaneous exit (remove staggered delay if needed, or keep small)
-                        item.style.transitionDelay = '0s'; 
-                        item.classList.add('exit-anim');
-                    });
-                    // Also animate title out simultaneously
-                    DOM.bcSchedTitle.classList.add('exit-anim');
+                    DOM.bigClockOverlay.classList.add('bc-layout-center'); // Moves clock to center and scales up
+                }
+
+                // REFRESH TRIGGER (Last 10 seconds of minute)
+                if (s >= 50 && !state.refreshedThisShow) {
+                    state.refreshedThisShow = true;
+                    backgroundRefresh();
                 }
                 
-                // PHASE 4: 45s (Center Clock ONLY)
-                else if (s >= 45 && s < 58 && state.clockPhase !== 4) {
+                // PHASE 4: 58s (PRE-TRANSITION FADE)
+                else if (s >= 58 && state.clockPhase !== 4) {
                     state.clockPhase = 4;
-                    DOM.bigClockOverlay.classList.add('bc-layout-center');
-                }
-                
-                // PHASE 5: 58s (PRE-TRANSITION FADE)
-                else if (s >= 58 && state.clockPhase !== 5) {
-                    state.clockPhase = 5;
                     document.querySelector('.bc-main-panel').style.transition = 'opacity 1s';
                     document.querySelector('.bc-main-panel').style.opacity = 0;
                     document.querySelector('.bc-schedule-panel').style.opacity = 0;
@@ -1911,27 +1930,21 @@
             document.querySelector('.bc-main-panel').style.opacity = 1; 
             document.querySelector('.bc-schedule-panel').style.opacity = 1;
             document.querySelector('.bc-main-panel').style.transition = 'all 1s ease-in-out'; 
-            DOM.bcSchedTitle.style.opacity = 1;
-            DOM.bcSchedTitle.classList.remove('exit-anim');
+            DOM.bcInfoText.style.opacity = 1;
             
             state.isClockRunning = false;
             state.clockPhase = 0;
             
-            // Close overlays to return to MAIN PAGE / NEWS
-            if(nextHour === 0) { 
-                triggerClosingNews(); 
-            } else {
-                closeAllOverlays();
-            }
+            // Return to Main News
+            closeAllOverlays();
         }
 
-        function forceRefreshAll() { crawlNews(true); fetchCurrency(); fetchWunderground(); alert("FRISSÍTÉS ELKÜLDVE"); }
+        function forceRefreshAll() { backgroundRefresh(); alert("FRISSÍTÉS ELKÜLDVE"); }
         function manualRefresh() { const btn = document.getElementById('manual-refresh-btn'); btn.innerHTML = '[ FRISSÍTÉS... ]'; btn.classList.add('loading'); state.manualRefreshRequested = true; state.tickerIdx = -1; state.mainIdx = -1; crawlNews(false); fetchCurrency(); fetchWunderground(); setTimeout(() => { cycleMain(true); }, 1500); setTimeout(() => { btn.innerHTML = `[ ↻ FRISSÍTÉS ]`; btn.classList.remove('loading'); }, 5000); }
         function testBreaking() { const now = new Date(); const longDesc = "EZ EGY TESZT ÜZENET. Ez a szöveg szándékosan hosszúra lett nyújtva, hogy meghaladja a rendelkezésre álló keret méretét."; document.getElementById('bk-card-headline').innerText = "RENDKÍVÜLI HÍR: TESZT ÜZEMMÓD"; document.getElementById('bk-card-body').innerHTML = `<div class="bk-scroll-wrapper">${longDesc}</div>`; document.getElementById('bk-card-meta').innerText = `${now.toLocaleTimeString('hu-HU')} • TESZT`; DOM.bkCardClickable.dataset.link = "#"; state.isBreakingActive = true; DOM.sidebar.classList.add('breaking-active'); setTimeout(() => { const wrapper = document.querySelector('.bk-scroll-wrapper'); if(wrapper) wrapper.style.transform = `translateY(-50px)`; }, 2000); setTimeout(() => { DOM.sidebar.classList.remove('breaking-active'); state.isBreakingActive = false; }, 10000); }
-        function triggerNightSummary() { const now = new Date(); const startOfDay = new Date(now); startOfDay.setHours(0,0,0,0); state.nightSummaryQueue = state.allNews.filter(n => n.date >= startOfDay).sort((a,b) => b.date - a.date); if(state.nightSummaryQueue.length === 0) return; state.isSpecial = true; state.isLocked = true; DOM.replayBadge.classList.remove('visible'); DOM.logoBox.classList.remove('force-hide'); if(state.upNextVisible) closeUpNext(); DOM.sidebar.classList.add('breaking-active'); const card = document.querySelector('.breaking-card'); card.classList.add('night-summary-card'); const headerText = card.querySelector('.bk-card-header span:first-child'); if(headerText) headerText.innerText = "EZ TÖRTÉNT ÉJFÉL ÓTA"; processNightSummaryQueue(); }
+        function triggerNightSummary() { const now = new Date(); const startOfDay = new Date(now); startOfDay.setHours(0,0,0,0); state.nightSummaryQueue = state.allNews.filter(n => n.date >= startOfDay).sort((a,b) => b.date - a.date); if(state.nightSummaryQueue.length === 0) return; state.isSpecial = true; state.isLocked = true; DOM.replayBadge.classList.remove('visible'); DOM.logoBox.classList.remove('force-hide'); DOM.sidebar.classList.add('breaking-active'); const card = document.querySelector('.breaking-card'); card.classList.add('night-summary-card'); const headerText = card.querySelector('.bk-card-header span:first-child'); if(headerText) headerText.innerText = "EZ TÖRTÉNT ÉJFÉL ÓTA"; processNightSummaryQueue(); }
         function processNightSummaryQueue() { if(state.nightSummaryQueue.length === 0) { DOM.sidebar.classList.remove('breaking-active'); setTimeout(() => { document.querySelector('.breaking-card').classList.remove('night-summary-card'); const headerText = document.querySelector('.bk-card-header span:first-child'); if(headerText) headerText.innerText = "MOST ÉRKEZETT"; closeAllOverlays(); }, 1000); return; } const item = state.nightSummaryQueue.shift(); DOM.bkCardClickable.dataset.link = item.link; const timeStr = item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'}); DOM.bkCardHeadline.innerText = item.title; const logo = getLogoHtml(item.source); DOM.bkCardMeta.innerHTML = `${timeStr} • ${logo} ${item.source}`; DOM.bkCardBody.innerHTML = ""; const wrapper = document.createElement("div"); wrapper.className = "bk-scroll-wrapper"; wrapper.innerText = item.desc; DOM.bkCardBody.appendChild(wrapper); const bodyH = DOM.bkCardBody.clientHeight; const charCount = (item.title.length + item.desc.length); let readTime = Math.max(12000, (charCount / 15) * 1000); setTimeout(() => { const scrollH = wrapper.scrollHeight; if(scrollH > bodyH) { const dist = scrollH - bodyH + 20; const duration = Math.max(2, dist * 0.05); wrapper.style.transition = `transform ${duration}s linear`; setTimeout(() => { wrapper.style.transform = `translateY(-${dist}px)`; }, 2000); readTime += duration * 1000; } }, 5000); setTimeout(() => { if(state.nightSummaryQueue.length > 0) { const card = document.querySelector('.breaking-card'); card.classList.add('flipped-state'); setTimeout(() => { processNightSummaryQueue(); card.classList.remove('flipped-state'); }, 500); } else { processNightSummaryQueue(); } }, readTime + 6000); }
         
-        /* FIX: COMPATIBILITY FETCH ROBUST (Replaces AbortSignal.timeout for older browsers) */
         async function fetchRobust(targetUrl, sourceName) { 
             const proxyList = shuffle([...PROXIES]); 
             for (let i = 0; i < proxyList.length; i++) { 
@@ -1965,7 +1978,7 @@
         function renderBreakingItemContent() { const item = state.breakingQueue.shift(); state.currentBreakingItem = item; DOM.bkCardClickable.dataset.link = item.link; const timeStr = item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'}); DOM.bkCardHeadline.innerText = item.title; const logo = getLogoHtml(item.source); DOM.bkCardMeta.innerHTML = `${timeStr} • ${logo} ${item.source}`; DOM.bkCardBody.innerHTML = ""; const wrapper = document.createElement("div"); wrapper.className = "bk-scroll-wrapper"; wrapper.innerText = item.desc; DOM.bkCardBody.appendChild(wrapper); const bodyH = DOM.bkCardBody.clientHeight; setTimeout(() => { const scrollH = wrapper.scrollHeight; if(scrollH > bodyH) { const dist = scrollH - bodyH + 20; const duration = Math.max(2, dist * 0.05); wrapper.style.transition = `transform ${duration}s linear`; setTimeout(() => { wrapper.style.transform = `translateY(-${dist}px)`; }, 2000); } }, 5000); const charCount = (item.title.length + item.desc.length); let duration = Math.max(15000, (charCount / 15) * 1000); setTimeout(() => { if (state.breakingQueue.length > 0) { processBreakingQueue(true); } else { closeBreaking(); } }, duration + 6000); }
         function closeBreaking() { DOM.sidebar.classList.remove('breaking-active'); setTimeout(() => { state.isBreakingActive = false; }, 1000); }
         
-        async function triggerSpecialMeteoSequence(startPhase = 0) { crawlNews(false); state.isSpecial = true; state.isLocked = true; toggleLiveBadge(true); setTimeout(() => { DOM.liveBadge.classList.add('delayed-visible'); }, 2000); clearNewsBackgrounds(); [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ].forEach(ui => document.getElementById(ui.id).classList.add(`hide-${ui.t}`)); DOM.logoBox.classList.remove('force-hide'); DOM.logoBox.classList.add('high-z'); setMeteoBackground(); DOM.special.style.display = 'flex'; setTimeout(() => DOM.special.classList.add('active'), 50);
+        async function triggerSpecialMeteoSequence(startPhase = 0) { crawlNews(false); state.isSpecial = true; state.isLocked = true; toggleLiveBadge(true); setTimeout(() => { DOM.liveBadge.classList.add('delayed-visible'); }, 2000); clearNewsBackgrounds(); [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'}, {id:'program-dock', t:'bottom'} ].forEach(ui => { let el = document.getElementById(ui.id); if(el) el.classList.add(`hide-${ui.t}`); }); DOM.logoBox.classList.remove('force-hide'); DOM.logoBox.classList.add('high-z'); setMeteoBackground(); DOM.special.style.display = 'flex'; setTimeout(() => DOM.special.classList.add('active'), 50);
             const sequence = [
                 { type: "list", title: "SZABOLCS-SZATMÁR-BEREG VÁRMEGYE", list: shuffle([...SZABOLCS_STATIONS]).slice(0, 12) },
                 { type: "ny_detailed", title: "NYÍREGYHÁZA RÉSZLETES ADATOK" },
@@ -2293,11 +2306,14 @@ async function triggerEconomyMode() {
     state.isSpecial = true; state.isLocked = true; toggleLiveBadge(true);
     setTimeout(() => { DOM.sumLiveBadge.classList.add('delayed-show'); }, 2000);
     clearNewsBackgrounds();
-    [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ].forEach(ui => document.getElementById(ui.id).classList.add(`hide-${ui.t}`));
+    // Hide all main UIs including DOCK
+    [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'}, {id:'program-dock', t:'bottom'} ].forEach(ui => {
+        const el = document.getElementById(ui.id);
+        if(el) el.classList.add(`hide-${ui.t}`);
+    });
     
     DOM.logoBox.classList.remove('force-hide'); DOM.logoBox.classList.add('high-z'); 
     DOM.summary.classList.add('economy-overlay'); 
-    if(state.upNextVisible) closeUpNext(); 
     document.getElementById('sum-live-badge').classList.remove('visible'); 
 
     DOM.sumMainTitle.innerText = "TŐZSDE ÉS PÉNZÜGY"; 
@@ -2345,11 +2361,8 @@ async function triggerEconomyMode() {
             // JAVÍTOTT SZÁMÍTÁSI LOGIKA
             if(state.currencyRates && state.currencyRates[curr]) { 
                 if (state.currencyBase === 'HUF') {
-                    // Ha a bázis HUF (OpenER), akkor 1 HUF = X Valuta. Fordítva: 1/X
                      val = (1 / state.currencyRates[curr]).toFixed(2);
                 } else {
-                    // Ha a bázis USD (CurrencyAPI), akkor USD/HUF arány / USD/Valuta arány
-                    // rate.HUF = 360, rate.EUR = 0.9 -> 360/0.9 = 400
                     val = (state.currencyRates.HUF / state.currencyRates[curr]).toFixed(2); 
                 }
             } 
@@ -2441,11 +2454,16 @@ function triggerClosingNews() { triggerSummaryMode(10, 'closing_news'); }
 function triggerSummaryMode(mins, type = 'half', isReturn = false) {
     state.isSummary = true; state.isLocked = true;
     DOM.logoBox.classList.remove('center-stage', 'high-z', 'logo-gradual-zoom'); DOM.logoBox.style.transform = ''; DOM.progGuide.classList.remove('active');
-    [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ].forEach(ui => document.getElementById(ui.id).classList.add(`hide-${ui.t}`));
+    
+    // Hide UI
+    [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'}, {id:'program-dock', t:'bottom'} ].forEach(ui => {
+        const el = document.getElementById(ui.id);
+        if(el) el.classList.add(`hide-${ui.t}`);
+    });
+
     DOM.logoBox.classList.remove('force-hide'); DOM.logoBox.classList.remove('logo-fade-out');
     DOM.logoBox.classList.add('high-z');
 
-    if(state.upNextVisible) closeUpNext(); 
     document.getElementById('sum-live-badge').classList.remove('visible'); document.getElementById('sum-sidebar').classList.remove('sport-theme');
     document.querySelector('.summary-embedded-branding').style.display = 'none';
 
@@ -2597,7 +2615,13 @@ function closeAllOverlays() {
         state.isLocked = false;
         DOM.hourlyArchiveOverlay.classList.remove('active');
     }, 800);
-    [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ].forEach(ui => document.getElementById(ui.id).classList.remove(`hide-${ui.t}`));
+    
+    // RESTORE UI (Includes Dock)
+    [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'}, {id:'program-dock', t:'bottom'} ].forEach(ui => {
+        const el = document.getElementById(ui.id);
+        if(el) el.classList.remove(`hide-${ui.t}`);
+    });
+
     if(DOM.fcAlert) DOM.fcAlert.classList.remove('collision-hidden');
     const card = document.querySelector('.breaking-card');
     if(card) card.classList.remove('night-summary-card');
@@ -2635,18 +2659,51 @@ function cycleMain(manual = false, preserveIndex = false) {
     if (state.mainIdx >= state.mainItems.length) state.mainIdx = 0;
 
     const item = state.mainItems[state.mainIdx]; state.currentMainLink = item.link;
-    DOM.mTextContainer.classList.add('faded-out');
+    
+    // V20.6: Use container active state for animations
+    DOM.mainContainerBox.classList.remove('active');
+    
     setTimeout(() => {
         if (state.isLocked) return; 
-        DOM.mainTitle.innerText = item.title; DOM.mainDesc.innerText = item.desc; 
-        const idx = state.mainIdx + 1; document.getElementById('nav-count').innerText = `${idx} / ${state.mainItems.length}`;
-        const logo = getLogoHtml(item.source); DOM.mainCat.innerHTML = `${logo} ${item.source} • ${item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'})}`;
-        DOM.mTextContainer.classList.remove('faded-out');
-        const img = document.createElement('img'); img.src = item.img; img.className = 'bg-img'; DOM.stage.appendChild(img);
+        
+        // Populate Redesigned Main News Layer (V20.6)
+        DOM.mainTitle.innerText = item.title; 
+        DOM.mainDesc.innerText = item.desc; 
+        
+        const idx = state.mainIdx + 1; 
+        document.getElementById('nav-count').innerText = `${idx} / ${state.mainItems.length}`;
+        
+        const timeStr = item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'});
+        
+        if(DOM.mainCatText) {
+             const feed = RSS_FEEDS.find(f => f.name === item.source); 
+             const logoUrl = feed ? `https://www.google.com/s2/favicons?domain=${feed.domain}&sz=64` : '';
+             DOM.mainCatText.innerHTML = `<img src="${logoUrl}"> ${item.source} • ${timeStr}`;
+        }
+        
+        const img = document.createElement('img'); 
+        img.src = item.img; 
+        img.className = 'bg-img'; 
+        DOM.stage.appendChild(img);
+        
         img.onerror = () => { img.remove(); DOM.mainTitle.innerText = "KÉP BETÖLTÉSE SIKERTELEN..."; setTimeout(() => cycleMain(), 2000); };
-        img.onload = () => { if(state.isLocked) { img.remove(); return; } img.classList.add('active'); const imgs = DOM.stage.querySelectorAll('.bg-img'); if (imgs.length > 2) imgs[0].remove(); };
-        DOM.mainPrg.style.transition = 'none'; DOM.mainPrg.style.width = '0%'; setTimeout(() => { DOM.mainPrg.style.transition = 'width 21.8s linear'; DOM.mainPrg.style.width = '100%'; }, 50);
-    }, 400);
+        img.onload = () => { 
+            if(state.isLocked) { img.remove(); return; } 
+            img.classList.add('active'); 
+            const imgs = DOM.stage.querySelectorAll('.bg-img'); 
+            if (imgs.length > 2) imgs[0].remove(); 
+
+            // Trigger Entry Animation (V20.6)
+            DOM.mainContainerBox.classList.add('active');
+        };
+        
+        DOM.mainPrg.style.transition = 'none'; 
+        DOM.mainPrg.style.width = '0%'; 
+        setTimeout(() => { 
+            DOM.mainPrg.style.transition = 'width 21.8s linear'; 
+            DOM.mainPrg.style.width = '100%'; 
+        }, 50);
+    }, 600); // Wait for exit transition
 }
 
 function startClock() {
@@ -2658,7 +2715,6 @@ function startClock() {
         DOM.cDate.innerText = `${now.getFullYear()}. ${String(now.getMonth()+1).padStart(2,'0')}. ${String(now.getDate()).padStart(2,'0')}. - ${days[now.getDay()]}`;
 
         checkScheduleExecution(); 
-        updateNextEventCapsule(); 
         checkNightMode(); 
         updateHourlyCubes();
 
@@ -2667,26 +2723,18 @@ function startClock() {
             generateHourlySchedule();
             
             // HARD TRIGGER FOR 00:00 START (Safety net if clock sequence wasn't running)
-            if (now.getHours() === 0 && !state.isSpecial) {
-                if (!state.isLocked) {
-                    triggerClosingNews();
-                }
-            } else if (!state.isSpecial && !state.isLocked && now.getHours() !== 0) {
-                // Force start hourly news if we somehow missed the clock
-                triggerSummaryMode(5, 'hourly');
+            if (now.getHours() === 0 && !state.isSpecial && !state.isLocked) {
+                triggerClosingNews();
             }
         } 
         
         updateDevMonitor(); 
         
-        // AUTO REFRESH LOGIC
+        // AUTO REFRESH LOGIC (Updated V20.6)
+        // Checks at minute 20 and 40
         if (!state.isNightMode && s === 0) { 
-            if (m === 2 || m === 22 || m === 42) { 
-                crawlNews(false); 
-                setTimeout(() => {
-                    state.mainIdx = 0; state.tickerIdx = 0; 
-                    cycleMain(true); cycleTicker(1);
-                }, 2000);
+            if (m === 20 || m === 40) { 
+                backgroundRefresh();
             } 
         }
         
@@ -2929,6 +2977,7 @@ function init() {
     if(uiLeft) uiLeft.onclick = (e) => { 
         // PREVENT CLICK IF CLICKING NAV
         if (e.target.closest('.main-nav-bar') || e.target.classList.contains('mn-btn')) return; 
+        if (e.target.closest('.main-nav-overlay') || e.target.classList.contains('nav-btn-mini')) return; 
         
         if(state.currentMainLink) window.open(state.currentMainLink, '_blank'); 
     };
