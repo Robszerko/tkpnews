@@ -74,42 +74,28 @@
         .hide-bottom { transform: translateY(150%) !important; opacity: 0 !important; pointer-events: none !important; }
         .force-hide { opacity: 0 !important; pointer-events: none !important; }
 
-        /* TOP BAR */
-        .top-bar {
-            position: absolute; top: 2vh; right: 2vw; left: clamp(320px, 25vw, 480px);
-            background: rgba(0, 15, 45, 0.95); height: 8vh; min-height: 65px;
-            border-bottom: 4px solid var(--primary); 
-            transform: skewX(-15deg) translateZ(0);
-            display: flex; align-items: flex-start; padding: 0 1.5vw; box-shadow: 0 15px 35px rgba(0,0,0,0.6); 
-            overflow: visible; z-index: 100; pointer-events: auto;
-            -webkit-backface-visibility: hidden; backface-visibility: hidden;
+        /* --- LEGACY BUTTON (Floating Top Right) --- */
+        .legacy-btn-abs {
+            position: absolute; top: 30px; right: 30px;
+            background: rgba(0, 0, 0, 0.4); 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            color: #ccc; 
+            padding: 6px 15px; 
+            font-family: var(--font-data); font-weight: 700; 
+            font-size: 0.75rem; 
+            text-decoration: none; 
+            border-radius: 4px; 
+            backdrop-filter: blur(5px);
+            transition: all 0.3s;
+            z-index: 500; pointer-events: auto;
+            text-transform: uppercase; letter-spacing: 1px;
         }
-        .tb-inner { 
-            transform: skewX(15deg) translateZ(0); 
-            display: flex; align-items: center; width: 100%; justify-content: space-between; height: 100%; 
-            -webkit-backface-visibility: hidden; backface-visibility: hidden;
+        .legacy-btn-abs:hover { 
+            background: #fff; color: #000; border-color: #fff; 
+            box-shadow: 0 0 15px rgba(255,255,255,0.4);
         }
-        
-        .ny-group { display: flex; flex-direction: column; align-items: flex-start; position: relative; height: 100%; justify-content: center; }
-        .ny-widget { display: flex; align-items: center; gap: 0; background: rgba(0,0,0,0.6); padding: 5px 15px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); z-index: 20; position: relative; }
-        .ny-text-col { display: flex; flex-direction: column; align-items: flex-end; margin-right: 15px; }
-        .ny-info { font-family: var(--font-tech); font-weight: 700; color: #fff; font-size: clamp(0.9rem, 1.4vh, 1.1rem); line-height: 1; margin-bottom: 2px; letter-spacing: 0.5px; }
-        .ny-update-badge { font-family: var(--font-mono); font-size: 0.7rem; color: #aaa; letter-spacing: 0.5px; }
-        .ny-temp-box { display: flex; align-items: center; gap: 8px; border-left: 1px solid rgba(255,255,255,0.2); padding-left: 12px; font-family: var(--font-tech); font-weight: bold; font-size: 1.05rem; }
-        
-        /* PWS ROTATOR SLOT */
-        .pws-rotator-slot { 
-            font-size: 0.8rem; padding-left: 10px; border-left: 1px solid rgba(255,255,255,0.2); 
-            font-weight: 700; font-family: var(--font-tech); color: #00d4ff; text-transform: uppercase; 
-            white-space: nowrap; min-width: 140px; text-align: left; display: flex; align-items: center; gap: 5px;
-            overflow: hidden; height: 100%;
-        }
-        .flip-content { transition: transform 0.6s, opacity 0.6s; display: inline-block; }
-        .flip-out { transform: rotateX(-90deg); opacity: 0; }
-        .flip-in { animation: flipIn 0.6s forwards; }
-        @keyframes flipIn { from { transform: rotateX(90deg); opacity: 0; } to { transform: rotateX(0); opacity: 1; } }
 
-        /* REFRESH BUTTON */
+        /* REFRESH BUTTON (SIDEBAR) */
         .sidebar-ctrl-panel { margin-top: 5px; width: 100%; pointer-events: auto; }
         .refresh-btn-side {
             width: 100%; background: rgba(0, 10, 20, 0.4); border: 1px solid rgba(255,255,255,0.05);
@@ -121,126 +107,153 @@
         .refresh-btn-side:hover { background: rgba(255,255,255,0.1); color: #fff; border-top-color: var(--accent); box-shadow: 0 0 10px rgba(0,0,0,0.3); }
         .refresh-btn-side.loading { color: #888; pointer-events: none; animation: pulse 1s infinite; }
 
-        .search-container { flex-grow: 1; display: flex; justify-content: flex-end; padding: 0 2vw; }
-        .search-form { display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 350px; height: 3.5vh; padding: 0 15px; transition: 0.3s; pointer-events: auto; }
-        .search-form:focus-within { border-color: var(--accent); background: #000; box-shadow: 0 0 15px rgba(255,204,0,0.2); }
-        .search-form input { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-size: 0.9rem; }
-
-        .legacy-btn {
-            background: linear-gradient(180deg, #2a2a2a 0%, #111 100%);
-            border: 1px solid #555; color: #ddd; padding: 5px 20px; 
-            margin-left: 15px; margin-right: 15px;
-            font-family: var(--font-data); font-weight: 700; 
-            cursor: pointer; text-decoration: none; display: flex; align-items: center;
-            font-size: 0.8rem; transition: 0.2s; white-space: nowrap; height: 3.5vh;
-            border-radius: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-            pointer-events: auto;
-        }
-        .legacy-btn:hover { background: #fff; color: #000; border-color: #fff; box-shadow: 0 0 15px rgba(255,255,255,0.5); }
-
-        /* LOGO BOX */
-        @keyframes hyperStrobeIn {
-            0% { opacity: 0; transform: scale(1.5); filter: brightness(10) blur(5px); }
-            5% { opacity: 1; filter: brightness(5); transform: scale(1.1); }
-            10% { opacity: 0; }
-            15% { opacity: 1; filter: brightness(3); transform: translateX(-5px); }
-            20% { opacity: 0; }
-            25% { opacity: 1; filter: brightness(2); transform: translateX(5px); }
-            30% { opacity: 1; filter: brightness(1); transform: scale(1); }
-            100% { opacity: 1; filter: brightness(1); transform: scale(1); }
-        }
-        
-        @keyframes hyperStrobeOut {
-            0% { opacity: 1; transform: scale(1); }
-            10% { opacity: 0; filter: brightness(5); }
-            20% { opacity: 0.8; filter: brightness(3); transform: scale(1.1); }
-            30% { opacity: 0; }
-            40% { opacity: 0.5; filter: brightness(2); }
-            100% { opacity: 0; transform: scale(1.2); pointer-events: none; }
-        }
-
+        /* --- REDESIGNED COMPACT LOGO (TV BUG STYLE) --- */
         .logo-box { 
             position: fixed; 
-            top: 4.5vh; left: 4vw;  
+            top: 4vh; left: 4vw;  
             width: auto; height: auto;
-            z-index: 9999; /* ALWAYS ON TOP */
-            pointer-events: auto; cursor: pointer; perspective: 1000px; 
-            animation: hyperStrobeIn 0.7s cubic-bezier(0.1, 0.9, 0.2, 1) 0.2s both; 
-            opacity: 1; transform-origin: center center;
+            z-index: 9999;
+            pointer-events: auto; cursor: pointer;
+            display: flex; flex-direction: column; 
+            align-items: flex-start;
+            gap: 0;
         }
-        
-        .logo-box.night-theme .logo-svg-icon {
-            fill: #b3d9ff; 
-            filter: drop-shadow(0 0 8px rgba(100, 150, 255, 0.8));
-        }
-        .logo-box.night-theme .logo-text-inline {
-            color: #dbeeff;
-            text-shadow: 0 0 10px rgba(0, 50, 150, 0.8);
-        }
-
         .logo-box.high-z { z-index: 10000 !important; }
 
-        .logo-box.logo-fade-out { animation: hyperStrobeOut 0.5s ease-in forwards; }
-        .logo-box:not(.logo-fade-out) { animation: hyperStrobeIn 0.7s cubic-bezier(0.1, 0.9, 0.2, 1) both; }
-        
-        .logo-inner { position: relative; width: 100%; height: 100%; text-align: left; transform-style: preserve-3d; transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
-        .logo-box.flipped .logo-inner { transform: rotateY(180deg); }
-        
-        .logo-front { 
-            position: relative; width: 100%; height: 100%; 
-            display: flex; flex-direction: row; 
-            align-items: flex-start;
-            justify-content: flex-start; 
-            -webkit-backface-visibility: hidden; backface-visibility: hidden;
-        }
-        
-        .logo-col-icon { display: flex; align-items: center; justify-content: center; margin-right: 10px; position: relative; width: 36px; height: 36px; margin-top:3px; }
-        .logo-svg-icon { width: 100%; height: 100%; fill: #fff; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.8)); position: absolute; top: 0; left: 0; transition: opacity 0.5s, transform 0.5s, fill 1s; opacity: 1; }
-        
-        .logo-col-text { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; position: relative; }
-        
-        .logo-text-inline { 
-            font-family: var(--font-main); font-weight: 800; font-size: 1.2rem;
-            color: #fff; 
-            letter-spacing: 0.5px; 
-            text-shadow: 0 2px 4px rgba(0,0,0,0.9); 
-            line-height: 0.9; margin-bottom: 2px; display: flex; align-items: center; 
-            transition: color 1s;
-        }
-        
-        .live-tag {
-            background: #cc0000; color: #fff; font-family: var(--font-main); font-size: 0.65rem;
-            padding: 1px 5px; border-radius: 2px; margin-left: 6px; font-weight: 900; letter-spacing: 1px;
-            opacity: 0; transition: opacity 0.5s, transform 0.5s; transform: translateX(-10px);
-            text-shadow: none; box-shadow: 0 2px 5px rgba(0,0,0,0.5); display: none; 
-        }
-        .live-tag.visible { display: inline-block; opacity: 1; transform: translateX(0); }
-        .live-tag.delayed-visible { transition-delay: 2s; }
-
-        .replay-tag {
-            background: #444; color: #ccc; font-family: var(--font-main); font-size: 0.65rem;
-            padding: 1px 5px; border-radius: 2px; margin-left: 6px; font-weight: 900; letter-spacing: 1px;
-            display: none; text-shadow: none; box-shadow: 0 2px 5px rgba(0,0,0,0.5); border: 1px solid #666;
-        }
-        .replay-tag.visible { display: inline-block; }
-
-        .logo-row-time { 
-            font-family: var(--font-tech); font-weight: 700; font-size: 0.95rem;
-            color: #f0f0f0; text-shadow: 0 1px 3px rgba(0,0,0,0.9);
-            line-height: 1; margin-bottom: 1px; 
-        }
-        .mc-sec { font-size: 0.75em; color: var(--accent); margin-left: 5px; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
-        
-        .logo-row-date { 
-            font-family: var(--font-data); font-weight: 700; font-size: 0.7rem;
-            color: #ddd; text-transform: uppercase; letter-spacing: 0.5px; 
-            text-shadow: 0 1px 2px rgba(0,0,0,0.8); line-height: 1; margin-bottom: 3px;
+        /* BLINK ANIMATION FOR LOAD/EXIT (3 Seconds) */
+        @keyframes strobeEffect {
+            0% { filter: invert(0); opacity: 0; }
+            10%, 30%, 50%, 70%, 90% { filter: invert(1); opacity: 1; }
+            20%, 40%, 60%, 80% { filter: invert(0); opacity: 0.8; }
+            100% { filter: invert(0); opacity: 1; }
         }
 
-        .logo-back { position: absolute; top:0; left:0; width: 100%; height: 100%; transform: rotateY(180deg); border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px; background: linear-gradient(135deg, #001a4d 0%, #000022 100%); border: 2px solid #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); text-align: center; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
-        .ny-msg-title { font-family: var(--font-script); color: #ffd700; font-size: 1.2rem; line-height: 1; margin-bottom: 5px; }
-        .ny-msg-sub { font-family: var(--font-main); color: #fff; font-size: 0.7rem; display: flex; align-items: center; gap: 5px; }
-        .ny-msg-sub svg { width: 14px; fill: #fff; }
+        @keyframes strobeExit {
+            0% { filter: invert(0); opacity: 1; }
+            10%, 30%, 50%, 70%, 90% { filter: invert(1); opacity: 1; }
+            20%, 40%, 60%, 80% { filter: invert(0); opacity: 0.8; }
+            100% { filter: invert(0); opacity: 0; transform: scale(0.9); }
+        }
+
+        /* Default visible state */
+        .logo-box { opacity: 1; }
+        
+        .logo-box.logo-entry .logo-main-bar {
+            animation: strobeEffect 3s linear forwards;
+        }
+        
+        .logo-box.logo-exit .logo-main-bar, .logo-box.logo-exit .logo-info-container {
+            animation: strobeExit 3s linear forwards;
+        }
+        
+        .logo-box.logo-exit .logo-info-container {
+            animation-delay: 0.2s; /* Slight stagger for info box */
+        }
+
+        /* THE COMPACT LOGO BAR */
+        .logo-main-bar {
+            display: flex; 
+            height: 26px; /* Very small, compact */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .logo-box-tkp {
+            background: #000;
+            color: #fff;
+            font-family: var(--font-main);
+            font-weight: 800;
+            font-size: 0.9rem; /* Small */
+            padding: 0 8px;
+            display: flex; align-items: center; justify-content: center;
+            letter-spacing: 1px;
+            line-height: 1;
+        }
+
+        .logo-sep-v {
+            width: 1px;
+            background: #888;
+            height: 100%;
+        }
+
+        .logo-box-news {
+            background: #fff;
+            color: #000;
+            font-family: var(--font-main);
+            font-weight: 800;
+            font-size: 0.9rem; /* Same size as TKP */
+            padding: 0 8px;
+            display: flex; align-items: center; justify-content: center;
+            letter-spacing: 1px;
+            line-height: 1;
+        }
+
+        /* ANCHORED INFO CONTAINER (Clock, Date, Weather) */
+        .logo-info-container {
+            margin-top: 0;
+            display: flex; flex-direction: column;
+            background: rgba(0,0,0,0.6); /* Subtle background */
+            backdrop-filter: blur(4px);
+            border-left: 2px solid #fff; /* The anchor line */
+            padding: 6px 10px;
+            /* Animation for entry handled by JS adding classes, default hidden handled below */
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+            transition: all 0.5s;
+        }
+
+        .logo-box.logo-entry .logo-info-container {
+            animation: slideDownInfo 1s ease-out 2.5s forwards; /* Starts after strobe mostly done */
+            opacity: 0;
+        }
+        
+        @keyframes slideDownInfo {
+            0% { opacity: 0; transform: translateY(-10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* TEXT STYLES IN INFO BOX */
+        .logo-date-row {
+            font-family: var(--font-main);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.8rem;
+            line-height: 1.1;
+            letter-spacing: 0.5px;
+            text-shadow: 0 1px 2px #000;
+            margin-bottom: 3px;
+        }
+        
+        .logo-date-dim { color: #aaa; font-weight: 400; margin-right: 5px; font-family: var(--font-data); }
+
+        .logo-weather-block {
+            display: flex; flex-direction: column;
+            font-family: var(--font-data);
+            font-size: 0.75rem;
+            color: #ddd;
+            line-height: 1.2;
+            text-shadow: 0 1px 2px #000;
+        }
+        
+        .logo-wx-main { font-weight: 700; color: #fff; }
+        .logo-wx-sub { font-size: 0.7rem; color: #bbb; text-transform: uppercase; margin-top: 1px; }
+
+        .live-tag, .replay-tag {
+            background: #cc0000; color: #fff; font-family: var(--font-main); font-size: 0.6rem;
+            padding: 0 4px; height: 26px; display: flex; align-items: center; 
+            font-weight: 900; margin-left: 0;
+            display: none; letter-spacing: 1px;
+        }
+        .live-tag.visible, .replay-tag.visible { display: flex; }
+        .replay-tag { background: #444; color: #ccc; border: none; }
+
+        /* Night Mode Override for Logo */
+        .logo-box.night-theme .logo-info-container { background: rgba(0, 10, 30, 0.8); border-left-color: #00d4ff; }
+
+        /* --- GENERIC EMBEDDED LOGO (FOR CLOCK/METEO) - MATCHING NEW STYLE --- */
+        .embedded-logo-new { display: flex; align-items: center; justify-content: center; height: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.5); }
+        .emb-tkp { background:#000; color:#fff; padding:0 8px; height:100%; display:flex; align-items:center; font-family:var(--font-main); font-weight:800; font-size:1rem; }
+        .emb-sep { width:1px; background:#888; height:100%; }
+        .emb-news { background:#fff; color:#000; padding:0 8px; height:100%; display:flex; align-items:center; font-family:var(--font-main); font-weight:800; font-size:1rem; }
+
 
         /* SIDEBAR */
         .sidebar { position: absolute; top: 12vh; right: 2vw; width: clamp(280px, 22vw, 420px); height: auto; pointer-events: auto; z-index: 40; perspective: 1000px; }
@@ -1029,12 +1042,681 @@
         .nav-btn-mini:hover { background: var(--primary); border-color: var(--primary); }
         .nav-counter-mini { font-family: var(--font-mono); font-size: 0.7rem; color: #ccc; margin: 0 5px; text-shadow: 0 1px 2px #000; }
 
+        /* Text Fade Logic */
+        .text-fade { transition: opacity 0.4s ease-out; opacity: 1; }
+        .text-fade.faded-out { opacity: 0; }
+        
+        .ticker-bar { 
+            position: absolute; bottom: 0; left: 0; width: 100%; height: var(--footer-h); 
+            background: #000; border-top: 5px solid var(--primary); display: flex; 
+            z-index: 40; box-shadow: 0 -10px 40px rgba(0,0,0,0.8); 
+            transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
+            pointer-events: auto;
+        }
+        
+        .ticker-nav { display: flex; align-items: center; background: #0a0a0a; padding: 0 10px; border-right: 1px solid #333; z-index: 50; gap: 8px; pointer-events: auto; }
+        .nav-btn { background: #1a1a1a; border: 1px solid #444; color: #fff; padding: 6px 15px; cursor: pointer; font-family: var(--font-tech); font-weight: bold; transition: 0.2s; }
+        .nav-btn:hover { background: var(--accent); color: #000; }
+        .tick-info { font-family: var(--font-tech); font-size: 0.85rem; color: #777; min-width: 70px; text-align: center; }
+        .ticker-window { flex-grow: 1; height: 100%; position: relative; overflow: hidden; z-index: 45; }
+        .ticker-item { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; padding-left: 20px; opacity: 0; transition: opacity 0.5s; cursor: pointer; pointer-events: auto; text-decoration: none; }
+        .ticker-item:hover { background: rgba(255,255,255,0.08); }
+        .ticker-item.active { opacity: 1; }
+        .ticker-content { font-family: var(--font-data); font-size: clamp(1rem, 2.3vh, 1.6rem); white-space: nowrap; display: flex; align-items: center; width: 100%; color: #f0f0f0; position: relative; transition: transform 0s linear; }
+        .ticker-meta { font-family: var(--font-tech); color: var(--accent); font-weight: 700; background: rgba(255,255,255,0.08); padding: 4px 12px; border-radius: 4px; margin-right: 15px; font-size: 0.85em; flex-shrink: 0; display:flex; align-items:center; gap:8px;}
+        .ticker-refresh-msg { color: var(--accent); font-weight: bold; animation: blink 0.5s infinite; letter-spacing: 2px; }
+        
+        /* HOURLY NAVIGATION BAR */
+        .hourly-nav-bar {
+            position: absolute; bottom: var(--footer-h); left: 20px;
+            width: auto; max-width: 80vw; height: 40px;
+            background: transparent; 
+            display: flex; justify-content: flex-start; align-items: flex-end;
+            padding-bottom: 0; gap: 6px; z-index: 55;
+            opacity: 0; pointer-events: none; transition: opacity 0.5s;
+            overflow-x: auto; white-space: nowrap;
+            scrollbar-width: none;
+        }
+        .hourly-nav-bar::-webkit-scrollbar { display: none; } 
+        .hourly-nav-bar.active { opacity: 1; pointer-events: auto; }
+
+        .hour-cube {
+            transform: skewX(-15deg);
+            background: rgba(0, 51, 153, 0.4); border: 1px solid rgba(0, 212, 255, 0.5);
+            color: #fff; font-family: var(--font-tech); font-weight: bold;
+            padding: 5px 15px; cursor: pointer; transition: all 0.3s cubic-bezier(0.2, 1, 0.3, 1);
+            font-size: 0.85rem; text-transform: uppercase;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 0 10px rgba(0, 51, 153, 0.3);
+            display: flex; align-items: center; justify-content: center;
+            height: 100%; margin-right: 2px; flex-shrink: 0;
+        }
+        .hour-cube span { transform: skewX(15deg); display: block; }
+        .hour-cube:hover { background: var(--accent); color: #000; border-color: #fff; box-shadow: 0 0 20px rgba(255, 204, 0, 0.6); transform: skewX(-15deg) translateY(-5px); }
+        
+        .hour-nav-label {
+             transform: skewX(-15deg);
+             background: #222; color: #888; border: 1px solid #444;
+             padding: 5px 10px; font-family: var(--font-tech); font-size: 0.7rem; font-weight: bold;
+             display: flex; align-items: center; height: 100%; margin-right: 10px; flex-shrink: 0;
+        }
+        .hour-nav-label span { transform: skewX(15deg); }
+        
+        /* HOURLY ARCHIVE OVERLAY */
+        #hourly-archive-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 5, 15, 0.95);
+            z-index: 8000; display: none; flex-direction: column;
+            backdrop-filter: blur(10px);
+            padding: 10vh 5vw 5vh 5vw; 
+        }
+        #hourly-archive-overlay.active { display: flex; }
+        
+        .ha-header { border-bottom: 4px solid var(--accent); padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .ha-title { font-family: var(--font-main); font-size: clamp(1.5rem, 3vw, 2.5rem); color: #fff; text-transform: uppercase; font-weight: 900; }
+        .ha-close-btn { background: #cc0000; color: #fff; border: none; padding: 8px 25px; font-family: var(--font-tech); font-weight: bold; font-size: 1.2rem; cursor: pointer; transition: 0.2s; }
+        .ha-close-btn:hover { background: #ff4444; }
+        .ha-list { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-right: 10px; }
+        .ha-item { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-left: 4px solid #444; padding: 15px; cursor: pointer; transition: 0.2s; }
+        .ha-item:hover { background: rgba(255,255,255,0.1); border-left-color: var(--accent); }
+        .ha-meta { font-family: var(--font-mono); font-size: 0.9rem; color: var(--accent); margin-bottom: 5px; display:flex; gap:10px; align-items:center; }
+        .ha-h { font-family: var(--font-data); font-size: 1.3rem; font-weight: bold; color: #fff; }
+        
+        .night-msg { display: none; width: 100%; height: 100%; background: linear-gradient(90deg, #0a0a0a 0%, #151515 50%, #0a0a0a 100%); padding-left: 20px; align-items: center; justify-content: space-between; box-shadow: inset 0 0 30px rgba(0,0,0,0.8); }
+        .night-msg.active { display: flex; }
+        .nm-left { display: flex; align-items: center; gap: 20px; height: 100%; }
+        .nm-icon-box { background: rgba(255,255,255,0.05); height: 100%; display: flex; align-items: center; padding: 0 20px; font-size: 2rem; border-right: 1px solid #333; color: #666; }
+        .nm-text { display: flex; flex-direction: column; justify-content: center; }
+        .nm-title { font-family: var(--font-tech); color: var(--accent); font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; font-weight: bold; margin-bottom: 3px; }
+        .nm-desc { font-family: var(--font-main); color: #fff; font-size: 1.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        .nm-timeline { display: flex; gap: 4px; margin-right: 2vw; height: 60%; align-items: center; }
+        .nm-t-item { background: #1a1a1a; color: #666; font-family: var(--font-mono); font-size: 0.75rem; font-weight: bold; padding: 0 15px; text-align: center; border-radius: 2px; display: flex; flex-direction: column; justify-content: center; height: 100%; border: 1px solid #333; position: relative; overflow: hidden; }
+        .nm-t-item.active { background: linear-gradient(180deg, rgba(255,204,0,0.1), rgba(255,204,0,0.05)); color: var(--accent); border-color: var(--accent); box-shadow: 0 0 15px rgba(255,204,0,0.15); }
+        .nm-t-item.active::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: var(--accent); }
+        
+        /* BIG CLOCK SHOW */
+        #big-clock-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: #000; 
+            z-index: 9000; display: none; opacity: 0; 
+            transition: opacity 0.8s ease-in-out; overflow: hidden;
+            grid-template-columns: 1fr 1.5fr; 
+        }
+        #big-clock-overlay.active { display: grid; opacity: 1; }
+        
+        .bc-schedule-panel {
+            padding: 80px 50px; display: flex; flex-direction: column; justify-content: center;
+            background: linear-gradient(90deg, rgba(0,0,0,0.9) 0%, transparent 100%);
+            border-right: 1px solid rgba(255,255,255,0.05); transition: opacity 0.5s, transform 0.5s;
+        }
+        /* New Informative Text Style */
+        .bc-info-text {
+            font-family: var(--font-main); font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            color: #ddd; line-height: 1.4; opacity: 0; transform: translateX(-30px);
+            animation: slideInLeft 0.8s forwards 0.2s; transition: opacity 0.5s;
+            border-left: 4px solid var(--accent); padding-left: 20px;
+        }
+        .bc-info-highlight { color: var(--accent); font-weight: bold; text-transform: uppercase; }
+
+        .bc-main-panel { position: relative; display: flex; justify-content: center; align-items: center; flex-direction: column; transition: all 1s ease-in-out; }
+        .bc-clock-wrapper { position: relative; width: 60vh; height: 60vh; display: flex; justify-content: center; align-items: center; transition: transform 1s; }
+        
+        /* LUXURY ANALOG CLOCK DESIGN - UPDATED */
+        #bc-analog-clock {
+            width: 100%; height: 100%; position: relative;
+            /* Brushed Titanium / Dark Luxury Face */
+            background: radial-gradient(circle at center, #2b2b2b 0%, #1a1a1a 40%, #000000 100%);
+            border-radius: 50%; 
+            /* Multi-layer Bezel: Silver Outer, Dark Inner Rim */
+            border: 8px solid #c0c0c0; 
+            box-shadow: 
+                0 0 0 2px #444, /* Outer thin detail */
+                0 0 0 12px #e0e0e0, /* Main silver bezel */
+                inset 0 0 40px #000, /* Inner depth */
+                0 20px 50px rgba(0,0,0,0.9); /* Heavy drop shadow */
+            box-sizing: border-box; 
+            transform: translateY(30px);
+            overflow: hidden; /* Prevent protruding elements */
+        }
+        
+        /* Metallic sheen on bezel */
+        #bc-analog-clock::after {
+            content: ''; position: absolute; top: -12px; left: -12px; right: -12px; bottom: -12px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 40%, transparent 60%, rgba(255,255,255,0.2) 100%);
+            pointer-events: none; z-index: 25;
+        }
+
+        /* Glass Glare Effect - refined */
+        #bc-analog-clock::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.05) 0%, transparent 60%);
+            pointer-events: none; z-index: 20;
+        }
+
+        /* Precise Ticks - Metallic */
+        .clock-tick {
+            position: absolute; width: 2px; height: 12px; background: linear-gradient(to bottom, #fff, #999);
+            left: 50%; top: 6px; 
+            transform-origin: 50% calc(30vh - 14px); /* Based on wrapper size (half of 60vh minus offsets) */
+            box-shadow: 0 2px 2px rgba(0,0,0,0.5);
+        }
+        .clock-tick.major { width: 4px; height: 18px; background: linear-gradient(to bottom, #fff, #bbb); box-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+        
+        /* Elegant Serif Numbers */
+        .clock-number {
+            position: absolute; width: 40px; height: 40px; 
+            line-height: 40px; text-align: center;
+            color: #e0e0e0; font-family: var(--font-serif); font-size: 2.5rem; font-weight: 700;
+            transform: translate(-50%, -50%); text-shadow: 0 2px 5px #000;
+        }
+
+        /* Discrete Digital Display - Integrated */
+        .clock-digital-display {
+            position: absolute; bottom: 25%; left: 50%; transform: translateX(-50%);
+            font-family: var(--font-mono); font-size: 1.1rem; color: #00d4ff; font-weight: bold;
+            background: rgba(0, 0, 0, 0.4); padding: 4px 12px; border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.1); box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            z-index: 5; letter-spacing: 2px;
+        }
+        
+        /* Logo inside Analog - Elegant branding */
+        .clock-branding {
+            position: absolute; top: 22%; left: 50%; transform: translateX(-50%);
+            display: flex; flex-direction: column; align-items: center; opacity: 0.9;
+        }
+        .clock-branding svg { width: 35px; height: 35px; fill: #c0c0c0; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.8)); }
+        .clock-branding span { font-family: var(--font-main); color: #c0c0c0; font-size: 0.85rem; letter-spacing: 3px; margin-top: 5px; font-weight: 400; text-transform: uppercase; }
+
+        /* Hands - Luxury Sword Style */
+        .hand { position: absolute; left: 50%; bottom: 50%; transform-origin: 50% 100%; border-radius: 50% 50% 0 0; z-index: 10; box-shadow: 0 5px 15px rgba(0,0,0,0.6); }
+        
+        .hand-h { 
+            width: 12px; height: 26%; 
+            background: linear-gradient(to right, #ccc, #fff, #ccc); 
+            margin-left: -6px; z-index: 11; 
+            clip-path: polygon(50% 0, 100% 20%, 100% 100%, 0 100%, 0 20%);
+        }
+        .hand-m { 
+            width: 8px; height: 40%; 
+            background: linear-gradient(to right, #ccc, #fff, #ccc); 
+            margin-left: -4px; z-index: 12; 
+            clip-path: polygon(50% 0, 100% 15%, 100% 100%, 0 100%, 0 15%);
+        }
+        
+        /* Seconds Hand - Needle Red (Fixed Pivot) */
+        .hand-s { 
+            width: 2px; height: 50%; background: #cc0000; 
+            left: 50%; bottom: 50%; margin-left: -1px; 
+            transform-origin: 50% 100%; /* Pivot exactly at bottom-center */
+            z-index: 13; box-shadow: none; border-radius: 2px 2px 0 0;
+        }
+        /* Counterweight tail */
+        .hand-s::after { 
+            content: ''; position: absolute; top: 100%; left: -2px; 
+            width: 6px; height: 25px; background: #cc0000; 
+            border-radius: 0 0 2px 2px; box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        /* Central Cap */
+        .clock-center { 
+            position: absolute; width: 14px; height: 14px; 
+            background: radial-gradient(circle at 30% 30%, #fff, #c0c0c0); 
+            border-radius: 50%; left: 50%; top: 50%; transform: translate(-50%, -50%); 
+            z-index: 15; box-shadow: 0 2px 5px rgba(0,0,0,0.8); border: 1px solid #666;
+        }
+
+        .bc-layout-center .bc-schedule-panel { opacity: 0; transform: translateX(-100px); pointer-events: none; }
+        .bc-layout-center .bc-main-panel { transform: translateX(-33%); } 
+        .bc-layout-center .bc-clock-wrapper { transform: scale(1.3); }
+        
+        @keyframes slideInLeft { from { opacity:0; transform:translateX(-30px); } to { opacity:1; transform:translateX(0); } }
+
+        #special-meteo { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: transparent; z-index: 5000; display: none; flex-direction: column; align-items: center; padding-top: 15vh; opacity: 0; transition: opacity 0.8s; pointer-events: none; }
+        #special-meteo.active { display: flex; opacity: 1; pointer-events: auto; }
+        .sm-bg { position: absolute; top:0; left:0; width:100%; height:100%; z-index:-1; background: linear-gradient(135deg, #001a4d 0%, #000 100%); transition: opacity 1s ease-in-out; }
+        .sm-pattern { position: absolute; top:0; left:0; width:100%; height:100%; z-index:0; background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 30px 30px; animation: panBg 60s linear infinite; }
+        @keyframes panBg { from { background-position: 0 0; } to { background-position: 100px 100px; } }
+        .sm-header { width: 92%; border-bottom: 6px solid var(--accent); display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 15px; margin-bottom: 2vh; position: relative; z-index: 2; }
+        .sm-title { font-family: var(--font-main); font-size: clamp(2rem, 4vh, 3.5rem); font-weight: 900; }
+        .sm-grid { width: 92%; height: 65vh; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(3, 1fr); gap: 10px; overflow: hidden; align-content: start; position: relative; z-index: 2; }
+        
+        /* NEW FORECAST CARD STYLES */
+        @keyframes card-entry { from { opacity: 0; transform: translateY(25px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .forecast-day-card { 
+            display: flex; flex-direction: column; padding: 16px; border-radius: 18px; 
+            background: var(--bg-widget-night); border: 1px solid var(--border-widget-night); 
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); color: var(--text-primary-night); 
+            transition: all 0.4s ease-in-out; backdrop-filter: blur(20px) saturate(180%); 
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-top: 6px solid var(--temp-color, var(--accent-interactive-night)); 
+            opacity: 0; animation: card-entry 0.6s ease-out forwards; 
+            font-family: var(--font-inter);
+        }
+        .forecast-day-card.today { transform: scale(1.05); border: 2px solid var(--accent-interactive-night); border-top-width: 6px; }
+        .forecast-header { text-align: center; margin-bottom: 10px; }
+        .forecast-day-name { font-size: 17px; font-weight: 700; }
+        .forecast-date { font-size: 13px; font-weight: 500; color: var(--text-secondary-night); }
+        .forecast-temps { font-size: 28px; font-weight: 800; display: flex; justify-content: center; align-items: baseline; gap: 14px; padding: 12px 0; border-top: 1px solid var(--border-widget-night); margin: 10px 0 0 0; }
+        .forecast-temp-min { font-size: 0.65em; color: var(--text-secondary-night); font-weight: 500; }
+        .forecast-sun-details { display: flex; justify-content: space-around; align-items: center; font-size: 13px; font-weight: 600; color: var(--text-secondary-night); padding: 8px 0; margin-bottom: 10px; border-bottom: 1px solid var(--border-widget-night); }
+        .forecast-sun-details > span { display: flex; align-items: center; }
+        .icon-combo { display: inline-flex; align-items: center; margin-right: 8px; }
+        .icon-sunrise { color: #facc15; }
+        .icon-sunset { color: #f97316; }
+        .icon-arrow { font-size: 0.7em; margin-left: -5px; position: relative; color: #ffffff; text-shadow: 0 0 3px rgba(0,0,0,0.5); }
+        .icon-arrow.up { top: -3px; }
+        .icon-arrow.down { top: 3px; }
+        .forecast-part { margin-top: 10px; flex-grow: 1; }
+        .forecast-part:first-of-type { padding-bottom: 10px; border-bottom: 1px solid var(--border-widget-night); }
+        .forecast-part-header { display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+        .forecast-part-header i { font-size: 1.3em; margin-right: 8px; color: var(--accent-interactive-night); width: 22px; text-align: center; }
+        .forecast-part-details { font-size: 13px; color: var(--text-secondary-night); line-height: 1.6; text-align: center; }
+        .forecast-part-details p { margin: 4px 0; }
+
+        .sm-card-item { background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.1); border-left: 6px solid var(--accent); padding: 10px 15px; display: flex; flex-direction: column; justify-content: center; opacity: 0; animation: slideInCard 0.6s forwards; backdrop-filter: blur(5px); }
+        .ny-detail-card { background: linear-gradient(135deg, #001a4d 0%, #000 100%); border: 1px solid rgba(255,255,255,0.2); border-left: 5px solid #00d4ff; }
+        .ny-d-label { font-family: var(--font-tech); font-size: 0.8rem; color: #888; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px; white-space: nowrap; }
+        .ny-d-val { font-family: var(--font-main); font-size: 2rem; color: #fff; font-weight: bold; line-height: 1; white-space: nowrap; }
+        .ny-d-icon { font-size: 1.8rem; margin-bottom: 5px; }
+        .astro-card { background: linear-gradient(135deg, #220033 0%, #000 100%); border-left: 5px solid #d400ff; }
+        .extreme-card { background: linear-gradient(135deg, #330000 0%, #1a0000 100%); border-left: 5px solid #ff4444; }
+        
+        .hourly-detailed-card { grid-column: span 4; grid-row: span 3; background: linear-gradient(180deg, rgba(0,20,40,0.95), rgba(0,10,20,0.98)); border-left: 6px solid #00d4ff; display: flex; flex-direction: column; padding: 20px; }
+        .hd-header-sub { font-family: var(--font-tech); color: #00d4ff; margin-bottom: 10px; font-weight: bold; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        .hd-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); flex-grow: 1; padding: 0 10px; }
+        .hd-row:last-child { border-bottom: none; }
+        .hd-time { font-family: var(--font-tech); font-size: 1.5rem; color: var(--accent); font-weight: bold; }
+        .hd-icon { font-size: 2.2rem; display:flex; align-items:center; gap:10px; }
+        .hd-desc-text { font-family: var(--font-main); font-size: 1.1rem; color: #fff; text-transform: uppercase; font-weight: 700; opacity: 0.9; flex-grow: 1; text-align: left; padding-left: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .hd-temp { font-family: var(--font-main); font-size: 2rem; font-weight: bold; color: #fff; margin-left: 15px; }
+        .hd-meta { font-family: var(--font-mono); font-size: 0.8rem; color: #ccc; text-align: right; min-width: 90px; }
+        
+        .sm-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; margin-bottom: 5px; width:100%; }
+        .sm-name { font-family: var(--font-main); font-size: 1.1rem; color: #fff; font-weight: 700; display: flex; align-items: center; gap: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .sm-cond { font-family: var(--font-tech); font-size: 0.8rem; color: #aaa; text-transform: uppercase; }
+        .sm-body { display: flex; justify-content: space-between; align-items: center; width:100%; }
+        .sm-temp-box { font-family: var(--font-tech); font-size: 2.2rem; font-weight: 700; color: var(--accent); line-height: 1; }
+        .sm-details { font-family: var(--font-mono); font-size: 0.65rem; color: #ccc; text-align: right; line-height: 1.3; display:grid; grid-template-columns: 1fr; gap:2px; }
+        .sm-watermark { position:absolute; bottom:2px; right:4px; font-size:0.45rem; color:rgba(255,255,255,0.2); font-family:var(--font-tech); letter-spacing:1px; }
+        @keyframes slideInCard { 0% { transform: translateY(30px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+        .embedded-logo { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+        .embedded-logo svg { width: 35px; height: 35px; fill: var(--primary); filter: drop-shadow(0 0 5px rgba(0,0,0,0.5)); }
+        .embedded-logo-text { font-family: var(--font-main); font-size: 1.2rem; font-weight: 800; color: #fff; letter-spacing: 1px; }
+
+        #summary-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 5000; display: none; grid-template-columns: 35% 65%; transform: translateY(0); opacity: 0; transition: opacity 0.5s; pointer-events: none; }
+        #summary-overlay.active { opacity: 1; pointer-events: auto; }
+        
+        /* ECONOMY SPECIFIC OVERRIDES */
+        .economy-overlay .summary-brand-side { 
+            /* STOCK MARKET BG */
+            background: linear-gradient(rgba(0, 20, 40, 0.9), rgba(0, 10, 20, 0.95)),
+                        url('https://images.unsplash.com/photo-1611974765270-ca1258634369?q=80&w=1920&fit=crop') center/cover !important;
+            border-right-color: var(--economy-accent); 
+            padding-top: 35vh; 
+        }
+        .economy-overlay .summary-subtitle { color: var(--economy-accent); }
+        .economy-overlay .summary-content-side::before { filter: hue-rotate(120deg) brightness(0.6) grayscale(20%); }
+        
+        .eco-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; height: 100%; padding-top:20px; }
+        .eco-card { background: linear-gradient(135deg, rgba(0, 40, 40, 0.8), rgba(0, 20, 20, 0.9)); border: 1px solid rgba(0, 204, 153, 0.3); border-left: 5px solid var(--economy-accent); border-radius: 4px; padding: 20px; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: fadeIn 0.5s; }
+        .eco-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 8px 0; margin-bottom: 5px; }
+        .eco-row:last-child { border-bottom: none; }
+        .eco-curr { font-family: var(--font-main); font-size: 1.4rem; color: #fff; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .eco-val { font-family: var(--font-mono); font-size: 1.5rem; color: var(--economy-accent); font-weight: bold; }
+        
+        .summary-brand-side { background: radial-gradient(circle at center, #002255 0%, #00081a 100%); border-right: 6px solid var(--accent); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; position: relative; overflow: hidden; padding-top: 35vh; }
+        .summary-brand-side::after { content: ''; position: absolute; top: 0; left: 0; width: 200%; height: 200%; background: repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0, rgba(255,255,255,0.03) 2px, transparent 2px, transparent 20px); animation: rotateBG 60s linear infinite; z-index: 0; opacity: 0.5; pointer-events: none; }
+        @keyframes rotateBG { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* SOCCER FIELD BACKGROUND - DARKER & WITH GOALS */
+        .summary-brand-side.sport-theme { 
+            background-color: #004d00; /* Much Darker Green */
+            background-image: 
+                /* Center Line */
+                linear-gradient(to right, transparent 49.5%, rgba(255,255,255,0.5) 49.5%, rgba(255,255,255,0.5) 50.5%, transparent 50.5%),
+                /* Center Circle */
+                radial-gradient(circle at 50% 50%, transparent 18%, rgba(255,255,255,0.5) 18%, rgba(255,255,255,0.5) 19%, transparent 19%),
+                /* Top Goal Area (Box) */
+                linear-gradient(to bottom, rgba(255,255,255,0.5) 2px, transparent 2px), /* Top border of box */
+                linear-gradient(to right, rgba(255,255,255,0.5) 2px, transparent 2px), /* Left border */
+                linear-gradient(to left, rgba(255,255,255,0.5) 2px, transparent 2px), /* Right border */
+                linear-gradient(to top, rgba(255,255,255,0.5) 2px, transparent 2px), /* Bottom border of box */
+                /* Bottom Goal Area (Box) */
+                linear-gradient(to top, rgba(255,255,255,0.5) 2px, transparent 2px), /* Bottom border of box */
+                linear-gradient(to right, rgba(255,255,255,0.5) 2px, transparent 2px), /* Left border */
+                linear-gradient(to left, rgba(255,255,255,0.5) 2px, transparent 2px), /* Right border */
+                linear-gradient(to bottom, rgba(255,255,255,0.5) 2px, transparent 2px); /* Top border of box */
+            
+            /* SIZES AND POSITIONS FOR GOALS */
+            background-size: 
+                100% 100%, /* Line */
+                100% 100%, /* Circle */
+                /* Top Goal Box (Width 40%, Height 15%) */
+                40% 2px, 2px 15%, 2px 15%, 40% 2px,
+                /* Bottom Goal Box */
+                40% 2px, 2px 15%, 2px 15%, 40% 2px;
+                
+            background-position: 
+                center, /* Line */
+                center, /* Circle */
+                /* Top Goal: top edge, left edge of box, right edge of box, bottom edge of box */
+                center top, calc(50% - 20%) top, calc(50% + 20%) top, center 15%,
+                /* Bottom Goal: bottom edge, left edge of box, right edge of box, top edge of box */
+                center bottom, calc(50% - 20%) bottom, calc(50% + 20%) bottom, center 85%;
+            
+            background-repeat: no-repeat;
+            border-right-color: var(--sport-light); 
+        }
+        .summary-brand-side.sport-theme .summary-subtitle { color: var(--sport-light); text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+        .summary-brand-side.sport-theme::after { opacity: 0.1; background: repeating-linear-gradient(90deg, rgba(255,255,255,0.1) 0, rgba(255,255,255,0.1) 20px, transparent 20px, transparent 40px); animation: none; transform: none; } /* Mowed grass effect */
+        .summary-brand-side.sport-theme::before { content: none; }
+
+        .summary-title { font-family: var(--font-main); font-size: clamp(1.5rem, 3vh, 2.2rem); color: #fff; text-transform: uppercase; font-weight: 800; text-align: center; line-height: 1.1; margin-bottom: 5px; z-index: 2; text-shadow: 0 4px 10px rgba(0,0,0,0.8); }
+        .summary-subtitle { font-family: var(--font-tech); font-size: 1.2rem; color: var(--accent); letter-spacing: 2px; text-align: center; z-index: 2; font-weight: 700; text-shadow: 0 2px 5px rgba(0,0,0,0.8); margin-bottom: 20px; }
+        
+        .provider-list-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; width: 85%; z-index: 20; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px; }
+        .provider-chip { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); padding: 4px 10px 4px 4px; border-radius: 20px; cursor: pointer; pointer-events: auto; transition: all 0.2s; backdrop-filter: blur(5px); }
+        .provider-chip:hover { background: var(--accent); transform: scale(1.05); box-shadow: 0 0 10px rgba(255, 204, 0, 0.5); border-color: #fff; }
+        .provider-chip:hover span { color: #000; }
+        .provider-chip img { width: 20px; height: 20px; border-radius: 50%; object-fit: contain; background: #fff; padding: 2px; }
+        .provider-chip span { font-family: var(--font-tech); font-weight: bold; font-size: 0.75rem; text-transform: uppercase; color: #eee; letter-spacing: 0.5px; }
+        
+        /* FINANCIAL NEWS CARD STYLES (Bottom Left) */
+        .fin-news-container {
+            position: absolute; bottom: 30px; left: 5%; width: 90%;
+            z-index: 20; display: flex; flex-direction: column;
+            transform: translateX(-120%); transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .fin-news-container.slide-in { transform: translateX(0); }
+        .fin-news-container.slide-out { transform: translateX(-120%); }
+
+        .fin-tab {
+            width: fit-content; background: var(--economy-accent); color: #000;
+            font-family: var(--font-main); font-weight: 800; text-transform: uppercase;
+            padding: 2px 10px; border-radius: 4px 4px 0 0; font-size: 0.85rem;
+            margin-bottom: -1px; opacity: 0; transition: opacity 0.5s;
+        }
+        .fin-tab.visible { opacity: 1; }
+
+        .fin-news-card {
+            background: rgba(0,0,0,0.85); border-left: 4px solid var(--economy-accent);
+            padding: 15px; border-radius: 0 4px 4px 4px;
+            display: flex; flex-direction: column; cursor: pointer; transition: 0.3s;
+            pointer-events: auto; border: 1px solid rgba(255,255,255,0.1); border-left-width: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .fin-news-card:hover { background: rgba(0,20,20,0.95); border-color: #fff; }
+        
+        .fin-news-content { opacity: 0; transition: opacity 0.5s; }
+        .fin-news-content.visible { opacity: 1; }
+
+        .fn-meta { font-family: var(--font-tech); font-size: 0.7rem; color: #aaa; display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
+        .fn-title { font-family: var(--font-main); font-size: 1rem; color: #fff; line-height: 1.2; font-weight: 700; }
+        .fn-logo { height: 16px; width: auto; }
+
+        .sum-live-badge { background: #cc0000; color: #fff; padding: 2px 10px; font-family: var(--font-main); font-weight: 900; letter-spacing: 2px; font-size: 0.9rem; margin-bottom: 20px; z-index: 2; box-shadow: 0 0 15px rgba(204,0,0,0.5); display: none; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease-out, transform 0.5s ease-out; }
+        .sum-live-badge.visible { display: block; }
+        .sum-live-badge.delayed-show { opacity: 1; transform: translateY(0); } 
+        .summary-embedded-branding { display: flex; flex-direction: column; align-items: center; margin-top: auto; padding-bottom: 30px; width: 60%; z-index: 2; }
+        .sum-timer-capsule { position: absolute; bottom: 40px; background: #cc0000; color: #fff; padding: 5px 25px; border-radius: 50px; font-family: var(--font-mono); font-weight: 700; font-size: 1.8rem; display: flex; align-items: center; gap: 10px; box-shadow: 0 0 25px rgba(204,0,0,0.6); border: 2px solid rgba(255,255,255,0.2); z-index: 2; }
+        .sum-timer-capsule::before { content: '⏱'; font-size: 0.8em; }
+        
+        .summary-content-side { background: #050505; padding: 40px; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+        .summary-content-side::before { content: ''; position: absolute; top:0; left:0; width:100%; height:100%; background: url('https://images.unsplash.com/photo-1495020689067-958852a7765e?q=80&w=1920&fit=crop') center/cover; opacity: 0.2; z-index: 0; filter: grayscale(100%); }
+        .summary-header { border-bottom: 2px solid #333; padding-bottom: 15px; margin-bottom: 20px; height: 10px; z-index: 2; position: relative; }
+        
+        .summary-page { display: flex; flex-direction: column; gap: 20px; position: absolute; width: calc(100% - 80px); transition: opacity 1.2s ease-in-out, transform 1.2s ease-in-out; opacity: 0; transform: translateX(50px); pointer-events: none; z-index: 1; }
+        .summary-page.active { opacity: 1; transform: translateX(0); pointer-events: auto; z-index: 100; }
+        .sum-item { display: flex; gap: 20px; background: rgba(0,0,0,0.8); padding: 15px; border-left: 4px solid #333; transition: 0.3s; cursor: pointer; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); pointer-events: auto; text-decoration: none; }
+        .sum-item:hover { background: rgba(20,20,30,0.9); border-left-color: var(--accent); }
+        .sum-img { width: 120px; height: 80px; object-fit: cover; background: #222; }
+        .sum-img.placeholder { display: flex; align-items: center; justify-content: center; background: #001a4d; border: 1px solid #333; }
+        .sum-img.placeholder svg { width: 50%; fill: var(--accent); }
+        .sum-text { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+        .sum-time { font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent); margin-bottom: 4px; display:flex; align-items:center; gap:6px; }
+        .sum-h { font-family: var(--font-data); font-weight: 700; font-size: 1.3rem; color: #fff; line-height: 1.2; text-shadow: 0 1px 2px #000; }
+        .sum-d { font-family: var(--font-data); font-size: 0.9rem; color: #aaa; margin-top: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+        .prov-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--accent); padding-bottom: 15px; margin-bottom: 20px; z-index: 5; position: relative; }
+        .prov-logo-area { display: flex; align-items: center; gap: 20px; }
+        .prov-logo-large { height: 60px; width: auto; border-radius: 4px; background: #fff; padding: 5px; }
+        .prov-title { font-family: var(--font-main); font-size: 2.5rem; color: #fff; text-transform: uppercase; font-weight: 800; }
+        .prov-close-btn { background: #cc0000; color: #fff; border: none; padding: 10px 20px; font-family: var(--font-tech); font-weight: bold; font-size: 1.2rem; cursor: pointer; pointer-events: auto; transition: 0.2s; }
+        .prov-close-btn:hover { background: #ff4444; }
+        .prov-list-scroll { overflow-y: auto; height: 80vh; padding-right: 10px; z-index: 5; position: relative; scrollbar-width: thin; scrollbar-color: var(--accent) #333; }
+        .prov-item { background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 10px; padding: 15px; display: flex; flex-direction: column; border-left: 3px solid #555; pointer-events: auto; cursor: pointer; transition: 0.2s; text-decoration: none; }
+        .prov-item:hover { background: rgba(255,255,255,0.1); border-left-color: var(--accent); }
+        .prov-time { font-family: var(--font-mono); color: var(--accent); font-weight: bold; font-size: 1.1rem; margin-bottom: 5px; }
+        .prov-h { font-family: var(--font-main); color: #fff; font-size: 1.4rem; margin-bottom: 5px; line-height: 1.1; }
+        .prov-desc { font-family: var(--font-data); color: #ccc; font-size: 1rem; line-height: 1.4; }
+
+        #prog-guide-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 5000; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.5s; overflow: hidden; }
+        #prog-guide-overlay.active { opacity: 1; pointer-events: auto; }
+        .pg-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; filter: blur(15px) brightness(0.4); transition: filter 10s ease-in-out, transform 15s linear; z-index: -1; }
+        .pg-bg.sharpen { filter: blur(0px) brightness(0.8); transform: scale(1.05); }
+        .pg-container { display: flex; flex-direction: column; gap: 25px; transform: skewX(-10deg); margin-left: 20vw; z-index: 2; }
+        .pg-item { display: flex; flex-direction: column; align-items: flex-start; opacity: 0; transform: translateX(50px); animation: pgSlideIn 0.8s forwards; border-left: 5px solid var(--accent); padding-left: 20px; }
+        .pg-item.fading-out { animation: pgFadeOut 0.8s forwards !important; }
+        .pg-time { font-family: var(--font-tech); font-size: 2.5rem; color: var(--accent); font-weight: 700; line-height: 1; text-shadow: 0 0 15px rgba(255, 204, 0, 0.4); }
+        .pg-title { font-family: var(--font-main); font-size: 2rem; color: #fff; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; }
+        .pg-desc { font-family: var(--font-data); font-size: 1.2rem; color: #bbb; text-transform: uppercase; }
+        @keyframes pgSlideIn { 0% { opacity: 0; transform: translateX(50px); } 100% { opacity: 1; transform: translateX(0); } }
+        @keyframes pgFadeOut { 0% { opacity: 1; transform: translateX(0); } 100% { opacity: 0; transform: translateX(-50px); } }
+
+        #auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .auth-box { background: #111; border: 1px solid #333; padding: 30px; border-left: 5px solid var(--accent); display: flex; flex-direction: column; align-items: center; gap: 15px; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
+        .auth-title { font-family: var(--font-tech); color: var(--accent); font-size: 1.2rem; letter-spacing: 2px; margin-bottom: 10px; }
+        .pin-input { background: #000; border: 1px solid #444; color: #fff; font-family: var(--font-mono); font-size: 2rem; width: 120px; text-align: center; padding: 10px; outline: none; letter-spacing: 5px; }
+        
+        #dev-panel { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80vw; max-width: 900px; height: 80vh; background: rgba(10, 15, 20, 0.98); border: 1px solid #333; z-index: 10001; display: none; flex-direction: column; box-shadow: 0 0 100px rgba(0,0,0,0.9); font-family: var(--font-mono); color: #ccc; }
+        .dev-head { background: #1a1a1a; padding: 15px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+        .dev-body { flex-grow: 1; padding: 20px; overflow-y: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .dev-section { background: #080808; border: 1px solid #222; padding: 15px; }
+        .dev-h { font-family: var(--font-tech); color: var(--primary); border-bottom: 1px solid #222; margin-bottom: 10px; padding-bottom: 5px; font-weight: bold; }
+        
+        #dev-schedule-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-bottom: 15px; }
+        #dev-schedule-table th { text-align: left; color: #888; border-bottom: 1px solid #333; padding: 4px; font-size: 0.7rem; }
+        #dev-schedule-table td { border-bottom: 1px solid #222; padding: 6px 4px; color: #bbb; }
+        .sch-time { color: var(--accent); font-weight: bold; }
+        .sch-live { color: #f00; font-weight: 900; animation: blink 1s infinite; letter-spacing: 1px; }
+        .sch-off { color: #555; font-style: italic; }
+
+        .btn { background: #222; border: 1px solid #444; color: #fff; padding: 8px 15px; cursor: pointer; font-family: var(--font-mono); font-size: 0.8rem; margin-bottom: 5px; width: 100%; text-align: left; transition: 0.2s; }
+        .btn:hover { background: var(--primary); }
+        .log-table { width: 100%; font-size: 0.75rem; border-collapse: collapse; }
+        .log-table td { padding: 4px; border-bottom: 1px solid #1a1a1a; }
+        .status-ok { color: #0f0; }
+        .status-fail { color: #f00; }
+        .status-wait { color: #888; font-style: italic; }
+        .close-btn { color: #f00; cursor: pointer; font-weight: bold; font-family: sans-serif; }
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s; }
+        .terminal { width: 550px; font-family: var(--font-mono); color: #0f0; font-size: 0.85rem; background: #050505; border: 1px solid #222; padding: 25px; margin-top: 20px; }
+        .term-line { height: 20px; margin-bottom: 4px; opacity: 0; }
+        .load-bar-wrap { width: 400px; height: 3px; background: #222; margin-top: 25px; overflow: hidden; border-radius: 2px; }
+        .load-fill { height: 100%; width: 0%; background: #0f0; transition: width 0.1s linear; }
+        @keyframes slideIn { from { transform: translateX(-100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.1; } }
+
+        /* --- REDESIGNED COMPACT LOGO (TV BUG STYLE) --- */
+        .logo-box { 
+            position: fixed; 
+            top: 4vh; left: 4vw;  
+            width: auto; height: auto;
+            z-index: 9999;
+            pointer-events: auto; cursor: pointer;
+            display: flex; flex-direction: column; 
+            align-items: flex-start;
+            gap: 0;
+        }
+        .logo-box.high-z { z-index: 10000 !important; }
+
+        /* BLINK ANIMATION FOR LOAD/EXIT (3 Seconds) */
+        @keyframes strobeEffect {
+            0% { filter: invert(0); opacity: 0; }
+            10%, 30%, 50%, 70%, 90% { filter: invert(1); opacity: 1; }
+            20%, 40%, 60%, 80% { filter: invert(0); opacity: 0.8; }
+            100% { filter: invert(0); opacity: 1; }
+        }
+
+        @keyframes strobeExit {
+            0% { filter: invert(0); opacity: 1; }
+            10%, 30%, 50%, 70%, 90% { filter: invert(1); opacity: 1; }
+            20%, 40%, 60%, 80% { filter: invert(0); opacity: 0.8; }
+            100% { filter: invert(0); opacity: 0; transform: scale(0.9); }
+        }
+
+        /* Default visible state */
+        .logo-box { opacity: 1; }
+        
+        .logo-box.logo-entry .logo-main-bar {
+            animation: strobeEffect 3s linear forwards;
+        }
+        
+        .logo-box.logo-exit .logo-main-bar, .logo-box.logo-exit .logo-info-container {
+            animation: strobeExit 3s linear forwards;
+        }
+        
+        .logo-box.logo-exit .logo-info-container {
+            animation-delay: 0.2s; /* Slight stagger for info box */
+        }
+
+        /* THE COMPACT LOGO BAR */
+        .logo-main-bar {
+            display: flex; 
+            height: 26px; /* Very small, compact */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .logo-box-tkp {
+            background: #000;
+            color: #fff;
+            font-family: var(--font-main);
+            font-weight: 800;
+            font-size: 0.9rem; /* Small */
+            padding: 0 8px;
+            display: flex; align-items: center; justify-content: center;
+            letter-spacing: 1px;
+            line-height: 1;
+        }
+
+        .logo-sep-v {
+            width: 1px;
+            background: #888;
+            height: 100%;
+        }
+
+        .logo-box-news {
+            background: #fff;
+            color: #000;
+            font-family: var(--font-main);
+            font-weight: 800;
+            font-size: 0.9rem; /* Same size as TKP */
+            padding: 0 8px;
+            display: flex; align-items: center; justify-content: center;
+            letter-spacing: 1px;
+            line-height: 1;
+        }
+
+        /* ANCHORED INFO CONTAINER (Clock, Date, Weather) */
+        .logo-info-container {
+            margin-top: 0;
+            display: flex; flex-direction: column;
+            background: rgba(0,0,0,0.6); /* Subtle background */
+            backdrop-filter: blur(4px);
+            border-left: 2px solid #fff; /* The anchor line */
+            padding: 6px 10px;
+            /* Animation for entry handled by JS adding classes, default hidden handled below */
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+            transition: all 0.5s;
+        }
+
+        .logo-box.logo-entry .logo-info-container {
+            animation: slideDownInfo 1s ease-out 2.5s forwards; /* Starts after strobe mostly done */
+            opacity: 0;
+        }
+        
+        @keyframes slideDownInfo {
+            0% { opacity: 0; transform: translateY(-10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* TEXT STYLES IN INFO BOX */
+        .logo-date-row {
+            font-family: var(--font-main);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.8rem;
+            line-height: 1.1;
+            letter-spacing: 0.5px;
+            text-shadow: 0 1px 2px #000;
+            margin-bottom: 3px;
+        }
+        
+        .logo-date-dim { color: #aaa; font-weight: 400; margin-right: 5px; font-family: var(--font-data); }
+
+        .logo-weather-block {
+            display: flex; flex-direction: column;
+            font-family: var(--font-data);
+            font-size: 0.75rem;
+            color: #ddd;
+            line-height: 1.2;
+            text-shadow: 0 1px 2px #000;
+        }
+        
+        .logo-wx-main { font-weight: 700; color: #fff; }
+        .logo-wx-sub { font-size: 0.7rem; color: #bbb; text-transform: uppercase; margin-top: 1px; }
+
+        .live-tag, .replay-tag {
+            background: #cc0000; color: #fff; font-family: var(--font-main); font-size: 0.6rem;
+            padding: 0 4px; height: 26px; display: flex; align-items: center; 
+            font-weight: 900; margin-left: 0;
+            display: none; letter-spacing: 1px;
+        }
+        .live-tag.visible, .replay-tag.visible { display: flex; }
+        .replay-tag { background: #444; color: #ccc; border: none; }
+
+        /* Night Mode Override for Logo */
+        .logo-box.night-theme .logo-info-container { background: rgba(0, 10, 30, 0.8); border-left-color: #00d4ff; }
+
+        /* --- GENERIC EMBEDDED LOGO (FOR CLOCK/METEO) - MATCHING NEW STYLE --- */
+        .embedded-logo-new { display: flex; align-items: center; justify-content: center; height: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.5); }
+        .emb-tkp { background:#000; color:#fff; padding:0 8px; height:100%; display:flex; align-items:center; font-family:var(--font-main); font-weight:800; font-size:1rem; }
+        .emb-sep { width:1px; background:#888; height:100%; }
+        .emb-news { background:#fff; color:#000; padding:0 8px; height:100%; display:flex; align-items:center; font-family:var(--font-main); font-weight:800; font-size:1rem; }
+
+        /* --- LEGACY BUTTON (Floating Top Right) --- */
+        .legacy-btn-abs {
+            position: absolute; top: 30px; right: 30px;
+            background: rgba(0, 0, 0, 0.4); 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            color: #ccc; 
+            padding: 6px 15px; 
+            font-family: var(--font-data); font-weight: 700; 
+            font-size: 0.75rem; 
+            text-decoration: none; 
+            border-radius: 4px; 
+            backdrop-filter: blur(5px);
+            transition: all 0.3s;
+            z-index: 500; pointer-events: auto;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .legacy-btn-abs:hover { 
+            background: #fff; color: #000; border-color: #fff; 
+            box-shadow: 0 0 15px rgba(255,255,255,0.4);
+        }
+
     </style>
 </head>
 <body>
 
     <!-- SECRET DEV TRIGGER (Top Left 80x80px) -->
     <div id="dev-trigger" onclick="openAuth()"></div>
+    
+    <!-- LEGACY BUTTON (Absolute, no Top Bar) -->
+    <a href="https://klikk.hu" target="_blank" class="legacy-btn-abs">KLIKK.HU &#10138;</a>
 
     <!-- AUTH OVERLAY -->
     <div id="auth-overlay">
@@ -1123,8 +1805,11 @@
                     <div id="clock-face"></div> <!-- Generated JS ticks -->
                     
                     <div class="clock-branding">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                        <span>TKP NEWS</span>
+                        <div class="embedded-logo-new">
+                             <div class="emb-tkp">TKP</div>
+                             <div class="emb-sep"></div>
+                             <div class="emb-news">NEWS</div>
+                        </div>
                     </div>
 
                     <!-- DISCRETE DIGITAL CLOCK INSIDE -->
@@ -1169,9 +1854,11 @@
             </div>
 
             <div class="summary-embedded-branding">
-                <svg viewBox="0 0 24 24" style="width:40px; height:40px; fill:var(--primary); margin-bottom:5px;">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-                </svg>
+                <div class="embedded-logo-new">
+                     <div class="emb-tkp">TKP</div>
+                     <div class="emb-sep"></div>
+                     <div class="emb-news">NEWS</div>
+                </div>
                 <div class="holiday-logo-text" style="font-size:1.1rem; color:#fff;" id="sum-source">ADAT: OPEN-ER</div>
             </div>
             <div class="sum-timer-capsule" id="sum-clock">03:00</div>
@@ -1209,9 +1896,10 @@
         <div class="sm-header">
             <div class="sm-title" id="sm-main-title">METEO ÁTTEKINTÉS</div>
             <div style="display:flex; align-items:center; gap:10px;">
-                <div class="embedded-logo">
-                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                    <span class="embedded-logo-text">TKP NEWS</span>
+                <div class="embedded-logo-new">
+                     <div class="emb-tkp">TKP</div>
+                     <div class="emb-sep"></div>
+                     <div class="emb-news">NEWS</div>
                 </div>
             </div>
         </div>
@@ -1231,70 +1919,35 @@
         <div class="grid"></div>
     </div>
 
-    <!-- LOGO & CLOCK -->
-    <div class="logo-box" id="logo-box" onclick="openAuth()">
-        <div class="logo-inner">
-            <div class="logo-front">
-                <div class="logo-col-icon">
-                    <svg id="globe-icon" class="logo-svg-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                </div>
-                <div class="logo-col-text">
-                    <div class="logo-text-inline">
-                        TKP NEWS 
-                        <span id="live-badge" class="live-tag">ÉLŐ</span>
-                        <span id="replay-badge" class="replay-tag">ISMÉTLÉS</span>
-                    </div>
-                    <div class="logo-row-time" id="clock-time">00:00<span class="mc-sec">00</span></div>
-                    <div class="logo-row-date" id="clock-date">----. --. --.</div>
-                </div>
+    <!-- LOGO & CLOCK & PWS (REDESIGNED V4 - TINY BUG STYLE + SOLID STACK) -->
+    <div class="logo-box logo-entry" id="logo-box" onclick="openAuth()">
+        <!-- LOGO ROW -->
+        <div class="logo-main-bar">
+            <div class="logo-box-tkp">TKP</div>
+            <div class="logo-sep-v"></div>
+            <div class="logo-box-news">NEWS</div>
+            <span id="live-badge" class="live-tag">ÉLŐ</span>
+            <span id="replay-badge" class="replay-tag">ISMÉTLÉS</span>
+        </div>
+        
+        <!-- INFO CONTAINER (ANCHORED) -->
+        <div class="logo-info-container">
+            <!-- DATE & TIME -->
+            <div class="logo-date-row">
+                <span id="clock-date-text" class="logo-date-dim">----.--.--.</span>
+                <span id="clock-time-text">00:00:00</span>
             </div>
-            <div class="logo-back" id="logo-back-face">
-                <div id="logo-back-content">
-                    <div class="ny-msg-title">Békés Boldog<br>Új Évet<br>Kíván</div>
-                    <div class="ny-msg-sub">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                        TKP NEWS
-                    </div>
-                </div>
+
+            <!-- WEATHER BLOCK -->
+            <div class="logo-weather-block" id="logo-wx-block">
+                <div class="logo-wx-main" id="logo-wx-text-1">ADATOK...</div>
+                <div class="logo-wx-sub" id="logo-wx-text-2">BETÖLTÉS...</div>
             </div>
         </div>
     </div>
 
     <div class="graphics-layer">
         
-        <div class="top-bar ui-element" id="ui-top">
-            <div class="tb-inner">
-                <div class="ny-group">
-                    <div class="ny-widget" id="ny-widget">
-                        <div class="ny-text-col">
-                            <div class="ny-info">NYÍREGYHÁZA</div>
-                            <div id="ny-time-badge" class="ny-update-badge">--:--:--</div>
-                        </div>
-                        <div class="ny-temp-box">
-                            <span style="color:#aaa; font-size:0.6rem;">MÉRT:</span> <span id="ny-temp" style="color:var(--accent);">--.-°C</span>
-                            <span style="color:#aaa; font-size:0.6rem; margin-left:5px;">ÉRZET:</span> <span id="ny-feel" style="color:#00d4ff;">--.-°C</span>
-                        </div>
-                        <!-- DYNAMIC SLOT FOR PWS ROTATION -->
-                        <div id="ny-dynamic-slot" class="pws-rotator-slot">
-                            <span class="flip-content">SZÉL: --</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="search-container">
-                    <form action="https://www.google.com/search" target="_blank" class="search-form">
-                        <input type="text" name="q" placeholder="KERESÉS A WEBEN...">
-                    </form>
-                </div>
-                
-                <a href="https://klikk.hu" target="_blank" class="legacy-btn">
-                    RÉGI OLDAL (KLIKK.HU) &#10138;
-                </a>
-                
-                <div style="font-family:var(--font-tech); font-weight:bold; color:var(--accent); font-size:0.8rem; letter-spacing:1px;">V20.6</div>
-            </div>
-        </div>
-
         <div class="sidebar ui-element" id="ui-right">
             <div class="sidebar-flipper">
                 <div class="sidebar-front">
@@ -1365,19 +2018,6 @@
                 </div>
 
                 <div class="mn-progress-bar"><div class="mn-progress-fill" id="m-prg"></div></div>
-            </div>
-        </div>
-
-        <!-- NEW: PROGRAM DOCK (Top Left, Below Logo) -->
-        <div class="program-dock ui-element" id="program-dock">
-            <div class="dock-btn" onclick="safeTrigger(() => triggerSpecialMeteoSequence())">
-                <i class="fas fa-cloud-sun"></i> Meteo
-            </div>
-            <div class="dock-btn" onclick="safeTrigger(() => triggerSummaryMode(1, 'sport'))">
-                <i class="fas fa-futbol"></i> Sport
-            </div>
-            <div class="dock-btn" onclick="safeTrigger(() => triggerEconomyMode())">
-                <i class="fas fa-chart-line"></i> Tőzsde
             </div>
         </div>
 
@@ -1605,8 +2245,14 @@
             mainTitle: document.getElementById('m-title'), mainDesc: document.getElementById('m-desc'), 
             mainCatText: document.getElementById('m-cat-text'), mainMeta: document.getElementById('m-meta'), mainPrg: document.getElementById('m-prg'),
             
-            cTime: document.getElementById('clock-time'), cDate: document.getElementById('clock-date'),
-            nyWidget: document.getElementById('ny-widget'), nyTemp: document.getElementById('ny-temp'), nyWind: document.getElementById('ny-dynamic-slot'), nyTime: document.getElementById('ny-time-badge'), nyFeel: document.getElementById('ny-feel'),
+            // NEW REFS FOR LOGO AREA
+            cTimeText: document.getElementById('clock-time-text'), 
+            cDateText: document.getElementById('clock-date-text'),
+            
+            // PWS Weather under Logo
+            logoWxText1: document.getElementById('logo-wx-text-1'),
+            logoWxText2: document.getElementById('logo-wx-text-2'),
+            
             special: document.getElementById('special-meteo'), smGrid: document.getElementById('sm-grid'), smTitle: document.getElementById('sm-main-title'), smBg: document.getElementById('sm-bg'),
             feedLog: document.getElementById('feed-log-table'), auth: document.getElementById('auth-overlay'), pin: document.getElementById('pin-input'), dev: document.getElementById('dev-panel'),
             summary: document.getElementById('summary-overlay'), sumContent: document.getElementById('sum-content'), sumClock: document.getElementById('sum-clock'), sumMainTitle: document.getElementById('sum-main-title'), sumSubTitle: document.getElementById('sum-sub-title'),
@@ -1643,7 +2289,12 @@
         function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
         function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
         function toggleLiveBadge(show) { if(show && !state.isNightMode) { DOM.liveBadge.classList.add('visible'); } else { DOM.liveBadge.classList.remove('visible'); } }
-        function formatVal(num) { if (num === null || num === undefined) return '--'; if (num % 1 === 0) return Math.round(num); return num.toFixed(1); }
+        // NEW FORMAT VAL LOGIC (INTEGER CHECK)
+        function formatVal(num) { 
+            if (num === null || num === undefined) return '--'; 
+            if (num % 1 === 0) return Math.round(num); // No decimal for integers
+            return num.toFixed(1); // 1 decimal for floats
+        }
         function getLogoHtml(sourceName) { const feed = RSS_FEEDS.find(f => f.name === sourceName); if(feed && feed.domain) { return `<img src="https://www.google.com/s2/favicons?domain=${feed.domain}&sz=64" class="source-logo" alt="${sourceName}">`; } return ''; }
         function safeTrigger(callback) { if(state.isClockRunning) return; closeAllOverlays(); setTimeout(callback, 1200); }
         
@@ -1827,10 +2478,10 @@
             return 'radial-gradient(circle at 70% 50%, #001a4d 0%, #000 80%)'; // Night
         }
 
-        // BACKGROUND REFRESH FUNCTION
-        function backgroundRefresh() {
-            console.log("TRIGGERING BACKGROUND REFRESH");
-            crawlNews(false); 
+        // BACKGROUND REFRESH FUNCTION - UPDATED
+        function backgroundRefresh(isReset = false) {
+            console.log("TRIGGERING BACKGROUND REFRESH", isReset);
+            crawlNews(isReset); // Pass reset flag
             fetchCurrency(); 
             fetchWunderground(true);
         }
@@ -1839,29 +2490,36 @@
             state.isSpecial = true; state.isLocked = true; state.isClockRunning = true; state.clockPhase = 0; state.refreshedThisShow = false;
             clearNewsBackgrounds();
             
-            // Hide Standard UI (including the Dock)
-            [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'}, {id:'program-dock', t:'bottom'} ].forEach(ui => {
-                const el = document.getElementById(ui.id);
-                if(el) el.classList.add(`hide-${ui.t}`);
-            });
+            // LOGO EXIT ANIMATION (2 seconds before show)
+            DOM.logoBox.classList.remove('logo-entry');
+            DOM.logoBox.classList.add('logo-exit');
             
-            // Keep Logo Visible and High
-            DOM.logoBox.classList.add('high-z'); 
-            
-            // Initialize Overlay with ADAPTIVE Background
-            DOM.bigClockOverlay.style.background = getSunPhaseBackground();
-            DOM.bigClockOverlay.style.display = 'grid'; 
-            DOM.bigClockOverlay.classList.remove('bc-layout-center');
-            setTimeout(() => { DOM.bigClockOverlay.classList.add('active'); }, 50);
-            
-            // Generate Analog Face
-            generateAnalogClockFace();
+            // 2 SECOND DELAY BEFORE SHOWING CLOCK UI
+            setTimeout(() => {
+                // Hide Standard UI (including the Dock)
+                [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'}, {id:'program-dock', t:'bottom'} ].forEach(ui => {
+                    const el = document.getElementById(ui.id);
+                    if(el) el.classList.add(`hide-${ui.t}`);
+                });
+                
+                // Initialize Overlay with ADAPTIVE Background
+                DOM.bigClockOverlay.style.background = getSunPhaseBackground();
+                DOM.bigClockOverlay.style.display = 'grid'; 
+                DOM.bigClockOverlay.classList.remove('bc-layout-center');
+                setTimeout(() => { DOM.bigClockOverlay.classList.add('active'); }, 50);
+                
+                // Generate Analog Face
+                generateAnalogClockFace();
 
+                // Start loop
+                runBigClockLoop();
+            }, 2000);
+        }
+
+        function runBigClockLoop() {
             const now = new Date();
             let nextHour = now.getHours() + 1; 
             if (nextHour > 23) nextHour = 0;
-            
-            // Start Animation Loop based on SECONDS of the minute
             
             const bcInterval = setInterval(() => {
                 updateAnalogHands(); 
@@ -1890,7 +2548,7 @@
                 // REFRESH TRIGGER (Last 10 seconds of minute)
                 if (s >= 50 && !state.refreshedThisShow) {
                     state.refreshedThisShow = true;
-                    backgroundRefresh();
+                    backgroundRefresh(false);
                 }
                 
                 // PHASE 4: 58s (PRE-TRANSITION FADE)
@@ -1939,8 +2597,8 @@
             closeAllOverlays();
         }
 
-        function forceRefreshAll() { backgroundRefresh(); alert("FRISSÍTÉS ELKÜLDVE"); }
-        function manualRefresh() { const btn = document.getElementById('manual-refresh-btn'); btn.innerHTML = '[ FRISSÍTÉS... ]'; btn.classList.add('loading'); state.manualRefreshRequested = true; state.tickerIdx = -1; state.mainIdx = -1; crawlNews(false); fetchCurrency(); fetchWunderground(); setTimeout(() => { cycleMain(true); }, 1500); setTimeout(() => { btn.innerHTML = `[ ↻ FRISSÍTÉS ]`; btn.classList.remove('loading'); }, 5000); }
+        function forceRefreshAll() { backgroundRefresh(true); alert("FRISSÍTÉS ELKÜLDVE"); }
+        function manualRefresh() { const btn = document.getElementById('manual-refresh-btn'); btn.innerHTML = '[ FRISSÍTÉS... ]'; btn.classList.add('loading'); state.manualRefreshRequested = true; state.tickerIdx = -1; state.mainIdx = -1; crawlNews(true); fetchCurrency(); fetchWunderground(); setTimeout(() => { cycleMain(true); }, 1500); setTimeout(() => { btn.innerHTML = `[ ↻ FRISSÍTÉS ]`; btn.classList.remove('loading'); }, 5000); }
         function testBreaking() { const now = new Date(); const longDesc = "EZ EGY TESZT ÜZENET. Ez a szöveg szándékosan hosszúra lett nyújtva, hogy meghaladja a rendelkezésre álló keret méretét."; document.getElementById('bk-card-headline').innerText = "RENDKÍVÜLI HÍR: TESZT ÜZEMMÓD"; document.getElementById('bk-card-body').innerHTML = `<div class="bk-scroll-wrapper">${longDesc}</div>`; document.getElementById('bk-card-meta').innerText = `${now.toLocaleTimeString('hu-HU')} • TESZT`; DOM.bkCardClickable.dataset.link = "#"; state.isBreakingActive = true; DOM.sidebar.classList.add('breaking-active'); setTimeout(() => { const wrapper = document.querySelector('.bk-scroll-wrapper'); if(wrapper) wrapper.style.transform = `translateY(-50px)`; }, 2000); setTimeout(() => { DOM.sidebar.classList.remove('breaking-active'); state.isBreakingActive = false; }, 10000); }
         function triggerNightSummary() { const now = new Date(); const startOfDay = new Date(now); startOfDay.setHours(0,0,0,0); state.nightSummaryQueue = state.allNews.filter(n => n.date >= startOfDay).sort((a,b) => b.date - a.date); if(state.nightSummaryQueue.length === 0) return; state.isSpecial = true; state.isLocked = true; DOM.replayBadge.classList.remove('visible'); DOM.logoBox.classList.remove('force-hide'); DOM.sidebar.classList.add('breaking-active'); const card = document.querySelector('.breaking-card'); card.classList.add('night-summary-card'); const headerText = card.querySelector('.bk-card-header span:first-child'); if(headerText) headerText.innerText = "EZ TÖRTÉNT ÉJFÉL ÓTA"; processNightSummaryQueue(); }
         function processNightSummaryQueue() { if(state.nightSummaryQueue.length === 0) { DOM.sidebar.classList.remove('breaking-active'); setTimeout(() => { document.querySelector('.breaking-card').classList.remove('night-summary-card'); const headerText = document.querySelector('.bk-card-header span:first-child'); if(headerText) headerText.innerText = "MOST ÉRKEZETT"; closeAllOverlays(); }, 1000); return; } const item = state.nightSummaryQueue.shift(); DOM.bkCardClickable.dataset.link = item.link; const timeStr = item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'}); DOM.bkCardHeadline.innerText = item.title; const logo = getLogoHtml(item.source); DOM.bkCardMeta.innerHTML = `${timeStr} • ${logo} ${item.source}`; DOM.bkCardBody.innerHTML = ""; const wrapper = document.createElement("div"); wrapper.className = "bk-scroll-wrapper"; wrapper.innerText = item.desc; DOM.bkCardBody.appendChild(wrapper); const bodyH = DOM.bkCardBody.clientHeight; const charCount = (item.title.length + item.desc.length); let readTime = Math.max(12000, (charCount / 15) * 1000); setTimeout(() => { const scrollH = wrapper.scrollHeight; if(scrollH > bodyH) { const dist = scrollH - bodyH + 20; const duration = Math.max(2, dist * 0.05); wrapper.style.transition = `transform ${duration}s linear`; setTimeout(() => { wrapper.style.transform = `translateY(-${dist}px)`; }, 2000); readTime += duration * 1000; } }, 5000); setTimeout(() => { if(state.nightSummaryQueue.length > 0) { const card = document.querySelector('.breaking-card'); card.classList.add('flipped-state'); setTimeout(() => { processNightSummaryQueue(); card.classList.remove('flipped-state'); }, 500); } else { processNightSummaryQueue(); } }, readTime + 6000); }
@@ -1970,7 +2628,7 @@
             return null; 
         }
 
-        async function crawlNews(isReset = false) { if(isReset) { DOM.tickerWindow.innerHTML = '<div class="ticker-item active"><div class="ticker-content"><span class="ticker-refresh-msg">ADATBÁZIS FRISSÍTÉSE...</span></div></div>'; clearTimeout(state.tickerTimer); DOM.mainTitle.innerText = "ADATBÁZIS FRISSÍTÉSE..."; } RSS_FEEDS.map(async (src) => { const text = await fetchRobust(src.url, src.name); if (text) { parseAndAdd(text, src.name); } }); }
+        async function crawlNews(isReset = false) { if(isReset) { DOM.tickerWindow.innerHTML = '<div class="ticker-item active"><div class="ticker-content"><span class="ticker-refresh-msg">ADATBÁZIS FRISSÍTÉSE...</span></div></div>'; clearTimeout(state.tickerTimer); DOM.mainTitle.innerText = "ADATBÁZIS FRISSÍTÉSE..."; state.mainItems = []; state.mainIdx = -1; state.tickerIdx = -1; } RSS_FEEDS.map(async (src) => { const text = await fetchRobust(src.url, src.name); if (text) { parseAndAdd(text, src.name); } }); }
         function parseAndAdd(xmlText, sourceName) { try { const xml = new DOMParser().parseFromString(xmlText, "text/xml"); let hasNew = false; xml.querySelectorAll("item").forEach(item => { const title = item.querySelector("title")?.textContent.trim(); const link = item.querySelector("link")?.textContent.trim(); const pubDate = new Date(item.querySelector("pubDate")?.textContent || new Date()); const desc = (item.querySelector("description")?.textContent || "").replace(/<[^>]*>?/gm, '').trim().substring(0, 500); let img = item.querySelector("enclosure")?.getAttribute("url"); if(!img) { const content = item.getElementsByTagNameNS("*", "content")[0]?.textContent || item.querySelector("description")?.textContent; img = content?.match(/src="([^"]+)"/)?.[1]; } if (title && link && !state.allNews.find(n => n.link === link)) { state.allNews.push({ title, link, date: pubDate, desc, source: sourceName, img: img }); hasNew = true; if(!state.initialLoadComplete) state.seenBreaking.add(link); } }); if(hasNew) state.hasFreshNews = true; updateLists(); updateDevLog(); if(state.mainItems.length > 0 && !state.mainStarted) { state.mainStarted = true; DOM.loader.style.opacity = 0; setTimeout(() => DOM.loader.remove(), 1000); cycleMain(); if(state.tickerIdx === 0) cycleTicker(1); } } catch(e) {} }
         function updateLists() { if (state.isNightMode) return; const now = new Date(); const newTicker = state.allNews.filter(n => (now - n.date) < 14400000).sort((a,b) => b.date - a.date); state.tickerItems = newTicker.length > 5 ? newTicker : [...state.allNews].sort((a,b) => b.date - a.date).slice(0, 50); const newMain = state.allNews.filter(n => (now - n.date) < 7200000 && n.img).sort(() => Math.random() - 0.5); state.mainItems = newMain.length > 0 ? newMain : state.allNews.filter(n => n.img).slice(0, 10); }
         async function checkBreaking() { if (state.isSpecial || state.isSummary || state.isLocked || !state.allNews) return; const now = Date.now(); state.allNews.filter(n => (now - n.date.getTime()) <= 180000).sort((a,b) => a.date - b.date).forEach(item => { if (!state.breakingHistory.has(item.link)) { state.breakingHistory.add(item.link); state.breakingQueue.push(item); } }); if (state.breakingQueue.length > 0 && !state.isBreakingActive && state.initialLoadComplete) processBreakingQueue(); }
@@ -2044,7 +2702,7 @@
         if (d.hourly.snowfall[targetIdx] > 0) precipAmount = ` (${d.hourly.snowfall[targetIdx]} cm)`;
         else if (d.hourly.rain[targetIdx] > 0) precipAmount = ` (${d.hourly.rain[targetIdx]} mm)`;
         
-        const getOMDesc = (code, day) => { const suffix = day ? "" : " (ÉJ)"; const sunIcon = day ? "☀️" : "🌙"; const partIcon = day ? "⛅" : "☁️"; if(code === 0) return {i: sunIcon, t: day ? "DERŰS" : "TISZTA"}; if([1,2,3].includes(code)) return {i: partIcon, t:"FELHŐS"}; if([45,48].includes(code)) return {i:"🌫️", t:"KÖD"}; if([51,53,55,61,63,65].includes(code)) return {i:"🌧️", t:"ESŐ"}; if([71,73,75,77].includes(code)) return {i:"❄️", t:"HAVAZÁS"}; return {i:"🌥️", t:"VÁLTOZÉKONY"}; }; const om = getOMDesc(c, isDay); html += ` <div class="hd-row"><div class="hd-time">${timeStr}</div><div class="hd-icon">${om.i}</div><div class="hd-desc-text">${om.t}${precipAmount}</div><div class="hd-temp">${Math.round(t)}°</div><div class="hd-meta"><div>CSAP: ${p}%</div><div>SZÉL: ${Math.round(w)}</div></div></div>`; } div.innerHTML = html + `<div class="sm-watermark" style="color:#ffcc00;">DATA: OPEN-METEO (BACKUP)</div>`; } DOM.smGrid.appendChild(div); } else { DOM.smGrid.innerHTML = '<div style="color:#fff; font-size:2rem; width:100%; text-align:center; padding-top:20px;">NINCS ELÉRHETŐ ELŐREJELZÉS</div>'; } }
+        const getOMDesc = (code, day) => { const suffix = day ? "" : " (ÉJ)"; const sunIcon = day ? "☀️" : "🌙"; const partIcon = day ? "⛅" : "☁️"; if(code === 0) return {i: sunIcon, t: day ? "DERŰS" : "TISZTA"}; if([1,2,3].includes(code)) return {i: partIcon, t:"FELHŐS"}; if([45,48].includes(code)) return {i:"🌫️", t:"KÖD"}; if([51,53,55,61,63,65].includes(code)) return {i:"🌧️", t:"ESŐ"}; if([71,73,75,77].includes(code)) return {i:"❄️", t:"HAVAZÁS"}; return {i:"🌥️", t:"VÁLTOZÉKONY"}; }; const om = getOMDesc(c, isDay); html += ` <div class="hd-row"><div class="hd-time">${timeStr}</div><div class="hd-icon">${om.i}</div><div class="hd-desc-text">${om.t}${precipAmount}</div><div class="hd-temp">${Math.round(t)}°</div><div class="hd-meta"><div>CSAP: ${p}%</div><div>SZÉL: ${Math.round(w)}</div></div></div>`; } div.innerHTML = html + `<div class="sm-watermark" style="color:#ffcc00;">DATA: OPEN-METEO (BACKUP)</div>`; } DOM.smGrid.appendChild(div); } else { DOM.smGrid.innerHTML = '<div style="color:#fff; font-size:2rem; width:100%; text-align:center;">ADATÁTVITELI HIBA (FORECAST)</div>'; } }
         
         // --- NEW REAL FORECAST RENDERER (Based on File 2 Design) ---
         function degreesToCompass(degrees) {
@@ -2590,6 +3248,11 @@ function closeAllOverlays() {
     DOM.logoBox.classList.remove('high-z');
     DOM.logoBox.classList.remove('logo-gradual-zoom');
     DOM.logoBox.style.transform = '';
+    
+    // RESTORE LOGO DEFAULT STATE
+    DOM.logoBox.classList.remove('logo-exit');
+    DOM.logoBox.classList.add('logo-entry'); 
+    
     clearInterval(state.summaryInterval);
     if(state.summaryTimer.interval) clearInterval(state.summaryTimer.interval);
     if(state.finNewsInterval) clearInterval(state.finNewsInterval);
@@ -2616,7 +3279,7 @@ function closeAllOverlays() {
         DOM.hourlyArchiveOverlay.classList.remove('active');
     }, 800);
     
-    // RESTORE UI (Includes Dock)
+    // RESTORE UI
     [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'}, {id:'program-dock', t:'bottom'} ].forEach(ui => {
         const el = document.getElementById(ui.id);
         if(el) el.classList.remove(`hide-${ui.t}`);
@@ -2709,10 +3372,20 @@ function cycleMain(manual = false, preserveIndex = false) {
 function startClock() {
     setInterval(() => {
         const now = new Date(); const m = now.getMinutes(); const s = now.getSeconds();
-        const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
-        DOM.cTime.innerHTML = `${timeStr}<span class="mc-sec">${String(s).padStart(2,'0')}</span>`;
-        const days = ['VASÁRNAP','HÉTFŐ','KEDD','SZERDA','CSÜTÖRTÖK','PÉNTEK','SZOMBAT'];
-        DOM.cDate.innerText = `${now.getFullYear()}. ${String(now.getMonth()+1).padStart(2,'0')}. ${String(now.getDate()).padStart(2,'0')}. - ${days[now.getDay()]}`;
+        const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        
+        // NEW DISCREET CLOCK UPDATE (Under Logo - Swapped Date/Time)
+        if(document.getElementById('clock-time-text')) {
+            document.getElementById('clock-time-text').innerText = timeStr;
+            document.getElementById('clock-date-text').innerText = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}.`;
+        }
+        
+        // Old clock references (in Big Clock / old places)
+        if(DOM.cTime) DOM.cTime.innerHTML = `${String(now.getHours()).padStart(2,'0')}:${String(m).padStart(2,'0')}<span class="mc-sec">${String(s).padStart(2,'0')}</span>`;
+        if(DOM.cDate) {
+             const days = ['VASÁRNAP','HÉTFŐ','KEDD','SZERDA','CSÜTÖRTÖK','PÉNTEK','SZOMBAT'];
+             DOM.cDate.innerText = `${now.getFullYear()}. ${String(now.getMonth()+1).padStart(2,'0')}. ${String(now.getDate()).padStart(2,'0')}. - ${days[now.getDay()]}`;
+        }
 
         checkScheduleExecution(); 
         checkNightMode(); 
@@ -2730,11 +3403,10 @@ function startClock() {
         
         updateDevMonitor(); 
         
-        // AUTO REFRESH LOGIC (Updated V20.6)
-        // Checks at minute 20 and 40
+        // AUTO REFRESH LOGIC (Updated V20.6 - STRICT 00, 20, 40)
         if (!state.isNightMode && s === 0) { 
-            if (m === 20 || m === 40) { 
-                backgroundRefresh();
+            if (m === 0 || m === 20 || m === 40) { 
+                backgroundRefresh(true); // Pass true to reset lists
             } 
         }
         
@@ -2753,38 +3425,34 @@ async function fetchWunderground(silent = false) {
         const avgTemp = validReadings.reduce((sum, r) => sum + r.temp, 0) / validReadings.length; const avgHum = validReadings.reduce((sum, r) => sum + r.hum, 0) / validReadings.length; const avgWind = validReadings.reduce((sum, r) => sum + r.wind, 0) / validReadings.length; const avgPress = validReadings.reduce((sum, r) => sum + r.pressure, 0) / validReadings.length;
         const maxGust = Math.max(...validReadings.map(r => r.windGust)); const maxPrecipRate = Math.max(...validReadings.map(r => r.precipRate)); const maxPrecipTotal = Math.max(...validReadings.map(r => r.precipTotal)); const maxUv = Math.max(...validReadings.map(r => r.uv));
         const windDir = validReadings[0].windDir; const feel = calculateAggregateRealFeel(avgTemp, avgHum, avgWind);
-        if(!silent) { DOM.nyTime.innerText = getTime(); DOM.nyTemp.innerText = `${formatVal(avgTemp)}°C`; DOM.nyFeel.innerText = `${formatVal(feel)}°C`; DOM.nyWidget.style.display = 'flex'; state.currentWxSource = `PWS ÁTLAG (${validReadings.length})`; }
+        
+        // PWS LOGIC UPDATED FOR NEW LOGO WEATHER SECTION
+        if(DOM.logoWxText1 && DOM.logoWxText2) {
+             DOM.logoWxText1.innerHTML = `NYÍREGYHÁZA | <span class="wx-accent">${formatVal(avgTemp)}°C</span> <span style="font-size:0.7em; opacity:0.8;">(ÉRZET: ${formatVal(feel)}°C)</span>`;
+             DOM.logoWxText2.innerHTML = `SZÉL: <span class="wx-blue">${avgWind.toFixed(1)} KM/H</span> ${getWind(windDir)} (${avgPress.toFixed(0)} hPa)`;
+             state.currentWxSource = `PWS ÁTLAG (${validReadings.length})`;
+        }
+        
         state.pwsData = { temp: formatVal(avgTemp), feel: formatVal(feel), wind: formatVal(avgWind), windDir: getWind(windDir), cond: maxPrecipRate > 0 ? "CSAPADÉK" : "SZÁRAZ", icon: maxPrecipRate > 0 ? "🌧️" : "☁️", humidity: avgHum.toFixed(0), pressure: avgPress.toFixed(0), rainRate: formatVal(maxPrecipRate), rainDay: formatVal(maxPrecipTotal), uv: maxUv.toFixed(1), updated: true };
         if(!silent) { updateMiniWidgets(state.pwsData, maxGust); }
-    } else { state.currentWxSource = 'OFFLINE (NINCS ADAT)'; }
+    } else { 
+        state.currentWxSource = 'OFFLINE (NINCS ADAT)'; 
+        if(DOM.logoWxText2) DOM.logoWxText2.innerText = "OFFLINE";
+    }
 }
 
 function rotatePwsSlot() {
-    if(!state.pwsData.updated) return;
-    const slot = document.getElementById('ny-dynamic-slot');
-    const span = slot.querySelector('.flip-content');
-    if(!span) return;
-
-    const modes = [
-        { t: `SZÉL: ${state.pwsData.wind} KM/H` },
-        { t: `IRÁNY: ${state.pwsData.windDir}` },
-        { t: `PÁRA: ${state.pwsData.humidity}%` },
-        { t: `NYOMÁS: ${state.pwsData.pressure} HPA` },
-        { t: `UV: ${state.pwsData.uv}` }
-    ];
-
-    if (parseFloat(state.pwsData.rainRate) >= 0) {
-         modes.push({ t: `CSAPADÉK: ${state.pwsData.rainRate} MM` });
+    // Rotation logic deprecated with new solid weather row, keeping function to prevent crash but it does nothing to old UI
+    // Can optionally rotate the secondary line in the logo weather row
+    if(!state.pwsData.updated || !DOM.logoWxText2) return;
+    
+    // Simple toggle between WIND/DIR and HUMIDITY/UV on the second line
+    const currentText = DOM.logoWxText2.innerText;
+    if(currentText.includes("SZÉL")) {
+         DOM.logoWxText2.innerHTML = `PÁRA: ${state.pwsData.humidity}% | UV: ${state.pwsData.uv} | ESŐ: ${state.pwsData.rainDay}mm`;
+    } else {
+         DOM.logoWxText2.innerHTML = `SZÉL: <span class="wx-blue">${state.pwsData.wind} KM/H</span> ${state.pwsData.windDir} (${state.pwsData.pressure} hPa)`;
     }
-
-    span.classList.add('flip-out');
-    setTimeout(() => {
-        state.pwsRotationIdx = (state.pwsRotationIdx + 1) % modes.length;
-        span.innerText = modes[state.pwsRotationIdx].t;
-        span.classList.remove('flip-out');
-        span.classList.add('flip-in');
-        setTimeout(() => span.classList.remove('flip-in'), 600);
-    }, 600);
 }
 
 function updateMiniWidgets(pws, gust) {
