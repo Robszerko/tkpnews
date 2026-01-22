@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V20.6 COMPACT BROADCAST</title>
+    <title>TKP NEWS - V20.7 FIXED BROADCAST</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,10 +16,6 @@
             --primary-dark: #001a4d;
             --accent: #ffcc00;
             --alert: #cc0000;
-            --sport-main: #004d00;
-            --sport-light: #00cc44;
-            --economy-bg: #001a1a;
-            --economy-accent: #00cc99;
             --glass: rgba(0, 10, 25, 0.85);
             --text: #ffffff;
             --footer-h: clamp(65px, 9vh, 95px);
@@ -29,7 +25,6 @@
             --font-tech: 'Chakra Petch', sans-serif;
             --font-mono: 'Roboto Mono', monospace;
             --font-serif: 'Playfair Display', serif;
-            --font-script: 'Great Vibes', cursive;
             --font-inter: 'Inter', sans-serif;
 
             /* Forecast Colors */
@@ -74,22 +69,22 @@
         .hide-bottom { transform: translateY(150%) !important; opacity: 0 !important; pointer-events: none !important; }
         .force-hide { opacity: 0 !important; pointer-events: none !important; }
 
-        /* --- TOP RIGHT CONTAINER (Weather + Legacy Btn) --- */
+        /* --- TOP RIGHT CONTAINER --- */
         .top-right-container {
             position: absolute; top: 30px; right: 30px;
-            display: flex; align-items: center; gap: 8px;
+            display: flex; align-items: center; gap: 10px;
             z-index: 500; pointer-events: auto;
             transform-origin: right center;
         }
 
         /* LEGACY BUTTON */
         .legacy-btn-styled {
+            height: 32px;
+            display: flex; align-items: center; justify-content: center;
+            padding: 0 15px; 
             background: rgba(0, 0, 0, 0.4); 
             border: 1px solid rgba(255, 255, 255, 0.2); 
             color: #ccc; 
-            padding: 0 15px; 
-            height: 32px;
-            display: flex; align-items: center; justify-content: center;
             font-family: var(--font-data); font-weight: 700; 
             font-size: 0.75rem; 
             text-decoration: none; 
@@ -104,26 +99,28 @@
             box-shadow: 0 0 15px rgba(255,255,255,0.4);
         }
 
-        /* NEW TOP RIGHT WEATHER BAR (PWS) */
+        /* HEADER WEATHER BAR */
         .header-weather-bar {
-            background: rgba(0, 5, 10, 0.25); 
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255,255,255,0.05);
+            background: rgba(0, 10, 20, 0.4); 
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-left: 2px solid var(--accent);
             height: 32px;
             border-radius: 4px;
             display: flex; align-items: center;
-            padding: 0 12px;
-            color: #ccc;
+            padding: 0 15px;
+            color: #ddd;
             font-family: var(--font-tech);
             font-size: 0.8rem;
-            min-width: 290px; 
+            min-width: 340px; 
             justify-content: space-between;
             transition: all 0.5s;
         }
-        .hwx-location { font-weight: bold; color: var(--accent); margin-right: 10px; letter-spacing: 1px; font-size: 0.75rem; }
-        .hwx-data { display: flex; gap: 10px; align-items: center; font-family: var(--font-data); font-weight: 600; font-size: 0.85rem; color:#fff; }
-        .hwx-data span { display:flex; align-items:center; gap:4px; }
-        .hwx-icon { font-size: 0.85rem; opacity: 0.9; }
+        
+        .hwx-location { font-weight: bold; color: var(--accent); margin-right: 10px; letter-spacing: 1px; }
+        .hwx-data { display: flex; gap: 12px; align-items: center; font-family: var(--font-data); font-weight: 600; }
+        .hwx-item { display: flex; align-items: center; gap: 5px; }
+        .hwx-icon { font-size: 0.9rem; }
 
         /* REFRESH BUTTON (SIDEBAR) */
         .sidebar-ctrl-panel { margin-top: 5px; width: 100%; pointer-events: auto; }
@@ -137,7 +134,7 @@
         .refresh-btn-side:hover { background: rgba(255,255,255,0.1); color: #fff; border-top-color: var(--accent); box-shadow: 0 0 10px rgba(0,0,0,0.3); }
         .refresh-btn-side.loading { color: #888; pointer-events: none; animation: pulse 1s infinite; }
 
-        /* --- REDESIGNED COMPACT LOGO (CENTERED ALIGNMENT) --- */
+        /* --- REDESIGNED LOGO BOX --- */
         .logo-box { 
             position: fixed; 
             top: 4vh; left: 4vw;  
@@ -178,10 +175,10 @@
             animation-delay: 0.2s; 
         }
 
-        /* THE COMPACT LOGO BAR */
+        /* INCREASED LOGO SIZE */
         .logo-main-bar {
             display: flex; 
-            height: 26px; 
+            height: 28px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
             position: relative;
             z-index: 2;
@@ -192,8 +189,8 @@
             color: #fff;
             font-family: var(--font-main);
             font-weight: 800;
-            font-size: 0.9rem;
-            padding: 0 8px;
+            font-size: 1.1rem;
+            padding: 0 10px;
             display: flex; align-items: center; justify-content: center;
             letter-spacing: 1px;
             line-height: 1;
@@ -210,24 +207,22 @@
             color: #000;
             font-family: var(--font-main);
             font-weight: 800;
-            font-size: 0.9rem;
-            padding: 0 8px;
+            font-size: 1.1rem;
+            padding: 0 10px;
             display: flex; align-items: center; justify-content: center;
             letter-spacing: 1px;
             line-height: 1;
         }
 
-        /* ANCHORED INFO CONTAINER (Clock, Date, Day - CENTERED) */
+        /* ANCHORED INFO CONTAINER - MOVED DOWN TO FIX OVERLAP */
         .logo-info-container {
-            margin-top: 1px; 
+            margin-top: 3px; /* Increased to avoid badge overlap */
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background: rgba(0,0,0,0.6); 
-            backdrop-filter: blur(4px);
-            border-left: none; 
-            border-top: 2px solid var(--accent);
-            padding: 4px 12px;
+            background: transparent; 
+            backdrop-filter: none;   
+            border: none;            
+            padding: 2px 0;
             width: 100%; 
-            min-width: 130px; 
             clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
             transition: all 0.5s;
         }
@@ -242,33 +237,33 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
+        /* SMALLER DATE/TIME */
         .logo-date-row {
             font-family: var(--font-main);
             color: #fff;
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.65rem; 
             line-height: 1.1;
             letter-spacing: 0.5px;
-            text-shadow: 0 1px 2px #000;
+            text-shadow: 1px 1px 2px #000;
             white-space: nowrap;
-            display: flex; gap: 8px; justify-content: center;
+            display: flex; gap: 5px; justify-content: center;
         }
         
-        .logo-date-dim { color: #ccc; font-weight: 500; font-family: var(--font-data); }
+        .logo-date-dim { color: #ddd; font-weight: 500; font-family: var(--font-data); }
 
         /* DAY OF WEEK ROW */
         .logo-day-row {
             font-family: var(--font-tech);
-            font-size: 0.7rem;
+            font-size: 0.6rem; 
             color: var(--accent);
             text-transform: uppercase;
             letter-spacing: 2px;
-            margin-top: 2px;
+            margin-top: 0;
             font-weight: 700;
-            text-shadow: 0 1px 2px #000;
+            text-shadow: 1px 1px 2px #000;
         }
 
-        /* JITTER FIX FOR CLOCK */
         #clock-time-text {
             font-family: var(--font-mono); 
             font-variant-numeric: tabular-nums; 
@@ -277,22 +272,16 @@
 
         .live-tag, .replay-tag {
             background: #cc0000; color: #fff; font-family: var(--font-main); font-size: 0.6rem;
-            padding: 0 4px; height: 26px; display: flex; align-items: center; 
+            padding: 0 5px; height: 28px; display: flex; align-items: center; 
             font-weight: 900; margin-left: 0;
             display: none; letter-spacing: 1px;
         }
         .live-tag.visible, .replay-tag.visible { display: flex; }
         .replay-tag { background: #444; color: #ccc; border: none; }
 
-        .logo-box.night-theme .logo-info-container { background: rgba(0, 10, 30, 0.8); border-top-color: #00d4ff; }
+        .logo-box.night-theme .logo-info-container { border-top-color: transparent; }
 
-        .embedded-logo-new { display: flex; align-items: center; justify-content: center; height: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.5); }
-        .emb-tkp { background:#000; color:#fff; padding:0 8px; height:100%; display:flex; align-items:center; font-family:var(--font-main); font-weight:800; font-size:1rem; }
-        .emb-sep { width:1px; background:#888; height:100%; }
-        .emb-news { background:#fff; color:#000; padding:0 8px; height:100%; display:flex; align-items:center; font-family:var(--font-main); font-weight:800; font-size:1rem; }
-
-
-        /* SIDEBAR (FLICKER FIX APPLIED) */
+        /* SIDEBAR */
         .sidebar { position: absolute; top: 12vh; right: 2vw; width: clamp(280px, 22vw, 420px); height: auto; pointer-events: auto; z-index: 40; perspective: 1000px; }
         
         .sidebar-flipper { 
@@ -312,7 +301,7 @@
         
         .sidebar-front { 
             display: flex; flex-direction: column; gap: 1.5vh; 
-            z-index: 2; /* Keep front on top by default */
+            z-index: 2; 
         }
         
         .sidebar-back { 
@@ -349,14 +338,24 @@
         .breaking-card.night-summary-card .bk-card-headline { background: linear-gradient(180deg, #002266 0%, #001133 100%); }
         
         .bk-card-header { font-family: var(--font-tech); color: #fff; font-size: 1rem; letter-spacing: 2px; text-transform: uppercase; border-bottom: 2px solid #ff4444; padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 10; background: linear-gradient(135deg, #990000 0%, #330000 100%); }
-        .bk-watermark { display: flex; align-items: center; gap: 4px; opacity: 0.9; background: rgba(255, 255, 255, 0.1); padding: 3px 8px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.15); }
-        .bk-watermark svg { width: 14px; height: 14px; fill: #fff; filter: drop-shadow(0 0 2px rgba(0,0,0,0.5)); }
-        .bk-watermark span { font-family: var(--font-main); font-weight: 800; font-size: 0.65rem; color: #fff; letter-spacing: 1px; }
+        .bk-watermark { display: flex; align-items: center; gap: 4px; opacity: 1; padding: 0; border: none; background: transparent; }
         .bk-card-headline { font-family: var(--font-main); font-weight: 800; font-size: 1.2rem; line-height: 1.1; color: #fff; margin-bottom: 15px; text-transform: uppercase; z-index: 5; background: linear-gradient(180deg, #570000 0%, #460000 100%); box-shadow: 0 5px 15px rgba(0,0,0,0.3); padding: 5px; border-radius: 4px; }
         .bk-card-body { font-family: var(--font-data); font-size: 1.1rem; line-height: 1.4; color: #eee; flex-grow: 1; overflow: hidden; position: relative; mask-image: linear-gradient(to bottom, black 90%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%); }
         .bk-scroll-wrapper { position: relative; top: 0; will-change: transform; }
         .bk-card-meta { font-family: var(--font-mono); font-size: 0.9rem; color: #ffcc00; margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 5px; display: flex; align-items: center; justify-content: flex-end; gap: 8px; z-index: 5; background: inherit; font-weight: bold; }
         .source-logo { height: 20px; width: auto; vertical-align: middle; border-radius: 2px; }
+
+        /* MINI LOGO FOR BREAKING CARD */
+        .mini-tkp-logo {
+            display: flex; height: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.5); transform: scale(0.9); transform-origin: right center;
+        }
+        .mini-tkp-logo .mtl-black {
+            background: #000; color: #fff; font-family: var(--font-main); font-weight: 800; font-size: 0.75rem; padding: 0 5px; display: flex; align-items: center; letter-spacing: 0.5px;
+        }
+        .mini-tkp-logo .mtl-sep { width: 1px; background: #888; }
+        .mini-tkp-logo .mtl-white {
+            background: #fff; color: #000; font-family: var(--font-main); font-weight: 800; font-size: 0.75rem; padding: 0 5px; display: flex; align-items: center; letter-spacing: 0.5px;
+        }
 
         /* WX DASHBOARD */
         .wx-dashboard { display: flex; flex-direction: column; gap: 5px; padding-top: 5px; }
@@ -373,6 +372,7 @@
         .wx-c-label { font-family: var(--font-mono); font-size: 0.6rem; color: #888; text-transform: uppercase; margin-bottom: 2px; white-space: nowrap; }
         .wx-c-val { font-family: var(--font-tech); font-size: 0.95rem; color: #e0e0e0; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
+        /* MAIN NEWS CONTAINER */
         .main-news { position: absolute; bottom: 15vh; left: 4vw; width: clamp(400px, 60vw, 1200px); pointer-events: auto; cursor: pointer; z-index: 20; transition: transform 0.2s; }
         .main-news:hover { transform: scale(1.01); }
         
@@ -386,6 +386,13 @@
         }
         .mn-container.active { opacity: 1; transform: translateY(0); }
         
+        /* NEW HEADER STRUCTURE */
+        .mn-header-row {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-end;
+        }
+
         .mn-row-top {
             background: var(--accent);
             color: #000;
@@ -439,20 +446,22 @@
         }
         .mn-progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 21.8s linear; }
 
+        /* MOVED NAV OVERLAY */
         .main-nav-overlay {
-            position: absolute; bottom: 10px; right: 10px; z-index: 50;
             display: flex; gap: 5px; align-items: center;
             opacity: 0; transition: opacity 1s 1s;
+            margin-bottom: 2px; /* Slight spacing above blue bar */
         }
         .mn-container.active .main-nav-overlay { opacity: 1; }
 
         .nav-btn-mini {
-            background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(0, 10, 20, 0.8); border: 1px solid rgba(255,255,255,0.3);
             color: #fff; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
             cursor: pointer; font-size: 0.6rem; transition: 0.2s; backdrop-filter: blur(5px);
+            border-radius: 2px;
         }
         .nav-btn-mini:hover { background: var(--primary); border-color: var(--primary); }
-        .nav-counter-mini { font-family: var(--font-mono); font-size: 0.7rem; color: #ccc; margin: 0 5px; text-shadow: 0 1px 2px #000; }
+        .nav-counter-mini { font-family: var(--font-mono); font-size: 0.8rem; color: #fff; margin: 0 8px; text-shadow: 0 1px 3px #000; font-weight: bold; background: rgba(0,0,0,0.5); padding: 2px 6px; border-radius: 2px; }
 
         .text-fade { transition: opacity 0.4s ease-out; opacity: 1; }
         .text-fade.faded-out { opacity: 0; }
@@ -547,7 +556,8 @@
         #big-clock-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: #000; 
-            z-index: 9000; display: none; opacity: 0; 
+            z-index: 20000; /* Increased Z-Index to be above everything */
+            display: none; opacity: 0; 
             transition: opacity 0.8s ease-in-out; overflow: hidden;
             grid-template-columns: 1fr 1.5fr; 
         }
@@ -560,8 +570,8 @@
         }
         /* New Informative Text Style */
         .bc-info-text {
-            font-family: var(--font-main); font-size: clamp(1.2rem, 2.5vw, 1.8rem);
-            color: #ddd; line-height: 1.4; opacity: 0; transform: translateX(-30px);
+            font-family: var(--font-main); font-size: clamp(1.2rem, 2.3vw, 1.6rem);
+            color: #ddd; line-height: 1.5; opacity: 0; transform: translateX(-30px);
             animation: slideInLeft 0.8s forwards 0.2s; transition: opacity 0.5s;
             border-left: 4px solid var(--accent); padding-left: 20px;
         }
@@ -665,7 +675,7 @@
         }
 
         .bc-layout-center .bc-schedule-panel { opacity: 0; transform: translateX(-100px); pointer-events: none; }
-        .bc-layout-center .bc-main-panel { transform: translateX(-33%); } 
+        .bc-layout-center .bc-main-panel { transform: translateX(-33%); }
         .bc-layout-center .bc-clock-wrapper { transform: scale(1.3); }
         
         @keyframes slideInLeft { from { opacity:0; transform:translateX(-30px); } to { opacity:1; transform:translateX(0); } }
@@ -742,116 +752,6 @@
         .embedded-logo svg { width: 35px; height: 35px; fill: var(--primary); filter: drop-shadow(0 0 5px rgba(0,0,0,0.5)); }
         .embedded-logo-text { font-family: var(--font-main); font-size: 1.2rem; font-weight: 800; color: #fff; letter-spacing: 1px; }
 
-        #summary-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 5000; display: none; grid-template-columns: 35% 65%; transform: translateY(0); opacity: 0; transition: opacity 0.5s; pointer-events: none; }
-        #summary-overlay.active { opacity: 1; pointer-events: auto; }
-        
-        .economy-overlay .summary-brand-side { 
-            background: linear-gradient(rgba(0, 20, 40, 0.9), rgba(0, 10, 20, 0.95)),
-                        url('https://images.unsplash.com/photo-1611974765270-ca1258634369?q=80&w=1920&fit=crop') center/cover !important;
-            border-right-color: var(--economy-accent); 
-            padding-top: 35vh; 
-        }
-        .economy-overlay .summary-subtitle { color: var(--economy-accent); }
-        .economy-overlay .summary-content-side::before { filter: hue-rotate(120deg) brightness(0.6) grayscale(20%); }
-        
-        .eco-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; height: 100%; padding-top:20px; }
-        .eco-card { background: linear-gradient(135deg, rgba(0, 40, 40, 0.8), rgba(0, 20, 20, 0.9)); border: 1px solid rgba(0, 204, 153, 0.3); border-left: 5px solid var(--economy-accent); border-radius: 4px; padding: 20px; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: fadeIn 0.5s; }
-        .eco-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 8px 0; margin-bottom: 5px; }
-        .eco-row:last-child { border-bottom: none; }
-        .eco-curr { font-family: var(--font-main); font-size: 1.4rem; color: #fff; font-weight: 700; display: flex; align-items: center; gap: 10px; }
-        .eco-val { font-family: var(--font-mono); font-size: 1.5rem; color: var(--economy-accent); font-weight: bold; }
-        
-        .summary-brand-side { background: radial-gradient(circle at center, #002255 0%, #00081a 100%); border-right: 6px solid var(--accent); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; position: relative; overflow: hidden; padding-top: 35vh; }
-        .summary-brand-side::after { content: ''; position: absolute; top: 0; left: 0; width: 200%; height: 200%; background: repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0, rgba(255,255,255,0.03) 2px, transparent 2px, transparent 20px); animation: rotateBG 60s linear infinite; z-index: 0; opacity: 0.5; pointer-events: none; }
-        @keyframes rotateBG { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        .summary-brand-side.sport-theme { 
-            background-color: #004d00; 
-            background-image: linear-gradient(to right, transparent 49.5%, rgba(255,255,255,0.5) 49.5%, rgba(255,255,255,0.5) 50.5%, transparent 50.5%), radial-gradient(circle at 50% 50%, transparent 18%, rgba(255,255,255,0.5) 18%, rgba(255,255,255,0.5) 19%, transparent 19%);
-            background-size: 100% 100%;
-            background-repeat: no-repeat;
-            border-right-color: var(--sport-light); 
-        }
-        .summary-brand-side.sport-theme .summary-subtitle { color: var(--sport-light); text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
-
-        .summary-title { font-family: var(--font-main); font-size: clamp(1.5rem, 3vh, 2.2rem); color: #fff; text-transform: uppercase; font-weight: 800; text-align: center; line-height: 1.1; margin-bottom: 5px; z-index: 2; text-shadow: 0 4px 10px rgba(0,0,0,0.8); }
-        .summary-subtitle { font-family: var(--font-tech); font-size: 1.2rem; color: var(--accent); letter-spacing: 2px; text-align: center; z-index: 2; font-weight: 700; text-shadow: 0 2px 5px rgba(0,0,0,0.8); margin-bottom: 20px; }
-        
-        .provider-list-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; width: 85%; z-index: 20; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px; }
-        .provider-chip { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); padding: 4px 10px 4px 4px; border-radius: 20px; cursor: pointer; pointer-events: auto; transition: all 0.2s; backdrop-filter: blur(5px); }
-        .provider-chip:hover { background: var(--accent); transform: scale(1.05); box-shadow: 0 0 10px rgba(255, 204, 0, 0.5); border-color: #fff; }
-        .provider-chip:hover span { color: #000; }
-        .provider-chip img { width: 20px; height: 20px; border-radius: 50%; object-fit: contain; background: #fff; padding: 2px; }
-        .provider-chip span { font-family: var(--font-tech); font-weight: bold; font-size: 0.75rem; text-transform: uppercase; color: #eee; letter-spacing: 0.5px; }
-        
-        .fin-news-container {
-            position: absolute; bottom: 30px; left: 5%; width: 90%;
-            z-index: 20; display: flex; flex-direction: column;
-            transform: translateX(-120%); transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
-        }
-        .fin-news-container.slide-in { transform: translateX(0); }
-        .fin-news-container.slide-out { transform: translateX(-120%); }
-
-        .fin-tab {
-            width: fit-content; background: var(--economy-accent); color: #000;
-            font-family: var(--font-main); font-weight: 800; text-transform: uppercase;
-            padding: 2px 10px; border-radius: 4px 4px 0 0; font-size: 0.85rem;
-            margin-bottom: -1px; opacity: 0; transition: opacity 0.5s;
-        }
-        .fin-tab.visible { opacity: 1; }
-
-        .fin-news-card {
-            background: rgba(0,0,0,0.85); border-left: 4px solid var(--economy-accent);
-            padding: 15px; border-radius: 0 4px 4px 4px;
-            display: flex; flex-direction: column; cursor: pointer; transition: 0.3s;
-            pointer-events: auto; border: 1px solid rgba(255,255,255,0.1); border-left-width: 4px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .fin-news-card:hover { background: rgba(0,20,20,0.95); border-color: #fff; }
-        
-        .fin-news-content { opacity: 0; transition: opacity 0.5s; }
-        .fin-news-content.visible { opacity: 1; }
-
-        .fn-meta { font-family: var(--font-tech); font-size: 0.7rem; color: #aaa; display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
-        .fn-title { font-family: var(--font-main); font-size: 1rem; color: #fff; line-height: 1.2; font-weight: 700; }
-        .fn-logo { height: 16px; width: auto; }
-
-        .sum-live-badge { background: #cc0000; color: #fff; padding: 2px 10px; font-family: var(--font-main); font-weight: 900; letter-spacing: 2px; font-size: 0.9rem; margin-bottom: 20px; z-index: 2; box-shadow: 0 0 15px rgba(204,0,0,0.5); display: none; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease-out, transform 0.5s ease-out; }
-        .sum-live-badge.visible { display: block; }
-        .sum-live-badge.delayed-show { opacity: 1; transform: translateY(0); } 
-        .summary-embedded-branding { display: flex; flex-direction: column; align-items: center; margin-top: auto; padding-bottom: 30px; width: 60%; z-index: 2; }
-        .sum-timer-capsule { position: absolute; bottom: 40px; background: #cc0000; color: #fff; padding: 5px 25px; border-radius: 50px; font-family: var(--font-mono); font-weight: 700; font-size: 1.8rem; display: flex; align-items: center; gap: 10px; box-shadow: 0 0 25px rgba(204,0,0,0.6); border: 2px solid rgba(255,255,255,0.2); z-index: 2; }
-        .sum-timer-capsule::before { content: '⏱'; font-size: 0.8em; }
-        
-        .summary-content-side { background: #050505; padding: 40px; display: flex; flex-direction: column; overflow: hidden; position: relative; }
-        .summary-content-side::before { content: ''; position: absolute; top:0; left:0; width:100%; height:100%; background: url('https://images.unsplash.com/photo-1495020689067-958852a7765e?q=80&w=1920&fit=crop') center/cover; opacity: 0.2; z-index: 0; filter: grayscale(100%); }
-        .summary-header { border-bottom: 2px solid #333; padding-bottom: 15px; margin-bottom: 20px; height: 10px; z-index: 2; position: relative; }
-        
-        .summary-page { display: flex; flex-direction: column; gap: 20px; position: absolute; width: calc(100% - 80px); transition: opacity 1.2s ease-in-out, transform 1.2s ease-in-out; opacity: 0; transform: translateX(50px); pointer-events: none; z-index: 1; }
-        .summary-page.active { opacity: 1; transform: translateX(0); pointer-events: auto; z-index: 100; }
-        .sum-item { display: flex; gap: 20px; background: rgba(0,0,0,0.8); padding: 15px; border-left: 4px solid #333; transition: 0.3s; cursor: pointer; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); pointer-events: auto; text-decoration: none; }
-        .sum-item:hover { background: rgba(20,20,30,0.9); border-left-color: var(--accent); }
-        .sum-img { width: 120px; height: 80px; object-fit: cover; background: #222; }
-        .sum-img.placeholder { display: flex; align-items: center; justify-content: center; background: #001a4d; border: 1px solid #333; }
-        .sum-img.placeholder svg { width: 50%; fill: var(--accent); }
-        .sum-text { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
-        .sum-time { font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent); margin-bottom: 4px; display:flex; align-items:center; gap:6px; }
-        .sum-h { font-family: var(--font-data); font-weight: 700; font-size: 1.3rem; color: #fff; line-height: 1.2; text-shadow: 0 1px 2px #000; }
-        .sum-d { font-family: var(--font-data); font-size: 0.9rem; color: #aaa; margin-top: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-
-        .prov-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--accent); padding-bottom: 15px; margin-bottom: 20px; z-index: 5; position: relative; }
-        .prov-logo-area { display: flex; align-items: center; gap: 20px; }
-        .prov-logo-large { height: 60px; width: auto; border-radius: 4px; background: #fff; padding: 5px; }
-        .prov-title { font-family: var(--font-main); font-size: 2.5rem; color: #fff; text-transform: uppercase; font-weight: 800; }
-        .prov-close-btn { background: #cc0000; color: #fff; border: none; padding: 10px 20px; font-family: var(--font-tech); font-weight: bold; font-size: 1.2rem; cursor: pointer; pointer-events: auto; transition: 0.2s; }
-        .prov-close-btn:hover { background: #ff4444; }
-        .prov-list-scroll { overflow-y: auto; height: 80vh; padding-right: 10px; z-index: 5; position: relative; scrollbar-width: thin; scrollbar-color: var(--accent) #333; }
-        .prov-item { background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 10px; padding: 15px; display: flex; flex-direction: column; border-left: 3px solid #555; pointer-events: auto; cursor: pointer; transition: 0.2s; text-decoration: none; }
-        .prov-item:hover { background: rgba(255,255,255,0.1); border-left-color: var(--accent); }
-        .prov-time { font-family: var(--font-mono); color: var(--accent); font-weight: bold; font-size: 1.1rem; margin-bottom: 5px; }
-        .prov-h { font-family: var(--font-main); color: #fff; font-size: 1.4rem; margin-bottom: 5px; line-height: 1.1; }
-        .prov-desc { font-family: var(--font-data); color: #ccc; font-size: 1rem; line-height: 1.4; }
-
         #prog-guide-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 5000; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.5s; overflow: hidden; }
         #prog-guide-overlay.active { opacity: 1; pointer-events: auto; }
         .pg-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; filter: blur(15px) brightness(0.4); transition: filter 10s ease-in-out, transform 15s linear; z-index: -1; }
@@ -904,7 +804,6 @@
             position: absolute; top: 30px; right: 30px;
             display: flex; align-items: center; gap: 10px;
             z-index: 500; pointer-events: auto;
-            /* Align with right edge visually */
             transform-origin: right center;
         }
 
@@ -932,10 +831,10 @@
 
         /* NEW HEADER WEATHER BAR (PWS) */
         .header-weather-bar {
-            background: rgba(0, 10, 20, 0.4); /* Almost invisible layer */
+            background: rgba(0, 10, 20, 0.4); 
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255,255,255,0.08);
-            border-left: 2px solid var(--accent); /* Elegant accent */
+            border-left: 2px solid var(--accent);
             height: 32px;
             border-radius: 4px;
             display: flex; align-items: center;
@@ -943,7 +842,7 @@
             color: #ddd;
             font-family: var(--font-tech);
             font-size: 0.8rem;
-            min-width: 280px; /* Match approximately the sidebar width */
+            min-width: 340px; /* Increased Width */
             justify-content: space-between;
             transition: all 0.5s;
         }
@@ -959,21 +858,6 @@
             align-items: center; /* Center horizontally */
         }
         
-        .logo-info-container {
-            border-left: none; /* Remove side line */
-            border-top: 2px solid #fff; /* Top line instead */
-            padding: 4px 12px;
-            margin-top: 1px;
-            align-items: center;
-            width: 100%; /* Take full width of parent (which is dictated by date length usually) */
-        }
-        
-        .logo-date-row {
-            justify-content: center;
-            text-align: center;
-            white-space: nowrap;
-        }
-
         .logo-weather-block { display: none !important; } /* Hide old block */
 
     </style>
@@ -1024,11 +908,7 @@
                 </table>
                 
                 <div class="dev-h" style="margin-top:20px;">MANUÁLIS VEZÉRLÉS</div>
-                <button class="btn" onclick="safeTrigger(() => triggerSummaryMode(3, 'half'))">[►] 3 PERCES HÍRÖSSZEFOGLALÓ (3p)</button>
-                <button class="btn" onclick="safeTrigger(() => triggerSummaryMode(5, 'hourly'))">[►] 5 PERCES HÍRÖSSZEFOGLALÓ (5p)</button>
-                <button class="btn" onclick="safeTrigger(() => triggerSummaryMode(1, 'sport'))">[►] SPORTHÍREK (1p)</button>
-                <button class="btn" onclick="safeTrigger(() => triggerBigClockSequence())">[⏰] NAGY ÓRA SHOW</button>
-                <button class="btn" onclick="safeTrigger(() => triggerEconomyMode())">[💰] TŐZSDE ÉS PÉNZÜGY (5p)</button>
+                <button class="btn" onclick="state.isClockRunning = false; safeTrigger(() => triggerBigClockSequence())">[⏰] NAGY ÓRA SHOW</button>
                 <button class="btn" onclick="closeAllOverlays()">[X] MINDEN ABLAK BEZÁRÁSA</button>
                 <button class="btn" onclick="forceRefreshAll()">[⚡] AZONNALI FRISSÍTÉS</button>
                 <button class="btn" onclick="testBreaking()">[🔥] BREAKING NEWS TESZT</button>
@@ -1067,13 +947,13 @@
     <!-- BIG CLOCK SHOW OVERLAY (REDESIGNED) -->
     <div id="big-clock-overlay">
         <div class="bc-schedule-panel">
-            <!-- REPLACED LIST WITH INFORMATIVE TEXT -->
             <div class="bc-info-text" id="bc-info-text">
-                <span style="font-size:1.4em; font-weight:bold;">Szia!</span><br><br>
-                Ez itt a <span class="bc-info-highlight">TKP NEWS</span>, a te személyes hírközpontod.<br>
-                Mi összegyűjtjük a legfrissebb híreket, időjárást és árfolyamokat, hogy neked csak hátra kelljen dőlnöd.<br><br>
-                <i class="fas fa-rss" style="color:#00d4ff;"></i> Friss információk percről percre. <br>
-                <span style="font-size:0.8em; color:#888;">Jó böngészést kívánunk!</span>
+                Köszönöm, hogy a 
+                <span class="bc-info-highlight" style="background:#000; color:#fff; padding:2px 8px; border-radius:4px; display:inline-block; margin:0 5px;">TKP NEWS</span> 
+                oldalát olvasod.<br><br>
+                Reggel 06-tól éjfélig minden nap a legfrissebb hirek futnak az oldalon, éjféltől reggel 06ig pedig az előző nap hireit olvashatod újra.<br><br>
+                <span style="color:var(--accent);">00:00-tól</span> az előnap reggeli illetve délelőtti hireit (06-12-ig), <span style="color:var(--accent);">02:00-tól</span> az előző nap napközben termett hireit (12-18-ig), <span style="color:var(--accent);">04:00-tól</span> pedig az előző nap esti hirei (18-23:59-ig) kerülnek terítékre, hogy Te tényleg semmiről ne maradj le.<br><br>
+                Használd a lapozót, informálódj. <span style="color:#00d4ff; font-weight:bold;">Kellemes időtöltést az oldalon!</span>
             </div>
         </div>
         <div class="bc-main-panel">
@@ -1095,52 +975,11 @@
 
                     <div class="hand hand-h" id="hand-h"></div>
                     <div class="hand hand-m" id="hand-m"></div>
-                    <div class="hand hand-s" id="hand-s"></div><div class="clock-center"></div>
+                    <div class="hand hand-s" id="hand-s"></div>
+                    <div class="clock-center"></div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- SUMMARY OVERLAY (WITH EMBEDDED LOGO) -->
-    <div id="summary-overlay">
-        <!-- Close Button for Economy/Summary -->
-        <div class="overlay-close-abs" onclick="closeAllOverlays()">[X] KILÉPÉS</div>
-
-        <div class="summary-brand-side" id="sum-sidebar">
-            <div class="sum-live-badge" id="sum-live-badge">ÉLŐ</div>
-            <div class="summary-title" id="sum-main-title">HÍRÖSSZEFOGLALÓ</div>
-            <div class="summary-subtitle" id="sum-sub-title">A NAP LEGFONTOSABB HÍREI</div>
-            
-            <!-- DYNAMIC FINANCIAL NEWS SLOT -->
-            <div id="financial-news-slot" class="fin-news-container">
-                <div id="fin-news-tab" class="fin-tab">FRISS HÍREK</div>
-                <div id="fin-news-card" class="fin-news-card">
-                    <!-- CONTENT -->
-                </div>
-            </div>
-
-            <!-- REGULAR PROVIDER ICONS -->
-            <div id="provider-container-wrapper" style="width:100%; display:flex; flex-direction:column; align-items:center;">
-                <div style="font-family:var(--font-tech); font-size:0.8rem; color:#aaa; margin-top:20px; width:80%; border-bottom:1px solid #333; padding-bottom:5px;">ADATOK FORRÁSAI:</div>
-                <div id="provider-icons-container" class="provider-list-container">
-                    <!-- Icons injected by JS -->
-                </div>
-                <div class="provider-instruction" id="provider-instruction-text">
-                    Kattints egy hírportál gombjára a mai híreinek megtekintéséhez!
-                </div>
-            </div>
-
-            <div class="summary-embedded-branding">
-                <div class="embedded-logo-new">
-                     <div class="emb-tkp">TKP</div>
-                     <div class="emb-sep"></div>
-                     <div class="emb-news">NEWS</div>
-                </div>
-                <div class="holiday-logo-text" style="font-size:1.1rem; color:#fff;" id="sum-source">ADAT: OPEN-ER</div>
-            </div>
-            <div class="sum-timer-capsule" id="sum-clock">03:00</div>
-        </div>
-        <div class="summary-content-side" id="sum-content"></div>
     </div>
 
     <!-- NEW: HOURLY ARCHIVE OVERLAY -->
@@ -1196,7 +1035,7 @@
         <div class="grid"></div>
     </div>
 
-    <!-- LOGO & CLOCK (UPDATED: CENTERED, NO PWS, WITH DAY OF WEEK) -->
+    <!-- LOGO & CLOCK (UPDATED: CENTERED, NO PWS, WITH DAY OF WEEK, NO LAYER) -->
     <div class="logo-box logo-entry" id="logo-box" onclick="openAuth()">
         <!-- LOGO ROW -->
         <div class="logo-main-bar">
@@ -1207,7 +1046,7 @@
             <span id="replay-badge" class="replay-tag">ISMÉTLÉS</span>
         </div>
         
-        <!-- INFO CONTAINER (ANCHORED CENTERED) -->
+        <!-- INFO CONTAINER (ANCHORED CENTERED - NO BACKGROUND LAYER) -->
         <div class="logo-info-container">
             <!-- DATE & TIME -->
             <div class="logo-date-row">
@@ -1252,9 +1091,13 @@
                     <div class="breaking-card" id="bk-card-clickable">
                         <div class="bk-card-header">
                             <span>MOST ÉRKEZETT</span>
+                            <!-- UPDATED BREAKING LOGO -->
                             <div class="bk-watermark">
-                                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                                <span>TKP NEWS</span>
+                                <div class="mini-tkp-logo">
+                                    <div class="mtl-black">TKP</div>
+                                    <div class="mtl-sep"></div>
+                                    <div class="mtl-white">NEWS</div>
+                                </div>
                             </div>
                         </div>
                         <div class="bk-card-headline" id="bk-card-headline">...</div>
@@ -1268,9 +1111,18 @@
         <!-- NEW CREATIVE MAIN NEWS LAYER (V20.6 COMPACT BROADCAST LOWER THIRD) -->
         <div class="main-news ui-element" id="ui-left">
             <div class="mn-container" id="mn-container-box">
-                <!-- Top Row: Source & Time (Gold) -->
-                <div class="mn-row-top" id="m-meta">
-                    <span id="m-cat-text">HÍRFORRÁS</span>
+                <!-- Header Row: Source (Left) + Nav (Right) -->
+                <div class="mn-header-row">
+                    <div class="mn-row-top" id="m-meta">
+                        <span id="m-cat-text">HÍRFORRÁS</span>
+                    </div>
+
+                    <!-- Nav Moved Here -->
+                    <div class="main-nav-overlay" id="main-nav-layer">
+                        <div class="nav-btn-mini" onclick="event.stopPropagation(); stepMain(-1); return false;">◀</div>
+                        <div class="nav-counter-mini" id="nav-count">0 / 0</div>
+                        <div class="nav-btn-mini" onclick="event.stopPropagation(); stepMain(1); return false;">▶</div>
+                    </div>
                 </div>
 
                 <!-- Middle Row: Headline (Dark) -->
@@ -1281,13 +1133,6 @@
                 <!-- Bottom Row: Description (Lighter) -->
                 <div class="mn-row-bot">
                     <div class="mn-desc" id="m-desc">Kérjük várjon, amíg a rendszer lekéri az elmúlt 2 órából a híreket.</div>
-                    
-                    <!-- Steppers inside the bottom row -->
-                    <div class="main-nav-overlay" id="main-nav-layer">
-                        <div class="nav-btn-mini" onclick="event.stopPropagation(); stepMain(-1); return false;">◀</div>
-                        <div class="nav-counter-mini" id="nav-count">0 / 0</div>
-                        <div class="nav-btn-mini" onclick="event.stopPropagation(); stepMain(1); return false;">▶</div>
-                    </div>
                 </div>
 
                 <div class="mn-progress-bar"><div class="mn-progress-fill" id="m-prg"></div></div>
@@ -1490,13 +1335,11 @@
             allNews: [], tickerItems: [], mainItems: [], weatherData: [],
             pwsData: { temp: '--', feel: '--', wind: '--', windDir: '', cond: '--', icon: '❓', updated: false, rainRate: 0, rainDay: 0, uv: 0, humidity: 0, pressure: 0 },
             tickerIdx: 0, mainIdx: 0, wxIdx: 0, tickerTimer: null, mainTimer: null,
-            isBreaking: false, isSpecial: false, isSummary: false,
+            isBreaking: false, isSpecial: false,
             seenBreaking: new Set(), breakingQueue: [], breakingHistory: new Set(), isBreakingActive: false,
             feedStatus: {}, startTime: Date.now(),
             currentMainLink: null, currentBreakingLink: null, currentBreakingItem: null,
-            summaryPageIdx: 0, summaryInterval: null, 
-            summaryTimer: { interval: null, remaining: 0, isProviderView: false }, 
-            finNewsInterval: null, pwsRotationIdx: 0,
+            pwsRotationIdx: 0,
             lastWxUpdate: 0, currentWxSource: '--', lastTickerUpdate: Date.now(),
             specialMeteoInterval: null, meteoPhaseTimer: null, nextMeteoTime: 0, 
             schedule: [], initialLoadComplete: false, isNightMode: false, forcedNightMode: false, mainTimer: null,
@@ -1519,14 +1362,13 @@
             
             cTimeText: document.getElementById('clock-time-text'), 
             cDateText: document.getElementById('clock-date-text'),
-            cDayText: document.getElementById('clock-day-text'), // NEW
+            cDayText: document.getElementById('clock-day-text'),
             
             // PWS Weather in Top Right (UPDATED)
             headerWxBar: document.getElementById('header-wx-bar'),
             
             special: document.getElementById('special-meteo'), smGrid: document.getElementById('sm-grid'), smTitle: document.getElementById('sm-main-title'), smBg: document.getElementById('sm-bg'),
             feedLog: document.getElementById('feed-log-table'), auth: document.getElementById('auth-overlay'), pin: document.getElementById('pin-input'), dev: document.getElementById('dev-panel'),
-            summary: document.getElementById('summary-overlay'), sumContent: document.getElementById('sum-content'), sumClock: document.getElementById('sum-clock'), sumMainTitle: document.getElementById('sum-main-title'), sumSubTitle: document.getElementById('sum-sub-title'),
             progGuide: document.getElementById('prog-guide-overlay'), pgContainer: document.getElementById('pg-container'), pgBg: document.getElementById('pg-bg'),
             devWxNext: document.getElementById('dev-wx-next'), devWxSrc: document.getElementById('dev-wx-src'), 
             devBkQueue: document.getElementById('dev-bk-queue'),
@@ -1540,8 +1382,6 @@
             bkCardHeadline: document.getElementById('bk-card-headline'), bkCardBody: document.getElementById('bk-card-body'), bkCardMeta: document.getElementById('bk-card-meta'),
             bkCardClickable: document.getElementById('bk-card-clickable'),
             fxSourceContainer: document.getElementById('fx-source-container'),
-            sumSource: document.getElementById('sum-source'),
-            sumLiveBadge: document.getElementById('sum-live-badge'),
             bigClockOverlay: document.getElementById('big-clock-overlay'),
             fcAlert: document.getElementById('ui-bottom'),
             uiLeft: document.getElementById('ui-left'),
@@ -1549,8 +1389,6 @@
             hourlyArchiveOverlay: document.getElementById('hourly-archive-overlay'),
             haTitle: document.getElementById('ha-title-text'),
             haList: document.getElementById('ha-list-container'),
-            finNewsSlot: document.getElementById('financial-news-slot'),
-            providerInstruction: document.getElementById('provider-instruction-text'),
             bcInfoText: document.getElementById('bc-info-text'),
             programDock: document.getElementById('program-dock')
         };
@@ -1632,7 +1470,7 @@
                 if (now >= item.time && now < item.time + 10000 && !item.triggered) { 
                     item.triggered = true; 
                     if(item.type === 'clock') { closeAllOverlays(); setTimeout(() => triggerBigClockSequence(), 1200); }
-                    else if (state.isNightMode && item.type !== 'closing_news') { if (item.type === 'night_summary') { closeAllOverlays(); setTimeout(() => triggerNightSummary(), 1200); } }
+                    else if (state.isNightMode) { if (item.type === 'night_summary') { closeAllOverlays(); setTimeout(() => triggerNightSummary(), 1200); } }
                 } 
             }); 
             state.schedule = state.schedule.filter(item => item.time > now - 600000); 
@@ -1759,7 +1597,16 @@
         }
 
         function triggerBigClockSequence() {
-            state.isSpecial = true; state.isLocked = true; state.isClockRunning = true; state.clockPhase = 0; state.refreshedThisShow = false;
+            // Force reset any stuck state
+             state.isClockRunning = false;
+            closeAllOverlays();
+            
+            state.isSpecial = true; 
+            state.isLocked = true; 
+            state.isClockRunning = true; 
+            state.clockPhase = 0; 
+            state.refreshedThisShow = false;
+            
             clearNewsBackgrounds();
             
             // LOGO EXIT ANIMATION (2 seconds before show)
@@ -1776,7 +1623,10 @@
                 
                 // Initialize Overlay with ADAPTIVE Background
                 DOM.bigClockOverlay.style.background = getSunPhaseBackground();
-                DOM.bigClockOverlay.style.display = 'grid'; 
+                DOM.bigClockOverlay.style.display = 'grid'; // Ensure grid display
+                DOM.bigClockOverlay.style.opacity = '1';
+                DOM.bigClockOverlay.style.zIndex = '20000'; // Make sure it's on top
+                
                 DOM.bigClockOverlay.classList.remove('bc-layout-center');
                 setTimeout(() => { DOM.bigClockOverlay.classList.add('active'); }, 50);
                 
@@ -1811,27 +1661,19 @@
                     DOM.bcInfoText.style.opacity = 0; // Fade out info
                 }
                 
-                // PHASE 3: 50s-58s (Center Clock)
-                else if (s >= 50 && s < 58 && state.clockPhase !== 3) {
+                // PHASE 3: 50s-58s (Center Clock & TRIGGER BACKGROUND REFRESH)
+                else if (s >= 50 && s < 59 && state.clockPhase !== 3) {
                     state.clockPhase = 3;
-                    DOM.bigClockOverlay.classList.add('bc-layout-center'); // Moves clock to center and scales up
+                    DOM.bigClockOverlay.classList.add('bc-layout-center'); // Moves clock to center
                 }
 
-                // REFRESH TRIGGER (Last 10 seconds of minute)
-                if (s >= 50 && !state.refreshedThisShow) {
+                // REFRESH TRIGGER (Exactly at 50 seconds)
+                if (s === 50 && !state.refreshedThisShow) {
                     state.refreshedThisShow = true;
-                    backgroundRefresh(false);
-                }
-                
-                // PHASE 4: 58s (PRE-TRANSITION FADE)
-                else if (s >= 58 && state.clockPhase !== 4) {
-                    state.clockPhase = 4;
-                    document.querySelector('.bc-main-panel').style.transition = 'opacity 1s';
-                    document.querySelector('.bc-main-panel').style.opacity = 0;
-                    document.querySelector('.bc-schedule-panel').style.opacity = 0;
+                    backgroundRefresh(true);
                 }
 
-                // END / TRANSITION: When seconds hit 0 EXACTLY
+                // END / TRANSITION: When seconds hit 0 EXACTLY (Transition to Main Page)
                 if (s === 0 && state.isClockRunning && state.clockPhase >= 1) {
                     clearInterval(bcInterval);
                     finishClockSequence(nextHour);
@@ -1903,7 +1745,20 @@
         async function crawlNews(isReset = false) { if(isReset) { DOM.tickerWindow.innerHTML = '<div class="ticker-item active"><div class="ticker-content"><span class="ticker-refresh-msg">ADATBÁZIS FRISSÍTÉSE...</span></div></div>'; clearTimeout(state.tickerTimer); DOM.mainTitle.innerText = "ADATBÁZIS FRISSÍTÉSE..."; state.mainItems = []; state.mainIdx = -1; state.tickerIdx = -1; } RSS_FEEDS.map(async (src) => { const text = await fetchRobust(src.url, src.name); if (text) { parseAndAdd(text, src.name); } }); }
         function parseAndAdd(xmlText, sourceName) { try { const xml = new DOMParser().parseFromString(xmlText, "text/xml"); let hasNew = false; xml.querySelectorAll("item").forEach(item => { const title = item.querySelector("title")?.textContent.trim(); const link = item.querySelector("link")?.textContent.trim(); const pubDate = new Date(item.querySelector("pubDate")?.textContent || new Date()); const desc = (item.querySelector("description")?.textContent || "").replace(/<[^>]*>?/gm, '').trim().substring(0, 500); let img = item.querySelector("enclosure")?.getAttribute("url"); if(!img) { const content = item.getElementsByTagNameNS("*", "content")[0]?.textContent || item.querySelector("description")?.textContent; img = content?.match(/src="([^"]+)"/)?.[1]; } if (title && link && !state.allNews.find(n => n.link === link)) { state.allNews.push({ title, link, date: pubDate, desc, source: sourceName, img: img }); hasNew = true; if(!state.initialLoadComplete) state.seenBreaking.add(link); } }); if(hasNew) state.hasFreshNews = true; updateLists(); updateDevLog(); if(state.mainItems.length > 0 && !state.mainStarted) { state.mainStarted = true; DOM.loader.style.opacity = 0; setTimeout(() => DOM.loader.remove(), 1000); cycleMain(); if(state.tickerIdx === 0) cycleTicker(1); } } catch(e) {} }
         function updateLists() { if (state.isNightMode) return; const now = new Date(); const newTicker = state.allNews.filter(n => (now - n.date) < 14400000).sort((a,b) => b.date - a.date); state.tickerItems = newTicker.length > 5 ? newTicker : [...state.allNews].sort((a,b) => b.date - a.date).slice(0, 50); const newMain = state.allNews.filter(n => (now - n.date) < 7200000 && n.img).sort(() => Math.random() - 0.5); state.mainItems = newMain.length > 0 ? newMain : state.allNews.filter(n => n.img).slice(0, 10); }
-        async function checkBreaking() { if (state.isSpecial || state.isSummary || state.isLocked || !state.allNews) return; const now = Date.now(); state.allNews.filter(n => (now - n.date.getTime()) <= 180000).sort((a,b) => a.date - b.date).forEach(item => { if (!state.breakingHistory.has(item.link)) { state.breakingHistory.add(item.link); state.breakingQueue.push(item); } }); if (state.breakingQueue.length > 0 && !state.isBreakingActive && state.initialLoadComplete) processBreakingQueue(); }
+        
+        async function checkBreaking() { 
+            if (state.isSpecial || state.isSummary || state.isLocked || !state.allNews) return; 
+            const now = Date.now(); 
+            // UPDATED: 15 minutes window (900000 ms) instead of 3 minutes
+            state.allNews.filter(n => (now - n.date.getTime()) <= 900000).sort((a,b) => a.date - b.date).forEach(item => { 
+                if (!state.breakingHistory.has(item.link)) { 
+                    state.breakingHistory.add(item.link); 
+                    state.breakingQueue.push(item); 
+                } 
+            }); 
+            if (state.breakingQueue.length > 0 && !state.isBreakingActive && state.initialLoadComplete) processBreakingQueue(); 
+        }
+        
         function processBreakingQueue(isNext = false) { if (state.breakingQueue.length === 0) { closeBreaking(); return; } state.isBreakingActive = true; if (DOM.sidebar.classList.contains('breaking-active') && isNext) { const card = document.querySelector('.breaking-card'); card.classList.add('flipped-state'); setTimeout(() => { renderBreakingItemContent(); card.classList.remove('flipped-state'); }, 500); } else { DOM.sidebar.classList.add('breaking-active'); renderBreakingItemContent(); } }
         function renderBreakingItemContent() { const item = state.breakingQueue.shift(); state.currentBreakingItem = item; DOM.bkCardClickable.dataset.link = item.link; const timeStr = item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'}); DOM.bkCardHeadline.innerText = item.title; const logo = getLogoHtml(item.source); DOM.bkCardMeta.innerHTML = `${timeStr} • ${logo} ${item.source}`; DOM.bkCardBody.innerHTML = ""; const wrapper = document.createElement("div"); wrapper.className = "bk-scroll-wrapper"; wrapper.innerText = item.desc; DOM.bkCardBody.appendChild(wrapper); const bodyH = DOM.bkCardBody.clientHeight; setTimeout(() => { const scrollH = wrapper.scrollHeight; if(scrollH > bodyH) { const dist = scrollH - bodyH + 20; const duration = Math.max(2, dist * 0.05); wrapper.style.transition = `transform ${duration}s linear`; setTimeout(() => { wrapper.style.transform = `translateY(-${dist}px)`; }, 2000); } }, 5000); const charCount = (item.title.length + item.desc.length); let duration = Math.max(15000, (charCount / 15) * 1000); setTimeout(() => { if (state.breakingQueue.length > 0) { processBreakingQueue(true); } else { closeBreaking(); } }, duration + 6000); }
         function closeBreaking() { DOM.sidebar.classList.remove('breaking-active'); setTimeout(() => { state.isBreakingActive = false; }, 1000); }
@@ -2231,290 +2086,19 @@ function getFinancialNews() {
     return items;
 }
 
-async function triggerEconomyMode() {
-    state.summaryPageIdx = 0;
-    state.isSpecial = true; state.isLocked = true; toggleLiveBadge(true);
-    setTimeout(() => { DOM.sumLiveBadge.classList.add('delayed-show'); }, 2000);
-    clearNewsBackgrounds();
-    // Hide all main UIs including DOCK
-    [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'}, {id:'program-dock', t:'bottom'} ].forEach(ui => {
-        const el = document.getElementById(ui.id);
-        if(el) el.classList.add(`hide-${ui.t}`);
-    });
-    
-    DOM.logoBox.classList.remove('force-hide'); DOM.logoBox.classList.add('high-z'); 
-    DOM.summary.classList.add('economy-overlay'); 
-    document.getElementById('sum-live-badge').classList.remove('visible'); 
-
-    DOM.sumMainTitle.innerText = "TŐZSDE ÉS PÉNZÜGY"; 
-    DOM.sumSubTitle.innerText = "NEMZETKÖZI VALUTA ÉS KRIPTO PIAC"; 
-    DOM.sumClock.style.display = 'none'; 
-    document.querySelector('.summary-embedded-branding').style.display = 'none'; 
-
-    // Handle News Container Visibility
-    const iconContainer = document.getElementById('provider-container-wrapper');
-    const newsContainer = document.getElementById('financial-news-slot');
-    if(iconContainer) iconContainer.style.display = 'none';
-
-    // Animation Sequence for News
-    if(newsContainer) {
-        newsContainer.style.display = 'flex';
-        setTimeout(() => newsContainer.classList.add('slide-in'), 100);
-        setTimeout(() => { document.getElementById('fin-news-tab').classList.add('visible'); }, 1100);
-        setTimeout(() => {
-            renderFinancialNewsCard();
-            if(state.finNewsInterval) clearInterval(state.finNewsInterval);
-            state.finNewsInterval = setInterval(renderFinancialNewsCard, 20000);
-        }, 2100);
-    }
-
-    DOM.sumContent.innerHTML = `<div class="summary-header"></div><div id="eco-grid-container" class="eco-grid"></div>`; 
-    DOM.summary.style.display = 'grid'; 
-    setTimeout(() => DOM.summary.classList.add('active'), 50); 
-
-    await fetchCurrency(); // Ensure fresh rates
-    
-    const itemsPerPage = 4;
-    const totalPages = Math.ceil(EXTENDED_CURRENCIES.length / itemsPerPage);
-    
-    const renderEcoPage = () => { 
-        const container = document.getElementById('eco-grid-container'); 
-        if(!container) return; 
-        container.innerHTML = ''; 
-        const start = state.summaryPageIdx * itemsPerPage; 
-        const end = start + itemsPerPage; 
-        const currentSet = EXTENDED_CURRENCIES.slice(start, end); 
-        
-        currentSet.forEach(curr => { 
-            let val = "---"; 
-            
-            // JAVÍTOTT SZÁMÍTÁSI LOGIKA
-            if(state.currencyRates && state.currencyRates[curr]) { 
-                if (state.currencyBase === 'HUF') {
-                     val = (1 / state.currencyRates[curr]).toFixed(2);
-                } else {
-                    val = (state.currencyRates.HUF / state.currencyRates[curr]).toFixed(2); 
-                }
-            } 
-            else if (mockRates[curr]) val = mockRates[curr].toFixed(2); 
-            else { val = (Math.random() * 1000 + 100).toFixed(2); } 
-
-            const name = CURRENCY_NAMES[curr] || curr; 
-            let iconUrl = `https://flagcdn.com/48x36/${curr.substring(0,2).toLowerCase()}.png`; 
-            if (['BTC','ETH','XRP','LTC','ADA','DOT','BCH','XLM','LINK','BNB','SOL','DOGE','UNI','USDT','USDC','MATIC','AVAX','LUNA','ATOM','ETC'].includes(curr)) { 
-                iconUrl = "https://cdn-icons-png.flaticon.com/512/1213/1213702.png"; 
-            } 
-            
-            const div = document.createElement('div'); 
-            div.className = 'eco-card'; 
-            div.onclick = (e) => { e.stopPropagation(); window.open(`https://www.google.com/search?q=${curr}+to+HUF`, '_blank'); }; 
-            div.innerHTML = `<div class="eco-curr"><img src="${iconUrl}" style="border-radius:2px; width:30px; margin-right:10px;">${curr} <span style="font-size:0.8em; color:#aaa; margin-left:5px;">( ${name} )</span></div><div class="eco-val">${val} FT</div>`; 
-            container.appendChild(div); 
-        }); 
-    }; 
-    
-    renderEcoPage(); 
-    
-    let elapsed = 0; 
-    state.summaryTimer.interval = setInterval(() => { 
-        elapsed += 1000; 
-        if (elapsed >= 300000) { 
-            clearInterval(state.summaryTimer.interval); 
-            clearInterval(state.summaryInterval); 
-            clearInterval(state.finNewsInterval);
-            
-            // Exit animation
-            if(newsContainer) {
-                const content = document.querySelector('.fin-news-content');
-                const tab = document.getElementById('fin-news-tab');
-                if(content) content.classList.remove('visible');
-                setTimeout(() => { if(tab) tab.classList.remove('visible'); }, 500);
-                setTimeout(() => { newsContainer.classList.remove('slide-in'); newsContainer.classList.add('slide-out'); }, 1000);
-            }
-
-            setTimeout(() => {
-                DOM.summary.classList.remove('economy-overlay'); 
-                closeAllOverlays(); 
-                DOM.sumClock.style.display = 'flex'; 
-                DOM.sumSource.style.display = 'none'; 
-                if(newsContainer) { newsContainer.style.display = 'none'; newsContainer.classList.remove('slide-out'); }
-                if(iconContainer) iconContainer.style.display = 'flex';
-            }, 2000); 
-        } 
-    }, 1000); 
-
-    state.summaryInterval = setInterval(() => { 
-        state.summaryPageIdx = (state.summaryPageIdx + 1) % totalPages; 
-        renderEcoPage(); 
-    }, 17000); 
-}
-
 let finNewsIdx = 0;
 function renderFinancialNewsCard() {
-    const slot = document.getElementById('fin-news-card');
-    const contentDiv = slot ? slot.querySelector('.fin-news-content') : null;
-
-    if(contentDiv) {
-        contentDiv.classList.remove('visible');
-        setTimeout(updateContent, 500);
-    } else {
-        updateContent();
-    }
-
-    function updateContent() {
-        if(!slot) return;
-        const items = getFinancialNews();
-        if(items.length === 0) {
-            slot.innerHTML = `<div class="fin-news-content visible" style="color:#888; font-size:0.8rem; padding:5px;">NINCS FRISS HÍR</div>`;
-            return;
-        }
-        const item = items[finNewsIdx % items.length];
-        finNewsIdx++;
-        const feed = RSS_FEEDS.find(f => f.name === item.source); 
-        const logoUrl = feed ? `https://www.google.com/s2/favicons?domain=${feed.domain}&sz=64` : '';
-        const timeStr = item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'});
-        slot.onclick = (e) => { e.stopPropagation(); window.open(item.link, '_blank'); };
-        slot.innerHTML = `<div class="fin-news-content"><div class="fn-meta"><img src="${logoUrl}" class="fn-logo"> ${item.source} • ${timeStr}</div><div class="fn-title">${item.title}</div><div style="font-family:var(--font-data); font-size:0.85rem; color:#ccc; margin-top:5px; line-height:1.3; overflow:hidden; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical;">${item.desc}</div></div>`;
-        setTimeout(() => { const newContent = slot.querySelector('.fin-news-content'); if(newContent) newContent.classList.add('visible'); }, 50);
-    }
+    // This function is kept for logic but slot is removed from DOM in default state
+    // Kept to prevent errors
 }
 
-function triggerClosingNews() { triggerSummaryMode(10, 'closing_news'); }
-
-function triggerSummaryMode(mins, type = 'half', isReturn = false) {
-    state.isSummary = true; state.isLocked = true;
-    DOM.logoBox.classList.remove('center-stage', 'high-z', 'logo-gradual-zoom'); DOM.logoBox.style.transform = ''; DOM.progGuide.classList.remove('active');
-    
-    // Hide UI
-    [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'}, {id:'program-dock', t:'bottom'} ].forEach(ui => {
-        const el = document.getElementById(ui.id);
-        if(el) el.classList.add(`hide-${ui.t}`);
-    });
-
-    DOM.logoBox.classList.remove('force-hide'); DOM.logoBox.classList.remove('logo-fade-out');
-    DOM.logoBox.classList.add('high-z');
-
-    document.getElementById('sum-live-badge').classList.remove('visible'); document.getElementById('sum-sidebar').classList.remove('sport-theme');
-    document.querySelector('.summary-embedded-branding').style.display = 'none';
-
-    const iconContainer = document.getElementById('provider-container-wrapper');
-    const newsContainer = document.getElementById('financial-news-slot');
-    if(iconContainer) iconContainer.style.display = 'flex';
-    if(newsContainer) newsContainer.style.display = 'none';
-
-    DOM.sumClock.style.display = 'flex';
-    DOM.sumContent.innerHTML = `<div class="summary-header"></div>`;
-    let items = []; const todayStart = new Date(); todayStart.setHours(0,0,0,0);
-
-    if(type === 'sport') { 
-        document.getElementById('sum-sidebar').classList.add('sport-theme');
-        const sportCutoff = new Date(); sportCutoff.setTime(sportCutoff.getTime() - (24 * 60 * 60 * 1000));
-        items = state.allNews.filter(n => { 
-            const src = n.source.toUpperCase(); const title = n.title.toLowerCase();
-            const isSportSource = src.includes('SPORT') || src.includes('NEMZETI') || src.includes('M4');
-            const hasSportKeyword = title.includes('sport') || title.includes('foci') || title.includes('bajnok') || title.includes('liga') || title.includes('futball');
-            return (isSportSource || hasSportKeyword) && n.date >= sportCutoff; 
-        }).sort((a,b) => b.date - a.date); 
-        if(items.length < 4) items = state.allNews.filter(n => n.source.toUpperCase().includes('SPORT')).sort((a,b) => b.date - a.date).slice(0,10); 
-    } else if(state.allNews.length > 0) { 
-        items = state.allNews.filter(n => n.date >= todayStart).sort((a,b) => b.date - a.date); 
-        if (items.length < 8) items = [...state.allNews].sort((a,b) => b.date - a.date).slice(0, 20); 
-    } else { 
-        for(let i=0; i<8; i++) items.push({title: "RENDSZER ÜZENET: ADATOK TÖLTÉSE...", desc: "Kérjük várjon, amíg a hírek frissülnek a központi szerverről.", date: new Date(), source: "SYSTEM", link: "#"}); 
-    }
-
-    if (type === 'hourly') { DOM.sumMainTitle.innerText = "HÍRÖSSZEFOGLALÓ"; DOM.sumSubTitle.innerText = "HÍREK 5 PERCBEN"; } 
-    else if (type === 'sport') { DOM.sumMainTitle.innerText = "SPORTHÍREK"; DOM.sumSubTitle.innerText = "A NAP LEGFONTOSABB SPORTHÍREI"; } 
-    else if (type === 'closing_news') { DOM.sumMainTitle.innerText = "ZÁRÓHÍRADÓ"; DOM.sumSubTitle.innerText = "A NAP HÍREI 10 PERCBEN"; }
-    else { DOM.sumMainTitle.innerText = "HÍRÖSSZEFOGLALÓ"; DOM.sumSubTitle.innerText = "HÍREK 3 PERCBEN"; }
-
-    const iconList = document.getElementById('provider-icons-container');
-    if(iconList) {
-        iconList.innerHTML = '';
-        const sources = [...new Set(state.allNews.map(n => n.source))].slice(0, 15); 
-        sources.forEach(src => { const feed = RSS_FEEDS.find(f => f.name === src); if(feed) { const btn = document.createElement('div'); btn.className = 'provider-chip'; btn.innerHTML = `<img src="https://www.google.com/s2/favicons?domain=${feed.domain}&sz=64"><span>${src}</span>`; btn.title = `Nézd meg a ${src} mai híreit!`; btn.onclick = (e) => { e.stopPropagation(); renderProviderSpecificNews(src); }; iconList.appendChild(btn); } });
-    }
-
-    let durationSeconds = (type === 'hourly' ? 300 : (type === 'sport' ? 60 : (type === 'closing_news' ? 600 : 180))); 
-    const secondsPerPage = 30; const itemsPerPage = 4; 
-    const totalPagesNeeded = Math.ceil(durationSeconds / secondsPerPage); 
-    const totalItemsNeeded = totalPagesNeeded * itemsPerPage;
-
-    let displayItems = [...items]; 
-    if (displayItems.length < totalItemsNeeded && displayItems.length > 0) { while (displayItems.length < totalItemsNeeded) { displayItems = displayItems.concat(items); } } 
-    displayItems = displayItems.slice(0, totalItemsNeeded);
-    const pages = []; for (let i = 0; i < displayItems.length; i += itemsPerPage) { pages.push(displayItems.slice(i, i + itemsPerPage)); }
-
-    if (!isReturn) { durationSeconds = pages.length * secondsPerPage; state.summaryTimer.remaining = durationSeconds; }
-
-    state.summaryTimer.isProviderView = false;
-    if(state.summaryTimer.interval) clearInterval(state.summaryTimer.interval);
-    
-    let timeLeft = state.summaryTimer.remaining; if(timeLeft < 0) timeLeft = 0;
-    DOM.sumClock.innerText = `0${Math.floor(timeLeft/60)}:${(timeLeft%60).toString().padStart(2,'0')}`;
-
-    state.summaryTimer.interval = setInterval(() => { 
-        state.summaryTimer.remaining--; 
-        let currentRem = state.summaryTimer.remaining;
-        if(currentRem < 0) { 
-            if(!state.summaryTimer.isProviderView) { clearInterval(state.summaryTimer.interval); closeAllOverlays(); }
-        } else { 
-            if(!state.summaryTimer.isProviderView) { DOM.sumClock.innerText = `0${Math.floor(currentRem/60)}:${(currentRem%60).toString().padStart(2,'0')}`; }
-        } 
-    }, 1000);
-
-    const placeholderLogo = `<svg viewBox="0 0 24 24" style="width:50%; fill:var(--accent);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`;
-
-    pages.forEach((p, idx) => { 
-        const pageDiv = document.createElement('div'); pageDiv.className = `summary-page ${idx === 0 ? 'active' : ''}`; pageDiv.id = `sum-page-${idx}`; 
-        p.forEach(item => { 
-            const itemDiv = document.createElement('a'); itemDiv.className = 'sum-item'; 
-            if(item.link && item.link !== "#") { itemDiv.href = item.link; itemDiv.target = "_blank"; itemDiv.rel = "noopener noreferrer"; } 
-            const imgHtml = item.img ? `<img src="${item.img}" class="sum-img">` : `<div class="sum-img placeholder">${placeholderLogo}</div>`; 
-            const logoHtml = getLogoHtml(item.source); const timeStr = item.date.toLocaleTimeString('hu-HU',{hour:'2-digit',minute:'2-digit'}); 
-            itemDiv.innerHTML = ` ${imgHtml} <div class="sum-text"> <div class="sum-time">${logoHtml} ${timeStr} • ${item.source}</div> <div class="sum-h">${item.title}</div> <div class="sum-d">${item.desc}</div> </div> `; 
-            pageDiv.appendChild(itemDiv); 
-        }); 
-        DOM.sumContent.appendChild(pageDiv); 
-    });
-
-    DOM.summary.style.display = 'grid'; setTimeout(() => DOM.summary.classList.add('active'), 50);
-
-    let cPage = 0; 
-    if (pages.length > 1) { 
-        if(state.summaryInterval) clearInterval(state.summaryInterval);
-        state.summaryInterval = setInterval(() => { 
-            if(state.isSummary && !state.summaryTimer.isProviderView) { 
-                const oldPage = document.getElementById(`sum-page-${cPage}`); if(oldPage) oldPage.classList.remove('active'); 
-                cPage = (cPage + 1) % pages.length; 
-                const newPage = document.getElementById(`sum-page-${cPage}`); if(newPage) newPage.classList.add('active'); 
-            } 
-        }, 30000); 
-    }
-}
-
-function renderProviderSpecificNews(sourceName) {
-    state.summaryTimer.isProviderView = true;
-    clearInterval(state.summaryInterval);
-    DOM.sumContent.innerHTML = '';
-    const todayStart = new Date(); todayStart.setHours(0,0,0,0);
-    const items = state.allNews.filter(n => n.source === sourceName && n.date >= todayStart).sort((a,b) => b.date - a.date);
-    const feed = RSS_FEEDS.find(f => f.name === sourceName);
-    const logoUrl = feed ? `https://www.google.com/s2/favicons?domain=${feed.domain}&sz=64` : '';
-
-    const header = document.createElement('div'); header.className = 'prov-header'; 
-    header.innerHTML = ` <div class="prov-logo-area"> <img src="${logoUrl}" class="prov-logo-large"> <div class="prov-title">${sourceName}</div> </div> <div style="display:flex; gap:10px;"> <button class="prov-close-btn" style="background:#444;" id="btn-back-sum">VISSZA</button> <button class="prov-close-btn" id="btn-close-all">X</button> </div> `; 
-    DOM.sumContent.appendChild(header); 
-
-    document.getElementById('btn-close-all').onclick = closeAllOverlays; 
-    document.getElementById('btn-back-sum').onclick = () => { if(state.summaryTimer.remaining < 0) { closeAllOverlays(); } else { const type = document.getElementById('sum-sidebar').classList.contains('sport-theme') ? 'sport' : 'half'; triggerSummaryMode(0, type, true); } }; 
-
-    const listContainer = document.createElement('div'); listContainer.className = 'prov-list-scroll'; 
-    if(items.length === 0) { listContainer.innerHTML = `<div style="color:#fff; font-size:1.5rem; text-align:center; padding-top:50px;">Nincs megjeleníthető hír mára ettől a szolgáltatótól.</div>`; } else { items.forEach(item => { const row = document.createElement('a'); row.className = 'prov-item'; if(item.link && item.link !== "#") { row.href = item.link; row.target = "_blank"; row.rel = "noopener noreferrer"; } const timeStr = item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'}); row.innerHTML = ` <div class="prov-time">${timeStr}</div> <div class="prov-h">${item.title}</div> <div class="prov-desc">${item.desc}</div> `; listContainer.appendChild(row); }); } DOM.sumContent.appendChild(listContainer);
-}
+// REMOVED LOGIC STUBS
+function triggerClosingNews() { console.log("Removed"); }
+function triggerSummaryMode() { console.log("Removed"); }
+function triggerEconomyMode() { console.log("Removed"); }
 
 function closeAllOverlays() {
-    DOM.summary.classList.remove('active'); DOM.summary.classList.remove('economy-overlay');
+    // DOM.summary removal not needed as summary overlay removed from active use
     DOM.special.classList.remove('active'); DOM.progGuide.classList.remove('active');
     DOM.logoBox.classList.remove('center-stage');
     DOM.logoBox.classList.remove('high-z');
@@ -2532,18 +2116,22 @@ function closeAllOverlays() {
     clearTimeout(state.specialMeteoInterval);
     clearTimeout(state.meteoPhaseTimer);
     clearTimeout(state.bigClockTimeout);
+    
+    // CRITICAL FIX: Reset clock state
+    state.isClockRunning = false;
+    state.clockPhase = 0;
+    
     state.isSummary = false;
     state.isSpecial = false;
     toggleLiveBadge(false);
     DOM.liveBadge.classList.remove('delayed-visible');
-    DOM.sumLiveBadge.classList.remove('delayed-show');
-    DOM.sumLiveBadge.classList.remove('visible');
-    document.querySelector('.summary-embedded-branding').style.display = 'flex';
+    // document.querySelector('.summary-embedded-branding').style.display = 'flex'; // Removed
     setTimeout(() => {
-        DOM.summary.style.display = 'none';
-        DOM.summary.style.pointerEvents = 'none';
+        if(DOM.summary) DOM.summary.style.display = 'none';
         DOM.special.style.display = 'none';
         DOM.special.style.pointerEvents = 'none';
+        DOM.bigClockOverlay.style.display = 'none';
+        DOM.bigClockOverlay.classList.remove('active', 'bc-layout-center');
         DOM.logoBox.style.pointerEvents = 'auto';
         DOM.logoBox.classList.remove('force-hide');
         setTimeout(() => DOM.logoBox.classList.remove('logo-fade-out'), 3000);
@@ -2663,11 +2251,6 @@ function startClock() {
         if (m === 0 && s === 0) { 
             fetchCurrency(); 
             generateHourlySchedule();
-            
-            // HARD TRIGGER FOR 00:00 START (Safety net if clock sequence wasn't running)
-            if (now.getHours() === 0 && !state.isSpecial && !state.isLocked) {
-                triggerClosingNews();
-            }
         } 
         
         updateDevMonitor(); 
