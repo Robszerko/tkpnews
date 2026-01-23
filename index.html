@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V20.7 FIXED BROADCAST</title>
+    <title>TKP NEWS - V20.9 FIXED BROADCAST</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -985,7 +985,7 @@
     <!-- NEW: HOURLY ARCHIVE OVERLAY -->
     <div id="hourly-archive-overlay">
         <!-- Close Button for Archive -->
-        <div class="overlay-close-abs" onclick="document.getElementById('hourly-archive-overlay').classList.remove('active')">[X] KILÉPÉS</div>
+        <div class="overlay-close-abs" style="position: absolute; top: 30px; right: 30px; font-weight: bold; font-family: var(--font-tech); cursor: pointer; z-index: 9999;" onclick="document.getElementById('hourly-archive-overlay').classList.remove('active')">[X] KILÉPÉS</div>
 
         <div class="ha-header">
             <div class="ha-title" id="ha-title-text">...</div>
@@ -1597,45 +1597,52 @@
         }
 
         function triggerBigClockSequence() {
-            // Force reset any stuck state
-             state.isClockRunning = false;
-            closeAllOverlays();
-            
-            state.isSpecial = true; 
-            state.isLocked = true; 
-            state.isClockRunning = true; 
-            state.clockPhase = 0; 
+            // Do NOT call closeAllOverlays() here. It kills the view after 800ms.
+
+            // 1. Set Flags immediately to lock the system
+            state.isSpecial = true;
+            state.isLocked = true;
+            state.isClockRunning = true;
+            state.clockPhase = 0;
             state.refreshedThisShow = false;
-            
+
+            // 2. Clear specific timers that might interfere
+            clearTimeout(state.tickerTimer);
+            clearInterval(state.mainTimer);
             clearNewsBackgrounds();
-            
-            // LOGO EXIT ANIMATION (2 seconds before show)
-            DOM.logoBox.classList.remove('logo-entry');
-            DOM.logoBox.classList.add('logo-exit');
-            
-            // 2 SECOND DELAY BEFORE SHOWING CLOCK UI
+
+            // 3. Hide other specific overlays manually if needed (safety check)
+            if(DOM.special) DOM.special.classList.remove('active');
+            if(DOM.progGuide) DOM.progGuide.classList.remove('active');
+            DOM.logoBox.classList.add('force-hide');
+
+            // 4. Start the sequence
             setTimeout(() => {
-                // Hide Standard UI (including the Dock)
+                // Hide Standard UI
                 [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'}, {id:'program-dock', t:'bottom'} ].forEach(ui => {
                     const el = document.getElementById(ui.id);
                     if(el) el.classList.add(`hide-${ui.t}`);
                 });
-                
-                // Initialize Overlay with ADAPTIVE Background
-                DOM.bigClockOverlay.style.background = getSunPhaseBackground();
-                DOM.bigClockOverlay.style.display = 'grid'; // Ensure grid display
-                DOM.bigClockOverlay.style.opacity = '1';
-                DOM.bigClockOverlay.style.zIndex = '20000'; // Make sure it's on top
-                
-                DOM.bigClockOverlay.classList.remove('bc-layout-center');
-                setTimeout(() => { DOM.bigClockOverlay.classList.add('active'); }, 50);
-                
-                // Generate Analog Face
-                generateAnalogClockFace();
 
-                // Start loop
+                // Show Clock Overlay
+                DOM.bigClockOverlay.style.background = getSunPhaseBackground();
+                DOM.bigClockOverlay.style.display = 'grid'; // Force display
+                DOM.bigClockOverlay.style.opacity = '0';
+                DOM.bigClockOverlay.style.zIndex = '20000';
+
+                // Reset Layout
+                DOM.bigClockOverlay.classList.remove('bc-layout-center');
+
+                // Force Reflow/Animation
+                requestAnimationFrame(() => {
+                    DOM.bigClockOverlay.style.transition = 'opacity 0.8s ease-in-out';
+                    DOM.bigClockOverlay.style.opacity = '1';
+                    DOM.bigClockOverlay.classList.add('active');
+                });
+
+                generateAnalogClockFace();
                 runBigClockLoop();
-            }, 2000);
+            }, 100);
         }
 
         function runBigClockLoop() {
