@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V20.9 FIXED BROADCAST</title>
+    <title>TKP NEWS - V20.20 ARCHIVE DETAILS & STABLE CORE</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -175,18 +175,20 @@
             animation-delay: 0.2s; 
         }
 
-        /* INCREASED LOGO SIZE */
+        /* --- REFINED LOGO STYLE (The "Not Black & White" Update) --- */
         .logo-main-bar {
             display: flex; 
             height: 28px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
             position: relative;
             z-index: 2;
+            border-radius: 2px;
+            overflow: hidden;
         }
 
         .logo-box-tkp {
-            background: #000;
-            color: #fff;
+            background: linear-gradient(160deg, #2b2b2b 0%, #050505 100%);
+            color: #f2f2f2;
             font-family: var(--font-main);
             font-weight: 800;
             font-size: 1.1rem;
@@ -194,17 +196,18 @@
             display: flex; align-items: center; justify-content: center;
             letter-spacing: 1px;
             line-height: 1;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
         }
 
         .logo-sep-v {
             width: 1px;
-            background: #888;
+            background: linear-gradient(to bottom, #444, #777, #444);
             height: 100%;
         }
 
         .logo-box-news {
-            background: #fff;
-            color: #000;
+            background: linear-gradient(160deg, #ffffff 0%, #d4d4d4 100%);
+            color: #1a1a1a;
             font-family: var(--font-main);
             font-weight: 800;
             font-size: 1.1rem;
@@ -212,11 +215,12 @@
             display: flex; align-items: center; justify-content: center;
             letter-spacing: 1px;
             line-height: 1;
+            text-shadow: 0 1px 0px rgba(255,255,255,0.8);
         }
 
         /* ANCHORED INFO CONTAINER - MOVED DOWN TO FIX OVERLAP */
         .logo-info-container {
-            margin-top: 3px; /* Increased to avoid badge overlap */
+            margin-top: 3px; 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             background: transparent; 
             backdrop-filter: none;   
@@ -345,16 +349,21 @@
         .bk-card-meta { font-family: var(--font-mono); font-size: 0.9rem; color: #ffcc00; margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 5px; display: flex; align-items: center; justify-content: flex-end; gap: 8px; z-index: 5; background: inherit; font-weight: bold; }
         .source-logo { height: 20px; width: auto; vertical-align: middle; border-radius: 2px; }
 
-        /* MINI LOGO FOR BREAKING CARD */
+        /* MINI LOGO FOR BREAKING CARD - REFINED */
         .mini-tkp-logo {
             display: flex; height: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.5); transform: scale(0.9); transform-origin: right center;
+            border-radius: 2px; overflow: hidden;
         }
         .mini-tkp-logo .mtl-black {
-            background: #000; color: #fff; font-family: var(--font-main); font-weight: 800; font-size: 0.75rem; padding: 0 5px; display: flex; align-items: center; letter-spacing: 0.5px;
+            background: linear-gradient(160deg, #2b2b2b 0%, #000000 100%);
+            color: #f2f2f2; 
+            font-family: var(--font-main); font-weight: 800; font-size: 0.75rem; padding: 0 5px; display: flex; align-items: center; letter-spacing: 0.5px;
         }
-        .mini-tkp-logo .mtl-sep { width: 1px; background: #888; }
+        .mini-tkp-logo .mtl-sep { width: 1px; background: #666; }
         .mini-tkp-logo .mtl-white {
-            background: #fff; color: #000; font-family: var(--font-main); font-weight: 800; font-size: 0.75rem; padding: 0 5px; display: flex; align-items: center; letter-spacing: 0.5px;
+            background: linear-gradient(160deg, #ffffff 0%, #d9d9d9 100%);
+            color: #1a1a1a; 
+            font-family: var(--font-main); font-weight: 800; font-size: 0.75rem; padding: 0 5px; display: flex; align-items: center; letter-spacing: 0.5px;
         }
 
         /* WX DASHBOARD */
@@ -539,7 +548,8 @@
         .ha-item:hover { background: rgba(255,255,255,0.1); border-left-color: var(--accent); }
         .ha-meta { font-family: var(--font-mono); font-size: 0.9rem; color: var(--accent); margin-bottom: 5px; display:flex; gap:10px; align-items:center; }
         .ha-h { font-family: var(--font-data); font-size: 1.3rem; font-weight: bold; color: #fff; }
-        
+        .ha-desc { font-family: var(--font-data); font-size: 0.9rem; color: #bbb; margin-top: 5px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
         .night-msg { display: none; width: 100%; height: 100%; background: linear-gradient(90deg, #0a0a0a 0%, #151515 50%, #0a0a0a 100%); padding-left: 20px; align-items: center; justify-content: space-between; box-shadow: inset 0 0 30px rgba(0,0,0,0.8); }
         .night-msg.active { display: flex; }
         .nm-left { display: flex; align-items: center; gap: 20px; height: 100%; }
@@ -576,6 +586,14 @@
             border-left: 4px solid var(--accent); padding-left: 20px;
         }
         .bc-info-highlight { color: var(--accent); font-weight: bold; text-transform: uppercase; }
+        /* NEW: INLINE NAV ICON */
+        .bc-inline-nav {
+            display: inline-flex; align-items: center; gap: 4px; vertical-align: middle;
+            background: rgba(0, 10, 20, 0.8); border: 1px solid rgba(255,255,255,0.3);
+            padding: 2px 4px; border-radius: 2px; transform: scale(0.9);
+        }
+        .bc-in-btn { width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.5); color: #fff; font-size: 0.5rem; border: 1px solid #555; border-radius: 2px; }
+        .bc-in-cnt { font-family: var(--font-mono); font-size: 0.6rem; color: #fff; font-weight: bold; }
 
         .bc-main-panel { position: relative; display: flex; justify-content: center; align-items: center; flex-direction: column; transition: all 1s ease-in-out; }
         .bc-clock-wrapper { position: relative; width: 60vh; height: 60vh; display: flex; justify-content: center; align-items: center; transition: transform 1s; }
@@ -637,8 +655,13 @@
             position: absolute; top: 22%; left: 50%; transform: translateX(-50%);
             display: flex; flex-direction: column; align-items: center; opacity: 0.9;
         }
-        .clock-branding svg { width: 35px; height: 35px; fill: #c0c0c0; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.8)); }
-        .clock-branding span { font-family: var(--font-main); color: #c0c0c0; font-size: 0.85rem; letter-spacing: 3px; margin-top: 5px; font-weight: 400; text-transform: uppercase; }
+        /* Custom Mini Logo CSS for Clock */
+        .clock-branding .logo-main-bar {
+            height: 20px; box-shadow: none;
+        }
+        .clock-branding .logo-box-tkp, .clock-branding .logo-box-news {
+            font-size: 0.8rem; padding: 0 6px;
+        }
 
         .hand { position: absolute; left: 50%; bottom: 50%; transform-origin: 50% 100%; border-radius: 50% 50% 0 0; z-index: 10; box-shadow: 0 5px 15px rgba(0,0,0,0.6); }
         
@@ -908,7 +931,8 @@
                 </table>
                 
                 <div class="dev-h" style="margin-top:20px;">MANUÁLIS VEZÉRLÉS</div>
-                <button class="btn" onclick="state.isClockRunning = false; safeTrigger(() => triggerBigClockSequence())">[⏰] NAGY ÓRA SHOW</button>
+                <!-- JAVÍTOTT GOMB: KÖZVETLEN HÍVÁS, NINCS safeTrigger -->
+                <button class="btn" onclick="prepareAndTriggerClock()">[⏰] NAGY ÓRA SHOW (KÉNYSZERÍTETT)</button>
                 <button class="btn" onclick="closeAllOverlays()">[X] MINDEN ABLAK BEZÁRÁSA</button>
                 <button class="btn" onclick="forceRefreshAll()">[⚡] AZONNALI FRISSÍTÉS</button>
                 <button class="btn" onclick="testBreaking()">[🔥] BREAKING NEWS TESZT</button>
@@ -949,11 +973,24 @@
         <div class="bc-schedule-panel">
             <div class="bc-info-text" id="bc-info-text">
                 Köszönöm, hogy a 
-                <span class="bc-info-highlight" style="background:#000; color:#fff; padding:2px 8px; border-radius:4px; display:inline-block; margin:0 5px;">TKP NEWS</span> 
+                <!-- INLINE LOGO BEILLESZTÉS (UPDATED) -->
+                <span class="bc-info-highlight" style="display:inline-flex; align-items:center; vertical-align:middle; background:transparent; padding:0; border:none; margin:0 5px;">
+                    <div style="display:flex; height:24px; box-shadow:0 2px 5px rgba(0,0,0,0.5); border-radius:2px; overflow:hidden;">
+                        <div style="background:linear-gradient(160deg, #2b2b2b 0%, #000 100%); color:#f2f2f2; font-family:var(--font-main); font-weight:800; padding:0 6px; display:flex; align-items:center;">TKP</div>
+                        <div style="width:1px; background:#666;"></div>
+                        <div style="background:linear-gradient(160deg, #fff 0%, #d9d9d9 100%); color:#1a1a1a; font-family:var(--font-main); font-weight:800; padding:0 6px; display:flex; align-items:center;">NEWS</div>
+                    </div>
+                </span> 
                 oldalát olvasod.<br><br>
                 Reggel 06-tól éjfélig minden nap a legfrissebb hirek futnak az oldalon, éjféltől reggel 06ig pedig az előző nap hireit olvashatod újra.<br><br>
                 <span style="color:var(--accent);">00:00-tól</span> az előnap reggeli illetve délelőtti hireit (06-12-ig), <span style="color:var(--accent);">02:00-tól</span> az előző nap napközben termett hireit (12-18-ig), <span style="color:var(--accent);">04:00-tól</span> pedig az előző nap esti hirei (18-23:59-ig) kerülnek terítékre, hogy Te tényleg semmiről ne maradj le.<br><br>
-                Használd a lapozót, informálódj. <span style="color:#00d4ff; font-weight:bold;">Kellemes időtöltést az oldalon!</span>
+                Használd a lapozót 
+                <!-- NEW INLINE NAVIGATOR ICON -->
+                <span class="bc-inline-nav">
+                    <div class="bc-in-btn">◀</div>
+                    <div class="bc-in-cnt">1/10</div>
+                    <div class="bc-in-btn">▶</div>
+                </span>, informálódj. <span style="color:#00d4ff; font-weight:bold;">Kellemes időtöltést az oldalon!</span>
             </div>
         </div>
         <div class="bc-main-panel">
@@ -963,10 +1000,11 @@
                     <div id="clock-face"></div> <!-- Generated JS ticks -->
                     
                     <div class="clock-branding">
-                        <div class="embedded-logo-new">
-                             <div class="emb-tkp">TKP</div>
-                             <div class="emb-sep"></div>
-                             <div class="emb-news">NEWS</div>
+                        <!-- LOGÓ CSERE MINI VÁLTOZATRA -->
+                        <div class="logo-main-bar" style="height:20px; box-shadow:none;">
+                            <div class="logo-box-tkp" style="font-size:0.8rem; padding:0 6px;">TKP</div>
+                            <div class="logo-sep-v"></div>
+                            <div class="logo-box-news" style="font-size:0.8rem; padding:0 6px;">NEWS</div>
                         </div>
                     </div>
 
@@ -984,7 +1022,7 @@
 
     <!-- NEW: HOURLY ARCHIVE OVERLAY -->
     <div id="hourly-archive-overlay">
-        <!-- Close Button for Archive -->
+        <!-- Close Button for Archive - JOBB FELSŐ SAROKBAN -->
         <div class="overlay-close-abs" style="position: absolute; top: 30px; right: 30px; font-weight: bold; font-family: var(--font-tech); cursor: pointer; z-index: 9999;" onclick="document.getElementById('hourly-archive-overlay').classList.remove('active')">[X] KILÉPÉS</div>
 
         <div class="ha-header">
@@ -1348,7 +1386,10 @@
             manualRefreshRequested: false, upNextVisible: false, clockPhase: 0,
             hourlyTriggered: false,
             currencyRates: null, currencyBase: 'USD',
-            refreshedThisShow: false
+            refreshedThisShow: false,
+            updateTriggered: false,
+            clockFinishTriggered: false,
+            logoExitTriggered: false
         };
 
         const DOM = {
@@ -1469,7 +1510,10 @@
             state.schedule.forEach((item) => { 
                 if (now >= item.time && now < item.time + 10000 && !item.triggered) { 
                     item.triggered = true; 
-                    if(item.type === 'clock') { closeAllOverlays(); setTimeout(() => triggerBigClockSequence(), 1200); }
+                    if(item.type === 'clock') { 
+                        // JAVÍTÁS: KÖZVETLEN INDÍTÁS, NINCS safeTrigger, NINCS closeAllOverlays
+                        triggerBigClockSequence();
+                    }
                     else if (state.isNightMode) { if (item.type === 'night_summary') { closeAllOverlays(); setTimeout(() => triggerNightSummary(), 1200); } }
                 } 
             }); 
@@ -1507,7 +1551,11 @@
                      const el = document.createElement('div'); el.className = 'ha-item';
                      const logoHtml = getLogoHtml(item.source);
                      const timeStr = item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'});
-                     el.innerHTML = `<div class="ha-meta">${timeStr} ${logoHtml} ${item.source}</div><div class="ha-h">${item.title}</div>`;
+                     el.innerHTML = `
+                        <div class="ha-meta">${timeStr} ${logoHtml} ${item.source}</div>
+                        <div class="ha-h">${item.title}</div>
+                        <div class="ha-desc">${item.desc}</div>
+                     `;
                      el.addEventListener('click', () => { window.open(item.link, '_blank'); });
                      DOM.haList.appendChild(el);
                  });
@@ -1581,68 +1629,114 @@
         }
 
         function getSunPhaseBackground() {
-            const h = new Date().getHours();
-            if (h >= 5 && h < 9) return 'linear-gradient(135deg, #ff9966 0%, #ff5e62 100%)'; // Morning/Sunrise
-            if (h >= 9 && h < 17) return 'linear-gradient(135deg, #56CCF2 0%, #2F80ED 100%)'; // Day (Bright Blue)
-            if (h >= 17 && h < 21) return 'linear-gradient(135deg, #4568dc 0%, #b06ab3 100%)'; // Sunset/Dusk
-            return 'radial-gradient(circle at 70% 50%, #001a4d 0%, #000 80%)'; // Night
+            const now = new Date();
+            const h = now.getHours();
+            const month = now.getMonth(); // 0 = Január, 11 = December
+
+            // Nyíregyháza Specifikus Napállás Logika (Évszakfüggő)
+            // Téli időszámítás (Kb. Nov-Feb): Napkelte 7:00 körül, Naplemente 16:00 körül
+            const isWinter = (month >= 10 || month <= 1); 
+            // Nyári időszámítás (Kb. Máj-Aug): Napkelte 5:00 körül, Naplemente 20:30 körül
+            const isSummer = (month >= 4 && month <= 7);
+
+            if (isWinter) {
+                // TÉLI SÉMA
+                if (h >= 7 && h < 9) return 'linear-gradient(135deg, #cc5500 0%, #330000 100%)'; // Téli Hajnal (Vörös)
+                if (h >= 9 && h < 15) return 'linear-gradient(135deg, #56CCF2 0%, #2F80ED 100%)'; // Téli Nappal
+                if (h >= 15 && h < 17) return 'linear-gradient(135deg, #662200 0%, #1a0033 100%)'; // Téli Alkonyat (Korai sötétedés)
+                return 'radial-gradient(circle at 70% 50%, #000a1a 0%, #000 90%)'; // Téli Éjszaka (Mélyebb)
+            } else if (isSummer) {
+                // NYÁRI SÉMA
+                if (h >= 5 && h < 8) return 'linear-gradient(135deg, #ff9966 0%, #ff5e62 100%)'; // Nyári Hajnal
+                if (h >= 8 && h < 19) return 'linear-gradient(135deg, #2980B9 0%, #6DD5FA 100%)'; // Nyári Nappal
+                if (h >= 19 && h < 21) return 'linear-gradient(135deg, #f12711 0%, #f5af19 100%)'; // Nyári Naplemente
+                return 'radial-gradient(circle at 70% 50%, #001a4d 0%, #000 80%)'; // Nyári Éjszaka
+            } else {
+                // ÁTMENETI SÉMA (Tavasz/Ősz)
+                if (h >= 6 && h < 8) return 'linear-gradient(135deg, #ff9966 0%, #ff5e62 100%)';
+                if (h >= 8 && h < 17) return 'linear-gradient(135deg, #56CCF2 0%, #2F80ED 100%)';
+                if (h >= 17 && h < 19) return 'linear-gradient(135deg, #4568dc 0%, #b06ab3 100%)';
+                return 'radial-gradient(circle at 70% 50%, #001a4d 0%, #000 80%)';
+            }
         }
 
-        // BACKGROUND REFRESH FUNCTION - UPDATED
-        function backgroundRefresh(isReset = false) {
-            console.log("TRIGGERING BACKGROUND REFRESH", isReset);
-            crawlNews(isReset); // Pass reset flag
+        // BACKGROUND REFRESH FUNCTION - SILENT MODE ADDED
+        function backgroundRefresh(isReset = false, silent = false, mode = 'full') {
+            console.log("TRIGGERING BACKGROUND REFRESH", isReset, "SILENT:", silent, "MODE:", mode);
+            crawlNews(isReset, silent, mode); // Pass silent flag and mode
             fetchCurrency(); 
             fetchWunderground(true);
         }
 
-        function triggerBigClockSequence() {
-            // Do NOT call closeAllOverlays() here. It kills the view after 800ms.
-
-            // 1. Set Flags immediately to lock the system
+        function prepareAndTriggerClock() {
+            // MANUAL TRIGGER LOGIC (TEST MODE)
             state.isSpecial = true;
             state.isLocked = true;
-            state.isClockRunning = true;
-            state.clockPhase = 0;
-            state.refreshedThisShow = false;
-
-            // 2. Clear specific timers that might interfere
-            clearTimeout(state.tickerTimer);
-            clearInterval(state.mainTimer);
-            clearNewsBackgrounds();
-
-            // 3. Hide other specific overlays manually if needed (safety check)
-            if(DOM.special) DOM.special.classList.remove('active');
-            if(DOM.progGuide) DOM.progGuide.classList.remove('active');
-            DOM.logoBox.classList.add('force-hide');
-
-            // 4. Start the sequence
+            animateLogoOut(); // Immediate logo exit
             setTimeout(() => {
-                // Hide Standard UI
-                [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'}, {id:'program-dock', t:'bottom'} ].forEach(ui => {
-                    const el = document.getElementById(ui.id);
-                    if(el) el.classList.add(`hide-${ui.t}`);
-                });
+                triggerBigClockSequence();
+            }, 5000); // 5s delay then Clock
+        }
 
-                // Show Clock Overlay
-                DOM.bigClockOverlay.style.background = getSunPhaseBackground();
-                DOM.bigClockOverlay.style.display = 'grid'; // Force display
-                DOM.bigClockOverlay.style.opacity = '0';
-                DOM.bigClockOverlay.style.zIndex = '20000';
+        function animateLogoOut() {
+            DOM.logoBox.classList.remove('logo-entry');
+            DOM.logoBox.classList.add('logo-exit');
+        }
 
-                // Reset Layout
-                DOM.bigClockOverlay.classList.remove('bc-layout-center');
+        function animateLogoIn() {
+            DOM.logoBox.classList.remove('logo-exit');
+            DOM.logoBox.classList.add('logo-entry');
+        }
 
-                // Force Reflow/Animation
-                requestAnimationFrame(() => {
-                    DOM.bigClockOverlay.style.transition = 'opacity 0.8s ease-in-out';
-                    DOM.bigClockOverlay.style.opacity = '1';
-                    DOM.bigClockOverlay.classList.add('active');
-                });
+        function triggerBigClockSequence() {
+            // ATOMBIZTOS INDÍTÁS: MINDENT LEÁLLÍTUNK ÉS ELREJTÜNK
+            console.log(">>> NAGY ÓRA SHOW INDÍTÁSA - MINDEN MÁS LEÁLLÍTÁSA <<<");
 
+            // 1. MINDEN ZÁROLÁSA AZONNAL
+            state.isSpecial = true; 
+            state.isLocked = true; 
+            state.isClockRunning = true; 
+            state.clockPhase = 0; 
+            state.updateTriggered = false; // Reset trigger flag
+            state.clockFinishTriggered = false; // Reset finish flag
+            state.logoExitTriggered = false;
+            
+            // 2. FOLYAMATOK GYILKOLÁSA
+            clearTimeout(state.tickerTimer);
+            clearInterval(state.mainTimer); 
+            clearTimeout(state.bigClockTimeout); 
+            
+            // 3. HÁTTÉR TAKARÍTÁS
+            clearNewsBackgrounds();
+            if(DOM.stage) DOM.stage.style.opacity = '0';
+
+            // 4. ZAVARÓ UI ELEMEK KÉNYSZERÍTETT ELREJTÉSE
+            const killList = ['ui-top', 'ui-right', 'ui-left', 'ui-bottom', 'program-dock', 'logo-box', 'special-meteo', 'hourly-archive-overlay'];
+            killList.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) {
+                    el.style.display = 'none'; // Brutális elrejtés
+                    el.classList.add('force-hide');
+                }
+            });
+
+            // 5. ÓRA ELŐKÉSZÍTÉSE
+            DOM.bigClockOverlay.style.background = getSunPhaseBackground();
+            DOM.bigClockOverlay.style.display = 'grid'; 
+            DOM.bigClockOverlay.style.opacity = '0'; 
+            DOM.bigClockOverlay.style.zIndex = '2147483647'; // Maximális lehetséges Z-index
+            DOM.bigClockOverlay.classList.remove('bc-layout-center');
+
+            // 6. MEGJELENÍTÉS (Kis késleltetéssel, hogy a CSS frissüljön)
+            setTimeout(() => {
+                DOM.bigClockOverlay.style.transition = 'opacity 0.8s ease-in-out';
+                DOM.bigClockOverlay.style.opacity = '1';
+                DOM.bigClockOverlay.classList.add('active');
+                
+                // Óra indítása
                 generateAnalogClockFace();
                 runBigClockLoop();
-            }, 100);
+            }, 50);
         }
 
         function runBigClockLoop() {
@@ -1654,6 +1748,7 @@
                 updateAnalogHands(); 
                 
                 const s = new Date().getSeconds();
+                const m = new Date().getMinutes();
                 
                 // PHASE 1: 0-45s (Show Info Text + Clock Left)
                 if (s < 45 && state.clockPhase !== 1) {
@@ -1668,25 +1763,24 @@
                     DOM.bcInfoText.style.opacity = 0; // Fade out info
                 }
                 
-                // PHASE 3: 50s-58s (Center Clock & TRIGGER BACKGROUND REFRESH)
+                // PHASE 3: 50s-59s (Center Clock)
                 else if (s >= 50 && s < 59 && state.clockPhase !== 3) {
                     state.clockPhase = 3;
                     DOM.bigClockOverlay.classList.add('bc-layout-center'); // Moves clock to center
                 }
 
-                // REFRESH TRIGGER (Exactly at 50 seconds)
-                if (s === 50 && !state.refreshedThisShow) {
-                    state.refreshedThisShow = true;
-                    backgroundRefresh(true);
-                }
-
-                // END / TRANSITION: When seconds hit 0 EXACTLY (Transition to Main Page)
-                if (s === 0 && state.isClockRunning && state.clockPhase >= 1) {
+                // ----------------------------------------------------
+                // NEW LOGIC: FINISH TRIGGER (00s)
+                // ----------------------------------------------------
+                // End exactly when seconds hit 0 (next minute)
+                if (s === 0 && state.isClockRunning && state.clockPhase >= 1 && !state.clockFinishTriggered) {
+                    console.log("ÓRA VÉGE (00:00)");
+                    state.clockFinishTriggered = true;
                     clearInterval(bcInterval);
                     finishClockSequence(nextHour);
                 }
                 
-            }, 50); // 50ms for high precision checks
+            }, 50); 
             
             // Fail-safe timeout (70s)
             state.bigClockTimeout = setTimeout(() => {
@@ -1700,22 +1794,49 @@
         }
 
         function finishClockSequence(nextHour) {
-            // INTEGRATED TRANSITION: Immediate UI Switch at 00:00
-            
+            // 1. Óra elrejtése
             DOM.bigClockOverlay.classList.remove('active', 'bc-layout-center'); 
-            DOM.bigClockOverlay.style.display = 'none'; 
+            DOM.bigClockOverlay.style.opacity = '0';
             
-            // Reset styles for next time
-            document.querySelector('.bc-main-panel').style.opacity = 1; 
-            document.querySelector('.bc-schedule-panel').style.opacity = 1;
-            document.querySelector('.bc-main-panel').style.transition = 'all 1s ease-in-out'; 
-            DOM.bcInfoText.style.opacity = 1;
-            
-            state.isClockRunning = false;
-            state.clockPhase = 0;
-            
-            // Return to Main News
-            closeAllOverlays();
+            setTimeout(() => {
+                DOM.bigClockOverlay.style.display = 'none'; 
+                
+                // 2. UNLOCK FIRST - Critical to allow UI updates
+                state.isLocked = false; 
+                state.isSpecial = false;
+                state.isClockRunning = false;
+                state.clockPhase = 0;
+
+                // 3. UI Visszaállítása
+                const reviveList = ['ui-top', 'ui-right', 'ui-left', 'ui-bottom', 'program-dock', 'logo-box'];
+                reviveList.forEach(id => {
+                    const el = document.getElementById(id);
+                    if(el) {
+                        el.style.display = ''; // Töröljük az inline 'none'-t
+                        el.classList.remove('force-hide', 'hide-top', 'hide-bottom', 'hide-left', 'hide-right');
+                    }
+                });
+                if(DOM.stage) DOM.stage.style.opacity = '1';
+
+                // 4. Logo Visszahozása
+                animateLogoIn();
+
+                // 5. TRIGGER HOT RESTART
+                // Don't wait for network. Restart with whatever we have in memory (even if empty, UI will show 'Processing')
+                clearInterval(state.mainTimer);
+                
+                DOM.mainTitle.innerText = "ADATOK FELDOLGOZÁSA...";
+                DOM.mainContainerBox.classList.add('active');
+
+                // Clear Indexes and RESET everything for a fresh start
+                state.mainIdx = -1;
+                state.tickerIdx = -1;
+                state.allNews = []; // Clear old news to force fresh fetch
+                
+                // Start fetch - NEW: Logic inside parseAndAdd will trigger display ASAP
+                crawlNews(true); 
+
+            }, 800); 
         }
 
         function forceRefreshAll() { backgroundRefresh(true); alert("FRISSÍTÉS ELKÜLDVE"); }
@@ -1749,8 +1870,41 @@
             return null; 
         }
 
-        async function crawlNews(isReset = false) { if(isReset) { DOM.tickerWindow.innerHTML = '<div class="ticker-item active"><div class="ticker-content"><span class="ticker-refresh-msg">ADATBÁZIS FRISSÍTÉSE...</span></div></div>'; clearTimeout(state.tickerTimer); DOM.mainTitle.innerText = "ADATBÁZIS FRISSÍTÉSE..."; state.mainItems = []; state.mainIdx = -1; state.tickerIdx = -1; } RSS_FEEDS.map(async (src) => { const text = await fetchRobust(src.url, src.name); if (text) { parseAndAdd(text, src.name); } }); }
-        function parseAndAdd(xmlText, sourceName) { try { const xml = new DOMParser().parseFromString(xmlText, "text/xml"); let hasNew = false; xml.querySelectorAll("item").forEach(item => { const title = item.querySelector("title")?.textContent.trim(); const link = item.querySelector("link")?.textContent.trim(); const pubDate = new Date(item.querySelector("pubDate")?.textContent || new Date()); const desc = (item.querySelector("description")?.textContent || "").replace(/<[^>]*>?/gm, '').trim().substring(0, 500); let img = item.querySelector("enclosure")?.getAttribute("url"); if(!img) { const content = item.getElementsByTagNameNS("*", "content")[0]?.textContent || item.querySelector("description")?.textContent; img = content?.match(/src="([^"]+)"/)?.[1]; } if (title && link && !state.allNews.find(n => n.link === link)) { state.allNews.push({ title, link, date: pubDate, desc, source: sourceName, img: img }); hasNew = true; if(!state.initialLoadComplete) state.seenBreaking.add(link); } }); if(hasNew) state.hasFreshNews = true; updateLists(); updateDevLog(); if(state.mainItems.length > 0 && !state.mainStarted) { state.mainStarted = true; DOM.loader.style.opacity = 0; setTimeout(() => DOM.loader.remove(), 1000); cycleMain(); if(state.tickerIdx === 0) cycleTicker(1); } } catch(e) {} }
+        // MODIFIED CRAWLNEWS: Logic to detect first load and start loop
+        async function crawlNews(isReset = false, silent = false, mode = 'full') { 
+            if(isReset) { 
+                // Only clear arrays if we are resetting. But keep mainStarted false to trigger restart.
+                state.mainItems = []; state.mainIdx = -1; state.tickerIdx = -1; state.allNews = []; 
+                state.mainStarted = false; // Reset started flag so we can re-trigger loop
+                clearInterval(state.mainTimer); // Stop existing loop
+            } 
+            
+            RSS_FEEDS.map(async (src) => { 
+                const text = await fetchRobust(src.url, src.name); 
+                if (text) { parseAndAdd(text, src.name); } 
+            }); 
+        }
+
+        function parseAndAdd(xmlText, sourceName) { try { const xml = new DOMParser().parseFromString(xmlText, "text/xml"); let hasNew = false; xml.querySelectorAll("item").forEach(item => { const title = item.querySelector("title")?.textContent.trim(); const link = item.querySelector("link")?.textContent.trim(); const pubDate = new Date(item.querySelector("pubDate")?.textContent || new Date()); const desc = (item.querySelector("description")?.textContent || "").replace(/<[^>]*>?/gm, '').trim().substring(0, 500); let img = item.querySelector("enclosure")?.getAttribute("url"); if(!img) { const content = item.getElementsByTagNameNS("*", "content")[0]?.textContent || item.querySelector("description")?.textContent; img = content?.match(/src="([^"]+)"/)?.[1]; } if (title && link && !state.allNews.find(n => n.link === link)) { state.allNews.push({ title, link, date: pubDate, desc, source: sourceName, img: img }); hasNew = true; if(!state.initialLoadComplete) state.seenBreaking.add(link); } }); if(hasNew) state.hasFreshNews = true; updateLists(); updateDevLog(); 
+        
+        // --- CRITICAL FIX: IF WE HAVE ITEMS AND HAVEN'T STARTED, START NOW ---
+        // This ensures the FIRST item is shown immediately, preventing the "Processing..." freeze
+        if(state.mainItems.length > 0 && !state.mainStarted && !state.isLocked) { 
+            state.mainStarted = true; 
+            DOM.loader.style.opacity = 0; 
+            setTimeout(() => DOM.loader.remove(), 1000); 
+            
+            // Force first cycle
+            state.mainIdx = -1;
+            cycleMain(); 
+            
+            // Start the interval loop for subsequent items
+            startMainLoop();
+            
+            if(state.tickerIdx === 0) cycleTicker(1); 
+        } 
+        } catch(e) {} }
+        
         function updateLists() { if (state.isNightMode) return; const now = new Date(); const newTicker = state.allNews.filter(n => (now - n.date) < 14400000).sort((a,b) => b.date - a.date); state.tickerItems = newTicker.length > 5 ? newTicker : [...state.allNews].sort((a,b) => b.date - a.date).slice(0, 50); const newMain = state.allNews.filter(n => (now - n.date) < 7200000 && n.img).sort(() => Math.random() - 0.5); state.mainItems = newMain.length > 0 ? newMain : state.allNews.filter(n => n.img).slice(0, 10); }
         
         async function checkBreaking() { 
@@ -2262,10 +2416,25 @@ function startClock() {
         
         updateDevMonitor(); 
         
-        // AUTO REFRESH LOGIC (Updated V20.6 - STRICT 00, 20, 40)
+        // --- LOGO EXIT TRIGGER (58:55) ---
+        // 5 seconds BEFORE clock starts at 59:00
+        if (m === 58 && s === 55 && !state.isNightMode && !state.logoExitTriggered && !state.isClockRunning) {
+             console.log("LOGO ANIMÁCIÓ KI (58:55)");
+             state.logoExitTriggered = true;
+             animateLogoOut();
+        }
+
+        // --- AUTOMATA INDÍTÁS (59:00) ---
+        if (m === 59 && s === 0 && !state.isNightMode && !state.isClockRunning) {
+             console.log("AUTOMATA ÓRA INDÍTÁS (59:00)");
+             triggerBigClockSequence();
+        }
+
+        // AUTO REFRESH LOGIC (Only strictly at 20 and 40)
+        // 00 refresh is handled by the hot restart logic
         if (!state.isNightMode && s === 0) { 
-            if (m === 0 || m === 20 || m === 40) { 
-                backgroundRefresh(true); // Pass true to reset lists
+            if (m === 20 || m === 40) { 
+                backgroundRefresh(true, true); 
             } 
         }
         
@@ -2465,8 +2634,7 @@ function checkNightMode() {
     const now = new Date(); const h = now.getHours();
     let isNight = state.forcedNightMode;
     if(!state.forcedNightMode) {
-        if (h >= 1 && h < 6) isNight = true;
-        else if (h === 0 && now.getMinutes() >= 10) isNight = true;
+        if (h >= 0 && h < 6) isNight = true;
     }
 
     if (isNight !== state.isNightMode) { 
