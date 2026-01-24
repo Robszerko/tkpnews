@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V20.20 ARCHIVE DETAILS & STABLE CORE</title>
+    <title>TKP NEWS - V20.21 OVERLAY STRATEGY</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -61,8 +61,14 @@
 
         /* --- UI LAYER --- */
         .graphics-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: auto; }
-        .ui-element { pointer-events: auto; transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s; }
+        .ui-element { 
+            pointer-events: auto; 
+            transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s; 
+        }
         
+        /* New Class for Soft Hiding (Opacity only, keep layout) */
+        .soft-hide { opacity: 0 !important; pointer-events: none !important; }
+
         .hide-top { transform: translateY(-150%) !important; opacity: 0 !important; pointer-events: none !important; }
         .hide-right { transform: translateX(130%) !important; opacity: 0 !important; pointer-events: none !important; }
         .hide-left { transform: translateX(-130%) !important; opacity: 0 !important; pointer-events: none !important; }
@@ -218,7 +224,7 @@
             text-shadow: 0 1px 0px rgba(255,255,255,0.8);
         }
 
-        /* ANCHORED INFO CONTAINER - MOVED DOWN TO FIX OVERLAP */
+        /* ANCHORED INFO CONTAINER */
         .logo-info-container {
             margin-top: 3px; 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -828,6 +834,8 @@
             display: flex; align-items: center; gap: 10px;
             z-index: 500; pointer-events: auto;
             transform-origin: right center;
+            /* Added transition for soft hide */
+            transition: opacity 0.5s ease;
         }
 
         /* LEGACY BUTTON */
@@ -1688,52 +1696,39 @@
             DOM.logoBox.classList.add('logo-entry');
         }
 
+        // --- NEW "OVERLAY" LOGIC FOR BIG CLOCK ---
         function triggerBigClockSequence() {
-            // ATOMBIZTOS INDÍTÁS: MINDENT LEÁLLÍTUNK ÉS ELREJTÜNK
-            console.log(">>> NAGY ÓRA SHOW INDÍTÁSA - MINDEN MÁS LEÁLLÍTÁSA <<<");
+            console.log(">>> NAGY ÓRA SHOW INDÍTÁSA (OVERLAY MÓD) <<<");
 
-            // 1. MINDEN ZÁROLÁSA AZONNAL
             state.isSpecial = true; 
-            state.isLocked = true; 
+            state.isLocked = true; // Prevent interaction
             state.isClockRunning = true; 
             state.clockPhase = 0; 
-            state.updateTriggered = false; // Reset trigger flag
-            state.clockFinishTriggered = false; // Reset finish flag
+            state.updateTriggered = false; 
+            state.clockFinishTriggered = false;
             state.logoExitTriggered = false;
             
-            // 2. FOLYAMATOK GYILKOLÁSA
-            clearTimeout(state.tickerTimer);
-            clearInterval(state.mainTimer); 
-            clearTimeout(state.bigClockTimeout); 
+            // DO NOT STOP TIMERS! Let news run in background.
+            // Just apply cover.
             
-            // 3. HÁTTÉR TAKARÍTÁS
-            clearNewsBackgrounds();
-            if(DOM.stage) DOM.stage.style.opacity = '0';
-
-            // 4. ZAVARÓ UI ELEMEK KÉNYSZERÍTETT ELREJTÉSE
-            const killList = ['ui-top', 'ui-right', 'ui-left', 'ui-bottom', 'program-dock', 'logo-box', 'special-meteo', 'hourly-archive-overlay'];
-            killList.forEach(id => {
+            // Hide small UI elements (soft hide)
+            const uiList = ['ui-top', 'ui-right', 'ui-left', 'ui-bottom', 'program-dock', 'logo-box', 'special-meteo', 'hourly-archive-overlay'];
+            uiList.forEach(id => {
                 const el = document.getElementById(id);
-                if(el) {
-                    el.style.display = 'none'; // Brutális elrejtés
-                    el.classList.add('force-hide');
-                }
+                if(el) el.classList.add('soft-hide');
             });
 
-            // 5. ÓRA ELŐKÉSZÍTÉSE
+            // Show Big Clock
             DOM.bigClockOverlay.style.background = getSunPhaseBackground();
             DOM.bigClockOverlay.style.display = 'grid'; 
             DOM.bigClockOverlay.style.opacity = '0'; 
-            DOM.bigClockOverlay.style.zIndex = '2147483647'; // Maximális lehetséges Z-index
+            DOM.bigClockOverlay.style.zIndex = '2147483647'; // Max Z
             DOM.bigClockOverlay.classList.remove('bc-layout-center');
 
-            // 6. MEGJELENÍTÉS (Kis késleltetéssel, hogy a CSS frissüljön)
             setTimeout(() => {
                 DOM.bigClockOverlay.style.transition = 'opacity 0.8s ease-in-out';
                 DOM.bigClockOverlay.style.opacity = '1';
                 DOM.bigClockOverlay.classList.add('active');
-                
-                // Óra indítása
                 generateAnalogClockFace();
                 runBigClockLoop();
             }, 50);
@@ -1750,7 +1745,7 @@
                 const s = new Date().getSeconds();
                 const m = new Date().getMinutes();
                 
-                // PHASE 1: 0-45s (Show Info Text + Clock Left)
+                // PHASE 1: 0-45s (Show Info Text)
                 if (s < 45 && state.clockPhase !== 1) {
                     state.clockPhase = 1;
                     DOM.bigClockOverlay.classList.remove('bc-layout-center');
@@ -1760,19 +1755,29 @@
                 // PHASE 2: 45-50s (Fade Out Text)
                 else if (s >= 45 && s < 50 && state.clockPhase !== 2) {
                     state.clockPhase = 2;
-                    DOM.bcInfoText.style.opacity = 0; // Fade out info
+                    DOM.bcInfoText.style.opacity = 0; 
                 }
                 
                 // PHASE 3: 50s-59s (Center Clock)
                 else if (s >= 50 && s < 59 && state.clockPhase !== 3) {
                     state.clockPhase = 3;
-                    DOM.bigClockOverlay.classList.add('bc-layout-center'); // Moves clock to center
+                    DOM.bigClockOverlay.classList.add('bc-layout-center'); 
+                }
+
+                // ----------------------------------------------------
+                // NEW LOGIC: BACKGROUND UPDATE TRIGGER (05s)
+                // ----------------------------------------------------
+                // If it's 05 seconds, run update silently in background.
+                if (s >= 5 && !state.updateTriggered && !state.isNightMode) {
+                    console.log("HÁTTÉR FRISSÍTÉS INDÍTÁSA (59:05)");
+                    state.updateTriggered = true;
+                    // Reset lists (true), Silent (true), Full refresh ('full')
+                    backgroundRefresh(true, true, 'full');
                 }
 
                 // ----------------------------------------------------
                 // NEW LOGIC: FINISH TRIGGER (00s)
                 // ----------------------------------------------------
-                // End exactly when seconds hit 0 (next minute)
                 if (s === 0 && state.isClockRunning && state.clockPhase >= 1 && !state.clockFinishTriggered) {
                     console.log("ÓRA VÉGE (00:00)");
                     state.clockFinishTriggered = true;
@@ -1782,59 +1787,40 @@
                 
             }, 50); 
             
-            // Fail-safe timeout (70s)
             state.bigClockTimeout = setTimeout(() => {
                 if(state.isClockRunning) {
                     clearInterval(bcInterval);
-                    let nextH = now.getHours() + 1;
-                    if(nextH > 23) nextH = 0;
-                    finishClockSequence(nextH);
+                    finishClockSequence(nextHour);
                 }
             }, 70000); 
         }
 
         function finishClockSequence(nextHour) {
-            // 1. Óra elrejtése
+            // Fade out clock overlay
             DOM.bigClockOverlay.classList.remove('active', 'bc-layout-center'); 
             DOM.bigClockOverlay.style.opacity = '0';
             
             setTimeout(() => {
                 DOM.bigClockOverlay.style.display = 'none'; 
                 
-                // 2. UNLOCK FIRST - Critical to allow UI updates
+                // Unlock
                 state.isLocked = false; 
                 state.isSpecial = false;
                 state.isClockRunning = false;
                 state.clockPhase = 0;
 
-                // 3. UI Visszaállítása
-                const reviveList = ['ui-top', 'ui-right', 'ui-left', 'ui-bottom', 'program-dock', 'logo-box'];
-                reviveList.forEach(id => {
+                // Reveal UI (remove soft-hide)
+                const uiList = ['ui-top', 'ui-right', 'ui-left', 'ui-bottom', 'program-dock', 'logo-box'];
+                uiList.forEach(id => {
                     const el = document.getElementById(id);
-                    if(el) {
-                        el.style.display = ''; // Töröljük az inline 'none'-t
-                        el.classList.remove('force-hide', 'hide-top', 'hide-bottom', 'hide-left', 'hide-right');
-                    }
+                    if(el) el.classList.remove('soft-hide', 'force-hide');
                 });
-                if(DOM.stage) DOM.stage.style.opacity = '1';
 
-                // 4. Logo Visszahozása
                 animateLogoIn();
 
-                // 5. TRIGGER HOT RESTART
-                // Don't wait for network. Restart with whatever we have in memory (even if empty, UI will show 'Processing')
-                clearInterval(state.mainTimer);
-                
-                DOM.mainTitle.innerText = "ADATOK FELDOLGOZÁSA...";
-                DOM.mainContainerBox.classList.add('active');
-
-                // Clear Indexes and RESET everything for a fresh start
-                state.mainIdx = -1;
-                state.tickerIdx = -1;
-                state.allNews = []; // Clear old news to force fresh fetch
-                
-                // Start fetch - NEW: Logic inside parseAndAdd will trigger display ASAP
-                crawlNews(true); 
+                // NIGHT MODE CHECK will happen automatically via startClock interval
+                // But we can force check now to ensure smooth transition
+                checkNightMode();
 
             }, 800); 
         }
@@ -1875,8 +1861,7 @@
             if(isReset) { 
                 // Only clear arrays if we are resetting. But keep mainStarted false to trigger restart.
                 state.mainItems = []; state.mainIdx = -1; state.tickerIdx = -1; state.allNews = []; 
-                state.mainStarted = false; // Reset started flag so we can re-trigger loop
-                clearInterval(state.mainTimer); // Stop existing loop
+                // DO NOT CLEAR INTERVAL HERE in Overlay Strategy
             } 
             
             RSS_FEEDS.map(async (src) => { 
@@ -1887,20 +1872,14 @@
 
         function parseAndAdd(xmlText, sourceName) { try { const xml = new DOMParser().parseFromString(xmlText, "text/xml"); let hasNew = false; xml.querySelectorAll("item").forEach(item => { const title = item.querySelector("title")?.textContent.trim(); const link = item.querySelector("link")?.textContent.trim(); const pubDate = new Date(item.querySelector("pubDate")?.textContent || new Date()); const desc = (item.querySelector("description")?.textContent || "").replace(/<[^>]*>?/gm, '').trim().substring(0, 500); let img = item.querySelector("enclosure")?.getAttribute("url"); if(!img) { const content = item.getElementsByTagNameNS("*", "content")[0]?.textContent || item.querySelector("description")?.textContent; img = content?.match(/src="([^"]+)"/)?.[1]; } if (title && link && !state.allNews.find(n => n.link === link)) { state.allNews.push({ title, link, date: pubDate, desc, source: sourceName, img: img }); hasNew = true; if(!state.initialLoadComplete) state.seenBreaking.add(link); } }); if(hasNew) state.hasFreshNews = true; updateLists(); updateDevLog(); 
         
-        // --- CRITICAL FIX: IF WE HAVE ITEMS AND HAVEN'T STARTED, START NOW ---
-        // This ensures the FIRST item is shown immediately, preventing the "Processing..." freeze
+        // Initial Start
         if(state.mainItems.length > 0 && !state.mainStarted && !state.isLocked) { 
             state.mainStarted = true; 
             DOM.loader.style.opacity = 0; 
             setTimeout(() => DOM.loader.remove(), 1000); 
-            
-            // Force first cycle
             state.mainIdx = -1;
             cycleMain(); 
-            
-            // Start the interval loop for subsequent items
             startMainLoop();
-            
             if(state.tickerIdx === 0) cycleTicker(1); 
         } 
         } catch(e) {} }
@@ -2158,47 +2137,47 @@
                     <p>${precipText}</p>
                     <p>Szél: ${d.daily.windspeed_10m_max[i].toFixed(0)} km/h</p>
                  </div>`;
-                 DOM.smGrid.appendChild(div);
-             }
-        } else {
-            DOM.smGrid.style.display = 'grid'; 
-            DOM.smGrid.innerHTML = '<div style="color:#fff; font-size:2rem; width:100%; text-align:center;">ADATÁTVITELI HIBA (FORECAST)</div>'; 
-        } 
-        document.getElementById('sm-update-time').innerText = getTime(); 
-    }
+             DOM.smGrid.appendChild(div);
+         }
+    } else {
+        DOM.smGrid.style.display = 'grid'; 
+        DOM.smGrid.innerHTML = '<div style="color:#fff; font-size:2rem; width:100%; text-align:center;">ADATÁTVITELI HIBA (FORECAST)</div>'; 
+    } 
+    document.getElementById('sm-update-time').innerText = getTime(); 
+}
 
-    async function renderRealAstro() { 
-        DOM.smGrid.innerHTML = ''; DOM.smGrid.style.display = 'grid'; 
-        const data = await fetchOpenMeteoForecast(47.95, 21.71); 
-        if(data && data.daily) { 
-            const todayIdx = 0; 
-            const rise = new Date(data.daily.sunrise[todayIdx]).toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'}); 
-            const set = new Date(data.daily.sunset[todayIdx]).toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'}); 
-            const uv = data.daily.uv_index_max[todayIdx]; 
-            const sunshine = (data.daily.sunshine_duration[todayIdx] / 3600).toFixed(1); 
-            const rainProb = data.daily.precipitation_probability_max[todayIdx]; 
-            const windMax = data.daily.windspeed_10m_max[todayIdx]; 
-            const pressure = data.current ? data.current.surface_pressure.toFixed(0) : "1013"; 
-            const vis = data.current ? (data.current.visibility / 1000).toFixed(1) : "10"; 
-            
-            const items = [ 
-                { l: "NAPKELTE", v: rise, i: "🌅" }, 
-                { l: "NAPNYUGTA", v: set, i: "🌇" }, 
-                { l: "UV MAXIMUM", v: uv.toFixed(1), i: "☀️" }, 
-                { l: "LÉGNYOMÁS", v: `${pressure} hPa`, i: "🍃" }, 
-                { l: "NAPSÜTÉS", v: `${sunshine} ÓRA`, i: "😎" }, 
-                { l: "CSAPADÉK ESÉLY", v: `${rainProb}%`, i: "☔" }, 
-                { l: "MAX SZÉL", v: `${Math.round(windMax)} KM/H`, i: "💨" }, 
-                { l: "LÁTÓTÁVOLSÁG", v: `${vis} KM`, i: "👁️" } 
-            ]; 
-            
-            items.forEach(d => { 
-                const div = document.createElement('div'); 
-                div.className = 'sm-card-item astro-card'; 
-                div.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;"><div class="ny-d-label">${d.l}</div><div style="font-size:2.5rem; margin:5px 0;">${d.i}</div><div class="ny-d-val" style="font-size:1.5rem;">${d.v}</div></div><div class="sm-watermark">DATA: OPEN-METEO</div>`; 
-                DOM.smGrid.appendChild(div); 
-            }); 
-        } document.getElementById('sm-update-time').innerText = getTime();
+async function renderRealAstro() { 
+    DOM.smGrid.innerHTML = ''; DOM.smGrid.style.display = 'grid'; 
+    const data = await fetchOpenMeteoForecast(47.95, 21.71); 
+    if(data && data.daily) { 
+        const todayIdx = 0; 
+        const rise = new Date(data.daily.sunrise[todayIdx]).toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'}); 
+        const set = new Date(data.daily.sunset[todayIdx]).toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'}); 
+        const uv = data.daily.uv_index_max[todayIdx]; 
+        const sunshine = (data.daily.sunshine_duration[todayIdx] / 3600).toFixed(1); 
+        const rainProb = data.daily.precipitation_probability_max[todayIdx]; 
+        const windMax = data.daily.windspeed_10m_max[todayIdx]; 
+        const pressure = data.current ? data.current.surface_pressure.toFixed(0) : "1013"; 
+        const vis = data.current ? (data.current.visibility / 1000).toFixed(1) : "10"; 
+        
+        const items = [ 
+            { l: "NAPKELTE", v: rise, i: "🌅" }, 
+            { l: "NAPNYUGTA", v: set, i: "🌇" }, 
+            { l: "UV MAXIMUM", v: uv.toFixed(1), i: "☀️" }, 
+            { l: "LÉGNYOMÁS", v: `${pressure} hPa`, i: "🍃" }, 
+            { l: "NAPSÜTÉS", v: `${sunshine} ÓRA`, i: "😎" }, 
+            { l: "CSAPADÉK ESÉLY", v: `${rainProb}%`, i: "☔" }, 
+            { l: "MAX SZÉL", v: `${Math.round(windMax)} KM/H`, i: "💨" }, 
+            { l: "LÁTÓTÁVOLSÁG", v: `${vis} KM`, i: "👁️" } 
+        ]; 
+        
+        items.forEach(d => { 
+            const div = document.createElement('div'); 
+            div.className = 'sm-card-item astro-card'; 
+            div.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;"><div class="ny-d-label">${d.l}</div><div style="font-size:2.5rem; margin:5px 0;">${d.i}</div><div class="ny-d-val" style="font-size:1.5rem;">${d.v}</div></div><div class="sm-watermark">DATA: OPEN-METEO</div>`; 
+            DOM.smGrid.appendChild(div); 
+        }); 
+    } document.getElementById('sm-update-time').innerText = getTime();
 }
 
 async function renderRealAirQuality() { 
@@ -2213,7 +2192,7 @@ async function renderRealAirQuality() {
             if(aqi > 20) { aqiText = "JÓ"; aqiColor = "#00d4ff"; } 
             if(aqi > 50) { aqiColor = "#fc0"; aqiText = "MEGFELELŐ"; } 
             if(aqi > 100) { aqiColor = "#f90"; aqiText = "SZENNYEZETT"; }
-            if(aqi > 100) { aqiColor = "#f00"; aqiText = "VESZÉLYES"; }
+            if(aqi > 150) { aqiColor = "#f00"; aqiText = "VESZÉLYES"; }
 
             const items = [ 
                 { t: "LEVEGŐMINŐSÉG (AQI)", v: `${aqi} - ${aqiText}`, c: aqiColor }, 
@@ -2247,70 +2226,30 @@ function getFinancialNews() {
     return items;
 }
 
-let finNewsIdx = 0;
-function renderFinancialNewsCard() {
-    // This function is kept for logic but slot is removed from DOM in default state
-    // Kept to prevent errors
-}
-
-// REMOVED LOGIC STUBS
-function triggerClosingNews() { console.log("Removed"); }
-function triggerSummaryMode() { console.log("Removed"); }
-function triggerEconomyMode() { console.log("Removed"); }
-
 function closeAllOverlays() {
-    // DOM.summary removal not needed as summary overlay removed from active use
-    DOM.special.classList.remove('active'); DOM.progGuide.classList.remove('active');
-    DOM.logoBox.classList.remove('center-stage');
-    DOM.logoBox.classList.remove('high-z');
-    DOM.logoBox.classList.remove('logo-gradual-zoom');
-    DOM.logoBox.style.transform = '';
+    // This function handles manual closing of specific overlays (Meteo, Archive)
+    // NOT the Big Clock (which is handled by finishClockSequence)
     
-    // RESTORE LOGO DEFAULT STATE
-    DOM.logoBox.classList.remove('logo-exit');
-    DOM.logoBox.classList.add('logo-entry'); 
+    DOM.special.classList.remove('active'); 
+    DOM.progGuide.classList.remove('active');
+    DOM.hourlyArchiveOverlay.classList.remove('active');
     
-    clearInterval(state.summaryInterval);
-    if(state.summaryTimer.interval) clearInterval(state.summaryTimer.interval);
-    if(state.finNewsInterval) clearInterval(state.finNewsInterval);
-    state.summaryTimer.isProviderView = false;
-    clearTimeout(state.specialMeteoInterval);
-    clearTimeout(state.meteoPhaseTimer);
-    clearTimeout(state.bigClockTimeout);
-    
-    // CRITICAL FIX: Reset clock state
-    state.isClockRunning = false;
-    state.clockPhase = 0;
-    
-    state.isSummary = false;
-    state.isSpecial = false;
-    toggleLiveBadge(false);
-    DOM.liveBadge.classList.remove('delayed-visible');
-    // document.querySelector('.summary-embedded-branding').style.display = 'flex'; // Removed
-    setTimeout(() => {
-        if(DOM.summary) DOM.summary.style.display = 'none';
-        DOM.special.style.display = 'none';
-        DOM.special.style.pointerEvents = 'none';
-        DOM.bigClockOverlay.style.display = 'none';
-        DOM.bigClockOverlay.classList.remove('active', 'bc-layout-center');
-        DOM.logoBox.style.pointerEvents = 'auto';
-        DOM.logoBox.classList.remove('force-hide');
-        setTimeout(() => DOM.logoBox.classList.remove('logo-fade-out'), 3000);
-        state.isLocked = false;
-        DOM.hourlyArchiveOverlay.classList.remove('active');
-    }, 800);
-    
-    // RESTORE UI
-    [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'}, {id:'program-dock', t:'bottom'} ].forEach(ui => {
-        const el = document.getElementById(ui.id);
-        if(el) el.classList.remove(`hide-${ui.t}`);
+    // Ensure UI is visible (remove soft-hide)
+    const uiList = ['ui-top', 'ui-right', 'ui-left', 'ui-bottom', 'program-dock', 'logo-box'];
+    uiList.forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.classList.remove('soft-hide', 'force-hide');
     });
+    
+    state.isLocked = false;
+    state.isSpecial = false;
+    
+    // Restore logo state if needed
+    animateLogoIn();
 
-    if(DOM.fcAlert) DOM.fcAlert.classList.remove('collision-hidden');
-    const card = document.querySelector('.breaking-card');
-    if(card) card.classList.remove('night-summary-card');
-    DOM.sidebar.classList.remove('breaking-active');
-    if (state.isNightMode) { checkNightMode(); DOM.replayBadge.classList.add('visible'); } else { cycleMain(true); cycleTicker(1); }
+    setTimeout(() => {
+        DOM.special.style.display = 'none';
+    }, 800);
 }
 
 function cycleTicker(dir = 1) {
@@ -2330,7 +2269,11 @@ function cycleTicker(dir = 1) {
 function manualTicker(dir) { clearTimeout(state.tickerTimer); cycleTicker(dir); }
 
 function cycleMain(manual = false, preserveIndex = false) {
-    if (!state.mainItems.length || state.isSpecial || state.isSummary || state.isLocked) return;
+    // Overlay strategy: cycleMain continues running in background
+    // Only stop if explicitly special/summary is active and NOT in overlay mode
+    // But here we use overlay, so we let it run unless completely blocked manually
+    
+    if (!state.mainItems.length) return;
 
     if (!manual) { 
         state.mainIdx++; 
@@ -2344,13 +2287,11 @@ function cycleMain(manual = false, preserveIndex = false) {
 
     const item = state.mainItems[state.mainIdx]; state.currentMainLink = item.link;
     
-    // V20.6: Use container active state for animations
+    // Animation
     DOM.mainContainerBox.classList.remove('active');
     
     setTimeout(() => {
-        if (state.isLocked) return; 
-        
-        // Populate Redesigned Main News Layer (V20.6)
+        // Populate
         DOM.mainTitle.innerText = item.title; 
         DOM.mainDesc.innerText = item.desc; 
         
@@ -2372,22 +2313,22 @@ function cycleMain(manual = false, preserveIndex = false) {
         
         img.onerror = () => { img.remove(); DOM.mainTitle.innerText = "KÉP BETÖLTÉSE SIKERTELEN..."; setTimeout(() => cycleMain(), 2000); };
         img.onload = () => { 
-            if(state.isLocked) { img.remove(); return; } 
             img.classList.add('active'); 
             const imgs = DOM.stage.querySelectorAll('.bg-img'); 
             if (imgs.length > 2) imgs[0].remove(); 
 
-            // Trigger Entry Animation (V20.6)
+            // Trigger Entry
             DOM.mainContainerBox.classList.add('active');
         };
         
+        // Progress bar
         DOM.mainPrg.style.transition = 'none'; 
         DOM.mainPrg.style.width = '0%'; 
         setTimeout(() => { 
             DOM.mainPrg.style.transition = 'width 21.8s linear'; 
             DOM.mainPrg.style.width = '100%'; 
         }, 50);
-    }, 600); // Wait for exit transition
+    }, 600); 
 }
 
 function startClock() {
@@ -2395,12 +2336,10 @@ function startClock() {
         const now = new Date(); const m = now.getMinutes(); const s = now.getSeconds();
         const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
         
-        // NEW DISCREET CLOCK UPDATE (Under Logo - Center Aligned)
         if(document.getElementById('clock-time-text')) {
             document.getElementById('clock-time-text').innerText = timeStr;
             document.getElementById('clock-date-text').innerText = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}.`;
             
-            // NEW DAY OF WEEK DISPLAY
             const days = ['VASÁRNAP','HÉTFŐ','KEDD','SZERDA','CSÜTÖRTÖK','PÉNTEK','SZOMBAT'];
             if(DOM.cDayText) DOM.cDayText.innerText = days[now.getDay()];
         }
@@ -2416,33 +2355,39 @@ function startClock() {
         
         updateDevMonitor(); 
         
-        // --- LOGO EXIT TRIGGER (58:55) ---
-        // 5 seconds BEFORE clock starts at 59:00
+        // --- SYNCED TRIGGER LOGIC ---
+        
+        // 1. Logo Exit Animation (58:55) - only if clock not running
         if (m === 58 && s === 55 && !state.isNightMode && !state.logoExitTriggered && !state.isClockRunning) {
              console.log("LOGO ANIMÁCIÓ KI (58:55)");
              state.logoExitTriggered = true;
              animateLogoOut();
         }
 
-        // --- AUTOMATA INDÍTÁS (59:00) ---
+        // 2. Big Clock Trigger (59:00)
         if (m === 59 && s === 0 && !state.isNightMode && !state.isClockRunning) {
              console.log("AUTOMATA ÓRA INDÍTÁS (59:00)");
              triggerBigClockSequence();
         }
 
-        // AUTO REFRESH LOGIC (Only strictly at 20 and 40)
-        // 00 refresh is handled by the hot restart logic
+        // 3. Regular Auto Refresh (20 and 40 only)
         if (!state.isNightMode && s === 0) { 
             if (m === 20 || m === 40) { 
                 backgroundRefresh(true, true); 
             } 
         }
         
+        // Ticker cycle
         if (!state.isNightMode && (Date.now() - state.lastTickerUpdate > 12000) && !state.isSpecial && !state.isSummary) { cycleTicker(1); } 
     }, 1000);
 }
 
-function startMainLoop() { if (state.mainTimer) clearInterval(state.mainTimer); state.mainTimer = setInterval(() => { if(!state.isSpecial && !state.isSummary) cycleMain(); }, 22000); }
+function startMainLoop() { 
+    if (state.mainTimer) clearInterval(state.mainTimer); 
+    state.mainTimer = setInterval(() => { 
+        cycleMain(); 
+    }, 22000); 
+}
 
 async function fetchWunderground(silent = false) {
     state.lastWxUpdate = Date.now(); let validReadings = [];
@@ -2450,30 +2395,23 @@ async function fetchWunderground(silent = false) {
     const results = await Promise.allSettled(promises);
     results.forEach((res, index) => { if (res.status === 'fulfilled' && res.value) { const d = res.value; if (d.observations && d.observations.length > 0) { const o = d.observations[0]; if (o && o.metric && typeof o.metric.temp === 'number') { validReadings.push({ temp: o.metric.temp, hum: o.humidity || 50, wind: o.metric.windSpeed || 0, windGust: o.metric.windGust || 0, precipRate: o.metric.precipRate || 0, precipTotal: o.metric.precipTotal || 0, windDir: o.winddir || 0, pressure: o.metric.pressure || 1013, uv: o.uv || 0, id: WU_STATIONS[index] }); } } } });
     
-    // UPDATED LOGIC: If no PWS data, force Open-Meteo fallback immediately
     if (validReadings.length === 0) {
         state.currentWxSource = 'OPEN-METEO (FALLBACK)'; 
-        // Force fallback
         const fallback = await fetchMeteoRobust(47.95, 21.71);
         if(fallback && DOM.headerWxBar) {
              const tempEl = document.getElementById('hwx-temp');
              const windEl = document.getElementById('hwx-wind');
              const condEl = document.getElementById('hwx-cond');
              
-             // Update Top Right Bar
              if(tempEl) tempEl.innerHTML = `${formatVal(fallback.temperature)}°C <span style="font-size:0.7em;opacity:0.7;">(ÉRZET: ${formatVal(fallback.temperatureFeelsLike)}°)</span>`;
              if(windEl) windEl.innerHTML = `<i class="fas fa-wind hwx-icon"></i> ${formatVal(fallback.windSpeed)} KM/H`;
              const wmo = getWmoDesc(fallback.iconCode, fallback.dayOrNight);
-             // JAVÍTOTT WIND DIRECTION DISPLAY
              if(condEl) condEl.innerHTML = `<i class="fas fa-compass hwx-icon" style="color:#ddd;"></i> ${getWind(fallback.windDirection)}`;
              
-             // Also update PWS Data structure for other widgets
              state.pwsData = { temp: formatVal(fallback.temperature), feel: formatVal(fallback.temperatureFeelsLike), wind: formatVal(fallback.windSpeed), windDir: getWind(fallback.windDirection), cond: wmo.t, icon: wmo.i, updated: true, rainRate: "0", rainDay: "0", uv: "0", humidity: fallback.relativeHumidity, pressure: "1013" };
              if(!silent) { updateMiniWidgets(state.pwsData, 0); }
-        } else {
-             if(document.getElementById('hwx-cond')) document.getElementById('hwx-cond').innerText = "OFFLINE";
         }
-        return; // Exit function as we used fallback
+        return;
     }
 
     if (validReadings.length > 0) {
@@ -2481,17 +2419,13 @@ async function fetchWunderground(silent = false) {
         const maxGust = Math.max(...validReadings.map(r => r.windGust)); const maxPrecipRate = Math.max(...validReadings.map(r => r.precipRate)); const maxPrecipTotal = Math.max(...validReadings.map(r => r.precipTotal)); const maxUv = Math.max(...validReadings.map(r => r.uv));
         const windDir = validReadings[0].windDir; const feel = calculateAggregateRealFeel(avgTemp, avgHum, avgWind);
         
-        // PWS LOGIC UPDATED FOR NEW TOP RIGHT BAR (Legacy Code removed from logo area)
-        // Populate #header-wx-bar elements
         if(DOM.headerWxBar) {
             const tempEl = document.getElementById('hwx-temp');
             const windEl = document.getElementById('hwx-wind');
             const condEl = document.getElementById('hwx-cond');
             
-            // Update Top Right Bar
             if(tempEl) tempEl.innerHTML = `${formatVal(avgTemp)}°C <span style="font-size:0.7em;opacity:0.7;">(ÉRZET: ${formatVal(feel)}°)</span>`;
             if(windEl) windEl.innerHTML = `<i class="fas fa-wind hwx-icon"></i> ${avgWind.toFixed(1)} KM/H`;
-            // JAVÍTOTT WIND DIRECTION DISPLAY (PWS)
             if(condEl) condEl.innerHTML = `<i class="fas fa-compass hwx-icon" style="color:#ddd;"></i> ${getWind(windDir)}`;
              
             state.currentWxSource = `PWS ÁTLAG (${validReadings.length})`;
@@ -2503,11 +2437,7 @@ async function fetchWunderground(silent = false) {
 }
 
 function rotatePwsSlot() {
-    // Rotation logic deprecated with new solid weather row, keeping function to prevent crash but it does nothing to old UI
-    // Can optionally rotate the secondary line in the logo weather row
     if(!state.pwsData.updated || !DOM.logoWxText2) return;
-    
-    // Simple toggle between WIND/DIR and HUMIDITY/UV on the second line
     const currentText = DOM.logoWxText2.innerText;
     if(currentText.includes("SZÉL")) {
          DOM.logoWxText2.innerHTML = `PÁRA: ${state.pwsData.humidity}% | UV: ${state.pwsData.uv} | ESŐ: ${state.pwsData.rainDay}mm`;
@@ -2531,16 +2461,12 @@ function clearMini() { state.testMiniRainState = false; state.testMiniAlertState
 
 let pageIdx = 0;
 let rates = null;
-const mockRates = { "EUR": 395, "USD": 365, "CHF": 410, "GBP": 460 };
 
 async function fetchCurrency() {
-    // Logic: Odd Month = API1, Even Month = API2, Fallback = API3
-    const currentMonth = new Date().getMonth() + 1; // 1-12
+    const currentMonth = new Date().getMonth() + 1; 
     const isOdd = currentMonth % 2 !== 0;
     const api1 = {k:'8258c9489622103635e16227fd9dadd7b8d1', n:'API1 (CurrencyAPI)'};
     const api2 = {k:'426709d24c8d4420f140ac7c451db300edfa', n:'API2 (CurrencyAPI)'};
-
-    // Setup priority array based on month
     const priority = isOdd ? [api1, api2] : [api2, api1];
 
     let success = false; 
@@ -2552,7 +2478,7 @@ async function fetchCurrency() {
                 const data = await res.json(); 
                 if(data.valid) { 
                     state.currencyRates = data.rates;
-                    state.currencyBase = 'USD'; // IMPORTANT: CurrencyAPI base is USD
+                    state.currencyBase = 'USD'; 
                     renderCurrency(data.rates, item.n); 
                     success = true; 
                     break; 
@@ -2567,24 +2493,16 @@ async function fetchCurrency() {
             const data = await res.json(); 
             if(data.result === "success") { 
                 state.currencyRates = data.rates;
-                state.currencyBase = 'HUF'; // IMPORTANT: OpenER base is HUF here
+                state.currencyBase = 'HUF'; 
                 renderCurrency(data.rates, 'OPEN-ER (BACKUP)'); 
             } 
         } catch(e) {} 
     }
 }
 
-const renderEcoPage = () => {
-    // This is handled dynamically inside triggerEconomyMode now
-};
-
 function renderCurrency(r, source) {
     const huf = r.HUF; const eur = huf / r.EUR; const chf = huf / r.CHF; const gbp = huf / r.GBP; const usd = huf;
     const iconStyle = 'width:20px; height:auto; margin-right:8px; vertical-align:middle; border-radius:2px;';
-
-    // Correction: If base is HUF (OpenER), r.HUF is 1. r.EUR is ~0.0025.
-    // If base is USD (CurrencyAPI), r.HUF is ~360. r.EUR is ~0.9.
-    // Formula huf / r.EUR works for BOTH cases correctly.
 
     document.getElementById('finance-rows').innerHTML = `
     <div class="data-row">
@@ -2634,6 +2552,7 @@ function checkNightMode() {
     const now = new Date(); const h = now.getHours();
     let isNight = state.forcedNightMode;
     if(!state.forcedNightMode) {
+        // STRICT NIGHT MODE CHECK: 00:00 to 05:59
         if (h >= 0 && h < 6) isNight = true;
     }
 
@@ -2647,7 +2566,6 @@ function checkNightMode() {
             DOM.mainDesc.innerText = "Kérjük várjon, amíg a rendszer betölti az előző nap híreit."; 
             toggleLiveBadge(false);
             DOM.replayBadge.classList.add('visible');
-            // Night Logo
             DOM.logoBox.classList.add('night-theme');
         } else { 
             DOM.tickerWindow.style.display = 'block'; 
@@ -2655,7 +2573,6 @@ function checkNightMode() {
             DOM.nightMsg.classList.remove('active'); 
             DOM.hourlyNavBar.classList.add('active');
             DOM.replayBadge.classList.remove('visible');
-            // Day Logo
             DOM.logoBox.classList.remove('night-theme');
             updateLists(); cycleMain(); cycleTicker(1); 
         } 
@@ -2677,8 +2594,9 @@ function checkNightMode() {
 document.addEventListener('visibilitychange', () => {
     if (!document.hidden) {
         const now = new Date(); const m = now.getMinutes(); const s = now.getSeconds();
-        const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
-        DOM.cTime.innerHTML = `${timeStr}<span class="mc-sec">${String(s).padStart(2,'0')}</span>`;
+        if(DOM.cTimeText) {
+             DOM.cTimeText.innerText = `${String(now.getHours()).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        }
         if (!state.isNightMode && !state.isSpecial) { if (Date.now() - state.lastTickerUpdate > 15000) { cycleTicker(1); } }
     }
 });
@@ -2686,24 +2604,19 @@ document.addEventListener('visibilitychange', () => {
 function init() {
     if(DOM.bkCardClickable) DOM.bkCardClickable.onclick = () => { const link = DOM.bkCardClickable.dataset.link; if(link && link !== "#") window.open(link, '_blank'); };
 
-    // NEW MAIN NAV LOGIC (TOP RIGHT)
     window.stepMain = function(dir) { 
         if(!state.mainItems.length || state.isLocked) return; 
         clearInterval(state.mainTimer); 
-        // Calculate index with wrap-around
         let newIdx = state.mainIdx + dir;
         if (newIdx < 0) newIdx = state.mainItems.length - 1;
         if (newIdx >= state.mainItems.length) newIdx = 0;
         state.mainIdx = newIdx;
-
-        // Render without auto-increment
         cycleMain(true, true); 
         startMainLoop(); 
     };
 
     const uiLeft = document.getElementById('ui-left'); 
     if(uiLeft) uiLeft.onclick = (e) => { 
-        // PREVENT CLICK IF CLICKING NAV
         if (e.target.closest('.main-nav-bar') || e.target.classList.contains('mn-btn')) return; 
         if (e.target.closest('.main-nav-overlay') || e.target.classList.contains('nav-btn-mini')) return; 
         
@@ -2715,7 +2628,7 @@ function init() {
 
     crawlNews(false); fetchCurrency(); fetchOther(); fetchWunderground();
 
-    // SAFE STARTUP: Remove loader after 8s even if news fails
+    // SAFE STARTUP
     setTimeout(() => { 
         if(DOM.loader && DOM.loader.parentNode) {
             state.initialLoadComplete = true; 
@@ -2726,7 +2639,7 @@ function init() {
 
     setInterval(updateWeatherCard, 10000); setInterval(fetchOther, 120000); 
     setInterval(fetchWunderground, 30000); setInterval(checkBreaking, 45000); 
-    setInterval(rotatePwsSlot, 10000); // 10s PWS FLIP
+    setInterval(rotatePwsSlot, 10000); 
     cycleMain(); cycleTicker();
 }
 
