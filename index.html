@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V20.21 OVERLAY STRATEGY</title>
+    <title>TKP NEWS - V20.24 GLASS UI</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -66,7 +66,6 @@
             transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s; 
         }
         
-        /* New Class for Soft Hiding (Opacity only, keep layout) */
         .soft-hide { opacity: 0 !important; pointer-events: none !important; }
 
         .hide-top { transform: translateY(-150%) !important; opacity: 0 !important; pointer-events: none !important; }
@@ -75,58 +74,126 @@
         .hide-bottom { transform: translateY(150%) !important; opacity: 0 !important; pointer-events: none !important; }
         .force-hide { opacity: 0 !important; pointer-events: none !important; }
 
-        /* --- TOP RIGHT CONTAINER --- */
+        /* --- TOP RIGHT CONTAINER (MODIFIED FOR GLASS UI) --- */
         .top-right-container {
-            position: absolute; top: 30px; right: 30px;
-            display: flex; align-items: center; gap: 10px;
+            position: absolute; 
+            top: 20px; /* High up */
+            right: 2vw; /* Aligned with sidebar */
+            display: flex; 
+            flex-direction: row; /* Side-by-side layout */
+            align-items: stretch; /* Match heights */
+            gap: 10px; /* Space between PWS and Button */
             z-index: 500; pointer-events: auto;
-            transform-origin: right center;
+            transform-origin: right top;
+            transition: opacity 0.5s ease;
         }
 
-        /* LEGACY BUTTON */
-        .legacy-btn-styled {
-            height: 32px;
-            display: flex; align-items: center; justify-content: center;
-            padding: 0 15px; 
-            background: rgba(0, 0, 0, 0.4); 
-            border: 1px solid rgba(255, 255, 255, 0.2); 
-            color: #ccc; 
-            font-family: var(--font-data); font-weight: 700; 
-            font-size: 0.75rem; 
-            text-decoration: none; 
-            border-radius: 4px; 
-            backdrop-filter: blur(5px);
-            transition: all 0.3s;
-            text-transform: uppercase; letter-spacing: 1px;
-            white-space: nowrap;
-        }
-        .legacy-btn-styled:hover { 
-            background: #fff; color: #000; border-color: #fff; 
-            box-shadow: 0 0 15px rgba(255,255,255,0.4);
-        }
-
-        /* HEADER WEATHER BAR */
-        .header-weather-bar {
-            background: rgba(0, 10, 20, 0.4); 
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-left: 2px solid var(--accent);
-            height: 32px;
+        /* --- SMART PWS WIDGET STYLE (GLASS) --- */
+        .tr-pws-widget {
+            /* HIGH TRANSPARENCY GLASS */
+            background: rgba(0, 15, 30, 0.4); 
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-left: 4px solid var(--accent);
             border-radius: 4px;
-            display: flex; align-items: center;
-            padding: 0 15px;
-            color: #ddd;
+            width: calc(clamp(280px, 22vw, 420px) - 90px);
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             font-family: var(--font-tech);
-            font-size: 0.8rem;
-            min-width: 340px; 
-            justify-content: space-between;
-            transition: all 0.5s;
+            display: flex; flex-direction: column;
+        }
+
+        .tr-pws-header {
+            background: linear-gradient(90deg, rgba(255,255,255,0.08) 0%, transparent 100%);
+            padding: 4px 8px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.7rem; color: #ddd;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+        }
+
+        .tr-live-badge {
+            background: rgba(204, 0, 0, 0.8); color: #fff; padding: 1px 4px; border-radius: 2px;
+            font-weight: bold; font-size: 0.65rem; letter-spacing: 1px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+
+        .tr-pws-content {
+            padding: 8px 12px;
+            flex-grow: 1;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        .tr-group {
+            display: none; width: 100%;
+            animation: fadeInRight 0.5s ease-out;
+            justify-content: space-between; align-items: center;
+        }
+        .tr-group.active { display: flex; }
+        @keyframes fadeInRight { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
+
+        .tr-value-box { display: flex; flex-direction: column; align-items: flex-start; }
+        .tr-label { font-size: 0.6rem; color: #ccc; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; text-shadow: 0 1px 2px #000; }
+        .tr-val { font-family: var(--font-main); font-size: 1.5rem; color: #fff; font-weight: 700; line-height: 1; display:flex; align-items:center; gap:6px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+        .tr-unit { font-size: 0.9rem; color: #eee; font-weight: 400; font-family: var(--font-tech); opacity: 0.8; }
+        .tr-icon { font-size: 1.1rem; width: 20px; text-align: center; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8)); }
+
+        .c-temp { color: #fff; }
+        .c-wind { color: #00d4ff; }
+        .c-uv { color: #ffcc00; }
+        .c-rain { color: #7f7fff; }
+        .c-press { color: #00ff99; }
+
+        /* Hidden Progress Bar */
+        .tr-progress { display: none; }
+
+        /* --- LEGACY CUBE BUTTON (GLASS) --- */
+        .legacy-btn-cube {
+            width: 80px; /* Square width */
+            /* Height will stretch to match container */
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            border-radius: 4px; 
+            
+            display: flex; flex-direction: column; 
+            align-items: center; justify-content: center;
+            text-decoration: none; 
+            color: #fff; 
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .legacy-btn-cube:hover { 
+            background: rgba(255, 255, 255, 0.25); 
+            border-color: #fff; 
+            box-shadow: 0 0 20px rgba(255,255,255,0.3);
+            transform: translateY(-2px);
         }
         
-        .hwx-location { font-weight: bold; color: var(--accent); margin-right: 10px; letter-spacing: 1px; }
-        .hwx-data { display: flex; gap: 12px; align-items: center; font-family: var(--font-data); font-weight: 600; }
-        .hwx-item { display: flex; align-items: center; gap: 5px; }
-        .hwx-icon { font-size: 0.9rem; }
+        .lbc-icon {
+            font-size: 1.8rem; color: #fff; margin-bottom: 5px;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.8));
+        }
+        
+        .lbc-text {
+            font-family: var(--font-tech); font-weight: 800; 
+            font-size: 0.8rem; text-transform: uppercase; 
+            letter-spacing: 1px; color: var(--accent);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+        }
+        
+        .lbc-sub {
+            font-family: var(--font-data); font-size: 0.6rem; 
+            color: #ccc; text-transform: uppercase;
+        }
+
 
         /* REFRESH BUTTON (SIDEBAR) */
         .sidebar-ctrl-panel { margin-top: 5px; width: 100%; pointer-events: auto; }
@@ -150,6 +217,7 @@
             display: flex; flex-direction: column; 
             align-items: center; 
             gap: 0;
+            opacity: 1;
         }
         .logo-box.high-z { z-index: 10000 !important; }
 
@@ -166,8 +234,6 @@
             20%, 40%, 60%, 80% { filter: invert(0); opacity: 0.8; }
             100% { filter: invert(0); opacity: 0; transform: scale(0.9); }
         }
-
-        .logo-box { opacity: 1; }
         
         .logo-box.logo-entry .logo-main-bar {
             animation: strobeEffect 3s linear forwards;
@@ -181,7 +247,7 @@
             animation-delay: 0.2s; 
         }
 
-        /* --- REFINED LOGO STYLE (The "Not Black & White" Update) --- */
+        /* --- REFINED LOGO STYLE --- */
         .logo-main-bar {
             display: flex; 
             height: 28px;
@@ -205,10 +271,12 @@
             text-shadow: 0 1px 2px rgba(0,0,0,0.5);
         }
 
+        /* REMOVED SEPARATOR AS REQUESTED */
         .logo-sep-v {
             width: 1px;
             background: linear-gradient(to bottom, #444, #777, #444);
             height: 100%;
+            display: none; /* ELTÜNTETVE */
         }
 
         .logo-box-news {
@@ -291,8 +359,17 @@
 
         .logo-box.night-theme .logo-info-container { border-top-color: transparent; }
 
-        /* SIDEBAR */
-        .sidebar { position: absolute; top: 12vh; right: 2vw; width: clamp(280px, 22vw, 420px); height: auto; pointer-events: auto; z-index: 40; perspective: 1000px; }
+        /* SIDEBAR - MOVED DOWN TO ACCOMMODATE TOP WIDGETS */
+        .sidebar { 
+            position: absolute; 
+            top: 15vh; /* MOVED DOWN FROM 12VH */
+            right: 2vw; 
+            width: clamp(280px, 22vw, 420px); 
+            height: auto; 
+            pointer-events: auto; 
+            z-index: 40; 
+            perspective: 1000px; 
+        }
         
         .sidebar-flipper { 
             position: relative; width: 100%; height: 100%; 
@@ -387,6 +464,12 @@
         .wx-c-label { font-family: var(--font-mono); font-size: 0.6rem; color: #888; text-transform: uppercase; margin-bottom: 2px; white-space: nowrap; }
         .wx-c-val { font-family: var(--font-tech); font-size: 0.95rem; color: #e0e0e0; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
+        .wx-live-badge {
+            background: #cc0000; color: white; font-size: 0.6rem;
+            padding: 1px 4px; border-radius: 2px; margin-left: 5px;
+            font-weight: bold; vertical-align: middle; letter-spacing: 1px;
+        }
+
         /* MAIN NEWS CONTAINER */
         .main-news { position: absolute; bottom: 15vh; left: 4vw; width: clamp(400px, 60vw, 1200px); pointer-events: auto; cursor: pointer; z-index: 20; transition: transform 0.2s; }
         .main-news:hover { transform: scale(1.01); }
@@ -536,6 +619,7 @@
         }
         .hour-nav-label span { transform: skewX(15deg); }
         
+        /* --- NEW HOURLY ARCHIVE STYLES --- */
         #hourly-archive-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 5, 15, 0.95);
@@ -545,10 +629,61 @@
         }
         #hourly-archive-overlay.active { display: flex; }
         
-        .ha-header { border-bottom: 4px solid var(--accent); padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; }
-        .ha-title { font-family: var(--font-main); font-size: clamp(1.5rem, 3vw, 2.5rem); color: #fff; text-transform: uppercase; font-weight: 900; }
-        .ha-close-btn { background: #cc0000; color: #fff; border: none; padding: 8px 25px; font-family: var(--font-tech); font-weight: bold; font-size: 1.2rem; cursor: pointer; transition: 0.2s; }
-        .ha-close-btn:hover { background: #ff4444; }
+        /* Updated Center Aligned Header with Arrows */
+        .ha-header { 
+            display: flex; 
+            justify-content: center; /* Center everything */
+            align-items: center;
+            position: relative;
+            border-bottom: 2px solid rgba(255,255,255,0.1); 
+            padding-bottom: 20px; 
+            margin-bottom: 20px; 
+        }
+        
+        .ha-title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .ha-nav-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: var(--accent);
+            font-size: 1.5rem;
+            width: 50px; height: 50px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 4px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .ha-nav-btn:hover {
+            background: var(--accent);
+            color: #000;
+            box-shadow: 0 0 15px var(--accent);
+            transform: scale(1.1);
+        }
+        
+        /* Disable forward nav if it's the current hour */
+        .ha-nav-btn.disabled {
+            opacity: 0.3;
+            pointer-events: none;
+            filter: grayscale(1);
+        }
+        
+        .ha-title { 
+            text-align: center;
+            font-family: var(--font-main); 
+            font-size: clamp(1.2rem, 2.5vw, 2.2rem); 
+            color: #fff; 
+            text-transform: uppercase; 
+            font-weight: 900; 
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            min-width: 300px; /* Ensure title doesn't jump too much */
+        }
+        
         .ha-list { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-right: 10px; }
         .ha-item { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-left: 4px solid #444; padding: 15px; cursor: pointer; transition: 0.2s; }
         .ha-item:hover { background: rgba(255,255,255,0.1); border-left-color: var(--accent); }
@@ -576,6 +711,7 @@
             display: none; opacity: 0; 
             transition: opacity 0.8s ease-in-out; overflow: hidden;
             grid-template-columns: 1fr 1.5fr; 
+            pointer-events: auto; /* Block interactions below */
         }
         #big-clock-overlay.active { display: grid; opacity: 1; }
         
@@ -828,69 +964,6 @@
         @keyframes slideIn { from { transform: translateX(-100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.1; } }
 
-        /* --- UPDATED TOP RIGHT CONTAINER --- */
-        .top-right-container {
-            position: absolute; top: 30px; right: 30px;
-            display: flex; align-items: center; gap: 10px;
-            z-index: 500; pointer-events: auto;
-            transform-origin: right center;
-            /* Added transition for soft hide */
-            transition: opacity 0.5s ease;
-        }
-
-        /* LEGACY BUTTON */
-        .legacy-btn-styled {
-            height: 32px;
-            display: flex; align-items: center; justify-content: center;
-            padding: 0 15px; 
-            background: rgba(0, 0, 0, 0.4); 
-            border: 1px solid rgba(255, 255, 255, 0.2); 
-            color: #ccc; 
-            font-family: var(--font-data); font-weight: 700; 
-            font-size: 0.75rem; 
-            text-decoration: none; 
-            border-radius: 4px; 
-            backdrop-filter: blur(5px);
-            transition: all 0.3s;
-            text-transform: uppercase; letter-spacing: 1px;
-            white-space: nowrap;
-        }
-        .legacy-btn-styled:hover { 
-            background: #fff; color: #000; border-color: #fff; 
-            box-shadow: 0 0 15px rgba(255,255,255,0.4);
-        }
-
-        /* NEW HEADER WEATHER BAR (PWS) */
-        .header-weather-bar {
-            background: rgba(0, 10, 20, 0.4); 
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-left: 2px solid var(--accent);
-            height: 32px;
-            border-radius: 4px;
-            display: flex; align-items: center;
-            padding: 0 15px;
-            color: #ddd;
-            font-family: var(--font-tech);
-            font-size: 0.8rem;
-            min-width: 340px; /* Increased Width */
-            justify-content: space-between;
-            transition: all 0.5s;
-        }
-        
-        .hwx-location { font-weight: bold; color: var(--accent); margin-right: 10px; letter-spacing: 1px; }
-        .hwx-data { display: flex; gap: 12px; align-items: center; font-family: var(--font-data); font-weight: 600; }
-        .hwx-item { display: flex; align-items: center; gap: 5px; }
-        .hwx-icon { font-size: 0.9rem; }
-
-
-        /* --- UPDATED CENTERED LOGO BOX --- */
-        .logo-box { 
-            align-items: center; /* Center horizontally */
-        }
-        
-        .logo-weather-block { display: none !important; } /* Hide old block */
-
     </style>
 </head>
 <body>
@@ -898,17 +971,26 @@
     <!-- SECRET DEV TRIGGER (Top Left 80x80px) -->
     <div id="dev-trigger" onclick="openAuth()"></div>
     
-    <!-- TOP RIGHT: PWS + LEGACY BUTTON -->
+    <!-- TOP RIGHT: SMART PWS WIDGET + KLIKK.HU CUBE (GLASS UI) -->
     <div class="top-right-container" id="ui-top">
-        <div id="header-wx-bar" class="header-weather-bar">
-            <span class="hwx-location">NYÍREGYHÁZA</span>
-            <div class="hwx-data">
-                <span id="hwx-temp">ADATOK...</span>
-                <span id="hwx-wind"></span>
-                <span id="hwx-cond"></span>
+        <div class="tr-pws-widget">
+            <div class="tr-pws-header">
+                <span><i class="fas fa-location-dot" style="color:var(--accent); margin-right:5px;"></i>NYÍREGYHÁZA</span>
+                <span class="tr-live-badge">ÉLŐ ADATOK</span>
             </div>
+            <div class="tr-pws-content" id="tr-pws-content">
+                <!-- Content injected via JS -->
+            </div>
+            <div class="tr-progress"><div class="tr-bar" id="tr-bar"></div></div>
         </div>
-        <a href="https://klikk.hu" target="_blank" class="legacy-btn-styled">KLIKK.HU &#10138;</a>
+        
+        <!-- LEGACY CUBE BUTTON (REPLACED ICON) -->
+        <a href="https://klikk.hu" target="_blank" class="legacy-btn-cube">
+            <!-- REPLACED ICON -->
+            <i class="fas fa-globe lbc-icon"></i>
+            <div class="lbc-text">KLIKK</div>
+            <div class="lbc-sub">.HU</div>
+        </a>
     </div>
 
     <!-- AUTH OVERLAY -->
@@ -939,7 +1021,6 @@
                 </table>
                 
                 <div class="dev-h" style="margin-top:20px;">MANUÁLIS VEZÉRLÉS</div>
-                <!-- JAVÍTOTT GOMB: KÖZVETLEN HÍVÁS, NINCS safeTrigger -->
                 <button class="btn" onclick="prepareAndTriggerClock()">[⏰] NAGY ÓRA SHOW (KÉNYSZERÍTETT)</button>
                 <button class="btn" onclick="closeAllOverlays()">[X] MINDEN ABLAK BEZÁRÁSA</button>
                 <button class="btn" onclick="forceRefreshAll()">[⚡] AZONNALI FRISSÍTÉS</button>
@@ -1011,6 +1092,7 @@
                         <!-- LOGÓ CSERE MINI VÁLTOZATRA -->
                         <div class="logo-main-bar" style="height:20px; box-shadow:none;">
                             <div class="logo-box-tkp" style="font-size:0.8rem; padding:0 6px;">TKP</div>
+                            <!-- REMOVED SEPARATOR -->
                             <div class="logo-sep-v"></div>
                             <div class="logo-box-news" style="font-size:0.8rem; padding:0 6px;">NEWS</div>
                         </div>
@@ -1028,13 +1110,17 @@
         </div>
     </div>
 
-    <!-- NEW: HOURLY ARCHIVE OVERLAY -->
+    <!-- NEW: HOURLY ARCHIVE OVERLAY (REDESIGNED) -->
     <div id="hourly-archive-overlay">
-        <!-- Close Button for Archive - JOBB FELSŐ SAROKBAN -->
-        <div class="overlay-close-abs" style="position: absolute; top: 30px; right: 30px; font-weight: bold; font-family: var(--font-tech); cursor: pointer; z-index: 9999;" onclick="document.getElementById('hourly-archive-overlay').classList.remove('active')">[X] KILÉPÉS</div>
+        <!-- Close Button for Archive -->
+        <div class="overlay-close-abs" style="position: absolute; top: 30px; right: 30px; font-weight: bold; font-family: var(--font-tech); cursor: pointer; z-index: 9999; color:#fff;" onclick="document.getElementById('hourly-archive-overlay').classList.remove('active')">[X] KILÉPÉS</div>
 
         <div class="ha-header">
-            <div class="ha-title" id="ha-title-text">...</div>
+            <div class="ha-title-wrapper">
+                <div class="ha-nav-btn" id="ha-prev" onclick="stepArchive(-1)">&#10094;</div>
+                <div class="ha-title" id="ha-title-text">...</div>
+                <div class="ha-nav-btn" id="ha-next" onclick="stepArchive(1)">&#10095;</div>
+            </div>
         </div>
         <div class="ha-list" id="ha-list-container"></div>
     </div>
@@ -1081,11 +1167,12 @@
         <div class="grid"></div>
     </div>
 
-    <!-- LOGO & CLOCK (UPDATED: CENTERED, NO PWS, WITH DAY OF WEEK, NO LAYER) -->
+    <!-- LOGO & CLOCK (UPDATED: NO SEP) -->
     <div class="logo-box logo-entry" id="logo-box" onclick="openAuth()">
         <!-- LOGO ROW -->
         <div class="logo-main-bar">
             <div class="logo-box-tkp">TKP</div>
+            <!-- SEPARATOR ELTÁVOLÍTVA (CSS: display:none) -->
             <div class="logo-sep-v"></div>
             <div class="logo-box-news">NEWS</div>
             <span id="live-badge" class="live-tag">ÉLŐ</span>
@@ -1309,6 +1396,20 @@
             { name: "Siófok", lat: 46.91, lon: 18.05, code: "hu" }, { name: "Keszthely", lat: 46.76, lon: 17.24, code: "hu" }
         ];
 
+        // NEW: 10 ADDITIONAL HUNGARIAN CITIES
+        const HU_EXTRA_STATIONS = [
+            { name: "Eger", lat: 47.90, lon: 20.37, code: "hu" },
+            { name: "Salgótarján", lat: 48.09, lon: 19.80, code: "hu" },
+            { name: "Szekszárd", lat: 46.35, lon: 18.70, code: "hu" },
+            { name: "Hódmezővásárhely", lat: 46.43, lon: 20.32, code: "hu" },
+            { name: "Baja", lat: 46.18, lon: 18.95, code: "hu" },
+            { name: "Esztergom", lat: 47.79, lon: 18.74, code: "hu" },
+            { name: "Pápa", lat: 47.33, lon: 17.47, code: "hu" },
+            { name: "Gyula", lat: 46.65, lon: 21.28, code: "hu" },
+            { name: "Hajdúszoboszló", lat: 47.44, lon: 21.40, code: "hu" },
+            { name: "Karcag", lat: 47.32, lon: 20.92, code: "hu" }
+        ];
+
         const EUROPE_MAJOR_STATIONS = [
             { name: "London", lat: 51.50, lon: -0.12, code: "gb" },
             { name: "Berlin", lat: 52.52, lon: 13.40, code: "de" },
@@ -1359,7 +1460,28 @@
              { name: "Fudzsi-hegy", lat: 35.36, lon: 138.72, code: "jp" }
         ];
 
-        const SIDEBAR_STATIONS = shuffle([...HU_MAJOR_STATIONS, ...WORLD_MAJOR_STATIONS]);
+        // NEW: 10 ADDITIONAL EXTREME/EXOTIC STATIONS
+        const EXTREME_EXTRA_STATIONS = [
+            { name: "Jakutszk", lat: 62.03, lon: 129.74, code: "ru" },
+            { name: "Kuvaitváros", lat: 29.37, lon: 47.97, code: "kw" },
+            { name: "La Paz", lat: -16.50, lon: -68.12, code: "bo" },
+            { name: "Quito", lat: -0.18, lon: -78.47, code: "ec" },
+            { name: "Wellington", lat: -41.29, lon: 174.77, code: "nz" },
+            { name: "Reykjavík", lat: 64.14, lon: -21.90, code: "is" },
+            { name: "Perth", lat: -31.95, lon: 115.86, code: "au" },
+            { name: "Vlagyivosztok", lat: 43.11, lon: 131.88, code: "ru" },
+            { name: "Fairbanks", lat: 64.84, lon: -147.72, code: "us" },
+            { name: "Alice Springs", lat: -23.69, lon: 133.88, code: "au" }
+        ];
+
+        // COMBINED SIDEBAR LIST INCLUDING NEW STATIONS
+        const SIDEBAR_STATIONS = shuffle([
+            ...HU_MAJOR_STATIONS, 
+            ...HU_EXTRA_STATIONS, 
+            ...WORLD_MAJOR_STATIONS, 
+            ...EXTREME_EXTRA_STATIONS
+        ]);
+
         const SEASONAL_BACKGROUNDS = {
             spring: [ 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=1920&fit=crop', 'https://images.unsplash.com/photo-1490750967868-58cb7506a90a?q=80&w=1920&fit=crop' ],
             summer: [ 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1920&fit=crop', 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1920&fit=crop' ],
@@ -1379,7 +1501,7 @@
 
         let state = {
             allNews: [], tickerItems: [], mainItems: [], weatherData: [],
-            pwsData: { temp: '--', feel: '--', wind: '--', windDir: '', cond: '--', icon: '❓', updated: false, rainRate: 0, rainDay: 0, uv: 0, humidity: 0, pressure: 0 },
+            pwsData: { temp: '--', feel: '--', wind: '--', windDir: '', cond: '--', icon: '❓', updated: false, rainRate: 0, rainDay: 0, uv: 0, humidity: 0, pressure: 0, gust: 0 },
             tickerIdx: 0, mainIdx: 0, wxIdx: 0, tickerTimer: null, mainTimer: null,
             isBreaking: false, isSpecial: false,
             seenBreaking: new Set(), breakingQueue: [], breakingHistory: new Set(), isBreakingActive: false,
@@ -1397,7 +1519,11 @@
             refreshedThisShow: false,
             updateTriggered: false,
             clockFinishTriggered: false,
-            logoExitTriggered: false
+            logoExitTriggered: false,
+            // PWS Rotator Vars
+            pwsSlide: 0,
+            pwsInterval: null,
+            viewingArchiveHour: -1
         };
 
         const DOM = {
@@ -1413,8 +1539,8 @@
             cDateText: document.getElementById('clock-date-text'),
             cDayText: document.getElementById('clock-day-text'),
             
-            // PWS Weather in Top Right (UPDATED)
-            headerWxBar: document.getElementById('header-wx-bar'),
+            // SMART PWS WIDGET
+            trPwsContent: document.getElementById('tr-pws-content'),
             
             special: document.getElementById('special-meteo'), smGrid: document.getElementById('sm-grid'), smTitle: document.getElementById('sm-main-title'), smBg: document.getElementById('sm-bg'),
             feedLog: document.getElementById('feed-log-table'), auth: document.getElementById('auth-overlay'), pin: document.getElementById('pin-input'), dev: document.getElementById('dev-panel'),
@@ -1547,12 +1673,26 @@
         
         function openHourlyArchive(hour) {
              const now = new Date(); const currentHour = now.getHours();
+             state.viewingArchiveHour = hour; // Store current view
+             
              let targetDate = new Date(); targetDate.setHours(hour, 0, 0, 0);
              if(hour > currentHour) { targetDate.setDate(targetDate.getDate() - 1); }
+             
              const startRange = targetDate.getTime(); const endRange = startRange + 3600000;
              const filteredItems = state.allNews.filter(n => { const t = n.date.getTime(); return t >= startRange && t < endRange; }).sort((a,b) => b.date - a.date);
              const nextHour = (hour + 1) % 24;
-             DOM.haTitle.innerText = `EZ TÖRTÉNT ${String(hour).padStart(2,'0')}:00 ÉS ${String(nextHour).padStart(2,'0')}:00 KÖZÖTT`;
+             
+             // Update Header with Arrows
+             DOM.haTitle.innerText = `${String(hour).padStart(2,'0')}:00 - ${String(nextHour).padStart(2,'0')}:00`;
+             
+             // Manage Navigation Button States
+             const nextBtn = document.getElementById('ha-next');
+             if(hour === currentHour) {
+                 nextBtn.classList.add('disabled');
+             } else {
+                 nextBtn.classList.remove('disabled');
+             }
+
              DOM.haList.innerHTML = '';
              if(filteredItems.length === 0) { DOM.haList.innerHTML = `<div style="color:#aaa; text-align:center; padding:20px;">Nem található hír ebben az időszakban.</div>`; } else {
                  filteredItems.forEach(item => {
@@ -1569,6 +1709,23 @@
                  });
              }
              DOM.hourlyArchiveOverlay.classList.add('active');
+        }
+
+        // New function to handle stepping through archive
+        function stepArchive(dir) {
+            if(state.viewingArchiveHour === -1) return;
+            let nextHour = state.viewingArchiveHour + dir;
+            
+            // Wrap around 24 hours logic
+            if(nextHour < 0) nextHour = 23;
+            if(nextHour > 23) nextHour = 0;
+            
+            // Prevent going into future relative to current wall clock
+            const nowHour = new Date().getHours();
+            // Simple check: if we are at current hour and try to go forward
+            if(dir === 1 && state.viewingArchiveHour === nowHour) return;
+
+            openHourlyArchive(nextHour);
         }
 
         // --- PRECISE GEOMETRIC ANALOG CLOCK GENERATOR (FIXED ALIGNMENT) ---
@@ -1825,6 +1982,105 @@
             }, 800); 
         }
 
+        // --- SMART PWS WIDGET LOGIC ---
+        
+        function updateTopRightPws() {
+            // 6-second rotation
+            const slideDuration = 6000;
+            
+            if (state.pwsInterval) clearInterval(state.pwsInterval);
+            
+            state.pwsInterval = setInterval(() => {
+                if(state.isLocked) return;
+                renderPwsSlide();
+                state.pwsSlide++;
+            }, slideDuration);
+            
+            renderPwsSlide(); // Initial render
+        }
+
+        function renderPwsSlide() {
+            const data = state.pwsData;
+            // Define slides (groups of data) - NOW INCLUDES WIND DIR
+            const slides = [
+                // Slide 0: Basic (Temp + Cond)
+                {
+                    html: `
+                    <div class="tr-group active">
+                        <div class="tr-value-box">
+                            <div class="tr-label">HŐMÉRSÉKLET</div>
+                            <div class="tr-val c-temp"><i class="fas fa-temperature-half tr-icon"></i>${data.temp}<span class="tr-unit">°C</span></div>
+                        </div>
+                        <div class="tr-value-box" style="align-items:flex-end;">
+                            <div class="tr-label">HŐÉRZET</div>
+                            <div class="tr-val c-temp">${data.feel}<span class="tr-unit">°C</span></div>
+                        </div>
+                    </div>`
+                },
+                // Slide 1: Wind
+                {
+                    html: `
+                    <div class="tr-group active">
+                        <div class="tr-value-box">
+                            <div class="tr-label">SZÉL (10M)</div>
+                            <div class="tr-val c-wind"><i class="fas fa-wind tr-icon"></i>${data.wind}<span class="tr-unit">KM/H</span></div>
+                        </div>
+                        <div class="tr-value-box" style="align-items:flex-end;">
+                            <div class="tr-label">SZÉLLÖKÉS</div>
+                            <div class="tr-val c-wind">${data.gust || '--'}<span class="tr-unit">KM/H</span></div>
+                        </div>
+                    </div>`
+                },
+                 // NEW Slide 2: Wind Direction
+                {
+                    html: `
+                    <div class="tr-group active" style="justify-content:center;">
+                        <div class="tr-value-box" style="align-items:center; width:100%;">
+                            <div class="tr-label">URALKODÓ SZÉLIRÁNY</div>
+                            <div class="tr-val c-wind" style="font-size:1.1rem; margin-top:5px;">
+                                <i class="fas fa-compass tr-icon" style="margin-right:8px;"></i>${data.windDir}
+                            </div>
+                        </div>
+                    </div>`
+                },
+                // Slide 3: Rain & Pressure
+                {
+                    html: `
+                    <div class="tr-group active">
+                        <div class="tr-value-box">
+                            <div class="tr-label">LÉGNYOMÁS</div>
+                            <div class="tr-val c-press"><i class="fas fa-gauge tr-icon"></i>${data.pressure}<span class="tr-unit">hPa</span></div>
+                        </div>
+                        <div class="tr-value-box" style="align-items:flex-end;">
+                            <div class="tr-label">CSAPADÉK (MA)</div>
+                            <div class="tr-val c-rain">${data.rainDay}<span class="tr-unit">MM</span></div>
+                        </div>
+                    </div>`
+                },
+                 // Slide 4: Enviro (Hum / UV)
+                {
+                    html: `
+                    <div class="tr-group active">
+                        <div class="tr-value-box">
+                            <div class="tr-label">PÁRATARTALOM</div>
+                            <div class="tr-val c-temp"><i class="fas fa-droplet tr-icon"></i>${data.humidity}<span class="tr-unit">%</span></div>
+                        </div>
+                        <div class="tr-value-box" style="align-items:flex-end;">
+                            <div class="tr-label">UV INDEX</div>
+                            <div class="tr-val c-uv">${data.uv}<span class="tr-unit">UV</span></div>
+                        </div>
+                    </div>`
+                }
+            ];
+
+            const current = slides[state.pwsSlide % slides.length];
+            DOM.trPwsContent.innerHTML = current.html;
+            
+            // Animate bar (now hidden but logic kept for structure if needed later)
+            // DOM.trBar removed via CSS display:none
+        }
+
+
         function forceRefreshAll() { backgroundRefresh(true); alert("FRISSÍTÉS ELKÜLDVE"); }
         function manualRefresh() { const btn = document.getElementById('manual-refresh-btn'); btn.innerHTML = '[ FRISSÍTÉS... ]'; btn.classList.add('loading'); state.manualRefreshRequested = true; state.tickerIdx = -1; state.mainIdx = -1; crawlNews(true); fetchCurrency(); fetchWunderground(); setTimeout(() => { cycleMain(true); }, 1500); setTimeout(() => { btn.innerHTML = `[ ↻ FRISSÍTÉS ]`; btn.classList.remove('loading'); }, 5000); }
         function testBreaking() { const now = new Date(); const longDesc = "EZ EGY TESZT ÜZENET. Ez a szöveg szándékosan hosszúra lett nyújtva, hogy meghaladja a rendelkezésre álló keret méretét."; document.getElementById('bk-card-headline').innerText = "RENDKÍVÜLI HÍR: TESZT ÜZEMMÓD"; document.getElementById('bk-card-body').innerHTML = `<div class="bk-scroll-wrapper">${longDesc}</div>`; document.getElementById('bk-card-meta').innerText = `${now.toLocaleTimeString('hu-HU')} • TESZT`; DOM.bkCardClickable.dataset.link = "#"; state.isBreakingActive = true; DOM.sidebar.classList.add('breaking-active'); setTimeout(() => { const wrapper = document.querySelector('.bk-scroll-wrapper'); if(wrapper) wrapper.style.transform = `translateY(-50px)`; }, 2000); setTimeout(() => { DOM.sidebar.classList.remove('breaking-active'); state.isBreakingActive = false; }, 10000); }
@@ -1880,6 +2136,7 @@
             state.mainIdx = -1;
             cycleMain(); 
             startMainLoop();
+            updateTopRightPws(); // Start PWS widget rotation
             if(state.tickerIdx === 0) cycleTicker(1); 
         } 
         } catch(e) {} }
@@ -1928,14 +2185,33 @@
         function setMeteoBackground() { const now = new Date(); const month = now.getMonth(); let colors = ['#001a4d', '#004d66']; DOM.smBg.style.backgroundImage = `none`; DOM.smBg.style.background = `linear-gradient(135deg, ${colors[0]} 0%, #000 100%)`; if(!document.querySelector('.sm-pattern')) { const pat = document.createElement('div'); pat.className = 'sm-pattern'; DOM.smBg.appendChild(pat); } }
         async function fetchWeatherDotCom(lat, lon) { try { const url = `https://api.weather.com/v3/wx/observations/current?geocode=${lat},${lon}&format=json&units=m&language=hu-HU&apiKey=${WU_KEY}`; const res = await fetch(url); if(res.ok) return await res.json(); return null; } catch(e) { return null; } }
         function mapOpenMeteoToWUCode(wmoCode) { if (wmoCode === 0) return 32; if ([1, 2, 3].includes(wmoCode)) return 30; if ([45, 48].includes(wmoCode)) return 20; if ([51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82].includes(wmoCode)) return 11; if ([71, 73, 75, 77, 85, 86].includes(wmoCode)) return 16; if ([95, 96, 99].includes(wmoCode)) return 4; return 26; }
-        function normalizeOpenMeteo(omData) { return { temperature: omData.current.temperature_2m, temperatureFeelsLike: omData.current.apparent_temperature, iconCode: mapOpenMeteoToWUCode(omData.current.weathercode), windSpeed: omData.current.windspeed_10m, relativeHumidity: omData.current.relative_humidity_2m, windDirection: omData.current.wind_direction_10m || 0, precip24Hour: 0, dayOrNight: omData.current.is_day === 1 ? 'D' : 'N', provider: 'OPEN-METEO (BACKUP)' }; }
+        
+        // --- UPDATED NORMALIZATION TO INCLUDE EXTRA FIELDS ---
+        function normalizeOpenMeteo(omData) { 
+            return { 
+                temperature: omData.current.temperature_2m, 
+                temperatureFeelsLike: omData.current.apparent_temperature, 
+                iconCode: mapOpenMeteoToWUCode(omData.current.weathercode), 
+                windSpeed: omData.current.windspeed_10m, 
+                relativeHumidity: omData.current.relative_humidity_2m, 
+                windDirection: omData.current.wind_direction_10m || 0, 
+                precip24Hour: 0, 
+                dayOrNight: omData.current.is_day === 1 ? 'D' : 'N', 
+                provider: 'OPEN-METEO (BACKUP)',
+                // Added extras:
+                visibility: omData.current.visibility ? omData.current.visibility / 1000 : null, // convert m to km if exists
+                temperatureDewPoint: omData.current.dewpoint_2m || null 
+            }; 
+        }
+
         async function fetchMeteoRobust(lat, lon) { 
             const urls = []; 
             urls.push({ url: `https://api.weather.com/v3/wx/observations/current?geocode=${lat},${lon}&format=json&units=m&language=hu-HU&apiKey=${WU_KEY}`, type: 'WU', useProxy: false }); 
             const shuffledProxies = shuffle([...PROXIES]).slice(0, 3); 
             shuffledProxies.forEach(proxy => { urls.push({ url: `https://api.weather.com/v3/wx/observations/current?geocode=${lat},${lon}&format=json&units=m&language=hu-HU&apiKey=${WU_KEY}`, type: 'WU', useProxy: true, proxyUrl: proxy }); }); 
-            urls.push({ url: `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,rain,showers,snowfall,weathercode,cloud_cover,pressure_msl,surface_pressure,windspeed_10m,wind_direction_10m&timezone=auto`, type: 'OM', useProxy: false }); 
-            urls.push({ url: `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,rain,showers,snowfall,weathercode,cloud_cover,pressure_msl,surface_pressure,windspeed_10m,wind_direction_10m&timezone=auto`, type: 'OM', useProxy: true, proxyUrl: shuffledProxies[0] }); 
+            // UPDATED QUERY TO INCLUDE DEWPOINT AND VISIBILITY
+            urls.push({ url: `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,rain,showers,snowfall,weathercode,cloud_cover,pressure_msl,surface_pressure,windspeed_10m,wind_direction_10m,dewpoint_2m,visibility&timezone=auto`, type: 'OM', useProxy: false }); 
+            urls.push({ url: `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,rain,showers,snowfall,weathercode,cloud_cover,pressure_msl,surface_pressure,windspeed_10m,wind_direction_10m,dewpoint_2m,visibility&timezone=auto`, type: 'OM', useProxy: true, proxyUrl: shuffledProxies[0] }); 
             
             for (const attempt of urls) { 
                 try { 
@@ -1962,7 +2238,40 @@
         async function fetchOpenMeteoForecast(lat, lon) { try { const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum,precipitation_probability_max,windspeed_10m_max,sunshine_duration,showers_sum,snowfall_sum&current=surface_pressure,visibility&hourly=temperature_2m,weathercode,precipitation_probability,windspeed_10m,is_day,snowfall,rain&timezone=auto`; const res = await fetch(url); if(res.ok) return await res.json(); return null; } catch(e) { return null; } }
 
         async function renderSpecialBatch(stations, title) { DOM.smTitle.innerText = title; DOM.smGrid.innerHTML = ''; stations.forEach((s, idx) => { const div = document.createElement('div'); div.className = title.includes('EXTRÉM') ? 'sm-card-item extreme-card' : 'sm-card-item'; div.id = `wx-card-${idx}`; div.innerHTML = `<div class="sm-top"><div class="sm-name"><img src="https://flagcdn.com/24x18/${s.code}.png" style="margin-right:8px; border-radius:2px;">${s.name}</div></div><div class="sm-body" style="opacity:0.5; animation: blink 1s infinite;"><div class="sm-temp-box">--°</div><div class="sm-details">ADATKERESÉS...</div></div>`; DOM.smGrid.appendChild(div); }); stations.forEach(async (station, i) => { const d = await fetchMeteoRobust(station.lat, station.lon); const card = document.getElementById(`wx-card-${i}`); if (!card) return; if (d) { const wmo = getWmoDesc(d.iconCode, d.dayOrNight); const temp = formatVal(d.temperature); const feel = formatVal(d.temperatureFeelsLike); const hum = d.relativeHumidity; const wind = formatVal(d.windSpeed); const prov = d.provider || 'N/A'; card.innerHTML = `<div class="sm-top"><div class="sm-name"><img src="https://flagcdn.com/24x18/${station.code}.png" style="margin-right:8px; border-radius:2px;">${station.name}</div><div class="sm-cond" style="color:${d.provider === 'OPEN-METEO (BACKUP)' ? '#ffcc00' : '#aaa'}">${wmo.i} ${wmo.t}</div></div><div class="sm-body"><div class="sm-temp-box">${temp}°</div><div class="sm-details">ÉRZET: ${feel}°<br>PÁRA: ${hum}%<br>SZÉL: ${wind} km/h</div></div><div class="sm-watermark">FORRÁS: ${prov}</div>`; const body = card.querySelector('.sm-body'); if(body) { body.style.opacity = '1'; body.style.animation = 'none'; } } else { card.innerHTML = `<div class="sm-top"><div class="sm-name"><img src="https://flagcdn.com/24x18/${station.code}.png" style="margin-right:8px; border-radius:2px;">${station.name}</div></div><div class="sm-body"><div class="sm-temp-box" style="font-size:1.5rem; color:#666;">OFFLINE</div></div>`; } }); document.getElementById('sm-update-time').innerText = getTime(); }
-        async function renderNyiregyhazaDetailed() { DOM.smTitle.innerText = "NYÍREGYHÁZA - RÉSZLETES PILLANATKÉP"; DOM.smGrid.innerHTML = ''; let d = await fetchWeatherDotCom(47.95, 21.71); if(d) { const wmo = getWmoDesc(d.iconCode, d.dayOrNight); const metrics = [ { label: "HŐMÉRSÉKLET", val: `${formatVal(d.temperature)}°C`, icon: "🌡️" }, { label: "HŐÉRZET", val: `${formatVal(d.temperatureFeelsLike)}°C`, icon: "🤔" }, { label: "KÖRÜLMÉNYEK", val: wmo.t, icon: wmo.i }, { label: "SZÉL", val: `${formatVal(d.windSpeed)} KM/H`, icon: "💨" }, { label: "SZÉLLÖKÉS", val: `${d.windGust ? formatVal(d.windGust) : '--'} KM/H`, icon: "🌬️" }, { label: "SZÉLIRÁNY", val: getWind(d.windDirection), icon: "🧭" }, { label: "CSAPADÉK", val: `${formatVal(d.precip24Hour)} MM`, icon: "🌧️" }, { label: "PÁRATARTALOM", val: `${d.relativeHumidity}%`, icon: "💧" }, { label: "HARMATPONT", val: `${formatVal(d.temperatureDewPoint)}°C`, icon: "🌫️" }, { label: "LÉGNYOMÁS", val: `${d.pressureAltimeter.toFixed(0)} hPa`, icon: "⏲️" }, { label: "UV INDEX", val: d.uvIndex, icon: "☀️" }, { label: "LÁTÓTÁVOLSÁG", val: `${formatVal(d.visibility)} KM`, icon: "👁️" } ]; metrics.forEach((m, i) => { const div = document.createElement('div'); div.className = 'sm-card-item ny-detail-card'; div.style.animationDelay = `${i * 0.05}s`; div.innerHTML = `<div style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:100%;"><div class="ny-d-label">${m.label}</div><div class="ny-d-icon">${m.icon}</div><div class="ny-d-val">${m.val}</div></div><div class="sm-watermark">DATA: WEATHER.COM</div>`; DOM.smGrid.appendChild(div); }); } else { DOM.smGrid.innerHTML = '<div style="color:#fff; font-size:2rem; width:100%; text-align:center;">ADATÁTVITELI HIBA (PWS OFFLINE)</div>'; } document.getElementById('sm-update-time').innerText = getTime(); }
+        
+        async function renderNyiregyhazaDetailed() { 
+            DOM.smTitle.innerText = "NYÍREGYHÁZA - RÉSZLETES PILLANATKÉP"; DOM.smGrid.innerHTML = ''; 
+            // Try fetching robustly to get extra fields if simple PWS fails
+            let d = await fetchMeteoRobust(47.95, 21.71); 
+            
+            if(d) { 
+                const wmo = getWmoDesc(d.iconCode, d.dayOrNight); 
+                const metrics = [ 
+                    { label: "HŐMÉRSÉKLET", val: `${formatVal(d.temperature)}°C`, icon: "🌡️" }, 
+                    { label: "HŐÉRZET", val: `${formatVal(d.temperatureFeelsLike)}°C`, icon: "🤔" }, 
+                    { label: "KÖRÜLMÉNYEK", val: wmo.t, icon: wmo.i }, 
+                    { label: "SZÉL", val: `${formatVal(d.windSpeed)} KM/H`, icon: "💨" }, 
+                    { label: "SZÉLLÖKÉS", val: `${d.windGust ? formatVal(d.windGust) : '--'} KM/H`, icon: "🌬️" }, 
+                    { label: "SZÉLIRÁNY", val: getWind(d.windDirection), icon: "🧭" }, 
+                    { label: "CSAPADÉK", val: `${formatVal(d.precip24Hour)} MM`, icon: "🌧️" }, 
+                    { label: "PÁRATARTALOM", val: `${d.relativeHumidity}%`, icon: "💧" }, 
+                    { label: "HARMATPONT", val: `${formatVal(d.temperatureDewPoint)}°C`, icon: "🌫️" }, 
+                    { label: "LÉGNYOMÁS", val: `${d.pressureAltimeter ? d.pressureAltimeter.toFixed(0) : d.pressure} hPa`, icon: "⏲️" }, 
+                    { label: "UV INDEX", val: d.uvIndex !== undefined ? d.uvIndex : '--', icon: "☀️" }, 
+                    { label: "LÁTÓTÁVOLSÁG", val: `${formatVal(d.visibility)} KM`, icon: "👁️" } 
+                ]; 
+                
+                metrics.forEach((m, i) => { 
+                    const div = document.createElement('div'); 
+                    div.className = 'sm-card-item ny-detail-card'; 
+                    div.style.animationDelay = `${i * 0.05}s`; 
+                    div.innerHTML = `<div style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:100%;"><div class="ny-d-label">${m.label}</div><div class="ny-d-icon">${m.icon}</div><div class="ny-d-val">${m.val}</div></div><div class="sm-watermark">DATA: ${d.provider || 'IBM/OPEN-METEO'}</div>`; 
+                    DOM.smGrid.appendChild(div); 
+                }); 
+            } else { DOM.smGrid.innerHTML = '<div style="color:#fff; font-size:2rem; width:100%; text-align:center;">ADATÁTVITELI HIBA (PWS OFFLINE)</div>'; } 
+            document.getElementById('sm-update-time').innerText = getTime(); 
+        }
+
         async function renderHourlyForecast(offset = 0) { DOM.smGrid.innerHTML = ''; const result = await fetchHourlyRobust(47.95, 21.71); if(result && result.data) { const div = document.createElement('div'); div.className = 'hourly-detailed-card'; const now = new Date(); now.setHours(now.getHours() + offset); const hStart = now.getHours(); const hEnd = (hStart + 6) % 24; const rangeStr = `${hStart}:00 - ${hEnd}:00`; let html = `<div class="hd-header-sub">IDŐSZAK: ${rangeStr}</div>`; if (result.source === 'WU') { const d = result.data; for(let i = offset; i < offset + 6; i++) { if (!d.temperature[i]) break; const t = d.temperature[i]; const dn = d.dayOrNight ? d.dayOrNight[i] : 'D'; const iconCode = d.iconCode[i]; const wmo = getWmoDesc(iconCode, dn); const p = d.precipChance[i] || 0; const w = d.windSpeed[i] || 0; const hum = d.relativeHumidity[i] || 0; const uv = d.uvIndex[i] || 0; const phrase = d.wxPhraseLong[i] || wmo.t; const dateObj = new Date(d.validTimeLocal[i]); const timeStr = dateObj.getHours() + ":00"; html += ` <div class="hd-row"><div class="hd-time">${timeStr}</div><div class="hd-icon">${wmo.i}</div><div class="hd-desc-text" title="${phrase}">${phrase.replace("HÓ","HAVAZÁS")}</div><div class="hd-temp">${Math.round(t)}°</div><div class="hd-meta"><div>ESÉLY: ${p}%</div><div>PÁRA: ${hum}%</div><div style="font-size:0.75rem;">UV: ${uv}</div></div></div>`; } div.innerHTML = html + `<div class="sm-watermark">DATA: WEATHER.COM HOURLY (DETAILED)</div>`; } else { const d = result.data; const currentHour = new Date().getHours(); for(let i = 1 + offset; i <= 6 + offset; i++) { const targetIdx = currentHour + i; if(targetIdx >= d.hourly.time.length) break; const t = d.hourly.temperature_2m[targetIdx]; const c = d.hourly.weathercode[targetIdx]; const p = d.hourly.precipitation_probability[targetIdx]; const w = d.hourly.windspeed_10m[targetIdx]; const isDay = d.hourly.is_day[targetIdx]; const timeStr = new Date(d.hourly.time[targetIdx]).getHours() + ":00"; 
         
         let precipAmount = '';
@@ -2137,47 +2446,47 @@
                     <p>${precipText}</p>
                     <p>Szél: ${d.daily.windspeed_10m_max[i].toFixed(0)} km/h</p>
                  </div>`;
-             DOM.smGrid.appendChild(div);
-         }
-    } else {
-        DOM.smGrid.style.display = 'grid'; 
-        DOM.smGrid.innerHTML = '<div style="color:#fff; font-size:2rem; width:100%; text-align:center;">ADATÁTVITELI HIBA (FORECAST)</div>'; 
-    } 
-    document.getElementById('sm-update-time').innerText = getTime(); 
-}
+                 DOM.smGrid.appendChild(div);
+             }
+        } else {
+            DOM.smGrid.style.display = 'grid'; 
+            DOM.smGrid.innerHTML = '<div style="color:#fff; font-size:2rem; width:100%; text-align:center;">ADATÁTVITELI HIBA (FORECAST)</div>'; 
+        } 
+        document.getElementById('sm-update-time').innerText = getTime(); 
+    }
 
-async function renderRealAstro() { 
-    DOM.smGrid.innerHTML = ''; DOM.smGrid.style.display = 'grid'; 
-    const data = await fetchOpenMeteoForecast(47.95, 21.71); 
-    if(data && data.daily) { 
-        const todayIdx = 0; 
-        const rise = new Date(data.daily.sunrise[todayIdx]).toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'}); 
-        const set = new Date(data.daily.sunset[todayIdx]).toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'}); 
-        const uv = data.daily.uv_index_max[todayIdx]; 
-        const sunshine = (data.daily.sunshine_duration[todayIdx] / 3600).toFixed(1); 
-        const rainProb = data.daily.precipitation_probability_max[todayIdx]; 
-        const windMax = data.daily.windspeed_10m_max[todayIdx]; 
-        const pressure = data.current ? data.current.surface_pressure.toFixed(0) : "1013"; 
-        const vis = data.current ? (data.current.visibility / 1000).toFixed(1) : "10"; 
-        
-        const items = [ 
-            { l: "NAPKELTE", v: rise, i: "🌅" }, 
-            { l: "NAPNYUGTA", v: set, i: "🌇" }, 
-            { l: "UV MAXIMUM", v: uv.toFixed(1), i: "☀️" }, 
-            { l: "LÉGNYOMÁS", v: `${pressure} hPa`, i: "🍃" }, 
-            { l: "NAPSÜTÉS", v: `${sunshine} ÓRA`, i: "😎" }, 
-            { l: "CSAPADÉK ESÉLY", v: `${rainProb}%`, i: "☔" }, 
-            { l: "MAX SZÉL", v: `${Math.round(windMax)} KM/H`, i: "💨" }, 
-            { l: "LÁTÓTÁVOLSÁG", v: `${vis} KM`, i: "👁️" } 
-        ]; 
-        
-        items.forEach(d => { 
-            const div = document.createElement('div'); 
-            div.className = 'sm-card-item astro-card'; 
-            div.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;"><div class="ny-d-label">${d.l}</div><div style="font-size:2.5rem; margin:5px 0;">${d.i}</div><div class="ny-d-val" style="font-size:1.5rem;">${d.v}</div></div><div class="sm-watermark">DATA: OPEN-METEO</div>`; 
-            DOM.smGrid.appendChild(div); 
-        }); 
-    } document.getElementById('sm-update-time').innerText = getTime();
+    async function renderRealAstro() { 
+        DOM.smGrid.innerHTML = ''; DOM.smGrid.style.display = 'grid'; 
+        const data = await fetchOpenMeteoForecast(47.95, 21.71); 
+        if(data && data.daily) { 
+            const todayIdx = 0; 
+            const rise = new Date(data.daily.sunrise[todayIdx]).toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'}); 
+            const set = new Date(data.daily.sunset[todayIdx]).toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'}); 
+            const uv = data.daily.uv_index_max[todayIdx]; 
+            const sunshine = (data.daily.sunshine_duration[todayIdx] / 3600).toFixed(1); 
+            const rainProb = data.daily.precipitation_probability_max[todayIdx]; 
+            const windMax = data.daily.windspeed_10m_max[todayIdx]; 
+            const pressure = data.current ? data.current.surface_pressure.toFixed(0) : "1013"; 
+            const vis = data.current ? (data.current.visibility / 1000).toFixed(1) : "10"; 
+            
+            const items = [ 
+                { l: "NAPKELTE", v: rise, i: "🌅" }, 
+                { l: "NAPNYUGTA", v: set, i: "🌇" }, 
+                { l: "UV MAXIMUM", v: uv.toFixed(1), i: "☀️" }, 
+                { l: "LÉGNYOMÁS", v: `${pressure} hPa`, i: "🍃" }, 
+                { l: "NAPSÜTÉS", v: `${sunshine} ÓRA`, i: "😎" }, 
+                { l: "CSAPADÉK ESÉLY", v: `${rainProb}%`, i: "☔" }, 
+                { l: "MAX SZÉL", v: `${Math.round(windMax)} KM/H`, i: "💨" }, 
+                { l: "LÁTÓTÁVOLSÁG", v: `${vis} KM`, i: "👁️" } 
+            ]; 
+            
+            items.forEach(d => { 
+                const div = document.createElement('div'); 
+                div.className = 'sm-card-item astro-card'; 
+                div.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;"><div class="ny-d-label">${d.l}</div><div style="font-size:2.5rem; margin:5px 0;">${d.i}</div><div class="ny-d-val" style="font-size:1.5rem;">${d.v}</div></div><div class="sm-watermark">DATA: OPEN-METEO</div>`; 
+                DOM.smGrid.appendChild(div); 
+            }); 
+        } document.getElementById('sm-update-time').innerText = getTime();
 }
 
 async function renderRealAirQuality() { 
@@ -2192,7 +2501,7 @@ async function renderRealAirQuality() {
             if(aqi > 20) { aqiText = "JÓ"; aqiColor = "#00d4ff"; } 
             if(aqi > 50) { aqiColor = "#fc0"; aqiText = "MEGFELELŐ"; } 
             if(aqi > 100) { aqiColor = "#f90"; aqiText = "SZENNYEZETT"; }
-            if(aqi > 150) { aqiColor = "#f00"; aqiText = "VESZÉLYES"; }
+            if(aqi > 100) { aqiColor = "#f00"; aqiText = "VESZÉLYES"; }
 
             const items = [ 
                 { t: "LEVEGŐMINŐSÉG (AQI)", v: `${aqi} - ${aqiText}`, c: aqiColor }, 
@@ -2226,30 +2535,70 @@ function getFinancialNews() {
     return items;
 }
 
-function closeAllOverlays() {
-    // This function handles manual closing of specific overlays (Meteo, Archive)
-    // NOT the Big Clock (which is handled by finishClockSequence)
-    
-    DOM.special.classList.remove('active'); 
-    DOM.progGuide.classList.remove('active');
-    DOM.hourlyArchiveOverlay.classList.remove('active');
-    
-    // Ensure UI is visible (remove soft-hide)
-    const uiList = ['ui-top', 'ui-right', 'ui-left', 'ui-bottom', 'program-dock', 'logo-box'];
-    uiList.forEach(id => {
-        const el = document.getElementById(id);
-        if(el) el.classList.remove('soft-hide', 'force-hide');
-    });
-    
-    state.isLocked = false;
-    state.isSpecial = false;
-    
-    // Restore logo state if needed
-    animateLogoIn();
+let finNewsIdx = 0;
+function renderFinancialNewsCard() {
+    // This function is kept for logic but slot is removed from DOM in default state
+    // Kept to prevent errors
+}
 
+// REMOVED LOGIC STUBS
+function triggerClosingNews() { console.log("Removed"); }
+function triggerSummaryMode() { console.log("Removed"); }
+function triggerEconomyMode() { console.log("Removed"); }
+
+function closeAllOverlays() {
+    // DOM.summary removal not needed as summary overlay removed from active use
+    DOM.special.classList.remove('active'); DOM.progGuide.classList.remove('active');
+    DOM.logoBox.classList.remove('center-stage');
+    DOM.logoBox.classList.remove('high-z');
+    DOM.logoBox.classList.remove('logo-gradual-zoom');
+    DOM.logoBox.style.transform = '';
+    
+    // RESTORE LOGO DEFAULT STATE
+    DOM.logoBox.classList.remove('logo-exit');
+    DOM.logoBox.classList.add('logo-entry'); 
+    
+    clearInterval(state.summaryInterval);
+    if(state.summaryTimer.interval) clearInterval(state.summaryTimer.interval);
+    if(state.finNewsInterval) clearInterval(state.finNewsInterval);
+    state.summaryTimer.isProviderView = false;
+    clearTimeout(state.specialMeteoInterval);
+    clearTimeout(state.meteoPhaseTimer);
+    clearTimeout(state.bigClockTimeout);
+    
+    // CRITICAL FIX: Reset clock state
+    state.isClockRunning = false;
+    state.clockPhase = 0;
+    
+    state.isSummary = false;
+    state.isSpecial = false;
+    toggleLiveBadge(false);
+    DOM.liveBadge.classList.remove('delayed-visible');
+    // document.querySelector('.summary-embedded-branding').style.display = 'flex'; // Removed
     setTimeout(() => {
+        if(DOM.summary) DOM.summary.style.display = 'none';
         DOM.special.style.display = 'none';
+        DOM.special.style.pointerEvents = 'none';
+        DOM.bigClockOverlay.style.display = 'none';
+        DOM.bigClockOverlay.classList.remove('active', 'bc-layout-center');
+        DOM.logoBox.style.pointerEvents = 'auto';
+        DOM.logoBox.classList.remove('force-hide');
+        setTimeout(() => DOM.logoBox.classList.remove('logo-fade-out'), 3000);
+        state.isLocked = false;
+        DOM.hourlyArchiveOverlay.classList.remove('active');
     }, 800);
+    
+    // RESTORE UI
+    [ {id:'ui-top',t:'top'}, {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'}, {id:'program-dock', t:'bottom'} ].forEach(ui => {
+        const el = document.getElementById(ui.id);
+        if(el) el.classList.remove(`hide-${ui.t}`, 'soft-hide', 'force-hide');
+    });
+
+    if(DOM.fcAlert) DOM.fcAlert.classList.remove('collision-hidden');
+    const card = document.querySelector('.breaking-card');
+    if(card) card.classList.remove('night-summary-card');
+    DOM.sidebar.classList.remove('breaking-active');
+    if (state.isNightMode) { checkNightMode(); DOM.replayBadge.classList.add('visible'); } else { cycleMain(true); cycleTicker(1); }
 }
 
 function cycleTicker(dir = 1) {
@@ -2269,11 +2618,7 @@ function cycleTicker(dir = 1) {
 function manualTicker(dir) { clearTimeout(state.tickerTimer); cycleTicker(dir); }
 
 function cycleMain(manual = false, preserveIndex = false) {
-    // Overlay strategy: cycleMain continues running in background
-    // Only stop if explicitly special/summary is active and NOT in overlay mode
-    // But here we use overlay, so we let it run unless completely blocked manually
-    
-    if (!state.mainItems.length) return;
+    if (!state.mainItems.length || state.isSpecial || state.isSummary || state.isLocked) return;
 
     if (!manual) { 
         state.mainIdx++; 
@@ -2287,11 +2632,13 @@ function cycleMain(manual = false, preserveIndex = false) {
 
     const item = state.mainItems[state.mainIdx]; state.currentMainLink = item.link;
     
-    // Animation
+    // V20.6: Use container active state for animations
     DOM.mainContainerBox.classList.remove('active');
     
     setTimeout(() => {
-        // Populate
+        if (state.isLocked) return; 
+        
+        // Populate Redesigned Main News Layer (V20.6)
         DOM.mainTitle.innerText = item.title; 
         DOM.mainDesc.innerText = item.desc; 
         
@@ -2313,22 +2660,22 @@ function cycleMain(manual = false, preserveIndex = false) {
         
         img.onerror = () => { img.remove(); DOM.mainTitle.innerText = "KÉP BETÖLTÉSE SIKERTELEN..."; setTimeout(() => cycleMain(), 2000); };
         img.onload = () => { 
+            if(state.isLocked) { img.remove(); return; } 
             img.classList.add('active'); 
             const imgs = DOM.stage.querySelectorAll('.bg-img'); 
             if (imgs.length > 2) imgs[0].remove(); 
 
-            // Trigger Entry
+            // Trigger Entry Animation (V20.6)
             DOM.mainContainerBox.classList.add('active');
         };
         
-        // Progress bar
         DOM.mainPrg.style.transition = 'none'; 
         DOM.mainPrg.style.width = '0%'; 
         setTimeout(() => { 
             DOM.mainPrg.style.transition = 'width 21.8s linear'; 
             DOM.mainPrg.style.width = '100%'; 
         }, 50);
-    }, 600); 
+    }, 600); // Wait for exit transition
 }
 
 function startClock() {
@@ -2336,10 +2683,12 @@ function startClock() {
         const now = new Date(); const m = now.getMinutes(); const s = now.getSeconds();
         const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
         
+        // NEW DISCREET CLOCK UPDATE (Under Logo - Center Aligned)
         if(document.getElementById('clock-time-text')) {
             document.getElementById('clock-time-text').innerText = timeStr;
             document.getElementById('clock-date-text').innerText = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}.`;
             
+            // NEW DAY OF WEEK DISPLAY
             const days = ['VASÁRNAP','HÉTFŐ','KEDD','SZERDA','CSÜTÖRTÖK','PÉNTEK','SZOMBAT'];
             if(DOM.cDayText) DOM.cDayText.innerText = days[now.getDay()];
         }
@@ -2355,39 +2704,34 @@ function startClock() {
         
         updateDevMonitor(); 
         
-        // --- SYNCED TRIGGER LOGIC ---
-        
-        // 1. Logo Exit Animation (58:55) - only if clock not running
+        // --- LOGO EXIT TRIGGER (58:55) ---
+        // 5 seconds BEFORE clock starts at 59:00
         if (m === 58 && s === 55 && !state.isNightMode && !state.logoExitTriggered && !state.isClockRunning) {
              console.log("LOGO ANIMÁCIÓ KI (58:55)");
              state.logoExitTriggered = true;
              animateLogoOut();
         }
 
-        // 2. Big Clock Trigger (59:00)
-        if (m === 59 && s === 0 && !state.isNightMode && !state.isClockRunning) {
+        // --- AUTOMATA INDÍTÁS (59:00) ---
+        // STRICT TRIGGER AT 59:00
+        if (m === 59 && s === 0 && !state.isClockRunning && !state.isNightMode) {
              console.log("AUTOMATA ÓRA INDÍTÁS (59:00)");
              triggerBigClockSequence();
         }
 
-        // 3. Regular Auto Refresh (20 and 40 only)
+        // AUTO REFRESH LOGIC (Only strictly at 20 and 40)
+        // 00 refresh is handled by the hot restart logic inside runBigClockLoop
         if (!state.isNightMode && s === 0) { 
             if (m === 20 || m === 40) { 
                 backgroundRefresh(true, true); 
             } 
         }
         
-        // Ticker cycle
         if (!state.isNightMode && (Date.now() - state.lastTickerUpdate > 12000) && !state.isSpecial && !state.isSummary) { cycleTicker(1); } 
     }, 1000);
 }
 
-function startMainLoop() { 
-    if (state.mainTimer) clearInterval(state.mainTimer); 
-    state.mainTimer = setInterval(() => { 
-        cycleMain(); 
-    }, 22000); 
-}
+function startMainLoop() { if (state.mainTimer) clearInterval(state.mainTimer); state.mainTimer = setInterval(() => { if(!state.isSpecial && !state.isSummary) cycleMain(); }, 22000); }
 
 async function fetchWunderground(silent = false) {
     state.lastWxUpdate = Date.now(); let validReadings = [];
@@ -2395,23 +2739,30 @@ async function fetchWunderground(silent = false) {
     const results = await Promise.allSettled(promises);
     results.forEach((res, index) => { if (res.status === 'fulfilled' && res.value) { const d = res.value; if (d.observations && d.observations.length > 0) { const o = d.observations[0]; if (o && o.metric && typeof o.metric.temp === 'number') { validReadings.push({ temp: o.metric.temp, hum: o.humidity || 50, wind: o.metric.windSpeed || 0, windGust: o.metric.windGust || 0, precipRate: o.metric.precipRate || 0, precipTotal: o.metric.precipTotal || 0, windDir: o.winddir || 0, pressure: o.metric.pressure || 1013, uv: o.uv || 0, id: WU_STATIONS[index] }); } } } });
     
+    // UPDATED LOGIC: If no PWS data, force Open-Meteo fallback immediately
     if (validReadings.length === 0) {
         state.currentWxSource = 'OPEN-METEO (FALLBACK)'; 
+        // Force fallback
         const fallback = await fetchMeteoRobust(47.95, 21.71);
         if(fallback && DOM.headerWxBar) {
              const tempEl = document.getElementById('hwx-temp');
              const windEl = document.getElementById('hwx-wind');
              const condEl = document.getElementById('hwx-cond');
              
+             // Update Top Right Bar
              if(tempEl) tempEl.innerHTML = `${formatVal(fallback.temperature)}°C <span style="font-size:0.7em;opacity:0.7;">(ÉRZET: ${formatVal(fallback.temperatureFeelsLike)}°)</span>`;
              if(windEl) windEl.innerHTML = `<i class="fas fa-wind hwx-icon"></i> ${formatVal(fallback.windSpeed)} KM/H`;
              const wmo = getWmoDesc(fallback.iconCode, fallback.dayOrNight);
+             // JAVÍTOTT WIND DIRECTION DISPLAY
              if(condEl) condEl.innerHTML = `<i class="fas fa-compass hwx-icon" style="color:#ddd;"></i> ${getWind(fallback.windDirection)}`;
              
+             // Also update PWS Data structure for other widgets
              state.pwsData = { temp: formatVal(fallback.temperature), feel: formatVal(fallback.temperatureFeelsLike), wind: formatVal(fallback.windSpeed), windDir: getWind(fallback.windDirection), cond: wmo.t, icon: wmo.i, updated: true, rainRate: "0", rainDay: "0", uv: "0", humidity: fallback.relativeHumidity, pressure: "1013" };
              if(!silent) { updateMiniWidgets(state.pwsData, 0); }
+        } else {
+             if(document.getElementById('hwx-cond')) document.getElementById('hwx-cond').innerText = "OFFLINE";
         }
-        return;
+        return; // Exit function as we used fallback
     }
 
     if (validReadings.length > 0) {
@@ -2419,25 +2770,47 @@ async function fetchWunderground(silent = false) {
         const maxGust = Math.max(...validReadings.map(r => r.windGust)); const maxPrecipRate = Math.max(...validReadings.map(r => r.precipRate)); const maxPrecipTotal = Math.max(...validReadings.map(r => r.precipTotal)); const maxUv = Math.max(...validReadings.map(r => r.uv));
         const windDir = validReadings[0].windDir; const feel = calculateAggregateRealFeel(avgTemp, avgHum, avgWind);
         
+        // PWS LOGIC UPDATED FOR NEW TOP RIGHT BAR (Legacy Code removed from logo area)
+        // Populate #header-wx-bar elements
         if(DOM.headerWxBar) {
             const tempEl = document.getElementById('hwx-temp');
             const windEl = document.getElementById('hwx-wind');
             const condEl = document.getElementById('hwx-cond');
             
+            // Update Top Right Bar
             if(tempEl) tempEl.innerHTML = `${formatVal(avgTemp)}°C <span style="font-size:0.7em;opacity:0.7;">(ÉRZET: ${formatVal(feel)}°)</span>`;
             if(windEl) windEl.innerHTML = `<i class="fas fa-wind hwx-icon"></i> ${avgWind.toFixed(1)} KM/H`;
+            // JAVÍTOTT WIND DIRECTION DISPLAY (PWS)
             if(condEl) condEl.innerHTML = `<i class="fas fa-compass hwx-icon" style="color:#ddd;"></i> ${getWind(windDir)}`;
              
             state.currentWxSource = `PWS ÁTLAG (${validReadings.length})`;
         }
         
-        state.pwsData = { temp: formatVal(avgTemp), feel: formatVal(feel), wind: formatVal(avgWind), windDir: getWind(windDir), cond: maxPrecipRate > 0 ? "CSAPADÉK" : "SZÁRAZ", icon: maxPrecipRate > 0 ? "🌧️" : "☁️", humidity: avgHum.toFixed(0), pressure: avgPress.toFixed(0), rainRate: formatVal(maxPrecipRate), rainDay: formatVal(maxPrecipTotal), uv: maxUv.toFixed(1), updated: true };
+        state.pwsData = { 
+            temp: formatVal(avgTemp), 
+            feel: formatVal(feel), 
+            wind: formatVal(avgWind), 
+            windDir: getWind(windDir), 
+            cond: maxPrecipRate > 0 ? "CSAPADÉK" : "SZÁRAZ", 
+            icon: maxPrecipRate > 0 ? "🌧️" : "☁️", 
+            humidity: avgHum.toFixed(0), 
+            pressure: avgPress.toFixed(0), 
+            rainRate: formatVal(maxPrecipRate), 
+            rainDay: formatVal(maxPrecipTotal), 
+            uv: maxUv.toFixed(1),
+            gust: maxGust.toFixed(1), // Added Gust
+            updated: true 
+        };
         if(!silent) { updateMiniWidgets(state.pwsData, maxGust); }
     }
 }
 
 function rotatePwsSlot() {
+    // Rotation logic deprecated with new solid weather row, keeping function to prevent crash but it does nothing to old UI
+    // Can optionally rotate the secondary line in the logo weather row
     if(!state.pwsData.updated || !DOM.logoWxText2) return;
+    
+    // Simple toggle between WIND/DIR and HUMIDITY/UV on the second line
     const currentText = DOM.logoWxText2.innerText;
     if(currentText.includes("SZÉL")) {
          DOM.logoWxText2.innerHTML = `PÁRA: ${state.pwsData.humidity}% | UV: ${state.pwsData.uv} | ESŐ: ${state.pwsData.rainDay}mm`;
@@ -2461,12 +2834,16 @@ function clearMini() { state.testMiniRainState = false; state.testMiniAlertState
 
 let pageIdx = 0;
 let rates = null;
+const mockRates = { "EUR": 395, "USD": 365, "CHF": 410, "GBP": 460 };
 
 async function fetchCurrency() {
-    const currentMonth = new Date().getMonth() + 1; 
+    // Logic: Odd Month = API1, Even Month = API2, Fallback = API3
+    const currentMonth = new Date().getMonth() + 1; // 1-12
     const isOdd = currentMonth % 2 !== 0;
     const api1 = {k:'8258c9489622103635e16227fd9dadd7b8d1', n:'API1 (CurrencyAPI)'};
     const api2 = {k:'426709d24c8d4420f140ac7c451db300edfa', n:'API2 (CurrencyAPI)'};
+
+    // Setup priority array based on month
     const priority = isOdd ? [api1, api2] : [api2, api1];
 
     let success = false; 
@@ -2478,7 +2855,7 @@ async function fetchCurrency() {
                 const data = await res.json(); 
                 if(data.valid) { 
                     state.currencyRates = data.rates;
-                    state.currencyBase = 'USD'; 
+                    state.currencyBase = 'USD'; // IMPORTANT: CurrencyAPI base is USD
                     renderCurrency(data.rates, item.n); 
                     success = true; 
                     break; 
@@ -2493,15 +2870,24 @@ async function fetchCurrency() {
             const data = await res.json(); 
             if(data.result === "success") { 
                 state.currencyRates = data.rates;
-                state.currencyBase = 'HUF'; 
+                state.currencyBase = 'HUF'; // IMPORTANT: OpenER base is HUF here
                 renderCurrency(data.rates, 'OPEN-ER (BACKUP)'); 
             } 
         } catch(e) {} 
     }
 }
 
+const renderEcoPage = () => {
+    // This is handled dynamically inside triggerEconomyMode now
+};
+
 function renderCurrency(r, source) {
-    const huf = r.HUF; const eur = huf / r.EUR; const chf = huf / r.CHF; const gbp = huf / r.GBP; const usd = huf;
+    const huf = r.HUF; 
+    const eur = huf / r.EUR; 
+    const chf = huf / r.CHF; 
+    const gbp = huf / r.GBP; 
+    const usd = huf;
+
     const iconStyle = 'width:20px; height:auto; margin-right:8px; vertical-align:middle; border-radius:2px;';
 
     document.getElementById('finance-rows').innerHTML = `
@@ -2530,120 +2916,190 @@ function renderCurrency(r, source) {
 
 async function fetchOther() {
     try {
-        const allStations = [...SIDEBAR_STATIONS, ...EXOTIC_STATIONS]; const batchSize = 10; const batch = [];
-        for(let i=0; i<batchSize; i++) { const idx = (state.stationPointer + i) % allStations.length; batch.push(allStations[idx]); }
-        state.stationPointer = (state.stationPointer + batchSize) % allStations.length;
+        // SIDEBAR_STATIONS már tartalmazza az új bővített listát (magyar + extrém)
+        const allStations = SIDEBAR_STATIONS; 
+        const batchSize = 1; // Egyszerre egyet frissítünk a rotációhoz, de előre lekérhetünk többet is
+        
+        // A rotáció érdekében mindig a következő 10-et kérjük le
+        const batch = [];
+        for(let i=0; i<10; i++) { 
+            const idx = (state.stationPointer + i) % allStations.length; 
+            batch.push(allStations[idx]); 
+        }
+        state.stationPointer = (state.stationPointer + 10) % allStations.length;
+        
         const promises = batch.map(s => fetchMeteoRobust(s.lat, s.lon));
-        const results = await Promise.all(promises); state.weatherData = [];
-        results.forEach((d, i) => { if(d) { state.weatherData.push({ name: batch[i].name, flagCode: batch[i].code, t: formatVal(d.temperature), f: formatVal(d.temperatureFeelsLike), h: d.relativeHumidity, w: formatVal(d.windSpeed), wd: d.windDirection, p: d.pressureAltimeter || 1013, uv: d.uvIndex || 0, v: d.visibility || 10000, iconCode: d.iconCode, dayOrNight: d.dayOrNight || 'D' }); } });
+        const results = await Promise.all(promises); 
+        
+        state.weatherData = [];
+        results.forEach((d, i) => { 
+            if(d) { 
+                state.weatherData.push({ 
+                    name: batch[i].name, 
+                    flagCode: batch[i].code, 
+                    t: formatVal(d.temperature), 
+                    f: formatVal(d.temperatureFeelsLike), 
+                    h: d.relativeHumidity, 
+                    w: formatVal(d.windSpeed), 
+                    wd: d.windDirection, 
+                    p: d.pressureAltimeter || d.pressure || 1013, 
+                    uv: d.uvIndex !== undefined ? d.uvIndex : 0, 
+                    v: d.visibility || 10, 
+                    iconCode: d.iconCode, 
+                    dayOrNight: d.dayOrNight || 'D' 
+                }); 
+            } 
+        });
         updateWeatherCard();
     } catch(e) {}
 }
 
 function updateWeatherCard() {
     if (!state.weatherData.length) return;
-    const w = state.weatherData[state.wxIdx]; const wmo = getWmoDesc(w.iconCode, w.dayOrNight);
-    document.getElementById('city-wx-name').innerHTML = `<img src="https://flagcdn.com/24x18/${w.flagCode}.png" style="margin-right:10px; border-radius:2px;">${w.name.toUpperCase()}`;
-    document.getElementById('wx-rows').innerHTML = `<div class="wx-dashboard"><div class="wx-main-row"><div class="wx-temp-big">${w.t}°</div><div class="wx-right-col"><div class="wx-cond-text" title="${wmo.t}">${wmo.i} ${wmo.t}</div><div class="wx-feels-like">ÉRZET: ${w.f}°</div></div></div><div class="wx-wind-row"><div class="wx-wind-label">SZÉL (10M)</div><div class="wx-wind-val">${w.w} KM/H • ${getWind(w.wd)}</div></div><div class="wx-details-grid"><div class="wx-cell"><span class="wx-c-label">PÁRATARTALOM</span><span class="wx-c-val">${w.h}%</span></div><div class="wx-cell"><span class="wx-c-label">LÉGNYOMÁS</span><span class="wx-c-val">${w.p.toFixed(0)} hPa</span></div><div class="wx-cell"><span class="wx-c-label">UV INDEX</span><span class="wx-c-val">${w.uv}</span></div><div class="wx-cell"><span class="wx-c-label">LÁTÓTÁVOLSÁG</span><span class="wx-c-val">${formatVal(w.v)} KM</span></div></div></div>`;
-    document.getElementById('wx-stamp').innerText = getTime(); state.wxIdx = (state.wxIdx + 1) % state.weatherData.length;
+    const w = state.weatherData[state.wxIdx]; 
+    const wmo = getWmoDesc(w.iconCode, w.dayOrNight);
+    
+    // NÉV + ÉLŐ ADATOK BADGE
+    document.getElementById('city-wx-name').innerHTML = `
+        <div style="display:flex; align-items:center;">
+            <img src="https://flagcdn.com/24x18/${w.flagCode}.png" style="margin-right:10px; border-radius:2px;">
+            ${w.name.toUpperCase()}
+            <span class="wx-live-badge" style="background:#cc0000; color:#fff; font-size:0.6rem; padding:1px 4px; border-radius:2px; margin-left:8px; letter-spacing:1px; box-shadow:0 0 5px rgba(204,0,0,0.5);">ÉLŐ</span>
+        </div>`;
+        
+    document.getElementById('wx-rows').innerHTML = `
+        <div class="wx-dashboard">
+            <div class="wx-main-row">
+                <div class="wx-temp-big">${w.t}°</div>
+                <div class="wx-right-col">
+                    <div class="wx-cond-text" title="${wmo.t}">${wmo.i} ${wmo.t}</div>
+                    <div class="wx-feels-like">ÉRZET: ${w.f}°</div>
+                </div>
+            </div>
+            <div class="wx-wind-row">
+                <div class="wx-wind-label">SZÉL (10M)</div>
+                <div class="wx-wind-val">${w.w} KM/H • ${getWind(w.wd)}</div>
+            </div>
+            <div class="wx-details-grid">
+                <div class="wx-cell"><span class="wx-c-label">PÁRATARTALOM</span><span class="wx-c-val">${w.h}%</span></div>
+                <div class="wx-cell"><span class="wx-c-label">LÉGNYOMÁS</span><span class="wx-c-val">${typeof w.p === 'number' ? w.p.toFixed(0) : w.p} hPa</span></div>
+                <div class="wx-cell"><span class="wx-c-label">UV INDEX</span><span class="wx-c-val">${w.uv}</span></div>
+                <div class="wx-cell"><span class="wx-c-label">LÁTÓTÁVOLSÁG</span><span class="wx-c-val">${formatVal(w.v)} KM</span></div>
+            </div>
+        </div>`;
+        
+    document.getElementById('wx-stamp').innerText = getTime(); 
+    state.wxIdx = (state.wxIdx + 1) % state.weatherData.length;
 }
 
 function checkNightMode() {
     const now = new Date(); const h = now.getHours();
     let isNight = state.forcedNightMode;
-    if(!state.forcedNightMode) {
-        // STRICT NIGHT MODE CHECK: 00:00 to 05:59
-        if (h >= 0 && h < 6) isNight = true;
-    }
+    if(!state.forcedNightMode)
+    {
+            if (h >= 0 && h < 6) isNight = true;
+        }
 
-    if (isNight !== state.isNightMode) { 
-        state.isNightMode = isNight; 
+        if (isNight !== state.isNightMode) { 
+            state.isNightMode = isNight; 
+            if (isNight) { 
+                DOM.tickerWindow.style.display = 'none'; 
+                DOM.tickerNav.style.display ='none'; 
+                DOM.nightMsg.classList.add('active'); 
+                DOM.hourlyNavBar.classList.remove('active');
+                DOM.mainDesc.innerText = "Kérjük várjon, amíg a rendszer betölti az előző nap híreit."; 
+                toggleLiveBadge(false);
+                DOM.replayBadge.classList.add('visible');
+                // Night Logo
+                DOM.logoBox.classList.add('night-theme');
+            } else { 
+                DOM.tickerWindow.style.display = 'block'; 
+                DOM.tickerNav.style.display = 'flex'; 
+                DOM.nightMsg.classList.remove('active'); 
+                DOM.hourlyNavBar.classList.add('active');
+                DOM.replayBadge.classList.remove('visible');
+                // Day Logo
+                DOM.logoBox.classList.remove('night-theme');
+                updateLists(); cycleMain(); cycleTicker(1); 
+            } 
+        }
         if (isNight) { 
-            DOM.tickerWindow.style.display = 'none'; 
-            DOM.tickerNav.style.display = 'none'; 
-            DOM.nightMsg.classList.add('active'); 
-            DOM.hourlyNavBar.classList.remove('active');
-            DOM.mainDesc.innerText = "Kérjük várjon, amíg a rendszer betölti az előző nap híreit."; 
-            toggleLiveBadge(false);
-            DOM.replayBadge.classList.add('visible');
-            DOM.logoBox.classList.add('night-theme');
-        } else { 
-            DOM.tickerWindow.style.display = 'block'; 
-            DOM.tickerNav.style.display = 'flex'; 
-            DOM.nightMsg.classList.remove('active'); 
-            DOM.hourlyNavBar.classList.add('active');
-            DOM.replayBadge.classList.remove('visible');
-            DOM.logoBox.classList.remove('night-theme');
-            updateLists(); cycleMain(); cycleTicker(1); 
-        } 
-    }
-    if (isNight) { 
-        let slot = 0, startHour = 6, endHour = 12, timeText = "REGGELI HÍREK 06:00 - 12:00"; 
-        if (h >= 2 && h < 4) { slot = 1; startHour = 12; endHour = 18; timeText = "DÉLUTÁNI HÍREK 12:00 - 18:00"; } 
-        else if (h >= 4 && h < 6) { slot = 2; startHour = 18; endHour = 24; timeText = "ESTI HÍREK 18:00 - 00:00"; } 
-        
-        const y = new Date(now); y.setDate(y.getDate() - 1); 
-        const tStart = new Date(y).setHours(startHour, 0, 0, 0); const tEnd = new Date(y).setHours(endHour, 0, 0, 0); 
-        let nightItems = state.allNews.filter(n => { const t = n.date.getTime(); return t >= tStart && t < tEnd && n.img; }); 
-        if (nightItems.length === 0) { const fallbackStart = new Date(y).setHours(0,0,0,0); const fallbackEnd = new Date(y).setHours(23,59,59,999); nightItems = [...state.allNews].filter(n => n.img && n.date.getTime() >= fallbackStart && n.date.getTime() <= fallbackEnd).slice(0, 30); }
-        nightItems.sort((a,b) => a.date - b.date); state.mainItems = nightItems; 
-        DOM.nightMsg.innerHTML = `<div class="nm-left"><div class="nm-icon-box">🌙</div><div class="nm-text"><div class="nm-title">ÉJSZAKAI ADÁS - AZ ELŐZŐ NAP HÍREI</div><div class="nm-desc">${timeText}</div></div></div><div class="nm-timeline"><div class="nm-t-item ${slot===0?'active':''}">00-02<br>REGGEL</div><div class="nm-t-item ${slot===1?'active':''}">02-04<br>DÉLUTÁN</div><div class="nm-t-item ${slot===2?'active':''}">04-06<br>ESTE</div></div>`; 
-    }
-}
-
-document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) {
-        const now = new Date(); const m = now.getMinutes(); const s = now.getSeconds();
-        if(DOM.cTimeText) {
-             DOM.cTimeText.innerText = `${String(now.getHours()).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+            let slot = 0, startHour = 6, endHour = 12, timeText = "REGGELI HÍREK 06:00 - 12:00"; 
+            if (h >= 2 && h < 4) { slot = 1; startHour = 12; endHour = 18; timeText = "DÉLUTÁNI HÍREK 12:00 - 18:00"; } 
+            else if (h >= 4 && h < 6) { slot = 2; startHour = 18; endHour = 24; timeText = "ESTI HÍREK 18:00 - 00:00"; } 
+            
+            const y = new Date(now); y.setDate(y.getDate() - 1); 
+            const tStart = new Date(y).setHours(startHour, 0, 0, 0); const tEnd = new Date(y).setHours(endHour, 0, 0, 0); 
+            let nightItems = state.allNews.filter(n => { const t = n.date.getTime(); return t >= tStart && t < tEnd && n.img; }); 
+            if (nightItems.length === 0) { const fallbackStart = new Date(y).setHours(0,0,0,0); const fallbackEnd = new Date(y).setHours(23,59,59,999); nightItems = [...state.allNews].filter(n => n.img && n.date.getTime() >= fallbackStart && n.date.getTime() <= fallbackEnd).slice(0, 30); }
+            nightItems.sort((a,b) => a.date - b.date); state.mainItems = nightItems; 
+            DOM.nightMsg.innerHTML = `<div class="nm-left"><div class="nm-icon-box">🌙</div><div class="nm-text"><div class="nm-title">ÉJSZAKAI ADÁS - AZ ELŐZŐ NAP HÍREI</div><div class="nm-desc">${timeText}</div></div></div><div class="nm-timeline"><div class="nm-t-item ${slot===0?'active':''}">00-02<br>REGGEL</div><div class="nm-t-item ${slot===1?'active':''}">02-04<br>DÉLUTÁN</div><div class="nm-t-item ${slot===2?'active':''}">04-06<br>ESTE</div></div>`; 
         }
-        if (!state.isNightMode && !state.isSpecial) { if (Date.now() - state.lastTickerUpdate > 15000) { cycleTicker(1); } }
     }
-});
 
-function init() {
-    if(DOM.bkCardClickable) DOM.bkCardClickable.onclick = () => { const link = DOM.bkCardClickable.dataset.link; if(link && link !== "#") window.open(link, '_blank'); };
-
-    window.stepMain = function(dir) { 
-        if(!state.mainItems.length || state.isLocked) return; 
-        clearInterval(state.mainTimer); 
-        let newIdx = state.mainIdx + dir;
-        if (newIdx < 0) newIdx = state.mainItems.length - 1;
-        if (newIdx >= state.mainItems.length) newIdx = 0;
-        state.mainIdx = newIdx;
-        cycleMain(true, true); 
-        startMainLoop(); 
-    };
-
-    const uiLeft = document.getElementById('ui-left'); 
-    if(uiLeft) uiLeft.onclick = (e) => { 
-        if (e.target.closest('.main-nav-bar') || e.target.classList.contains('mn-btn')) return; 
-        if (e.target.closest('.main-nav-overlay') || e.target.classList.contains('nav-btn-mini')) return; 
-        
-        if(state.currentMainLink) window.open(state.currentMainLink, '_blank'); 
-    };
-
-    startClock(); startMainLoop(); generateHourlySchedule();
-    const d = document.createElement('div'); d.className='term-line'; d.innerText = ">> RENDSZER KÉSZ"; DOM.term.appendChild(d); DOM.fill.style.width = "100%";
-
-    crawlNews(false); fetchCurrency(); fetchOther(); fetchWunderground();
-
-    // SAFE STARTUP
-    setTimeout(() => { 
-        if(DOM.loader && DOM.loader.parentNode) {
-            state.initialLoadComplete = true; 
-            DOM.loader.style.opacity = 0; 
-            setTimeout(() => DOM.loader.remove(), 1000);
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+            const now = new Date();const m = now.getMinutes(); const s = now.getSeconds();
+            // UI frissítés visszatéréskor (Tab fókusz visszanyerése)
+            if(DOM.cTimeText) {
+                 DOM.cTimeText.innerText = `${String(now.getHours()).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+            }
+            if (!state.isNightMode && !state.isSpecial) { if (Date.now() - state.lastTickerUpdate > 15000) { cycleTicker(1); } }
         }
-    }, 8000);
+    });
 
-    setInterval(updateWeatherCard, 10000); setInterval(fetchOther, 120000); 
-    setInterval(fetchWunderground, 30000); setInterval(checkBreaking, 45000); 
-    setInterval(rotatePwsSlot, 10000); 
-    cycleMain(); cycleTicker();
-}
+    function init() {
+        if(DOM.bkCardClickable) DOM.bkCardClickable.onclick = () => { const link = DOM.bkCardClickable.dataset.link; if(link && link !== "#") window.open(link, '_blank'); };
 
-document.addEventListener('DOMContentLoaded', init);
-</script>
+        // NEW MAIN NAV LOGIC (TOP RIGHT)
+        window.stepMain = function(dir) { 
+            if(!state.mainItems.length || state.isLocked) return; 
+            clearInterval(state.mainTimer); 
+            // Calculate index with wrap-around
+            let newIdx = state.mainIdx + dir;
+            if (newIdx < 0) newIdx = state.mainItems.length - 1;
+            if (newIdx >= state.mainItems.length) newIdx = 0;
+            state.mainIdx = newIdx;
+
+            // Render without auto-increment
+            cycleMain(true, true); 
+            startMainLoop(); 
+        };
+
+        const uiLeft = document.getElementById('ui-left'); 
+        if(uiLeft) uiLeft.onclick = (e) => { 
+            // PREVENT CLICK IF CLICKING NAV
+            if (e.target.closest('.main-nav-bar') || e.target.classList.contains('mn-btn')) return; 
+            if (e.target.closest('.main-nav-overlay') || e.target.classList.contains('nav-btn-mini')) return; 
+            
+            if(state.currentMainLink) window.open(state.currentMainLink, '_blank'); 
+        };
+
+        startClock(); startMainLoop(); generateHourlySchedule();
+        const d = document.createElement('div'); d.className='term-line'; d.innerText = ">> RENDSZER KÉSZ"; DOM.term.appendChild(d); DOM.fill.style.width = "100%";
+
+        crawlNews(false); fetchCurrency(); fetchOther(); fetchWunderground();
+
+        // SAFE STARTUP: Remove loader after 8s even if news fails
+        setTimeout(() => { 
+            if(DOM.loader && DOM.loader.parentNode) {
+                state.initialLoadComplete = true; 
+                DOM.loader.style.opacity = 0; 
+                setTimeout(() => DOM.loader.remove(), 1000);
+            }
+        }, 8000);
+
+        setInterval(updateWeatherCard, 10000); setInterval(fetchOther, 120000); 
+        setInterval(fetchWunderground, 30000); setInterval(checkBreaking, 45000); 
+        setInterval(rotatePwsSlot, 10000); // 10s PWS FLIP
+        
+        // Start Smart PWS Rotation
+        updateTopRightPws();
+
+        cycleMain(); cycleTicker();
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+    </script>
 </body>
 </html>
