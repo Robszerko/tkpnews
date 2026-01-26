@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V20.25 BREAKING EDITION</title>
+    <title>TKP NEWS - V20.26 RAIN ALERT EDITION</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -149,33 +149,43 @@
         /* Hidden Progress Bar */
         .tr-progress { display: none; }
 
-        /* --- LEGACY CUBE BUTTON (GLASS) --- */
+        /* --- NEW DYNAMIC CUBE BUTTON (RAIN AWARE) --- */
         .legacy-btn-cube {
             width: 80px; /* Square width */
             /* Height will stretch to match container */
-            background: rgba(255, 255, 255, 0.1); 
+            background: rgba(255, 255, 255, 0.4); 
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             
             border: 1px solid rgba(255, 255, 255, 0.2); 
             border-radius: 4px; 
             
-            display: flex; flex-direction: column; 
-            align-items: center; justify-content: center;
-            text-decoration: none; 
-            color: #fff; 
-            transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+            cursor: pointer;
         }
 
         .legacy-btn-cube:hover { 
-            background: rgba(255, 255, 255, 0.25); 
+            background: rgba(0, 0, 0, 0.6); 
             border-color: #fff; 
             box-shadow: 0 0 20px rgba(255,255,255,0.3);
             transform: translateY(-2px);
         }
+            .legacy-btn-cube[data-mode="rain"] {
+    background: rgba(0, 0, 0, 0.6) !important;
+}
+        /* CONTENT FACES FOR CUBE */
+        .cube-content {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; 
+            align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+        
+        .cube-content.active { opacity: 1; pointer-events: auto; }
         
         .lbc-icon {
             font-size: 1.8rem; color: #fff; margin-bottom: 5px;
@@ -1009,7 +1019,7 @@
         <div class="tr-pws-widget">
             <div class="tr-pws-header">
                 <span><i class="fas fa-location-dot" style="color:var(--accent); margin-right:5px;"></i>NYÍREGYHÁZA</span>
-                <span class="tr-live-badge">ÉLŐ ADATOK</span>
+                <span class="tr-live-badge">ÉLŐ</span>
             </div>
             <div class="tr-pws-content" id="tr-pws-content">
                 <!-- Content injected via JS -->
@@ -1017,13 +1027,22 @@
             <div class="tr-progress"><div class="tr-bar" id="tr-bar"></div></div>
         </div>
         
-        <!-- LEGACY CUBE BUTTON (REPLACED ICON) -->
-        <a href="https://klikk.hu" target="_blank" class="legacy-btn-cube">
-            <!-- REPLACED ICON -->
-            <i class="fas fa-globe lbc-icon"></i>
-            <div class="lbc-text">KLIKK</div>
-            <div class="lbc-sub">.HU</div>
-        </a>
+        <!-- NEW DYNAMIC CUBE (KLIKK / RAIN ALERT) -->
+        <div id="tr-cube-wrapper" class="legacy-btn-cube" onclick="handleCubeClick()">
+            <!-- FACE 1: DEFAULT KLIKK -->
+            <div id="cube-content-klikk" class="cube-content active">
+                <i class="fas fa-globe lbc-icon"></i>
+                <div class="lbc-text">KLIKK</div>
+                <div class="lbc-sub">.HU</div>
+            </div>
+            
+            <!-- FACE 2: RAIN ALERT -->
+            <div id="cube-content-rain" class="cube-content">
+                <i class="fas fa-cloud-showers-heavy lbc-icon" style="color:#00d4ff; animation: pulse 1s infinite;"></i>
+                <div class="lbc-text" style="color:#fff; font-size:0.7rem;">ESIK</div>
+                <div class="lbc-sub" id="cube-rain-val" style="color:#00d4ff; font-weight:bold;">-- MM</div>
+            </div>
+        </div>
     </div>
 
     <!-- AUTH OVERLAY -->
@@ -1070,6 +1089,8 @@
                 
                 <div class="dev-h" style="margin-top:20px;">SPECIÁLIS METEO GRID TESZT</div>
                  <button class="btn" onclick="safeTrigger(() => triggerSpecialMeteoSequence())">[☁] METEO SHOW (5p - AUTO)</button>
+                 <button class="btn" onclick="testMiniRain(true)">[🌧️] ESŐ TESZT BE (TOP CUBE)</button>
+                 <button class="btn" onclick="testMiniRain(false)">[☀️] ESŐ TESZT KI</button>
                  
                 <div class="dev-h" style="margin-top:20px;">PROXY ÁLLAPOT</div>
                 <div style="font-size:0.8rem; margin-bottom:5px;">
@@ -1643,7 +1664,7 @@
 
         function updateDevMonitor() { 
             if (DOM.dev.style.display === 'none') return; 
-            const now = new Date().getTime(); const elapsedWx = now - state.lastWxUpdate; const nextWx = 30000 - elapsedWx; 
+            const now = new Date().getTime(); const elapsedWx = now - state.lastWxUpdate; const nextWx = 20000 - elapsedWx; // Adjusted to 20s
             DOM.devWxNext.innerText = nextWx > 0 ? (nextWx/1000).toFixed(0) + "s" : "MOST"; DOM.devWxSrc.innerText = state.currentWxSource; 
             let html = ""; state.schedule.forEach(item => { let diff = item.time - now; let status = "VÁRAKOZÁS"; let duration = 0; if(item.type === 'clock') duration = 60000; else if(item.type === 'night_summary') duration = 180000; let timeStr = ""; let rowClass = ""; if (state.isNightMode && item.type !== 'clock' && !item.isNightEvent) { timeStr = "--:--"; status = "<span class='sch-off'>ÜZEMSZÜNET</span>"; rowClass = "opacity:0.5;"; } else { if (diff > 0) { let m = Math.floor(diff / 60000); let s = Math.floor((diff % 60000) / 1000); timeStr = `-${m}:${s.toString().padStart(2,'0')}`; status = "VÁRAKOZÁS"; } else if (diff > -duration) { timeStr = "00:00"; status = "<span class='sch-live'>ADÁSBAN</span>"; } else { timeStr = "---"; status = "VÉGE"; } } html += `<tr style="${rowClass}"><td>${item.label}</td><td class="sch-time">${timeStr}</td><td>${status}</td></tr>`; }); DOM.devScheduleTable.innerHTML = html; DOM.devBkQueue.innerText = state.breakingQueue.length; 
         }
@@ -1797,6 +1818,41 @@
                 { html: `<div class="tr-group active"><div class="tr-value-box"><div class="tr-label">PÁRATARTALOM</div><div class="tr-val c-temp"><i class="fas fa-droplet tr-icon"></i>${data.humidity}<span class="tr-unit">%</span></div></div><div class="tr-value-box" style="align-items:flex-end;"><div class="tr-label">UV INDEX</div><div class="tr-val c-uv">${data.uv}<span class="tr-unit">UV</span></div></div></div>` }
             ];
             const current = slides[state.pwsSlide % slides.length]; DOM.trPwsContent.innerHTML = current.html;
+        }
+
+        // --- DYNAMIC CUBE LOGIC ---
+        function updateCubeWidget() {
+            const rainRate = parseFloat(state.pwsData.rainRate);
+            const rainDay = state.pwsData.rainDay;
+            const klikkFace = document.getElementById('cube-content-klikk');
+            const rainFace = document.getElementById('cube-content-rain');
+            const rainVal = document.getElementById('cube-rain-val');
+            const wrapper = document.getElementById('tr-cube-wrapper');
+
+            if (rainRate > 0 || state.testMiniRainState) { 
+                // Show RAIN ALERT
+                klikkFace.classList.remove('active');
+                rainFace.classList.add('active');
+                rainVal.innerText = `${state.testMiniRainState ? "2.5" : rainDay} MM`;
+                wrapper.style.borderColor = "#00d4ff"; 
+                wrapper.style.boxShadow = "0 0 15px rgba(0, 212, 255, 0.4)";
+                wrapper.dataset.mode = "rain";
+            } else {
+                // Show DEFAULT KLIKK
+                rainFace.classList.remove('active');
+                klikkFace.classList.add('active');
+                wrapper.style.borderColor = "rgba(255, 255, 255, 0.2)"; 
+                wrapper.style.boxShadow = "0 5px 15px rgba(0,0,0,0.3)";
+                wrapper.dataset.mode = "klikk";
+            }
+        }
+
+        function handleCubeClick() {
+            const wrapper = document.getElementById('tr-cube-wrapper');
+            // Only navigate if in standard mode
+            if(wrapper.dataset.mode === 'klikk') {
+                window.open('https://klikk.hu', '_blank');
+            }
         }
 
         function forceRefreshAll() { backgroundRefresh(true); alert("FRISSÍTÉS ELKÜLDVE"); }
@@ -2034,18 +2090,26 @@
             
             if (validReadings.length === 0) {
                 state.currentWxSource = 'OPEN-METEO (FALLBACK)'; const fallback = await fetchMeteoRobust(47.95, 21.71);
-                if(fallback) { state.pwsData = { temp: formatVal(fallback.temperature), feel: formatVal(fallback.temperatureFeelsLike), wind: formatVal(fallback.windSpeed), windDir: getWind(fallback.windDirection), cond: getWmoDesc(fallback.iconCode, fallback.dayOrNight).t, icon: getWmoDesc(fallback.iconCode, fallback.dayOrNight).i, updated: true, rainRate: "0", rainDay: "0", uv: "0", humidity: fallback.relativeHumidity, pressure: "1013" }; if(!silent) { updateMiniWidgets(state.pwsData, 0); } }
+                if(fallback) { 
+                    state.pwsData = { temp: formatVal(fallback.temperature), feel: formatVal(fallback.temperatureFeelsLike), wind: formatVal(fallback.windSpeed), windDir: getWind(fallback.windDirection), cond: getWmoDesc(fallback.iconCode, fallback.dayOrNight).t, icon: getWmoDesc(fallback.iconCode, fallback.dayOrNight).i, updated: true, rainRate: "0", rainDay: "0", uv: "0", humidity: fallback.relativeHumidity, pressure: "1013" }; 
+                    if(!silent) { updateMiniWidgets(state.pwsData, 0); updateCubeWidget(); } 
+                }
                 return;
             }
             const avgTemp = validReadings.reduce((sum, r) => sum + r.temp, 0) / validReadings.length; const avgHum = validReadings.reduce((sum, r) => sum + r.hum, 0) / validReadings.length; const avgWind = validReadings.reduce((sum, r) => sum + r.wind, 0) / validReadings.length; const avgPress = validReadings.reduce((sum, r) => sum + r.pressure, 0) / validReadings.length; const maxGust = Math.max(...validReadings.map(r => r.windGust)); const maxPrecipRate = Math.max(...validReadings.map(r => r.precipRate)); const maxPrecipTotal = Math.max(...validReadings.map(r => r.precipTotal)); const maxUv = Math.max(...validReadings.map(r => r.uv)); const windDir = validReadings[0].windDir; const feel = calculateAggregateRealFeel(avgTemp, avgHum, avgWind);
             state.currentWxSource = `PWS ÁTLAG (${validReadings.length})`;
             state.pwsData = { temp: formatVal(avgTemp), feel: formatVal(feel), wind: formatVal(avgWind), windDir: getWind(windDir), cond: maxPrecipRate > 0 ? "CSAPADÉK" : "SZÁRAZ", icon: maxPrecipRate > 0 ? "🌧️" : "☁️", humidity: avgHum.toFixed(0), pressure: avgPress.toFixed(0), rainRate: formatVal(maxPrecipRate), rainDay: formatVal(maxPrecipTotal), uv: maxUv.toFixed(1), gust: maxGust.toFixed(1), updated: true };
-            if(!silent) { updateMiniWidgets(state.pwsData, maxGust); }
+            if(!silent) { updateMiniWidgets(state.pwsData, maxGust); updateCubeWidget(); }
         }
 
         function rotatePwsSlot() { if(!state.pwsData.updated || !DOM.logoWxText2) return; const currentText = DOM.logoWxText2.innerText; if(currentText.includes("SZÉL")) { DOM.logoWxText2.innerHTML = `PÁRA: ${state.pwsData.humidity}% | UV: ${state.pwsData.uv} | ESŐ: ${state.pwsData.rainDay}mm`; } else { DOM.logoWxText2.innerHTML = `SZÉL: <span class="wx-blue">${state.pwsData.wind} KM/H</span> ${state.pwsData.windDir} (${state.pwsData.pressure} hPa)`; } }
         function updateMiniWidgets(pws, gust) { if(DOM.miniRain && DOM.miniAlert) { const isRaining = parseFloat(pws.rainRate) > 0 || state.testMiniRainState; if(isRaining) { DOM.miniRain.classList.add('active'); const rate = state.testMiniRainState ? "TESZT" : pws.rainRate; const total = state.testMiniRainState ? "0.0" : pws.rainDay; DOM.miniRainTxt.innerHTML = `${rate} MM/H <span class="mini-sub">(NAPI: ${total})</span>`; } else { DOM.miniRain.classList.remove('active'); } const isAlert = gust > 45 || state.testMiniAlertState; if(isAlert) { DOM.miniAlert.classList.add('active'); const val = state.testMiniAlertState ? "TESZT" : gust.toFixed(0); DOM.miniAlertTxt.innerHTML = `VIHAROS SZÉL <span class="mini-sub">(${val} KM/H)</span>`; } else { DOM.miniAlert.classList.remove('active'); } } }
-        function testMiniRain(active) { state.testMiniRainState = active; updateMiniWidgets(state.pwsData, 0); }
+        
+        function testMiniRain(active) { 
+            state.testMiniRainState = active; 
+            updateMiniWidgets(state.pwsData, 0); 
+            updateCubeWidget(); // ALSO UPDATE TOP CUBE
+        }
         function testMiniAlert(active) { state.testMiniAlertState = active; updateMiniWidgets(state.pwsData, 0); }
         function clearMini() { state.testMiniRainState = false; state.testMiniAlertState = false; updateMiniWidgets(state.pwsData, 0); }
 
@@ -2091,7 +2155,17 @@
             const d = document.createElement('div'); d.className='term-line'; d.innerText = ">> RENDSZER KÉSZ"; DOM.term.appendChild(d); DOM.fill.style.width = "100%";
             crawlNews(false); fetchCurrency(); fetchOther(); fetchWunderground();
             setTimeout(() => { if(DOM.loader && DOM.loader.parentNode) { state.initialLoadComplete = true; DOM.loader.style.opacity = 0; setTimeout(() => DOM.loader.remove(), 1000); } }, 8000);
-            setInterval(updateWeatherCard, 10000); setInterval(fetchOther, 120000); setInterval(fetchWunderground, 30000); setInterval(checkBreaking, 45000); setInterval(rotatePwsSlot, 10000); updateTopRightPws(); cycleMain(); cycleTicker();
+            
+            // INTERVALS
+            setInterval(updateWeatherCard, 10000); 
+            setInterval(fetchOther, 120000); 
+            setInterval(fetchWunderground, 20000); // 20s for Rain Alert
+            setInterval(checkBreaking, 45000); 
+            setInterval(rotatePwsSlot, 10000); 
+            
+            updateTopRightPws(); 
+            cycleMain(); 
+            cycleTicker();
         }
 
         document.addEventListener('DOMContentLoaded', init);
