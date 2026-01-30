@@ -589,7 +589,7 @@
                     </div>
                     <div id="cube-content-rain" class="cube-content">
                         <i class="fas fa-cloud-showers-heavy lbc-icon" style="color:#00d4ff; animation: pulse 1s infinite;"></i>
-                        <div class="lbc-text" style="color:#fff; font-size:0.7rem;">ESIK</div>
+                        <div class="lbc-text" style="color:#fff; font-size:0.7rem;">MOST:</div>
                         <div class="lbc-sub" id="cube-rain-val" style="color:#00d4ff; font-weight:bold;">-- MM</div>
                     </div>
                 </div>
@@ -745,7 +745,7 @@
         const SEASONAL_BACKGROUNDS = { spring: ['https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=1920&fit=crop'], summer: ['https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1920&fit=crop'], autumn: ['https://images.unsplash.com/photo-1507371341162-63b5acf0d979?q=80&w=1920&fit=crop'], winter: ['https://images.unsplash.com/photo-1478265409131-1f65c88f965c?q=80&w=1920&fit=crop'] };
         const BACKGROUNDS = { winter_night: SEASONAL_BACKGROUNDS.winter, winter_day: SEASONAL_BACKGROUNDS.winter, dawn: SEASONAL_BACKGROUNDS.spring, day: SEASONAL_BACKGROUNDS.summer, dusk: SEASONAL_BACKGROUNDS.autumn, night: SEASONAL_BACKGROUNDS.winter };
 
-        let state = { allNews: [], tickerItems: [], mainItems: [], weatherData: [], pwsData: { temp: '--', feel: '--', wind: '--', windDir: '', cond: '--', icon: '❓', updated: false, rainRate: 0, rainDay: 0, uv: 0, humidity: 0, pressure: 0, gust: 0 }, tickerIdx: 0, mainIdx: 0, wxIdx: 0, tickerTimer: null, mainTimer: null, isBreaking: false, isSpecial: false, seenBreaking: new Set(), breakingQueue: [], breakingHistory: new Set(), isBreakingActive: false, feedStatus: {}, startTime: Date.now(), currentMainLink: null, currentBreakingLink: null, currentBreakingItem: null, pwsRotationIdx: 0, lastWxUpdate: 0, currentWxSource: '--', lastTickerUpdate: Date.now(), specialMeteoInterval: null, meteoPhaseTimer: null, schedule: [], initialLoadComplete: false, isNightMode: false, forcedNightMode: false, mainTimer: null, weatherAlertCooldown: {}, mainStarted: false, bigClockTimeout: null, isLocked: false, isClockRunning: false, testMiniRainState: false, testMiniAlertState: false, stationPointer: 0, nightSummaryQueue: [], hasFreshNews: false, manualRefreshRequested: false, clockPhase: 0, hourlyTriggered: false, currencyRates: null, currencyBase: 'USD', refreshedThisShow: false, updateTriggered: false, clockFinishTriggered: false, logoExitTriggered: false, pwsSlide: 0, pwsInterval: null, viewingArchiveHour: -1, nextClockTriggerSeconds: 0 };
+        let state = { allNews: [], tickerItems: [], mainItems: [], weatherData: [], pwsData: { temp: '--', feel: '--', wind: '--', windDir: '', cond: '--', icon: '❓', updated: false, rainRate: 0, rainDay: 0, uv: 0, humidity: 0, pressure: 0, gust: 0 }, tickerIdx: 0, mainIdx: 0, wxIdx: 0, tickerTimer: null, mainTimer: null, isBreaking: false, isSpecial: false, seenBreaking: new Set(), breakingQueue: [], breakingHistory: new Set(), isBreakingActive: false, feedStatus: {}, startTime: Date.now(), currentMainLink: null, currentBreakingLink: null, currentBreakingItem: null, pwsRotationIdx: 0, lastWxUpdate: 0, currentWxSource: '--', lastTickerUpdate: Date.now(), specialMeteoInterval: null, meteoPhaseTimer: null, schedule: [], initialLoadComplete: false, isNightMode: false, forcedNightMode: false, mainTimer: null, weatherAlertCooldown: {}, mainStarted: false, bigClockTimeout: null, isLocked: false, isClockRunning: false, testMiniRainState: false, testMiniAlertState: false, stationPointer: 0, nightSummaryQueue: [], hasFreshNews: false, manualRefreshRequested: false, clockPhase: 0, hourlyTriggered: false, currencyRates: null, currencyBase: 'USD', refreshedThisShow: false, updateTriggered: false, clockFinishTriggered: false, logoExitTriggered: false, pwsSlide: 0, pwsInterval: null, viewingArchiveHour: -1, nextClockTriggerSeconds: 0, nextBreakingTriggerTime: 0 };
 
         const DOM = { loader: document.getElementById('loader'), term: document.getElementById('term'), fill: document.getElementById('load-fill'), stage: document.getElementById('stage'), tickerWindow: document.getElementById('ticker-window'), mainContainerBox: document.getElementById('mn-container-box'), mainTitle: document.getElementById('m-title'), mainDesc: document.getElementById('m-desc'), mainCatText: document.getElementById('m-cat-text'), mainMeta: document.getElementById('m-meta'), mainPrg: document.getElementById('m-prg'), trPwsContent: document.getElementById('tr-pws-content'), special: document.getElementById('special-meteo'), smGrid: document.getElementById('sm-grid'), smTitle: document.getElementById('sm-main-title'), smBg: document.getElementById('sm-bg'), feedLog: document.getElementById('feed-log-table'), auth: document.getElementById('auth-overlay'), pin: document.getElementById('pin-input'), dev: document.getElementById('dev-panel'), devWxNext: document.getElementById('dev-wx-next'), devWxSrc: document.getElementById('dev-wx-src'), devBkQueue: document.getElementById('dev-bk-queue'), devScheduleTable: document.getElementById('dev-schedule-table').querySelector('tbody'), logoBox: document.getElementById('logo-box'), liveBadge: document.getElementById('live-badge'), replayBadge: document.getElementById('replay-badge'), nightMsg: document.getElementById('night-msg'), tickerNav: document.getElementById('ticker-nav'), sidebar: document.querySelector('.sidebar'), sidebarFlipper: document.querySelector('.sidebar-flipper'), bkCardHeadline: document.getElementById('bk-card-headline'), bkCardBody: document.getElementById('bk-card-body'), bkCardMeta: document.getElementById('bk-card-meta'), bkCardClickable: document.getElementById('bk-card-clickable'), fxSourceContainer: document.getElementById('fx-source-container'), bigClockOverlay: document.getElementById('big-clock-overlay'), hourlyNavBar: document.getElementById('hourly-nav-bar'), hourlyArchiveOverlay: document.getElementById('hourly-archive-overlay'), haTitle: document.getElementById('ha-title-text'), haList: document.getElementById('ha-list-container'), bcInfoText: document.getElementById('bc-info-text') };
 
@@ -883,18 +883,44 @@
         async function checkBreaking() { 
             if (state.isLocked && state.isClockRunning) return; 
             const now = Date.now(); 
-            // 20 MINUTE WINDOW
-            state.allNews.filter(n => (now - n.date.getTime()) <= 1200000).sort((a,b) => a.date - b.date).forEach(item => { 
-                if (!state.breakingHistory.has(item.link)) { 
+            // 3 MINUTE WINDOW FOR BREAKING NEWS (szigorított időablak)
+            state.allNews.filter(n => (now - n.date.getTime()) <= 180000).sort((a,b) => a.date - b.date).forEach(item => { 
+                if (!state.seenBreaking.has(item.link)) { 
                     state.breakingQueue.push(item); 
+                    state.seenBreaking.add(item.link);
                 } 
             }); 
             // Deduplicate
             state.breakingQueue = state.breakingQueue.filter((item, index, self) => index === self.findIndex((t) => t.link === item.link));
 
-            if (state.breakingQueue.length > 0 && !state.isBreakingActive && state.initialLoadComplete) { 
-                processBreakingQueue(); 
+            if (state.breakingQueue.length > 0 && !state.isBreakingActive && state.initialLoadComplete && state.nextBreakingTriggerTime === 0) { 
+               scheduleBreakingTrigger();
             } 
+        }
+        
+        function scheduleBreakingTrigger() {
+            // Random késleltetés, hogy ne azonnal jelenjen meg, hanem "betoppanjon"
+            const randomDelay = Math.floor(Math.random() * 20000) + 5000; // 5-25 másodperc
+            state.nextBreakingTriggerTime = Date.now() + randomDelay;
+        }
+        
+        function scheduleBreakingDisplay() {
+             const now = new Date();
+             if (state.nextBreakingTriggerTime !== 0 && Date.now() >= state.nextBreakingTriggerTime) {
+                 // Ütközés ellenőrzése (Nagy óra előtt 59. percben már ne induljon)
+                 if(now.getMinutes() === 59 && now.getSeconds() > 30) {
+                     // Toljuk el későbbre
+                     state.nextBreakingTriggerTime = Date.now() + 65000;
+                     return;
+                 }
+                 if(!state.isLocked && !state.isSpecial && !state.isBreakingActive && !state.isClockRunning) {
+                     processBreakingQueue();
+                     state.nextBreakingTriggerTime = 0; 
+                 } else {
+                     // Ha foglalt a rendszer, próba később
+                     state.nextBreakingTriggerTime = Date.now() + 10000;
+                 }
+             }
         }
 
         function processBreakingQueue() { 
@@ -930,18 +956,27 @@
             
             const bodyH = DOM.bkCardBody.clientHeight; 
             const scrollH = wrapper.scrollHeight; 
+            const isOverflow = scrollH > bodyH;
             
-            let readTime = Math.max(15000, (item.title.length + item.desc.length) * 65); 
+            let totalDuration = 0;
 
-            if(scrollH > bodyH) { 
+            if(isOverflow) { 
                 const dist = scrollH - bodyH + 30; 
-                const scrollDuration = Math.max(2, dist * 0.05); 
-                readTime += (scrollDuration * 1000) + 4000; 
+                // Lassú olvasási sebesség
+                const scrollDuration = Math.max(3, dist / 20); // pixel / sec
+                
+                // 4 másodperc várakozás az elején (fix)
                 setTimeout(() => { 
                     wrapper.style.transition = `transform ${scrollDuration}s linear`; 
                     wrapper.style.transform = `translateY(-${dist}px)`; 
-                }, 3000); 
-            } 
+                }, 4000); 
+                
+                // Teljes idő: 4s start + scroll + 5s vége olvasásra
+                totalDuration = 4000 + (scrollDuration * 1000) + 5000;
+            } else {
+                // Ha nincs scroll, akkor karakterszám alapján számolunk
+                totalDuration = Math.max(10000, (item.title.length + item.desc.length) * 80);
+            }
 
             setTimeout(() => { 
                 if (state.breakingQueue.length > 0) { 
@@ -954,7 +989,7 @@
                 } else { 
                     closeBreaking(); 
                 } 
-            }, readTime); 
+            }, totalDuration); 
         }
 
         function closeBreaking() { DOM.sidebar.classList.remove('breaking-active'); setTimeout(() => { state.isBreakingActive = false; checkNightMode(); }, 1000); }
@@ -1019,7 +1054,12 @@
                 if (!state.isNightMode && s === 0) { 
                     if (m === 5 || m === 20 || m === 40) { backgroundRefresh(true, true); } 
                 } 
+                
+                // --- BREAKING NEWS CHECK & TRIGGER ---
                 if (s % 45 === 0) { checkBreaking(); } 
+                // Random trigger check (every second)
+                scheduleBreakingDisplay();
+
                 if (!state.isNightMode && (Date.now() - state.lastTickerUpdate > 12000) && !state.isSpecial && !state.isSummary) { cycleTicker(1); } 
             }, 1000); 
         }
@@ -1049,7 +1089,7 @@
             const d = document.createElement('div'); d.className='term-line'; d.innerText = ">> RENDSZER KÉSZ"; DOM.term.appendChild(d); DOM.fill.style.width = "100%";
             crawlNews(false); fetchCurrency(); fetchOther(); fetchWunderground();
             setTimeout(() => { if(DOM.loader && DOM.loader.parentNode) { state.initialLoadComplete = true; DOM.loader.style.opacity = 0; setTimeout(() => DOM.loader.remove(), 1000); } }, 8000);
-            setInterval(updateWeatherCard, 10000); setInterval(fetchOther, 120000); setInterval(fetchWunderground, 20000); setInterval(checkBreaking, 45000); updateTopRightPws(); cycleMain(); cycleTicker();
+            setInterval(updateWeatherCard, 10000); setInterval(fetchOther, 120000); setInterval(fetchWunderground, 20000); updateTopRightPws(); cycleMain(); cycleTicker();
         }
 
         document.addEventListener('DOMContentLoaded', init);
