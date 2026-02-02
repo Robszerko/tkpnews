@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V20.40 HD PRO</title>
+    <title>TKP NEWS - V20.97 SCROLL & LOGO FIX</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,7 +21,7 @@
             
             /* Dynamic sizing base - controlled by JS AutoScaler */
             --base-scale: 1;
-            --footer-h: calc(80px * var(--base-scale));
+            --footer-h: calc(85px * var(--base-scale));
             
             --font-main: 'Oswald', sans-serif;
             --font-data: 'Roboto Condensed', sans-serif;
@@ -62,7 +62,7 @@
         #stage { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; background: #010101; pointer-events: none; }
         .bg-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.1); transition: opacity 2s ease, transform 25s linear; z-index: 1; }
         .bg-img.active { opacity: 1; transform: scale(1); }
-        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0) 100%); z-index: 2; pointer-events: none; }
+        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0) 100%); z-index: 2; pointer-events: none; }
         .grid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 50px 50px; z-index: 3; opacity: 0.2; pointer-events: none;}
 
         .graphics-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; }
@@ -75,21 +75,23 @@
         .hide-bottom { transform: translateY(150%) !important; opacity: 0 !important; pointer-events: none !important; }
         .force-hide { opacity: 0 !important; pointer-events: none !important; }
 
-        /* --- RIGHT COLUMN COMPACT HD LAYOUT --- */
+        /* --- RIGHT COLUMN FLUID LAYOUT FIX --- */
         .right-column-container {
             position: absolute;
-            top: 2vh; 
+            top: 0; 
             right: 2vw;
             width: clamp(260px, 22vw, 400px); 
-            max-height: calc(100vh - var(--footer-h) - 30px);
+            height: 100vh; 
+            padding-top: 6vh; 
+            padding-bottom: calc(var(--footer-h) + 4vh); 
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
+            justify-content: center;
             align-items: flex-end;
-            gap: 0.8rem;
+            gap: clamp(1rem, 4vh, 3rem); 
             z-index: 50;
             pointer-events: none;
-            transform-origin: top right; /* For scaling safety */
+            transform-origin: center right;
         }
 
         .top-right-widget-group { position: relative; width: 100%; display: flex; flex-direction: row; align-items: stretch; gap: 8px; pointer-events: auto; justify-content: flex-end; }
@@ -136,33 +138,165 @@
         .refresh-btn-side:hover { background: rgba(255,255,255,0.15); color: #fff; border-top-color: var(--accent); box-shadow: 0 0 15px rgba(0,0,0,0.5); }
         .refresh-btn-side.loading { color: #888; pointer-events: none; animation: pulse 1s infinite; }
 
-        .logo-box { position: fixed; top: 4vh; left: 4vw; width: auto; height: auto; z-index: 9999; pointer-events: auto; cursor: pointer; display: flex; flex-direction: column; gap: 2px; opacity: 1; will-change: transform, opacity; transform-origin: top left; }
+        /* --- REDESIGNED TKP LOGO --- */
+        .logo-box { 
+            position: fixed; top: 4vh; left: 4vw; width: auto; z-index: 9999; 
+            pointer-events: auto; cursor: pointer; 
+            display: flex; flex-direction: column; align-items: center;
+            opacity: 1; will-change: transform, opacity; transform-origin: top left; 
+        }
         .logo-box.high-z { z-index: 10000 !important; }
-        .rtl-logo-container { position: relative; display: flex; flex-direction: column; align-items: flex-start; width: fit-content; }
-        .rtl-boxes { display: flex; gap: 2px; margin-bottom: 2px; }
-        .rtl-box { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-family: var(--font-inter); font-weight: 800; font-size: 1.2rem; color: #fff; opacity: 0; transform: scale(0); background: rgba(100, 100, 100, 0.5); border: 1px solid rgba(255,255,255,0.3); }
-        @keyframes rtlBounceToWatermark { 0% { opacity: 0; transform: scale(0); background: var(--anim-color); border-color: transparent; } 10% { opacity: 1; transform: scale(1.2); background: var(--anim-color); border-color: transparent; } 20% { transform: scale(0.9); background: var(--anim-color); border-color: transparent; } 30% { transform: scale(1.05); background: var(--anim-color); border-color: transparent; } 40% { transform: scale(1); background: var(--anim-color); border-color: transparent; } 80% { transform: scale(1); background: var(--anim-color); border-color: transparent; color:#fff; } 100% { opacity: 1; transform: scale(1); background: rgba(100, 100, 100, 0.35); border-color: rgba(255, 255, 255, 0.3); color: rgba(255, 255, 255, 0.9); backdrop-filter: blur(4px); } }
-        @keyframes rtlExitColored { 0% { opacity: 1; transform: scale(1); background: rgba(100, 100, 100, 0.35); border-color: rgba(255, 255, 255, 0.3); } 30% { opacity: 1; transform: scale(1.1); background: var(--anim-color); border-color: transparent; color: #fff; } 100% { opacity: 0; transform: scale(0); background: var(--anim-color); border-color: transparent; } }
-        .logo-box.logo-entry .rtl-box.b1 { --anim-color: var(--rtl-red); animation: rtlBounceToWatermark 4.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
-        .logo-box.logo-entry .rtl-box.b2 { --anim-color: var(--rtl-purple); animation: rtlBounceToWatermark 4.5s cubic-bezier(0.25, 1, 0.5, 1) 0.15s forwards; }
-        .logo-box.logo-entry .rtl-box.b3 { --anim-color: var(--rtl-blue); animation: rtlBounceToWatermark 4.5s cubic-bezier(0.25, 1, 0.5, 1) 0.3s forwards; }
-        .logo-box.logo-exit .rtl-box.b1 { --anim-color: var(--rtl-red); animation: rtlExitColored 0.7s ease-in forwards; }
-        .logo-box.logo-exit .rtl-box.b2 { --anim-color: var(--rtl-purple); animation: rtlExitColored 0.7s ease-in 0.1s forwards; }
-        .logo-box.logo-exit .rtl-box.b3 { --anim-color: var(--rtl-blue); animation: rtlExitColored 0.7s ease-in 0.2s forwards; }
-        .rtl-news-text { font-family: var(--font-main); font-weight: 700; font-size: 0.9rem; line-height: 1; letter-spacing: 3px; color: rgba(255, 255, 255, 0.85); text-shadow: 0 1px 2px rgba(0,0,0,0.8); margin-top: 3px; width: 100%; text-align: center; opacity: 0; transform: translateY(5px); }
-        @keyframes newsReveal { 0% { opacity: 0; transform: translateY(5px); filter: blur(3px); } 100% { opacity: 1; transform: translateY(0); filter: blur(0); } }
-        @keyframes newsExit { 0% { opacity: 1; } 100% { opacity: 0; transform: translateY(5px); } }
-        .logo-box.logo-entry .rtl-news-text { animation: newsReveal 1s ease-out 3.5s forwards; } 
-        .logo-box.logo-exit .rtl-news-text { animation: newsExit 0.5s ease-in forwards; }
-        .rtl-badge { position: absolute; left: 100%; top: 0; margin-left: 4px; background: rgba(204, 0, 0, 0.8); color: #fff; font-family: var(--font-tech); font-weight: 700; font-size: 0.6rem; padding: 2px 4px; border-radius: 2px; letter-spacing: 1px; display: none; box-shadow: 0 2px 5px rgba(0,0,0,0.5); white-space: nowrap; backdrop-filter: blur(2px); }
-        .rtl-badge.replay { background: rgba(68, 68, 68, 0.8); color: #ccc; }
-        .rtl-badge.visible { display: block; animation: fadeInRight 0.5s; }
-        .logo-box.night-theme .rtl-box { border-color: rgba(255, 204, 0, 0.2); color: #ccc; }
-        .inline-rtl-logo { display: inline-flex; gap: 2px; vertical-align: middle; margin: 0 4px; }
-        .inline-rtl-box { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; color: #fff; font-family: var(--font-inter); font-weight: 800; font-size: 0.7rem; border-radius: 1px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
-        .ir-t { background: var(--rtl-red); } .ir-k { background: var(--rtl-purple); } .ir-p { background: var(--rtl-blue); }
-        .clock-branding .rtl-box { background: rgba(200, 200, 200, 0.4) !important; border-color: rgba(255,255,255,0.6) !important; color: #fff !important; opacity: 1 !important; transform: scale(1) !important; animation: none !important; }
-        .clock-branding .rtl-news-text { opacity: 1 !important; color: #fff !important; transform: none !important; animation: none !important; }
+
+        .new-logo-container {
+            display: flex; flex-direction: column; align-items: flex-start;
+        }
+
+        .logo-letters {
+            display: flex; gap: 3px; z-index: 2;
+        }
+
+        .logo-block {
+            width: 34px; height: 34px;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-family: 'Inter', sans-serif; font-weight: 900; font-size: 1.4rem;
+            border-radius: 2px;
+            border: 1px solid rgba(255,255,255,0.25);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            transform: scale(0); opacity: 0;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            /* Important: Transition for watermark effect */
+            transition: background 1.5s ease, border-color 1.5s ease, color 1.5s ease, box-shadow 1.5s ease, text-shadow 1.5s ease;
+        }
+
+        /* TKP COLORS */
+        .lb-t { background: linear-gradient(135deg, #d00000 0%, #900000 100%); }
+        .lb-k { background: linear-gradient(135deg, #702082 0%, #4a1555 100%); }
+        .lb-p { background: linear-gradient(135deg, #009ee3 0%, #006c9b 100%); }
+
+        /* NEWS BAR */
+        .logo-news-bar {
+            background: #000;
+            color: #fff;
+            width: 100%;
+            text-align: center;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 4px;
+            padding: 2px 0;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            margin-top: 0px; 
+            transform-origin: top center;
+            transform: scaleY(0); opacity: 0;
+            position: relative; z-index: 1;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.6);
+             /* Important: Transition for watermark effect */
+            transition: background 1.5s ease, color 1.5s ease, border-color 1.5s ease, box-shadow 1.5s ease;
+        }
+
+        /* LIVE & REPLAY BADGES */
+        .status-badge {
+            position: absolute; left: 100%; top: 0; margin-left: 6px;
+            background: #cc0000; color: #fff;
+            font-family: 'Chakra Petch', sans-serif; font-weight: 700; font-size: 0.7rem;
+            padding: 2px 6px; border-radius: 2px; letter-spacing: 1px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            white-space: nowrap; display: none; opacity: 0;
+            animation: fadeInRight 0.5s forwards;
+        }
+        .status-badge.replay { background: #444; color: #ccc; }
+        .status-badge.visible { display: block; opacity: 1; }
+
+        /* ANIMATIONS */
+        @keyframes logoPopIn { 
+            0% { transform: scale(0); opacity: 0; } 
+            60% { transform: scale(1.15); opacity: 1; } 
+            100% { transform: scale(1); opacity: 1; } 
+        }
+        @keyframes newsUnfold { 
+            0% { transform: scaleY(0); opacity: 0; } 
+            100% { transform: scaleY(1); opacity: 1; } 
+        }
+        @keyframes logoPopOut { 
+            0% { transform: scale(1); opacity: 1; } 
+            100% { transform: scale(0); opacity: 0; } 
+        }
+        @keyframes newsFold { 
+            0% { transform: scaleY(1); opacity: 1; } 
+            100% { transform: scaleY(0); opacity: 0; } 
+        }
+
+        /* ENTRY STATE */
+        .logo-box.logo-entry .lb-t { animation: logoPopIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.1s; }
+        .logo-box.logo-entry .lb-k { animation: logoPopIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.2s; }
+        .logo-box.logo-entry .lb-p { animation: logoPopIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.3s; }
+        .logo-box.logo-entry .logo-news-bar { animation: newsUnfold 0.5s ease-out forwards 0.7s; }
+
+        /* EXIT STATE */
+        .logo-box.logo-exit .logo-news-bar { animation: newsFold 0.3s ease-in forwards; }
+        .logo-box.logo-exit .lb-t { animation: logoPopOut 0.4s ease-in forwards 0.3s; }
+        .logo-box.logo-exit .lb-k { animation: logoPopOut 0.4s ease-in forwards 0.2s; }
+        .logo-box.logo-exit .lb-p { animation: logoPopOut 0.4s ease-in forwards 0.1s; }
+
+        /* WATERMARK ACTIVE STATE (Strict Overrides) */
+        .logo-box.watermark-active .logo-block {
+            background: rgba(80, 80, 80, 0.25) !important;
+            border-color: rgba(255, 255, 255, 0.15) !important;
+            box-shadow: none !important;
+            color: rgba(255, 255, 255, 0.6) !important;
+            text-shadow: none !important;
+        }
+        .logo-box.watermark-active .logo-news-bar {
+            background: transparent !important;
+            color: rgba(255, 255, 255, 0.6) !important;
+            border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+            box-shadow: none !important;
+            text-shadow: 0 1px 2px #000 !important;
+        }
+
+        /* NIGHT MODE (Manual Override) */
+        .logo-box.night-theme { opacity: 0.85; filter: grayscale(0.3); }
+        
+        /* INLINE LOGO FOR TEXT - FIXED VISIBILITY */
+        .text-inline-logo {
+            display: inline-flex; flex-direction: column; align-items: flex-start;
+            vertical-align: middle;
+            transform: scale(0.6);
+            margin: 0 -20px; /* Counteract scale spacing */
+        }
+        
+        /* FIX: Force inline logo to be visible regardless of global animation state */
+        .text-inline-logo .logo-block {
+            transform: scale(1) !important;
+            opacity: 1 !important;
+            box-shadow: none !important;
+        }
+        .text-inline-logo .logo-news-bar {
+            transform: scaleY(1) !important;
+            opacity: 1 !important;
+        }
+        
+        /* EMBEDDED WATERMARK FOR BIG CLOCK */
+        .clock-embedded-logo {
+            display: flex; flex-direction: column; align-items: center;
+            opacity: 0.9;
+            transform: scale(0.7);
+        }
+        .clock-embedded-logo .logo-block {
+            background: rgba(120, 120, 120, 0.3);
+            border-color: rgba(255, 255, 255, 0.4);
+            color: #ddd;
+            box-shadow: none;
+            transform: scale(1); opacity: 1; /* Force visible */
+            text-shadow: none;
+        }
+        .clock-embedded-logo .logo-news-bar {
+            background: transparent;
+            color: #ddd;
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+            box-shadow: none;
+            transform: scaleY(1); opacity: 1; /* Force visible */
+        }
 
         .sidebar { position: relative; width: 100%; height: auto; pointer-events: auto; z-index: 40; perspective: 1000px; flex-shrink: 0; }
         .sidebar-flipper { position: relative; width: 100%; transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1); transform-style: preserve-3d; will-change: transform; }
@@ -230,17 +364,77 @@
         .nav-btn-mini:hover { background: var(--primary); border-color: var(--primary); }
         .nav-counter-mini { font-family: var(--font-mono); font-size: 0.8rem; color: #fff; margin: 0 8px; text-shadow: 0 1px 3px #000; font-weight: bold; background: rgba(0,0,0,0.5); padding: 2px 6px; border-radius: 2px; }
 
-        .ticker-bar { position: absolute; bottom: 0; left: 0; width: 100%; height: var(--footer-h); background: #000; border-top: 5px solid var(--primary); display: flex; z-index: 40; box-shadow: 0 -10px 40px rgba(0,0,0,0.8); transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s; pointer-events: auto; }
-        .ticker-nav { display: flex; align-items: center; background: #0a0a0a; padding: 0 10px; border-right: 1px solid #333; z-index: 50; gap: 8px; pointer-events: auto; }
-        .nav-btn { background: #1a1a1a; border: 1px solid #444; color: #fff; padding: 6px 15px; cursor: pointer; font-family: var(--font-tech); font-weight: bold; transition: 0.2s; }
-        .nav-btn:hover { background: var(--accent); color: #000; }
-        .tick-info { font-family: var(--font-tech); font-size: 0.85rem; color: #777; min-width: 70px; text-align: center; }
-        .ticker-window { flex-grow: 1; height: 100%; position: relative; overflow: hidden; z-index: 45; padding-right: 180px; mask-image: linear-gradient(to right, black 85%, transparent 100%); -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%); }
-        .ticker-item { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; padding-left: 20px; opacity: 0; transition: opacity 0.5s; cursor: pointer; pointer-events: auto; text-decoration: none; }
-        .ticker-item:hover { background: rgba(255,255,255,0.08); }
+        /* --- TICKER BAR REDESIGN --- */
+        .ticker-bar { 
+            position: absolute; bottom: 0; left: 0; width: 100%; height: var(--footer-h); 
+            background: linear-gradient(180deg, #181818 0%, #000000 100%); 
+            border-top: 4px solid var(--primary); 
+            display: flex; z-index: 40; 
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.15); 
+            transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s; 
+            pointer-events: auto; 
+        }
+        
+        /* TICKER NAV */
+        .ticker-nav { 
+            display: flex; align-items: center; 
+            background: #111; 
+            padding: 0 10px; 
+            z-index: 50; gap: 8px; 
+            pointer-events: auto; 
+            position: relative;
+        }
+        
+        /* Slanted separator after nav */
+        .ticker-nav::after {
+            content: ''; position: absolute; right: -15px; top: 0; width: 30px; height: 100%;
+            background: #111; transform: skewX(-20deg); border-right: 1px solid #333;
+            z-index: -1;
+        }
+
+        .nav-btn { 
+            background: linear-gradient(180deg, #2a2a2a 0%, #151515 100%); 
+            border: 1px solid #444; border-radius: 2px;
+            color: #ccc; padding: 6px 15px; cursor: pointer; 
+            font-family: var(--font-tech); font-weight: bold; 
+            transition: 0.2s; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+        .nav-btn:hover { background: var(--accent); color: #000; border-color: #fff; box-shadow: 0 0 10px var(--accent); }
+        .tick-info { font-family: var(--font-tech); font-size: 0.85rem; color: #888; min-width: 70px; text-align: center; text-shadow: 0 1px 1px #000; }
+        
+        /* TICKER WINDOW & PATTERN */
+        .ticker-window { 
+            flex-grow: 1; height: 100%; position: relative; overflow: hidden; z-index: 45; padding-right: 180px; 
+            /* Subtle tech pattern background */
+            background-image: repeating-linear-gradient(45deg, transparent 0, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px);
+            mask-image: linear-gradient(to right, black 85%, transparent 100%); -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%); 
+        }
+        
+        .ticker-item { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; padding-left: 25px; 
+            opacity: 0; transition: opacity 0.5s; cursor: pointer; pointer-events: auto; text-decoration: none; 
+        }
+        .ticker-item:hover { background: rgba(255,255,255,0.05); }
         .ticker-item.active { opacity: 1; }
-        .ticker-content { font-family: var(--font-data); font-size: clamp(1rem, 2.3vh, 1.6rem); white-space: nowrap; display: flex; align-items: center; width: 100%; color: #f0f0f0; position: relative; transition: transform 0s linear; }
-        .ticker-meta { font-family: var(--font-tech); color: var(--accent); font-weight: 700; background: rgba(255,255,255,0.08); padding: 4px 12px; border-radius: 4px; margin-right: 15px; font-size: 0.85em; flex-shrink: 0; display:flex; align-items:center; gap:8px;}
+        
+        .ticker-content { 
+            font-family: var(--font-data); font-size: clamp(1.1rem, 2.4vh, 1.8rem); 
+            white-space: nowrap; display: flex; align-items: center; width: auto; 
+            color: #f0f0f0; position: relative; 
+            /* Transformation handled by JS now for conditional scroll */
+            will-change: transform;
+        }
+        
+        .ticker-meta { 
+            font-family: var(--font-tech); color: #fff; font-weight: 700; 
+            background: linear-gradient(90deg, var(--primary-dark), #000);
+            padding: 4px 12px; border-radius: 4px; margin-right: 15px; font-size: 0.75em; flex-shrink: 0; 
+            display:flex; align-items:center; gap:8px;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            text-transform: uppercase; letter-spacing: 1px;
+        }
         
         .ticker-clock { position: absolute; right: 0; top: 0; height: 100%; width: 160px; background: var(--sun-bg-grad); border-left: 4px solid var(--sun-accent); z-index: 60; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: -10px 0 30px rgba(0,0,0,1); transition: all 3s ease; }
         .tc-time-row { display: flex; align-items: baseline; justify-content: center; gap: 2px; }
@@ -483,12 +677,14 @@
             <div class="bc-info-text" id="bc-info-text">
                 Köszönöm, hogy a 
                 <span class="bc-info-highlight" style="display:inline-flex; align-items:center; vertical-align:middle; background:transparent; padding:0; border:none; margin:0 5px;">
-                    <div class="inline-rtl-logo">
-                        <div class="inline-rtl-box ir-t">T</div>
-                        <div class="inline-rtl-box ir-k">K</div>
-                        <div class="inline-rtl-box ir-p">P</div>
+                    <div class="text-inline-logo">
+                        <div class="logo-letters">
+                            <div class="logo-block lb-t">T</div>
+                            <div class="logo-block lb-k">K</div>
+                            <div class="logo-block lb-p">P</div>
+                        </div>
+                        <div class="logo-news-bar">NEWS</div>
                     </div>
-                    <span style="font-family:'Oswald'; font-weight:700; margin-left:4px; font-size:0.9em; letter-spacing:1px; color:#ccc;">NEWS</span>
                 </span> 
                 oldalát olvasod.<br><br>
                 Reggel 06-tól éjfélig minden nap a legfrissebb hirek futnak az oldalon, éjféltől reggel 06ig pedig az előző nap hireit olvashatod újra.<br><br>
@@ -506,13 +702,13 @@
                 <div id="bc-analog-clock">
                     <div id="clock-face"></div>
                     <div class="clock-branding">
-                        <div class="rtl-logo-container" style="transform: scale(0.7); opacity:0.9;">
-                            <div class="rtl-boxes">
-                                <div class="rtl-box" style="opacity:1; background:rgba(200,200,200,0.25); border-color:rgba(255,255,255,0.4); transform:none;">T</div>
-                                <div class="rtl-box" style="opacity:1; background:rgba(200,200,200,0.25); border-color:rgba(255,255,255,0.4); transform:none;">K</div>
-                                <div class="rtl-box" style="opacity:1; background:rgba(200,200,200,0.25); border-color:rgba(255,255,255,0.4); transform:none;">P</div>
+                        <div class="clock-embedded-logo">
+                            <div class="logo-letters">
+                                <div class="logo-block">T</div>
+                                <div class="logo-block">K</div>
+                                <div class="logo-block">P</div>
                             </div>
-                            <div class="rtl-news-text" style="opacity:1; transform:none; color:#ddd;">NEWS</div>
+                            <div class="logo-news-bar">NEWS</div>
                         </div>
                     </div>
                     <div id="bc-digital-display" class="clock-digital-display">--:--:--</div>
@@ -562,16 +758,17 @@
         <div class="grid"></div>
     </div>
 
+    <!-- NEW LOGO STRUCTURE -->
     <div class="logo-box logo-entry" id="logo-box" onclick="openAuth()">
-        <div class="rtl-logo-container">
-            <div id="live-badge" class="rtl-badge live">ÉLŐ</div>
-            <div id="replay-badge" class="rtl-badge replay">ISMÉTLÉS</div>
-            <div class="rtl-boxes">
-                <div class="rtl-box b1">T</div>
-                <div class="rtl-box b2">K</div>
-                <div class="rtl-box b3">P</div>
+        <div class="new-logo-container">
+            <div class="logo-letters">
+                <div class="logo-block lb-t">T</div>
+                <div class="logo-block lb-k">K</div>
+                <div class="logo-block lb-p">P</div>
             </div>
-            <div class="rtl-news-text">NEWS</div>
+            <div class="logo-news-bar">NEWS</div>
+            <div id="live-badge" class="status-badge live">ÉLŐ</div>
+            <div id="replay-badge" class="status-badge replay">ISMÉTLÉS</div>
         </div>
     </div>
 
@@ -762,7 +959,7 @@
         const SEASONAL_BACKGROUNDS = { spring: ['https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=1920&fit=crop'], summer: ['https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1920&fit=crop'], autumn: ['https://images.unsplash.com/photo-1507371341162-63b5acf0d979?q=80&w=1920&fit=crop'], winter: ['https://images.unsplash.com/photo-1478265409131-1f65c88f965c?q=80&w=1920&fit=crop'] };
         const BACKGROUNDS = { winter_night: SEASONAL_BACKGROUNDS.winter, winter_day: SEASONAL_BACKGROUNDS.winter, dawn: SEASONAL_BACKGROUNDS.spring, day: SEASONAL_BACKGROUNDS.summer, dusk: SEASONAL_BACKGROUNDS.autumn, night: SEASONAL_BACKGROUNDS.winter };
 
-        let state = { allNews: [], tickerItems: [], mainItems: [], weatherData: [], pwsData: { temp: '--', feel: '--', wind: '--', windDir: '', cond: '--', icon: '❓', updated: false, rainRate: 0, rainDay: 0, uv: 0, humidity: 0, pressure: 0, gust: 0 }, tickerIdx: 0, mainIdx: 0, wxIdx: 0, tickerTimer: null, mainTimer: null, isBreaking: false, isSpecial: false, seenBreaking: new Set(), breakingQueue: [], breakingHistory: new Set(), isBreakingActive: false, feedStatus: {}, startTime: Date.now(), currentMainLink: null, currentBreakingLink: null, currentBreakingItem: null, pwsRotationIdx: 0, lastWxUpdate: 0, currentWxSource: '--', lastTickerUpdate: Date.now(), specialMeteoInterval: null, meteoPhaseTimer: null, schedule: [], initialLoadComplete: false, isNightMode: false, forcedNightMode: false, mainTimer: null, weatherAlertCooldown: {}, mainStarted: false, bigClockTimeout: null, isLocked: false, isClockRunning: false, testMiniRainState: false, testMiniAlertState: false, stationPointer: 0, nightSummaryQueue: [], hasFreshNews: false, manualRefreshRequested: false, clockPhase: 0, hourlyTriggered: false, currencyRates: null, currencyBase: 'USD', refreshedThisShow: false, updateTriggered: false, clockFinishTriggered: false, logoExitTriggered: false, pwsSlide: 0, pwsInterval: null, viewingArchiveHour: -1, nextClockTriggerSeconds: 0, nextBreakingTriggerTime: 0, sunData: null };
+        let state = { allNews: [], tickerItems: [], mainItems: [], weatherData: [], pwsData: { temp: '--', feel: '--', wind: '--', windDir: '', cond: '--', icon: '❓', updated: false, rainRate: 0, rainDay: 0, uv: 0, humidity: 0, pressure: 0, gust: 0 }, tickerIdx: 0, mainIdx: 0, wxIdx: 0, tickerTimer: null, mainTimer: null, isBreaking: false, isSpecial: false, seenBreaking: new Set(), breakingQueue: [], breakingHistory: new Set(), isBreakingActive: false, feedStatus: {}, startTime: Date.now(), currentMainLink: null, currentBreakingLink: null, currentBreakingItem: null, pwsRotationIdx: 0, lastWxUpdate: 0, currentWxSource: '--', lastTickerUpdate: Date.now(), specialMeteoInterval: null, meteoPhaseTimer: null, schedule: [], initialLoadComplete: false, isNightMode: false, forcedNightMode: false, mainTimer: null, weatherAlertCooldown: {}, mainStarted: false, bigClockTimeout: null, isLocked: false, isClockRunning: false, testMiniRainState: false, testMiniAlertState: false, stationPointer: 0, nightSummaryQueue: [], hasFreshNews: false, manualRefreshRequested: false, clockPhase: 0, hourlyTriggered: false, currencyRates: null, currencyBase: 'USD', refreshedThisShow: false, updateTriggered: false, clockFinishTriggered: false, logoExitTriggered: false, pwsSlide: 0, pwsInterval: null, viewingArchiveHour: -1, nextClockTriggerSeconds: 0, nextBreakingTriggerTime: 0, sunData: null, logoWatermarkTimer: null };
 
         const DOM = { loader: document.getElementById('loader'), term: document.getElementById('term'), fill: document.getElementById('load-fill'), stage: document.getElementById('stage'), tickerWindow: document.getElementById('ticker-window'), mainContainerBox: document.getElementById('mn-container-box'), mainTitle: document.getElementById('m-title'), mainDesc: document.getElementById('m-desc'), mainCatText: document.getElementById('m-cat-text'), mainMeta: document.getElementById('m-meta'), mainPrg: document.getElementById('m-prg'), trPwsContent: document.getElementById('tr-pws-content'), special: document.getElementById('special-meteo'), smGrid: document.getElementById('sm-grid'), smTitle: document.getElementById('sm-main-title'), smBg: document.getElementById('sm-bg'), feedLog: document.getElementById('feed-log-table'), auth: document.getElementById('auth-overlay'), pin: document.getElementById('pin-input'), dev: document.getElementById('dev-panel'), devWxNext: document.getElementById('dev-wx-next'), devWxSrc: document.getElementById('dev-wx-src'), devBkQueue: document.getElementById('dev-bk-queue'), devScheduleTable: document.getElementById('dev-schedule-table').querySelector('tbody'), logoBox: document.getElementById('logo-box'), liveBadge: document.getElementById('live-badge'), replayBadge: document.getElementById('replay-badge'), nightMsg: document.getElementById('night-msg'), tickerNav: document.getElementById('ticker-nav'), sidebar: document.querySelector('.sidebar'), sidebarFlipper: document.querySelector('.sidebar-flipper'), bkCardHeadline: document.getElementById('bk-card-headline'), bkCardBody: document.getElementById('bk-card-body'), bkCardMeta: document.getElementById('bk-card-meta'), bkCardClickable: document.getElementById('bk-card-clickable'), fxSourceContainer: document.getElementById('fx-source-container'), bigClockOverlay: document.getElementById('big-clock-overlay'), hourlyNavBar: document.getElementById('hourly-nav-bar'), hourlyArchiveOverlay: document.getElementById('hourly-archive-overlay'), haTitle: document.getElementById('ha-title-text'), haList: document.getElementById('ha-list-container'), bcInfoText: document.getElementById('bc-info-text') };
 
@@ -807,8 +1004,28 @@
         function backgroundRefresh(isReset = false, silent = false) { crawlNews(isReset, silent); fetchCurrency(); fetchWunderground(true); }
 
         function prepareAndTriggerClock() { state.isSpecial = true; state.isLocked = true; animateLogoOut(); setTimeout(() => { triggerBigClockSequence(); }, 5000); }
-        function animateLogoOut() { DOM.logoBox.classList.remove('logo-entry'); DOM.logoBox.classList.add('logo-exit'); }
-        function animateLogoIn() { DOM.logoBox.classList.remove('logo-exit'); DOM.logoBox.classList.add('logo-entry'); }
+        
+        function animateLogoOut() { 
+            DOM.logoBox.classList.remove('logo-entry', 'watermark-active'); 
+            DOM.logoBox.classList.add('logo-exit'); 
+            if(state.logoWatermarkTimer) clearTimeout(state.logoWatermarkTimer);
+        }
+        
+        function animateLogoIn() { 
+            DOM.logoBox.classList.remove('logo-exit', 'watermark-active'); 
+            DOM.logoBox.classList.add('logo-entry'); 
+            scheduleLogoWatermark();
+        }
+
+        // --- RANDOM WATERMARK TIMER ---
+        function scheduleLogoWatermark() {
+            if(state.logoWatermarkTimer) clearTimeout(state.logoWatermarkTimer);
+            // Random time between 5000ms (5s) and 30000ms (30s)
+            const randomTime = Math.floor(Math.random() * 25000) + 5000;
+            state.logoWatermarkTimer = setTimeout(() => {
+                DOM.logoBox.classList.add('watermark-active');
+            }, randomTime);
+        }
 
         function triggerBigClockSequence() { state.isSpecial = true; state.isLocked = true; state.isClockRunning = true; state.clockPhase = 0; state.updateTriggered = false; state.clockFinishTriggered = false; state.logoExitTriggered = false; DOM.bigClockOverlay.style.background = getSunPhaseBackground(); DOM.bigClockOverlay.style.display = 'grid'; DOM.bigClockOverlay.style.opacity = '0'; DOM.bigClockOverlay.classList.remove('bc-layout-center'); setTimeout(() => { DOM.bigClockOverlay.style.transition = 'opacity 0.8s ease-in-out'; DOM.bigClockOverlay.style.opacity = '1'; DOM.bigClockOverlay.classList.add('active'); generateAnalogClockFace(); runBigClockLoop(); }, 50); }
 
@@ -1039,7 +1256,85 @@
 
         function closeAllOverlays() { DOM.special.classList.remove('active'); DOM.logoBox.classList.remove('center-stage', 'high-z', 'logo-gradual-zoom'); DOM.logoBox.style.transform = ''; DOM.logoBox.classList.remove('logo-exit'); DOM.logoBox.classList.add('logo-entry'); clearTimeout(state.specialMeteoInterval); clearTimeout(state.meteoPhaseTimer); clearTimeout(state.bigClockTimeout); state.isClockRunning = false; state.clockPhase = 0; state.isSummary = false; state.isSpecial = false; toggleLiveBadge(false); DOM.liveBadge.classList.remove('delayed-visible'); setTimeout(() => { DOM.special.style.display = 'none'; DOM.special.style.pointerEvents = 'none'; DOM.bigClockOverlay.style.display = 'none'; DOM.bigClockOverlay.classList.remove('active', 'bc-layout-center'); DOM.logoBox.style.pointerEvents = 'auto'; DOM.logoBox.classList.remove('force-hide'); setTimeout(() => DOM.logoBox.classList.remove('logo-fade-out'), 3000); state.isLocked = false; DOM.hourlyArchiveOverlay.classList.remove('active'); }, 800); [ {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ].forEach(ui => { const el = document.getElementById(ui.id); if(el) el.classList.remove(`hide-${ui.t}`, 'soft-hide', 'force-hide'); }); const card = document.querySelector('.breaking-card'); if(card) card.classList.remove('night-summary-card'); DOM.sidebar.classList.remove('breaking-active'); if (state.isNightMode) { checkNightMode(); DOM.replayBadge.classList.add('visible'); } else { cycleMain(true); cycleTicker(1); } }
 
-        function cycleTicker(dir = 1) { if (state.isLocked) return; if (state.isNightMode) return; state.lastTickerUpdate = Date.now(); if (!state.tickerItems.length) { clearTimeout(state.tickerTimer); state.tickerTimer = setTimeout(() => cycleTicker(dir), 1000); return; } if (state.tickerIdx === 0 && state.hasFreshNews && dir === 1) { updateLists(); state.hasFreshNews = false; cycleMain(true); } let nextIdx = (state.tickerIdx + dir + state.tickerItems.length) % state.tickerItems.length; if (nextIdx === 0 && dir === 1 && state.tickerItems.length === 0) crawlNews(false); state.tickerIdx = nextIdx; const item = state.tickerItems[state.tickerIdx]; if (!item) return; const old = DOM.tickerWindow.querySelector('.ticker-item.active'); if (old) { old.classList.remove('active'); setTimeout(() => old.remove(), 600); } const el = document.createElement('a'); el.className = 'ticker-item active'; if(item.link && item.link !== "#") { el.href = item.link; el.target = "_blank"; el.rel = "noopener noreferrer"; } const logo = getLogoHtml(item.source); el.innerHTML = `<div class="ticker-content"><div class="ticker-meta">${logo} ${item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'})} • ${item.source}</div><span>${item.title}</span></div>`; DOM.tickerWindow.appendChild(el); document.getElementById('t-count').innerText = `${state.tickerIdx + 1} / ${state.tickerItems.length}`; setTimeout(() => { const c = el.querySelector('.ticker-content'); if (c.scrollWidth > DOM.tickerWindow.clientWidth) { const dist = c.scrollWidth + 50; const t = (dist / 60) * 1000; c.style.transition = `transform ${t}ms linear`; c.style.transform = `translateX(-${dist}px)`; clearTimeout(state.tickerTimer); state.tickerTimer = setTimeout(() => cycleTicker(1), t + 2000); } else { clearTimeout(state.tickerTimer); state.tickerTimer = setTimeout(() => cycleTicker(1), 15000); } }, 100); }
+        // --- NEW SMART SCROLL TICKER LOGIC ---
+        function cycleTicker(dir = 1) { 
+            if (state.isLocked) return; 
+            if (state.isNightMode) return; 
+            
+            state.lastTickerUpdate = Date.now(); 
+            
+            if (!state.tickerItems.length) { 
+                clearTimeout(state.tickerTimer); 
+                state.tickerTimer = setTimeout(() => cycleTicker(dir), 1000); 
+                return; 
+            } 
+            
+            if (state.tickerIdx === 0 && state.hasFreshNews && dir === 1) { 
+                updateLists(); 
+                state.hasFreshNews = false; 
+                cycleMain(true); 
+            } 
+            
+            let nextIdx = (state.tickerIdx + dir + state.tickerItems.length) % state.tickerItems.length; 
+            if (nextIdx === 0 && dir === 1 && state.tickerItems.length === 0) crawlNews(false); 
+            
+            state.tickerIdx = nextIdx; 
+            const item = state.tickerItems[state.tickerIdx]; 
+            if (!item) return; 
+            
+            const old = DOM.tickerWindow.querySelector('.ticker-item.active'); 
+            if (old) { 
+                old.classList.remove('active'); 
+                setTimeout(() => old.remove(), 600); 
+            } 
+            
+            const el = document.createElement('a'); 
+            el.className = 'ticker-item active'; 
+            if(item.link && item.link !== "#") { el.href = item.link; el.target = "_blank"; el.rel = "noopener noreferrer"; } 
+            
+            const logo = getLogoHtml(item.source); 
+            el.innerHTML = `<div class="ticker-content"><div class="ticker-meta">${logo} ${item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'})} • ${item.source}</div><span>${item.title}</span></div>`; 
+            
+            DOM.tickerWindow.appendChild(el); 
+            document.getElementById('t-count').innerText = `${state.tickerIdx + 1} / ${state.tickerItems.length}`; 
+            
+            // MEASURE AND ANIMATE LOGIC
+            setTimeout(() => { 
+                const content = el.querySelector('.ticker-content'); 
+                
+                // FIX: Calculate available width correctly by subtracting padding
+                // The clock area is covered by padding-right: 180px on .ticker-window
+                const containerFullWidth = DOM.tickerWindow.getBoundingClientRect().width;
+                const paddingRight = parseFloat(window.getComputedStyle(DOM.tickerWindow).paddingRight) || 0;
+                const availableWidth = containerFullWidth - paddingRight;
+                
+                const contentWidth = content.getBoundingClientRect().width;
+                
+                // If content is wider than the AVAILABLE (visible) width
+                if (contentWidth > availableWidth) { 
+                    // Calculate overflow based on full content vs available space
+                    // Add buffer to scroll fully out of view or just enough? Usually "marquee" style
+                    // Here we scroll it to the left so the end is visible + some buffer
+                    const overflow = contentWidth - availableWidth + 50; 
+                    
+                    const duration = Math.max(3000, (overflow / 50) * 1000); // 50px per second speed
+                    
+                    // Initial delay for reading the start
+                    setTimeout(() => {
+                        content.style.transition = `transform ${duration}ms linear`; 
+                        content.style.transform = `translateX(-${overflow}px)`; 
+                        
+                        clearTimeout(state.tickerTimer); 
+                        state.tickerTimer = setTimeout(() => cycleTicker(1), duration + 3000); // Wait for scroll + 3s pause
+                    }, 2000);
+                } 
+                // If content fits
+                else { 
+                    clearTimeout(state.tickerTimer); 
+                    state.tickerTimer = setTimeout(() => cycleTicker(1), 15000); 
+                } 
+            }, 100); 
+        }
 
         function manualTicker(dir) { clearTimeout(state.tickerTimer); cycleTicker(dir); }
 
@@ -1170,7 +1465,8 @@
                     if (s % 45 === 0) { checkBreaking(); } 
                     scheduleBreakingDisplay();
 
-                    if (!state.isNightMode && (Date.now() - state.lastTickerUpdate > 12000) && !state.isSpecial && !state.isSummary) { cycleTicker(1); } 
+                    // Modified safety check for longer ticker duration ( > 16000 )
+                    if (!state.isNightMode && (Date.now() - state.lastTickerUpdate > 16000) && !state.isSpecial && !state.isSummary) { cycleTicker(1); } 
                 }
             }, 100); 
         }
@@ -1199,6 +1495,9 @@
             
             // Start Auto Scaler
             AutoScaler.init();
+            
+            // Schedule the first watermark transition immediately on load
+            scheduleLogoWatermark();
             
             startClock(); startMainLoop(); generateHourlySchedule();
             const d = document.createElement('div'); d.className='term-line'; d.innerText = ">> RENDSZER KÉSZ"; DOM.term.appendChild(d); DOM.fill.style.width = "100%";
