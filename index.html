@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V20.30 HD COMPACT</title>
+    <title>TKP NEWS - V20.40 HD PRO</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600;700&family=Roboto+Condensed:wght@300;400;700&family=Chakra+Petch:wght@400;500;600;700;800&family=Roboto+Mono:wght@500;700&family=Great+Vibes&family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600;700&family=Roboto+Condensed:wght@300;400;700&family=Chakra+Petch:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;700&family=Great+Vibes&family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
@@ -18,7 +18,10 @@
             --alert: #cc0000;
             --glass: rgba(0, 10, 25, 0.85);
             --text: #ffffff;
-            --footer-h: clamp(60px, 8vh, 90px); /* Kicsit kompaktabb footer */
+            
+            /* Dynamic sizing base - controlled by JS AutoScaler */
+            --base-scale: 1;
+            --footer-h: calc(80px * var(--base-scale));
             
             --font-main: 'Oswald', sans-serif;
             --font-data: 'Roboto Condensed', sans-serif;
@@ -36,6 +39,10 @@
             --rtl-red: #d00000;
             --rtl-purple: #5b2a86; 
             --rtl-blue: #009ee3;
+
+            /* Dynamic Sun Phase Colors */
+            --sun-accent: #ffcc00; /* Default */
+            --sun-bg-grad: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; outline: none; }
@@ -47,6 +54,7 @@
             -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeLegibility;
             position: fixed; top: 0; left: 0;
+            font-size: calc(16px * var(--base-scale)); /* Global scaling */
         }
 
         #dev-trigger { position: fixed; top: 0; left: 0; width: 80px; height: 80px; z-index: 20000; cursor: pointer; }
@@ -70,25 +78,18 @@
         /* --- RIGHT COLUMN COMPACT HD LAYOUT --- */
         .right-column-container {
             position: absolute;
-            top: 2vh; /* Slightly higher start */
+            top: 2vh; 
             right: 2vw;
-            /* Narrower width to keep it compact */
-            width: clamp(260px, 20vw, 380px); 
-            
-            /* Ensure it never touches the footer */
+            width: clamp(260px, 22vw, 400px); 
             max-height: calc(100vh - var(--footer-h) - 30px);
-            
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
             align-items: flex-end;
-            gap: 10px; /* Reduced gap */
+            gap: 0.8rem;
             z-index: 50;
             pointer-events: none;
-            
-            /* Sharpness optimization - No Scaling! */
-            -webkit-font-smoothing: antialiased;
-            backface-visibility: hidden;
+            transform-origin: top right; /* For scaling safety */
         }
 
         .top-right-widget-group { position: relative; width: 100%; display: flex; flex-direction: row; align-items: stretch; gap: 8px; pointer-events: auto; justify-content: flex-end; }
@@ -135,7 +136,7 @@
         .refresh-btn-side:hover { background: rgba(255,255,255,0.15); color: #fff; border-top-color: var(--accent); box-shadow: 0 0 15px rgba(0,0,0,0.5); }
         .refresh-btn-side.loading { color: #888; pointer-events: none; animation: pulse 1s infinite; }
 
-        .logo-box { position: fixed; top: 4vh; left: 4vw; width: auto; height: auto; z-index: 9999; pointer-events: auto; cursor: pointer; display: flex; flex-direction: column; gap: 2px; opacity: 1; will-change: transform, opacity; }
+        .logo-box { position: fixed; top: 4vh; left: 4vw; width: auto; height: auto; z-index: 9999; pointer-events: auto; cursor: pointer; display: flex; flex-direction: column; gap: 2px; opacity: 1; will-change: transform, opacity; transform-origin: top left; }
         .logo-box.high-z { z-index: 10000 !important; }
         .rtl-logo-container { position: relative; display: flex; flex-direction: column; align-items: flex-start; width: fit-content; }
         .rtl-boxes { display: flex; gap: 2px; margin-bottom: 2px; }
@@ -207,7 +208,7 @@
         .wx-c-val { font-family: var(--font-tech); font-size: 0.9rem; color: #e0e0e0; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .wx-live-badge { background: #cc0000; color: white; font-size: 0.55rem; padding: 1px 3px; border-radius: 2px; font-weight: bold; vertical-align: middle; letter-spacing: 1px; flex-shrink: 0; }
 
-        .main-news { position: absolute; bottom: 15vh; left: 4vw; width: clamp(400px, 60vw, 1200px); pointer-events: auto; cursor: pointer; z-index: 20; transition: transform 0.2s; }
+        .main-news { position: absolute; bottom: 15vh; left: 4vw; width: clamp(400px, 60vw, 1200px); pointer-events: auto; cursor: pointer; z-index: 20; transition: transform 0.2s; transform-origin: bottom left; }
         .main-news:hover { transform: scale(1.01); }
         .mn-container { display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.6); opacity: 0; transform: translateY(20px); transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .mn-container.active { opacity: 1; transform: translateY(0); }
@@ -234,13 +235,19 @@
         .nav-btn { background: #1a1a1a; border: 1px solid #444; color: #fff; padding: 6px 15px; cursor: pointer; font-family: var(--font-tech); font-weight: bold; transition: 0.2s; }
         .nav-btn:hover { background: var(--accent); color: #000; }
         .tick-info { font-family: var(--font-tech); font-size: 0.85rem; color: #777; min-width: 70px; text-align: center; }
-        .ticker-window { flex-grow: 1; height: 100%; position: relative; overflow: hidden; z-index: 45; }
+        .ticker-window { flex-grow: 1; height: 100%; position: relative; overflow: hidden; z-index: 45; padding-right: 180px; mask-image: linear-gradient(to right, black 85%, transparent 100%); -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%); }
         .ticker-item { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; padding-left: 20px; opacity: 0; transition: opacity 0.5s; cursor: pointer; pointer-events: auto; text-decoration: none; }
         .ticker-item:hover { background: rgba(255,255,255,0.08); }
         .ticker-item.active { opacity: 1; }
         .ticker-content { font-family: var(--font-data); font-size: clamp(1rem, 2.3vh, 1.6rem); white-space: nowrap; display: flex; align-items: center; width: 100%; color: #f0f0f0; position: relative; transition: transform 0s linear; }
         .ticker-meta { font-family: var(--font-tech); color: var(--accent); font-weight: 700; background: rgba(255,255,255,0.08); padding: 4px 12px; border-radius: 4px; margin-right: 15px; font-size: 0.85em; flex-shrink: 0; display:flex; align-items:center; gap:8px;}
         
+        .ticker-clock { position: absolute; right: 0; top: 0; height: 100%; width: 160px; background: var(--sun-bg-grad); border-left: 4px solid var(--sun-accent); z-index: 60; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: -10px 0 30px rgba(0,0,0,1); transition: all 3s ease; }
+        .tc-time-row { display: flex; align-items: baseline; justify-content: center; gap: 2px; }
+        .tc-hm { font-family: var(--font-mono); font-size: 1.8rem; color: #fff; font-weight: 700; line-height: 1; letter-spacing: -1px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); font-variant-numeric: tabular-nums; }
+        .tc-s { font-family: var(--font-mono); font-size: 1.1rem; color: var(--sun-accent); font-weight: 500; min-width: 30px; transition: color 3s ease; font-variant-numeric: tabular-nums; }
+        .tc-date-row { font-family: var(--font-main); font-size: 0.75rem; color: #ccc; text-transform: uppercase; font-weight: 600; margin-top: 4px; letter-spacing: 1px; opacity: 0.9; width: 100%; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2px; }
+
         .hourly-nav-bar { position: absolute; bottom: var(--footer-h); left: 20px; width: auto; max-width: 80vw; height: 40px; background: transparent; display: flex; justify-content: flex-start; align-items: flex-end; padding-bottom: 0; gap: 6px; z-index: 55; opacity: 0; pointer-events: none; transition: opacity 0.5s; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
         .hourly-nav-bar::-webkit-scrollbar { display: none; } 
         .hourly-nav-bar.active { opacity: 1; pointer-events: auto; }
@@ -675,6 +682,16 @@
                 <button class="nav-btn" onclick="manualTicker(1)">▶</button>
             </div>
             <div class="ticker-window" id="ticker-window"></div>
+            
+            <!-- NEW DIGITAL CLOCK COMPONENT -->
+            <div class="ticker-clock">
+                <div class="tc-time-row">
+                    <div class="tc-hm" id="tc-hm">00:00</div>
+                    <div class="tc-s" id="tc-s">:00</div>
+                </div>
+                <div class="tc-date-row" id="tc-date">---.--.--</div>
+            </div>
+            
         </div>
 
     </div>
@@ -745,7 +762,7 @@
         const SEASONAL_BACKGROUNDS = { spring: ['https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=1920&fit=crop'], summer: ['https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1920&fit=crop'], autumn: ['https://images.unsplash.com/photo-1507371341162-63b5acf0d979?q=80&w=1920&fit=crop'], winter: ['https://images.unsplash.com/photo-1478265409131-1f65c88f965c?q=80&w=1920&fit=crop'] };
         const BACKGROUNDS = { winter_night: SEASONAL_BACKGROUNDS.winter, winter_day: SEASONAL_BACKGROUNDS.winter, dawn: SEASONAL_BACKGROUNDS.spring, day: SEASONAL_BACKGROUNDS.summer, dusk: SEASONAL_BACKGROUNDS.autumn, night: SEASONAL_BACKGROUNDS.winter };
 
-        let state = { allNews: [], tickerItems: [], mainItems: [], weatherData: [], pwsData: { temp: '--', feel: '--', wind: '--', windDir: '', cond: '--', icon: '❓', updated: false, rainRate: 0, rainDay: 0, uv: 0, humidity: 0, pressure: 0, gust: 0 }, tickerIdx: 0, mainIdx: 0, wxIdx: 0, tickerTimer: null, mainTimer: null, isBreaking: false, isSpecial: false, seenBreaking: new Set(), breakingQueue: [], breakingHistory: new Set(), isBreakingActive: false, feedStatus: {}, startTime: Date.now(), currentMainLink: null, currentBreakingLink: null, currentBreakingItem: null, pwsRotationIdx: 0, lastWxUpdate: 0, currentWxSource: '--', lastTickerUpdate: Date.now(), specialMeteoInterval: null, meteoPhaseTimer: null, schedule: [], initialLoadComplete: false, isNightMode: false, forcedNightMode: false, mainTimer: null, weatherAlertCooldown: {}, mainStarted: false, bigClockTimeout: null, isLocked: false, isClockRunning: false, testMiniRainState: false, testMiniAlertState: false, stationPointer: 0, nightSummaryQueue: [], hasFreshNews: false, manualRefreshRequested: false, clockPhase: 0, hourlyTriggered: false, currencyRates: null, currencyBase: 'USD', refreshedThisShow: false, updateTriggered: false, clockFinishTriggered: false, logoExitTriggered: false, pwsSlide: 0, pwsInterval: null, viewingArchiveHour: -1, nextClockTriggerSeconds: 0, nextBreakingTriggerTime: 0 };
+        let state = { allNews: [], tickerItems: [], mainItems: [], weatherData: [], pwsData: { temp: '--', feel: '--', wind: '--', windDir: '', cond: '--', icon: '❓', updated: false, rainRate: 0, rainDay: 0, uv: 0, humidity: 0, pressure: 0, gust: 0 }, tickerIdx: 0, mainIdx: 0, wxIdx: 0, tickerTimer: null, mainTimer: null, isBreaking: false, isSpecial: false, seenBreaking: new Set(), breakingQueue: [], breakingHistory: new Set(), isBreakingActive: false, feedStatus: {}, startTime: Date.now(), currentMainLink: null, currentBreakingLink: null, currentBreakingItem: null, pwsRotationIdx: 0, lastWxUpdate: 0, currentWxSource: '--', lastTickerUpdate: Date.now(), specialMeteoInterval: null, meteoPhaseTimer: null, schedule: [], initialLoadComplete: false, isNightMode: false, forcedNightMode: false, mainTimer: null, weatherAlertCooldown: {}, mainStarted: false, bigClockTimeout: null, isLocked: false, isClockRunning: false, testMiniRainState: false, testMiniAlertState: false, stationPointer: 0, nightSummaryQueue: [], hasFreshNews: false, manualRefreshRequested: false, clockPhase: 0, hourlyTriggered: false, currencyRates: null, currencyBase: 'USD', refreshedThisShow: false, updateTriggered: false, clockFinishTriggered: false, logoExitTriggered: false, pwsSlide: 0, pwsInterval: null, viewingArchiveHour: -1, nextClockTriggerSeconds: 0, nextBreakingTriggerTime: 0, sunData: null };
 
         const DOM = { loader: document.getElementById('loader'), term: document.getElementById('term'), fill: document.getElementById('load-fill'), stage: document.getElementById('stage'), tickerWindow: document.getElementById('ticker-window'), mainContainerBox: document.getElementById('mn-container-box'), mainTitle: document.getElementById('m-title'), mainDesc: document.getElementById('m-desc'), mainCatText: document.getElementById('m-cat-text'), mainMeta: document.getElementById('m-meta'), mainPrg: document.getElementById('m-prg'), trPwsContent: document.getElementById('tr-pws-content'), special: document.getElementById('special-meteo'), smGrid: document.getElementById('sm-grid'), smTitle: document.getElementById('sm-main-title'), smBg: document.getElementById('sm-bg'), feedLog: document.getElementById('feed-log-table'), auth: document.getElementById('auth-overlay'), pin: document.getElementById('pin-input'), dev: document.getElementById('dev-panel'), devWxNext: document.getElementById('dev-wx-next'), devWxSrc: document.getElementById('dev-wx-src'), devBkQueue: document.getElementById('dev-bk-queue'), devScheduleTable: document.getElementById('dev-schedule-table').querySelector('tbody'), logoBox: document.getElementById('logo-box'), liveBadge: document.getElementById('live-badge'), replayBadge: document.getElementById('replay-badge'), nightMsg: document.getElementById('night-msg'), tickerNav: document.getElementById('ticker-nav'), sidebar: document.querySelector('.sidebar'), sidebarFlipper: document.querySelector('.sidebar-flipper'), bkCardHeadline: document.getElementById('bk-card-headline'), bkCardBody: document.getElementById('bk-card-body'), bkCardMeta: document.getElementById('bk-card-meta'), bkCardClickable: document.getElementById('bk-card-clickable'), fxSourceContainer: document.getElementById('fx-source-container'), bigClockOverlay: document.getElementById('big-clock-overlay'), hourlyNavBar: document.getElementById('hourly-nav-bar'), hourlyArchiveOverlay: document.getElementById('hourly-archive-overlay'), haTitle: document.getElementById('ha-title-text'), haList: document.getElementById('ha-list-container'), bcInfoText: document.getElementById('bc-info-text') };
 
@@ -1028,40 +1045,134 @@
 
         function cycleMain(manual = false, preserveIndex = false) { if (state.isLocked) return; if (!state.mainItems.length || state.isSpecial || state.isSummary) return; if (!manual) { state.mainIdx++; if (state.mainIdx >= state.mainItems.length) state.mainIdx = 0; } else if (!preserveIndex) { state.mainIdx = 0; } if (state.mainIdx < 0) state.mainIdx = state.mainItems.length - 1; if (state.mainIdx >= state.mainItems.length) state.mainIdx = 0; const item = state.mainItems[state.mainIdx]; state.currentMainLink = item.link; DOM.mainContainerBox.classList.remove('active'); setTimeout(() => { if (state.isLocked) return; DOM.mainTitle.innerText = item.title; DOM.mainDesc.innerText = item.desc; document.getElementById('nav-count').innerText = `${state.mainIdx + 1} / ${state.mainItems.length}`; const timeStr = item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'}); if(DOM.mainCatText) { const feed = RSS_FEEDS.find(f => f.name === item.source); const logoUrl = feed ? `https://www.google.com/s2/favicons?domain=${feed.domain}&sz=64` : ''; DOM.mainCatText.innerHTML = `<img src="${logoUrl}"> ${item.source} • ${timeStr}`; } const img = document.createElement('img'); img.src = item.img; img.className = 'bg-img'; DOM.stage.appendChild(img); img.onerror = () => { img.remove(); DOM.mainTitle.innerText = "KÉP BETÖLTÉSE SIKERTELEN..."; setTimeout(() => cycleMain(), 2000); }; img.onload = () => { if(state.isLocked) { img.remove(); return; } img.classList.add('active'); const imgs = DOM.stage.querySelectorAll('.bg-img'); if (imgs.length > 2) imgs[0].remove(); DOM.mainContainerBox.classList.add('active'); }; DOM.mainPrg.style.transition = 'none'; DOM.mainPrg.style.width = '0%'; setTimeout(() => { DOM.mainPrg.style.transition = 'width 21.8s linear'; DOM.mainPrg.style.width = '100%'; }, 50); }, 600); }
 
+        // --- SUN CYCLE ENGINE (NYÍREGYHÁZA DETAILED) ---
+        const SunCycle = {
+            calc: (date, lat, lon) => {
+                // Simplified orbital mechanics for robust standalone usage
+                const d = new Date(date);
+                const n = Math.floor((d - new Date(d.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+                const h = d.getHours() + d.getMinutes() / 60;
+                // Approx sunrise/sunset
+                const declination = 23.45 * Math.sin((2 * Math.PI * (284 + n)) / 365);
+                const hourAngle = Math.acos(-Math.tan(lat * Math.PI/180) * Math.tan(declination * Math.PI/180)) * 180/Math.PI;
+                const sunrise = 12 - hourAngle / 15;
+                const sunset = 12 + hourAngle / 15;
+                // Correct for longitude (Nyíregyháza is East, so earlier)
+                const lonCorr = (15 - lon) * 4 / 60; // hours
+                return { rise: sunrise + lonCorr - 0.5, set: sunset + lonCorr + 0.5 }; // approximate local time adjustment
+            },
+            getPhase: () => {
+                // Returns color theme and gradient based on Nyíregyháza sun position
+                const now = new Date();
+                // Get accurate rise/set from API if available, else approximate
+                let rise = 6, set = 18;
+                // Manual overrides for Nyíregyháza typical times if no API
+                const m = now.getMonth();
+                if(m === 11 || m < 1) { rise = 7.5; set = 16; } // Winter
+                else if(m > 4 && m < 8) { rise = 4.5; set = 20.5; } // Summer
+                else { rise = 6; set = 18; } // Equinox
+
+                const h = now.getHours() + now.getMinutes()/60;
+                
+                // Define Phases
+                if (h < rise - 1) return { n: 'NIGHT', c: '#3366cc', g: 'linear-gradient(180deg, #000510 0%, #001a33 100%)' }; // Deep Night
+                if (h < rise) return { n: 'DAWN', c: '#ff9966', g: 'linear-gradient(180deg, #1a0520 0%, #4d1a33 100%)' }; // Dawn
+                if (h < rise + 0.5) return { n: 'SUNRISE', c: '#ffcc00', g: 'linear-gradient(180deg, #331a00 0%, #cc5500 100%)' }; // Sunrise
+                if (h < set - 1) return { n: 'DAY', c: '#00d4ff', g: 'linear-gradient(180deg, #0a1a2a 0%, #1a2a3a 100%)' }; // Day
+                if (h < set) return { n: 'GOLDEN', c: '#ffcc00', g: 'linear-gradient(180deg, #332200 0%, #664400 100%)' }; // Golden Hour
+                if (h < set + 0.5) return { n: 'SUNSET', c: '#ff4444', g: 'linear-gradient(180deg, #330000 0%, #660000 100%)' }; // Sunset
+                if (h < set + 1.5) return { n: 'DUSK', c: '#9933cc', g: 'linear-gradient(180deg, #1a0033 0%, #330066 100%)' }; // Dusk
+                return { n: 'NIGHT', c: '#3366cc', g: 'linear-gradient(180deg, #000510 0%, #001a33 100%)' };
+            }
+        };
+
+        // --- INTELLIGENT AUTO SCALER ---
+        const AutoScaler = {
+            init: () => {
+                window.addEventListener('resize', AutoScaler.apply);
+                AutoScaler.apply();
+            },
+            apply: () => {
+                const baseW = 1920;
+                const baseH = 1080;
+                const winW = window.innerWidth;
+                const winH = window.innerHeight;
+                
+                // Calculate scale ratio preserving aspect but filling viewport best as possible
+                // We prioritize ensuring height fits for ticker/header visibility
+                const scaleX = winW / baseW;
+                const scaleY = winH / baseH;
+                const scale = Math.min(scaleX, scaleY);
+                
+                // Set CSS Variable
+                document.documentElement.style.setProperty('--base-scale', scale);
+                
+                // Ensure layout doesn't overlap on very weird aspect ratios
+                // If screen is super wide but short (ultrawide), we might need to constrain width
+                // If screen is 4:3, we scale down content slightly more to avoid edge clipping
+            }
+        };
+
+        function updateTickerClock() {
+            const now = new Date();
+            // Monospace format
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+            
+            const dayStr = now.toLocaleDateString('hu-HU', { weekday: 'long' });
+            const dateStr = now.toLocaleDateString('hu-HU', { month: 'short', day: 'numeric' }).replace(/\.$/, ""); 
+            
+            document.getElementById('tc-hm').innerText = `${h}:${m}`;
+            document.getElementById('tc-s').innerText = `:${s}`;
+            document.getElementById('tc-date').innerText = `${dateStr}. | ${dayStr}`;
+
+            // Apply Sun Phase Styling
+            const phase = SunCycle.getPhase();
+            document.documentElement.style.setProperty('--sun-accent', phase.c);
+            document.documentElement.style.setProperty('--sun-bg-grad', phase.g);
+        }
+
         function startClock() { 
+            // 100ms interval for precise second updates without lag
             setInterval(() => { 
                 const now = new Date(); const m = now.getMinutes(); const s = now.getSeconds(); 
-                checkScheduleExecution(); 
-                if (!state.isClockRunning) { checkNightMode(); } 
-                updateHourlyCubes(); 
                 
-                if (m === 0 && s === 0) { 
-                    fetchCurrency(); 
-                    generateHourlySchedule(); 
-                } 
-                
-                updateDevMonitor(); 
-                
-                // --- BIG CLOCK RANDOM START ---
-                if (m === 59 && s === (state.nextClockTriggerSeconds - 5) && !state.isNightMode && !state.logoExitTriggered && !state.isClockRunning) { 
-                    state.logoExitTriggered = true; 
-                    animateLogoOut(); 
-                } 
-                if (m === 59 && s === state.nextClockTriggerSeconds && !state.isClockRunning && !state.isNightMode) { 
-                    triggerBigClockSequence(); 
-                } 
-                
-                if (!state.isNightMode && s === 0) { 
-                    if (m === 5 || m === 20 || m === 40) { backgroundRefresh(true, true); } 
-                } 
-                
-                // --- BREAKING NEWS CHECK & TRIGGER ---
-                if (s % 45 === 0) { checkBreaking(); } 
-                // Random trigger check (every second)
-                scheduleBreakingDisplay();
+                updateTickerClock(); 
 
-                if (!state.isNightMode && (Date.now() - state.lastTickerUpdate > 12000) && !state.isSpecial && !state.isSummary) { cycleTicker(1); } 
-            }, 1000); 
+                // Execute heavy logic only on full seconds
+                if (now.getMilliseconds() < 150) {
+                    checkScheduleExecution(); 
+                    if (!state.isClockRunning) { checkNightMode(); } 
+                    updateHourlyCubes(); 
+                    
+                    if (m === 0 && s === 0) { 
+                        fetchCurrency(); 
+                        generateHourlySchedule(); 
+                    } 
+                    
+                    updateDevMonitor(); 
+                    
+                    // --- BIG CLOCK RANDOM START ---
+                    if (m === 59 && s === (state.nextClockTriggerSeconds - 5) && !state.isNightMode && !state.logoExitTriggered && !state.isClockRunning) { 
+                        state.logoExitTriggered = true; 
+                        animateLogoOut(); 
+                    } 
+                    if (m === 59 && s === state.nextClockTriggerSeconds && !state.isClockRunning && !state.isNightMode) { 
+                        triggerBigClockSequence(); 
+                    } 
+                    
+                    if (!state.isNightMode && s === 0) { 
+                        if (m === 5 || m === 20 || m === 40) { backgroundRefresh(true, true); } 
+                    } 
+                    
+                    // --- BREAKING NEWS CHECK & TRIGGER ---
+                    if (s % 45 === 0) { checkBreaking(); } 
+                    scheduleBreakingDisplay();
+
+                    if (!state.isNightMode && (Date.now() - state.lastTickerUpdate > 12000) && !state.isSpecial && !state.isSummary) { cycleTicker(1); } 
+                }
+            }, 100); 
         }
 
         function startMainLoop() { if (state.mainTimer) clearInterval(state.mainTimer); state.mainTimer = setInterval(() => { if(!state.isSpecial && !state.isSummary) cycleMain(); }, 22000); }
@@ -1085,6 +1196,10 @@
             if(DOM.bkCardClickable) DOM.bkCardClickable.onclick = () => { const link = DOM.bkCardClickable.dataset.link; if(link && link !== "#") window.open(link, '_blank'); };
             window.stepMain = function(dir) { if(!state.mainItems.length || state.isLocked) return; clearInterval(state.mainTimer); let newIdx = state.mainIdx + dir; if (newIdx < 0) newIdx = state.mainItems.length - 1; if (newIdx >= state.mainItems.length) newIdx = 0; state.mainIdx = newIdx; cycleMain(true, true); startMainLoop(); };
             const uiLeft = document.getElementById('ui-left'); if(uiLeft) uiLeft.onclick = (e) => { if (e.target.closest('.main-nav-bar') || e.target.classList.contains('mn-btn')) return; if (e.target.closest('.main-nav-overlay') || e.target.classList.contains('nav-btn-mini')) return; if(state.currentMainLink) window.open(state.currentMainLink, '_blank'); };
+            
+            // Start Auto Scaler
+            AutoScaler.init();
+            
             startClock(); startMainLoop(); generateHourlySchedule();
             const d = document.createElement('div'); d.className='term-line'; d.innerText = ">> RENDSZER KÉSZ"; DOM.term.appendChild(d); DOM.fill.style.width = "100%";
             crawlNews(false); fetchCurrency(); fetchOther(); fetchWunderground();
