@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V20.97 SCROLL & LOGO FIX</title>
+    <title>TKP NEWS - V21.02 CLEAN WATERMARK</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -138,7 +138,7 @@
         .refresh-btn-side:hover { background: rgba(255,255,255,0.15); color: #fff; border-top-color: var(--accent); box-shadow: 0 0 15px rgba(0,0,0,0.5); }
         .refresh-btn-side.loading { color: #888; pointer-events: none; animation: pulse 1s infinite; }
 
-        /* --- REDESIGNED TKP LOGO --- */
+        /* --- REDESIGNED TKP LOGO (RESIZED & ANIMATED) --- */
         .logo-box { 
             position: fixed; top: 4vh; left: 4vw; width: auto; z-index: 9999; 
             pointer-events: auto; cursor: pointer; 
@@ -152,26 +152,53 @@
         }
 
         .logo-letters {
-            display: flex; gap: 3px; z-index: 2;
+            display: flex; gap: 2px; z-index: 2; /* Spacing reduced */
         }
 
+        /* REDUCED LOGO SIZE */
         .logo-block {
-            width: 34px; height: 34px;
+            width: 26px; height: 26px; /* Was 34px */
             display: flex; align-items: center; justify-content: center;
-            color: #fff; font-family: 'Inter', sans-serif; font-weight: 900; font-size: 1.4rem;
+            color: #fff; font-family: 'Inter', sans-serif; font-weight: 900; 
+            font-size: 1.1rem; /* Was 1.4rem */
             border-radius: 2px;
             border: 1px solid rgba(255,255,255,0.25);
             box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-            transform: scale(0); opacity: 0;
+            
+            /* Initial state for PopIn */
+            transform: scale(0); opacity: 0; 
+            
             text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-            /* Important: Transition for watermark effect */
             transition: background 1.5s ease, border-color 1.5s ease, color 1.5s ease, box-shadow 1.5s ease, text-shadow 1.5s ease;
         }
 
-        /* TKP COLORS */
+        /* LOGO COLORS */
         .lb-t { background: linear-gradient(135deg, #d00000 0%, #900000 100%); }
         .lb-k { background: linear-gradient(135deg, #702082 0%, #4a1555 100%); }
         .lb-p { background: linear-gradient(135deg, #009ee3 0%, #006c9b 100%); }
+
+        /* 3-SECOND JUMPING ANIMATION */
+        @keyframes logoColorJump {
+            0% { filter: brightness(1); transform: translateY(0) scale(1); }
+            50% { filter: brightness(1.3) saturate(1.2); transform: translateY(-2px) scale(1); }
+            100% { filter: brightness(1); transform: translateY(0) scale(1); }
+        }
+        
+        /* 
+           CRITICAL FIX: 
+           Exclude .logo-entry from this rule so the PopIn animation (scale 0->1) can run first!
+           Only run jumping when NOT watermark, NOT exit, and NOT entry.
+        */
+        .logo-box:not(.watermark-active):not(.logo-exit):not(.logo-entry) .logo-block {
+            animation: logoColorJump 0.6s infinite alternate;
+            /* Force opacity/scale to 1 just in case, but after entry is removed */
+            opacity: 1; transform: scale(1); 
+        }
+        
+        /* Stagger the jumps */
+        .logo-box:not(.watermark-active):not(.logo-exit):not(.logo-entry) .lb-t { animation-delay: 0s; }
+        .logo-box:not(.watermark-active):not(.logo-exit):not(.logo-entry) .lb-k { animation-delay: 0.1s; }
+        .logo-box:not(.watermark-active):not(.logo-exit):not(.logo-entry) .lb-p { animation-delay: 0.2s; }
 
         /* NEWS BAR */
         .logo-news-bar {
@@ -181,17 +208,22 @@
             text-align: center;
             font-family: 'Oswald', sans-serif;
             font-weight: 700;
-            font-size: 0.9rem;
-            letter-spacing: 4px;
-            padding: 2px 0;
+            font-size: 0.75rem; /* Reduced from 0.9rem */
+            letter-spacing: 3px;
+            padding: 1px 0;
             border-bottom: 2px solid rgba(255,255,255,0.3);
             margin-top: 0px; 
             transform-origin: top center;
             transform: scaleY(0); opacity: 0;
             position: relative; z-index: 1;
             box-shadow: 0 5px 15px rgba(0,0,0,0.6);
-             /* Important: Transition for watermark effect */
             transition: background 1.5s ease, color 1.5s ease, border-color 1.5s ease, box-shadow 1.5s ease;
+        }
+        
+        /* FIX: Keep News Bar visible during jumping state */
+        .logo-box:not(.logo-entry):not(.logo-exit) .logo-news-bar {
+            transform: scaleY(1);
+            opacity: 1;
         }
 
         /* LIVE & REPLAY BADGES */
@@ -226,7 +258,7 @@
             100% { transform: scaleY(0); opacity: 0; } 
         }
 
-        /* ENTRY STATE */
+        /* ENTRY STATE - Triggers ONCE when class is added */
         .logo-box.logo-entry .lb-t { animation: logoPopIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.1s; }
         .logo-box.logo-entry .lb-k { animation: logoPopIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.2s; }
         .logo-box.logo-entry .lb-p { animation: logoPopIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.3s; }
@@ -245,11 +277,13 @@
             box-shadow: none !important;
             color: rgba(255, 255, 255, 0.6) !important;
             text-shadow: none !important;
+            animation: none !important; /* Stop jumping */
+            transform: scale(1) !important; opacity: 1 !important;
         }
         .logo-box.watermark-active .logo-news-bar {
             background: transparent !important;
             color: rgba(255, 255, 255, 0.6) !important;
-            border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+            border-bottom: none !important; /* FIXED: Removed line in watermark mode */
             box-shadow: none !important;
             text-shadow: 0 1px 2px #000 !important;
         }
@@ -257,19 +291,18 @@
         /* NIGHT MODE (Manual Override) */
         .logo-box.night-theme { opacity: 0.85; filter: grayscale(0.3); }
         
-        /* INLINE LOGO FOR TEXT - FIXED VISIBILITY */
+        /* INLINE LOGO FOR TEXT */
         .text-inline-logo {
             display: inline-flex; flex-direction: column; align-items: flex-start;
             vertical-align: middle;
             transform: scale(0.6);
-            margin: 0 -20px; /* Counteract scale spacing */
+            margin: 0 -15px;
         }
-        
-        /* FIX: Force inline logo to be visible regardless of global animation state */
         .text-inline-logo .logo-block {
             transform: scale(1) !important;
             opacity: 1 !important;
             box-shadow: none !important;
+            animation: none !important;
         }
         .text-inline-logo .logo-news-bar {
             transform: scaleY(1) !important;
@@ -289,6 +322,7 @@
             box-shadow: none;
             transform: scale(1); opacity: 1; /* Force visible */
             text-shadow: none;
+            animation: none !important;
         }
         .clock-embedded-logo .logo-news-bar {
             background: transparent;
@@ -385,7 +419,6 @@
             position: relative;
         }
         
-        /* Slanted separator after nav */
         .ticker-nav::after {
             content: ''; position: absolute; right: -15px; top: 0; width: 30px; height: 100%;
             background: #111; transform: skewX(-20deg); border-right: 1px solid #333;
@@ -405,8 +438,7 @@
         
         /* TICKER WINDOW & PATTERN */
         .ticker-window { 
-            flex-grow: 1; height: 100%; position: relative; overflow: hidden; z-index: 45; padding-right: 180px; 
-            /* Subtle tech pattern background */
+            flex-grow: 1; height: 100%; position: relative; overflow: hidden; z-index: 45; padding-right: 140px; /* Adjusted from 200px */
             background-image: repeating-linear-gradient(45deg, transparent 0, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px);
             mask-image: linear-gradient(to right, black 85%, transparent 100%); -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%); 
         }
@@ -422,7 +454,6 @@
             font-family: var(--font-data); font-size: clamp(1.1rem, 2.4vh, 1.8rem); 
             white-space: nowrap; display: flex; align-items: center; width: auto; 
             color: #f0f0f0; position: relative; 
-            /* Transformation handled by JS now for conditional scroll */
             will-change: transform;
         }
         
@@ -436,11 +467,20 @@
             text-transform: uppercase; letter-spacing: 1px;
         }
         
-        .ticker-clock { position: absolute; right: 0; top: 0; height: 100%; width: 160px; background: var(--sun-bg-grad); border-left: 4px solid var(--sun-accent); z-index: 60; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: -10px 0 30px rgba(0,0,0,1); transition: all 3s ease; }
-        .tc-time-row { display: flex; align-items: baseline; justify-content: center; gap: 2px; }
-        .tc-hm { font-family: var(--font-mono); font-size: 1.8rem; color: #fff; font-weight: 700; line-height: 1; letter-spacing: -1px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); font-variant-numeric: tabular-nums; }
-        .tc-s { font-family: var(--font-mono); font-size: 1.1rem; color: var(--sun-accent); font-weight: 500; min-width: 30px; transition: color 3s ease; font-variant-numeric: tabular-nums; }
-        .tc-date-row { font-family: var(--font-main); font-size: 0.75rem; color: #ccc; text-transform: uppercase; font-weight: 600; margin-top: 4px; letter-spacing: 1px; opacity: 0.9; width: 100%; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2px; }
+        /* ORGANIZED BOTTOM RIGHT CLOCK - COMPACT VERSION */
+        .ticker-clock { 
+            position: absolute; right: 0; top: 0; height: 100%; width: 130px; /* Reduced from 160px */
+            background: var(--sun-bg-grad); border-left: 4px solid var(--sun-accent); 
+            z-index: 60; display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            box-shadow: -10px 0 30px rgba(0,0,0,1); transition: all 3s ease; 
+            padding: 0 2px;
+        }
+        .tc-time-row { display: flex; align-items: baseline; justify-content: center; width: 100%; margin-bottom: 2px; }
+        /* Smaller fonts for time */
+        .tc-hm { font-family: var(--font-mono); font-size: 1.5rem; color: #fff; font-weight: 700; line-height: 1; letter-spacing: -1px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); font-variant-numeric: tabular-nums; }
+        .tc-s { font-family: var(--font-mono); font-size: 0.85rem; color: var(--sun-accent); font-weight: 500; margin-left: 3px; transition: color 3s ease; font-variant-numeric: tabular-nums; opacity: 0.9; }
+        /* Organized Date Row */
+        .tc-date-row { font-family: var(--font-main); font-size: 0.65rem; color: #ccc; text-transform: uppercase; font-weight: 700; margin-top: 2px; letter-spacing: 0.5px; opacity: 0.9; width: 100%; text-align: center; border-top: 1px solid rgba(255,255,255,0.25); padding-top: 3px; line-height: 1.2; }
 
         .hourly-nav-bar { position: absolute; bottom: var(--footer-h); left: 20px; width: auto; max-width: 80vw; height: 40px; background: transparent; display: flex; justify-content: flex-start; align-items: flex-end; padding-bottom: 0; gap: 6px; z-index: 55; opacity: 0; pointer-events: none; transition: opacity 0.5s; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
         .hourly-nav-bar::-webkit-scrollbar { display: none; } 
@@ -1006,25 +1046,40 @@
         function prepareAndTriggerClock() { state.isSpecial = true; state.isLocked = true; animateLogoOut(); setTimeout(() => { triggerBigClockSequence(); }, 5000); }
         
         function animateLogoOut() { 
-            DOM.logoBox.classList.remove('logo-entry', 'watermark-active'); 
-            DOM.logoBox.classList.add('logo-exit'); 
+            // 1. Remove watermark (colors return)
+            DOM.logoBox.classList.remove('watermark-active');
+
+            // 2. Wait 3 seconds (colors jumping), then fade out
             if(state.logoWatermarkTimer) clearTimeout(state.logoWatermarkTimer);
+            state.logoWatermarkTimer = setTimeout(() => {
+                 DOM.logoBox.classList.remove('logo-entry');
+                 DOM.logoBox.classList.add('logo-exit');
+            }, 3000);
         }
         
         function animateLogoIn() { 
-            DOM.logoBox.classList.remove('logo-exit', 'watermark-active'); 
+            DOM.logoBox.classList.remove('logo-exit'); 
+            DOM.logoBox.classList.remove('watermark-active'); // Ensure colors are visible first
+            
+            // Add entry class to trigger PopIn animation
             DOM.logoBox.classList.add('logo-entry'); 
-            scheduleLogoWatermark();
+            
+            // Wait 1s for PopIn to finish, then remove entry class to allow jumping animation
+            setTimeout(() => {
+                 DOM.logoBox.classList.remove('logo-entry');
+            }, 1000);
+
+            // Wait 3 seconds total (1s entry + 2s jumping) then activate watermark
+            if(state.logoWatermarkTimer) clearTimeout(state.logoWatermarkTimer);
+            state.logoWatermarkTimer = setTimeout(() => {
+                DOM.logoBox.classList.add('watermark-active');
+            }, 3000);
         }
 
         // --- RANDOM WATERMARK TIMER ---
         function scheduleLogoWatermark() {
             if(state.logoWatermarkTimer) clearTimeout(state.logoWatermarkTimer);
-            // Random time between 5000ms (5s) and 30000ms (30s)
-            const randomTime = Math.floor(Math.random() * 25000) + 5000;
-            state.logoWatermarkTimer = setTimeout(() => {
-                DOM.logoBox.classList.add('watermark-active');
-            }, randomTime);
+            DOM.logoBox.classList.add('watermark-active');
         }
 
         function triggerBigClockSequence() { state.isSpecial = true; state.isLocked = true; state.isClockRunning = true; state.clockPhase = 0; state.updateTriggered = false; state.clockFinishTriggered = false; state.logoExitTriggered = false; DOM.bigClockOverlay.style.background = getSunPhaseBackground(); DOM.bigClockOverlay.style.display = 'grid'; DOM.bigClockOverlay.style.opacity = '0'; DOM.bigClockOverlay.classList.remove('bc-layout-center'); setTimeout(() => { DOM.bigClockOverlay.style.transition = 'opacity 0.8s ease-in-out'; DOM.bigClockOverlay.style.opacity = '1'; DOM.bigClockOverlay.classList.add('active'); generateAnalogClockFace(); runBigClockLoop(); }, 50); }
@@ -1254,7 +1309,7 @@
         async function renderRealAstro() { DOM.smGrid.innerHTML = ''; DOM.smGrid.style.display = 'grid'; const data = await fetchOpenMeteoForecast(47.95, 21.71); if(data && data.daily) { const todayIdx = 0; const rise = new Date(data.daily.sunrise[todayIdx]).toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'}); const set = new Date(data.daily.sunset[todayIdx]).toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'}); const uv = data.daily.uv_index_max[todayIdx]; const sunshine = (data.daily.sunshine_duration[todayIdx] / 3600).toFixed(1); const rainProb = data.daily.precipitation_probability_max[todayIdx]; const windMax = data.daily.windspeed_10m_max[todayIdx]; const pressure = data.current ? data.current.surface_pressure.toFixed(0) : "1013"; const vis = data.current ? (data.current.visibility / 1000).toFixed(1) : "10"; const items = [ { l: "NAPKELTE", v: rise, i: "🌅" }, { l: "NAPNYUGTA", v: set, i: "🌇" }, { l: "UV MAXIMUM", v: uv.toFixed(1), i: "☀️" }, { l: "LÉGNYOMÁS", v: `${pressure} hPa`, i: "🍃" }, { l: "NAPSÜTÉS", v: `${sunshine} ÓRA`, i: "😎" }, { l: "CSAPADÉK ESÉLY", v: `${rainProb}%`, i: "☔" }, { l: "MAX SZÉL", v: `${Math.round(windMax)} KM/H`, i: "💨" }, { l: "LÁTÓTÁVOLSÁG", v: `${vis} KM`, i: "👁️" } ]; items.forEach(d => { const div = document.createElement('div'); div.className = 'sm-card-item astro-card'; div.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;"><div class="ny-d-label">${d.l}</div><div style="font-size:2.5rem; margin:5px 0;">${d.i}</div><div class="ny-d-val" style="font-size:1.5rem;">${d.v}</div></div><div class="sm-watermark">DATA: OPEN-METEO</div>`; DOM.smGrid.appendChild(div); }); } document.getElementById('sm-update-time').innerText = getTime(); }
         async function renderRealAirQuality() { DOM.smGrid.innerHTML = ''; DOM.smGrid.style.display = 'grid'; try { const res = await fetch("https://air-quality-api.open-meteo.com/v1/air-quality?latitude=47.95&longitude=21.71&current=us_aqi,pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone,uv_index&timezone=auto"); const d = await res.json(); if(d && d.current) { const c = d.current; const aqi = c.us_aqi; let aqiColor = "#0f0"; let aqiText = "KIVÁLÓ"; if(aqi > 20) { aqiText = "JÓ"; aqiColor = "#00d4ff"; } if(aqi > 50) { aqiColor = "#fc0"; aqiText = "MEGFELELŐ"; } if(aqi > 100) { aqiColor = "#f90"; aqiText = "SZENNYEZETT"; } if(aqi > 100) { aqiColor = "#f00"; aqiText = "VESZÉLYES"; } const items = [ { t: "LEVEGŐMINŐSÉG (AQI)", v: `${aqi} - ${aqiText}`, c: aqiColor }, { t: "SZÁLLÓ POR (PM10)", v: `${c.pm10} µg/m³`, c: "#fff" }, { t: "FINOM POR (PM2.5)", v: `${c.pm2_5} µg/m³`, c: "#fff" }, { t: "UV INDEX (JELENLEGI)", v: c.uv_index.toFixed(1), c: c.uv_index > 5 ? "#fc0" : "#0f0" }, { t: "NITROGÉN-DIOXID", v: `${c.nitrogen_dioxide} µg/m³`, c: "#ccc" }, { t: "ÓZON (O3)", v: `${c.ozone} µg/m³`, c: "#00d4ff" }, { t: "SZÉN-MONOXID", v: `${c.carbon_monoxide} µg/m³`, c: "#aaa" }, { t: "KÉN-DIOXID", v: `${c.sulphur_dioxide} µg/m³`, c: "#aaa" } ]; items.forEach(i => { const div = document.createElement('div'); div.className = 'sm-card-item'; div.style.borderLeftColor = i.c; div.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;"><div class="ny-d-label">${i.t}</div><div class="ny-d-val" style="color:${i.c}; font-size:1.6rem;">${i.v}</div></div><div class="sm-watermark">DATA: OPEN-METEO AIR API</div>`; DOM.smGrid.appendChild(div); }); } } catch(e) { DOM.smGrid.innerHTML = '<div style="color:#fff; font-size:2rem; width:100%; text-align:center;">LEVEGŐMINŐSÉG ADATOK NEM ELÉRHETŐEK</div>'; } }
 
-        function closeAllOverlays() { DOM.special.classList.remove('active'); DOM.logoBox.classList.remove('center-stage', 'high-z', 'logo-gradual-zoom'); DOM.logoBox.style.transform = ''; DOM.logoBox.classList.remove('logo-exit'); DOM.logoBox.classList.add('logo-entry'); clearTimeout(state.specialMeteoInterval); clearTimeout(state.meteoPhaseTimer); clearTimeout(state.bigClockTimeout); state.isClockRunning = false; state.clockPhase = 0; state.isSummary = false; state.isSpecial = false; toggleLiveBadge(false); DOM.liveBadge.classList.remove('delayed-visible'); setTimeout(() => { DOM.special.style.display = 'none'; DOM.special.style.pointerEvents = 'none'; DOM.bigClockOverlay.style.display = 'none'; DOM.bigClockOverlay.classList.remove('active', 'bc-layout-center'); DOM.logoBox.style.pointerEvents = 'auto'; DOM.logoBox.classList.remove('force-hide'); setTimeout(() => DOM.logoBox.classList.remove('logo-fade-out'), 3000); state.isLocked = false; DOM.hourlyArchiveOverlay.classList.remove('active'); }, 800); [ {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ].forEach(ui => { const el = document.getElementById(ui.id); if(el) el.classList.remove(`hide-${ui.t}`, 'soft-hide', 'force-hide'); }); const card = document.querySelector('.breaking-card'); if(card) card.classList.remove('night-summary-card'); DOM.sidebar.classList.remove('breaking-active'); if (state.isNightMode) { checkNightMode(); DOM.replayBadge.classList.add('visible'); } else { cycleMain(true); cycleTicker(1); } }
+        function closeAllOverlays() { DOM.special.classList.remove('active'); DOM.logoBox.classList.remove('center-stage', 'high-z', 'logo-gradual-zoom'); DOM.logoBox.style.transform = ''; DOM.logoBox.classList.remove('logo-exit'); animateLogoIn(); clearTimeout(state.specialMeteoInterval); clearTimeout(state.meteoPhaseTimer); clearTimeout(state.bigClockTimeout); state.isClockRunning = false; state.clockPhase = 0; state.isSummary = false; state.isSpecial = false; toggleLiveBadge(false); DOM.liveBadge.classList.remove('delayed-visible'); setTimeout(() => { DOM.special.style.display = 'none'; DOM.special.style.pointerEvents = 'none'; DOM.bigClockOverlay.style.display = 'none'; DOM.bigClockOverlay.classList.remove('active', 'bc-layout-center'); DOM.logoBox.style.pointerEvents = 'auto'; DOM.logoBox.classList.remove('force-hide'); setTimeout(() => DOM.logoBox.classList.remove('logo-fade-out'), 3000); state.isLocked = false; DOM.hourlyArchiveOverlay.classList.remove('active'); }, 800); [ {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ].forEach(ui => { const el = document.getElementById(ui.id); if(el) el.classList.remove(`hide-${ui.t}`, 'soft-hide', 'force-hide'); }); const card = document.querySelector('.breaking-card'); if(card) card.classList.remove('night-summary-card'); DOM.sidebar.classList.remove('breaking-active'); if (state.isNightMode) { checkNightMode(); DOM.replayBadge.classList.add('visible'); } else { cycleMain(true); cycleTicker(1); } }
 
         // --- NEW SMART SCROLL TICKER LOGIC ---
         function cycleTicker(dir = 1) { 
@@ -1401,10 +1456,6 @@
                 
                 // Set CSS Variable
                 document.documentElement.style.setProperty('--base-scale', scale);
-                
-                // Ensure layout doesn't overlap on very weird aspect ratios
-                // If screen is super wide but short (ultrawide), we might need to constrain width
-                // If screen is 4:3, we scale down content slightly more to avoid edge clipping
             }
         };
 
@@ -1416,11 +1467,11 @@
             const s = String(now.getSeconds()).padStart(2, '0');
             
             const dayStr = now.toLocaleDateString('hu-HU', { weekday: 'long' });
-            const dateStr = now.toLocaleDateString('hu-HU', { month: 'short', day: 'numeric' }).replace(/\.$/, ""); 
+            const dateStr = now.toLocaleDateString('hu-HU', { month: 'long', day: 'numeric' }).replace(/\.$/, "").toUpperCase(); 
             
             document.getElementById('tc-hm').innerText = `${h}:${m}`;
             document.getElementById('tc-s').innerText = `:${s}`;
-            document.getElementById('tc-date').innerText = `${dateStr}. | ${dayStr}`;
+            document.getElementById('tc-date').innerText = `${dateStr}. • ${dayStr.toUpperCase()}`;
 
             // Apply Sun Phase Styling
             const phase = SunCycle.getPhase();
@@ -1496,8 +1547,8 @@
             // Start Auto Scaler
             AutoScaler.init();
             
-            // Schedule the first watermark transition immediately on load
-            scheduleLogoWatermark();
+            // FIX: Trigger the full logo animation on startup, not just the watermark
+            animateLogoIn();
             
             startClock(); startMainLoop(); generateHourlySchedule();
             const d = document.createElement('div'); d.className='term-line'; d.innerText = ">> RENDSZER KÉSZ"; DOM.term.appendChild(d); DOM.fill.style.width = "100%";
