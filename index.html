@@ -409,11 +409,14 @@
         /* --- TICKER BAR REDESIGN --- */
         .ticker-bar { 
             position: absolute; bottom: 0; left: 0; width: 100%; height: var(--footer-h); 
-            background: linear-gradient(180deg, #181818 0%, #000000 100%); 
-            border-top: 4px solid var(--primary); 
+            /* MODIFIED: Dynamic background based on sun cycle */
+            background: var(--sun-bg-grad);
+            /* MODIFIED: Dynamic top border color */
+            border-top: 4px solid var(--sun-accent); 
             display: flex; z-index: 40; 
             box-shadow: 0 -10px 40px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.15); 
-            transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s; 
+            /* MODIFIED: Added background and border-color transition */
+            transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s, background 3s ease, border-color 3s ease; 
             pointer-events: auto; 
         }
         
