@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V21.05 ART CLOCK (24H VARIATIONS)</title>
+    <title>TKP NEWS - V21.10 METEO FIX & EXTREME PACK</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1051,7 +1051,39 @@
         const EXOTIC_STATIONS = [ { name: "Death Valley", lat: 36.53, lon: -116.93, code: "us" }, { name: "Ojmjakon", lat: 63.46, lon: 142.79, code: "ru" }, { name: "McMurdo (Antarktisz)", lat: -77.85, lon: 166.67, code: "aq" }, { name: "Everest Alaptábor", lat: 28.00, lon: 86.85, code: "np" }, { name: "Las Vegas", lat: 36.17, lon: -115.14, code: "us" }, { name: "Honolulu (Hawaii)", lat: 21.30, lon: -157.85, code: "us" }, { name: "Nuuk (Grönland)", lat: 64.18, lon: -51.72, code: "gl" }, { name: "Ushuaia", lat: -54.80, lon: -68.30, code: "ar" }, { name: "Szahara (Közép)", lat: 23.41, lon: 25.66, code: "eg" }, { name: "Csernobil (Pripjaty)", lat: 51.40, lon: 30.05, code: "ua" } ];
         const EXOTIC_STATIONS_2 = [ { name: "Mariana-árok", lat: 11.35, lon: 142.20, code: "mp" }, { name: "Mount Everest", lat: 27.98, lon: 86.92, code: "np" }, { name: "Amazonas (Manaus)", lat: -3.11, lon: -60.02, code: "br" }, { name: "Gobi Sivatag", lat: 42.60, lon: 103.43, code: "mn" }, { name: "Húsvét-sziget", lat: -27.11, lon: -109.35, code: "cl" }, { name: "Galápagos", lat: -0.74, lon: -90.31, code: "ec" }, { name: "Svalbard", lat: 78.22, lon: 15.65, code: "no" }, { name: "Mekka", lat: 21.38, lon: 39.85, code: "sa" }, { name: "Grand Canyon", lat: 36.10, lon: -112.11, code: "us" }, { name: "Fudzsi-hegy", lat: 35.36, lon: 138.72, code: "jp" } ];
         const EXTREME_EXTRA_STATIONS = [ { name: "Jakutszk", lat: 62.03, lon: 129.74, code: "ru" }, { name: "Kuvaitváros", lat: 29.37, lon: 47.97, code: "kw" }, { name: "La Paz", lat: -16.50, lon: -68.12, code: "bo" }, { name: "Quito", lat: -0.18, lon: -78.47, code: "ec" }, { name: "Wellington", lat: -41.29, lon: 174.77, code: "nz" }, { name: "Reykjavík", lat: 64.14, lon: -21.90, code: "is" }, { name: "Perth", lat: -31.95, lon: 115.86, code: "au" }, { name: "Vlagyivosztok", lat: 43.11, lon: 131.88, code: "ru" }, { name: "Fairbanks", lat: 64.84, lon: -147.72, code: "us" }, { name: "Alice Springs", lat: -23.69, lon: 133.88, code: "au" } ];
-        const SIDEBAR_STATIONS = shuffle([ ...HU_MAJOR_STATIONS, ...HU_EXTRA_STATIONS, ...WORLD_MAJOR_STATIONS, ...EXTREME_EXTRA_STATIONS ]);
+        
+        // --- NEW: 20 MORE EXTREME LOCATIONS ---
+        const EXTREME_LOCATIONS_NEW = [
+             { name: "Danakil-mélyföld (Etiópia)", lat: 14.24, lon: 40.30, code: "et" },
+             { name: "Vosztok Állomás (Antarktisz)", lat: -78.46, lon: 106.84, code: "aq" },
+             { name: "Mawsynram (India - Esős)", lat: 25.30, lon: 91.58, code: "in" },
+             { name: "Atacama-sivatag (Chile)", lat: -23.86, lon: -69.13, code: "cl" },
+             { name: "Tristan da Cunha (Elszigetelt)", lat: -37.10, lon: -12.27, code: "sh" },
+             { name: "La Rinconada (Peru - Magas)", lat: -14.63, lon: -69.44, code: "pe" },
+             { name: "Coober Pedy (Ausztrália)", lat: -29.01, lon: 134.75, code: "au" },
+             { name: "Ittoqqortoormiit (Grönland)", lat: 70.48, lon: -21.96, code: "gl" },
+             { name: "Dallol (Etiópia - Forró)", lat: 14.24, lon: 40.30, code: "et" },
+             { name: "Snag (Yukon, Kanada)", lat: 62.38, lon: -140.40, code: "ca" },
+             { name: "Verhojanszk (Oroszország)", lat: 67.54, lon: 133.38, code: "ru" },
+             { name: "Summit Camp (Grönland)", lat: 72.58, lon: -38.46, code: "gl" },
+             { name: "Dast-e Lut (Irán - Forró)", lat: 30.60, lon: 58.50, code: "ir" },
+             { name: "Mount Washington (USA - Szeles)", lat: 44.27, lon: -71.30, code: "us" },
+             { name: "Kerguelen-szigetek", lat: -49.35, lon: 70.21, code: "tf" },
+             { name: "Alert (Nunavut - Észak)", lat: 82.50, lon: -62.34, code: "ca" },
+             { name: "Villa Las Estrellas (Antarktisz)", lat: -62.20, lon: -58.96, code: "aq" },
+             { name: "Norilszk (Oroszország)", lat: 69.35, lon: 88.20, code: "ru" },
+             { name: "Bouvet-sziget", lat: -54.42, lon: 3.35, code: "bv" },
+             { name: "Salar de Uyuni (Bolívia)", lat: -20.13, lon: -67.48, code: "bo" }
+        ];
+
+        // COMBINED LIST FOR SIDEBAR (HUGE VARIETY)
+        const SIDEBAR_STATIONS = shuffle([ 
+            ...HU_MAJOR_STATIONS, 
+            ...HU_EXTRA_STATIONS, 
+            ...WORLD_MAJOR_STATIONS, 
+            ...EXTREME_EXTRA_STATIONS,
+            ...EXTREME_LOCATIONS_NEW
+        ]);
 
         const WEATHER_BACKGROUNDS = { rain: ['https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?q=80&w=1920&fit=crop'], snow: ['https://images.unsplash.com/photo-1485594050903-8e8ee5322318?q=80&w=1920&fit=crop'], fog: ['https://images.unsplash.com/photo-1485236715568-ddc5ee6ca227?q=80&w=1920&fit=crop'] };
         const SEASONAL_BACKGROUNDS = { spring: ['https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=1920&fit=crop'], summer: ['https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1920&fit=crop'], autumn: ['https://images.unsplash.com/photo-1507371341162-63b5acf0d979?q=80&w=1920&fit=crop'], winter: ['https://images.unsplash.com/photo-1478265409131-1f65c88f965c?q=80&w=1920&fit=crop'] };
@@ -1097,7 +1129,11 @@
 
         function updateAnalogHands() { const now = new Date(); const s = now.getSeconds(); const ms = now.getMilliseconds(); const smoothS = s + ms/1000; const m = now.getMinutes() + smoothS/60; const h = now.getHours() % 12 + m/60; const sDeg = s * 6; const mDeg = m * 6; const hDeg = h * 30; const hs = document.getElementById('hand-s'); const hm = document.getElementById('hand-m'); const hh = document.getElementById('hand-h'); if(hs) hs.style.transform = `rotate(${sDeg}deg)`; if(hm) hm.style.transform = `rotate(${mDeg}deg)`; if(hh) hh.style.transform = `rotate(${hDeg}deg)`; const digi = document.getElementById('bc-digital-display'); if(digi) digi.innerText = now.toLocaleTimeString('hu-HU'); }
 
-        function backgroundRefresh(isReset = false, silent = false) { crawlNews(isReset, silent); fetchCurrency(); fetchWunderground(true); }
+        // --- MODIFIED: NO CURRENCY FETCH HERE ---
+        function refreshNewsOnly(isReset = false, silent = false) { 
+            crawlNews(isReset, silent); 
+            fetchWunderground(true); 
+        }
 
         function prepareAndTriggerClock() { state.isSpecial = true; state.isLocked = true; animateLogoOut(); setTimeout(() => { triggerBigClockSequence(); }, 5000); }
         
@@ -1247,7 +1283,7 @@
             DOM.bigClockOverlay.style.display = 'grid'; DOM.bigClockOverlay.style.opacity = '0'; DOM.bigClockOverlay.classList.remove('bc-layout-center'); setTimeout(() => { DOM.bigClockOverlay.style.transition = 'opacity 0.8s ease-in-out'; DOM.bigClockOverlay.style.opacity = '1'; DOM.bigClockOverlay.classList.add('active'); generateAnalogClockFace(); runBigClockLoop(); }, 50); 
         }
 
-        function runBigClockLoop() { const now = new Date(); let nextHour = now.getHours() + 1; if (nextHour > 23) nextHour = 0; const bcInterval = setInterval(() => { updateAnalogHands(); const s = new Date().getSeconds(); if (s < 45 && state.clockPhase !== 1) { state.clockPhase = 1; DOM.bigClockOverlay.classList.remove('bc-layout-center'); DOM.bcInfoText.style.opacity = 1; } else if (s >= 45 && s < 50 && state.clockPhase !== 2) { state.clockPhase = 2; DOM.bcInfoText.style.opacity = 0; } else if (s >= 50 && s < 59 && state.clockPhase !== 3) { state.clockPhase = 3; DOM.bigClockOverlay.classList.add('bc-layout-center'); } if (s === 45 && !state.updateTriggered && !state.isNightMode) { state.updateTriggered = true; backgroundRefresh(true, true); } if (s === 0 && state.isClockRunning && state.clockPhase >= 1 && !state.clockFinishTriggered) { state.clockFinishTriggered = true; clearInterval(bcInterval); finishClockSequence(); } }, 50); state.bigClockTimeout = setTimeout(() => { if(state.isClockRunning) { clearInterval(bcInterval); finishClockSequence(); } }, 70000); }
+        function runBigClockLoop() { const now = new Date(); let nextHour = now.getHours() + 1; if (nextHour > 23) nextHour = 0; const bcInterval = setInterval(() => { updateAnalogHands(); const s = new Date().getSeconds(); if (s < 45 && state.clockPhase !== 1) { state.clockPhase = 1; DOM.bigClockOverlay.classList.remove('bc-layout-center'); DOM.bcInfoText.style.opacity = 1; } else if (s >= 45 && s < 50 && state.clockPhase !== 2) { state.clockPhase = 2; DOM.bcInfoText.style.opacity = 0; } else if (s >= 50 && s < 59 && state.clockPhase !== 3) { state.clockPhase = 3; DOM.bigClockOverlay.classList.add('bc-layout-center'); } if (s === 45 && !state.updateTriggered && !state.isNightMode) { state.updateTriggered = true; refreshNewsOnly(false, true); } if (s === 0 && state.isClockRunning && state.clockPhase >= 1 && !state.clockFinishTriggered) { state.clockFinishTriggered = true; clearInterval(bcInterval); finishClockSequence(); } }, 50); state.bigClockTimeout = setTimeout(() => { if(state.isClockRunning) { clearInterval(bcInterval); finishClockSequence(); } }, 70000); }
 
         function finishClockSequence() { DOM.bigClockOverlay.classList.remove('active', 'bc-layout-center'); DOM.bigClockOverlay.style.opacity = '0'; setTimeout(() => { DOM.bigClockOverlay.style.display = 'none'; state.isLocked = false; state.isSpecial = false; state.isClockRunning = false; state.clockPhase = 0; animateLogoIn(); checkNightMode(); }, 800); }
 
@@ -1293,7 +1329,7 @@
         }
         function handleCubeClick() { const wrapper = document.getElementById('tr-cube-wrapper'); if(wrapper.dataset.mode === 'klikk') { window.open('https://klikk.hu', '_blank'); } }
 
-        function forceRefreshAll() { backgroundRefresh(true); alert("FRISSÍTÉS ELKÜLDVE"); }
+        function forceRefreshAll() { refreshNewsOnly(true); fetchCurrency(); alert("FRISSÍTÉS ELKÜLDVE"); }
         function manualRefresh() { const btn = document.getElementById('manual-refresh-btn'); btn.innerHTML = '[ FRISSÍTÉS... ]'; btn.classList.add('loading'); state.manualRefreshRequested = true; state.tickerIdx = -1; state.mainIdx = -1; crawlNews(true); fetchCurrency(); fetchWunderground(); setTimeout(() => { cycleMain(true); }, 1500); setTimeout(() => { btn.innerHTML = `[ ↻ FRISSÍTÉS ]`; btn.classList.remove('loading'); }, 5000); }
         
         function testBreaking() { const now = new Date(); const longDesc = "EZ EGY TESZT ÜZENET. Ez a szöveg szándékosan hosszúra lett nyújtva, hogy meghaladja a rendelkezésre álló keret méretét."; document.getElementById('bk-card-headline').innerText = "RENDKÍVÜLI HÍR: TESZT ÜZEMMÓD"; document.getElementById('bk-card-body').innerHTML = `<div class="bk-scroll-wrapper">${longDesc}</div>`; document.getElementById('bk-card-meta').innerText = `TESZT`; document.getElementById('bk-time-stamp').innerText = now.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'}); DOM.bkCardClickable.dataset.link = "#"; state.isBreakingActive = true; DOM.sidebar.classList.add('breaking-active'); renderBreakingItemContent(); }
@@ -1306,7 +1342,10 @@
         
         function parseAndAdd(xmlText, sourceName) { 
             try { 
-                const xml = new DOMParser().parseFromString(xmlText, "text/xml"); let hasNew = false; 
+                const xml = new DOMParser().parseFromString(xmlText, "text/xml"); 
+                let hasNew = false; 
+                let addedItemLink = null;
+
                 xml.querySelectorAll("item").forEach(item => { 
                     const title = item.querySelector("title")?.textContent.trim(); 
                     const link = item.querySelector("link")?.textContent.trim(); 
@@ -1314,35 +1353,104 @@
                     const desc = (item.querySelector("description")?.textContent || "").replace(/<[^>]*>?/gm, '').trim().substring(0, 500); 
                     let img = item.querySelector("enclosure")?.getAttribute("url"); 
                     if(!img) { const content = item.getElementsByTagNameNS("*", "content")[0]?.textContent || item.querySelector("description")?.textContent; img = content?.match(/src="([^"]+)"/)?.[1]; } 
+                    
                     if (title && link && !state.allNews.find(n => n.link === link)) { 
-                        state.allNews.push({ title, link, date: pubDate, desc, source: sourceName, img: img }); 
+                        const newItem = { title, link, date: pubDate, desc, source: sourceName, img: img };
+                        state.allNews.push(newItem); 
                         hasNew = true; 
+                        
+                        // IF it has an image, mark it for immediate display
+                        if (img) addedItemLink = link;
                     } 
                 }); 
+                
                 if(hasNew) {
                     state.hasFreshNews = true; 
                     if(state.initialLoadComplete) {
                         checkBreaking();
                     }
+                    
+                    updateLists(); 
+                    updateDevLog(); 
+
+                    // --- LOGIC: FORCE IMMEDIATE DISPLAY OF NEW ITEM (MAIN NEWS) ---
+                    if (addedItemLink && !state.isLocked && !state.isSpecial) {
+                        const targetIdx = state.mainItems.findIndex(n => n.link === addedItemLink);
+                        if (targetIdx !== -1) {
+                            const item = state.mainItems.splice(targetIdx, 1)[0];
+                            state.mainItems.unshift(item);
+                            state.mainIdx = -1;
+                            cycleMain();
+                            startMainLoop();
+                        }
+                    }
+
+                    // --- LOGIC: FORCE IMMEDIATE REFRESH OF TICKER (BLACK BAR) ---
+                    if (!state.isLocked && !state.isSpecial && !state.isNightMode) {
+                        state.tickerIdx = -1;
+                        if(state.tickerTimer) clearTimeout(state.tickerTimer);
+                        const currentTicker = DOM.tickerWindow.querySelector('.ticker-item');
+                        if(currentTicker) currentTicker.remove();
+                        cycleTicker(1);
+                    }
                 }
-                updateLists(); updateDevLog(); 
-                if(state.mainItems.length > 0 && !state.mainStarted && !state.isLocked) { state.mainStarted = true; DOM.loader.style.opacity = 0; setTimeout(() => DOM.loader.remove(), 1000); state.mainIdx = -1; cycleMain(); startMainLoop(); updateTopRightPws(); if(state.tickerIdx === 0) cycleTicker(1); } 
+                
+                if(state.mainItems.length > 0 && !state.mainStarted && !state.isLocked) { 
+                    state.mainStarted = true; 
+                    DOM.loader.style.opacity = 0; setTimeout(() => DOM.loader.remove(), 1000); 
+                    state.mainIdx = -1; 
+                    cycleMain(); 
+                    startMainLoop(); 
+                    updateTopRightPws(); 
+                    if(state.tickerIdx === 0) cycleTicker(1); 
+                } 
             } catch(e) {} 
         }
 
-        function updateLists() { if (state.isNightMode) return; const now = new Date(); const newTicker = state.allNews.filter(n => (now - n.date) < 14400000).sort((a,b) => b.date - a.date); state.tickerItems = newTicker.length > 5 ? newTicker : [...state.allNews].sort((a,b) => b.date - a.date).slice(0, 50); const newMain = state.allNews.filter(n => (now - n.date) < 7200000 && n.img).sort(() => Math.random() - 0.5); state.mainItems = newMain.length > 0 ? newMain : state.allNews.filter(n => n.img).slice(0, 10); }
+        // --- MODIFIED UPDATE LISTS (PRIORITY LOGIC) ---
+        function updateLists() { 
+            if (state.isNightMode) return; 
+            
+            const now = new Date(); 
+            const thirtyMinsAgo = now.getTime() - (30 * 60 * 1000);
+            const twoHoursAgo = now.getTime() - (2 * 60 * 60 * 1000);
+
+            // Filter valid items (must have image)
+            const validItems = state.allNews.filter(n => n.img);
+
+            // 1. Priority Items (Last 30 mins)
+            let priorityItems = validItems.filter(n => n.date.getTime() >= thirtyMinsAgo);
+            
+            // 2. Standard Items (Between 30m and 2h ago)
+            let standardItems = validItems.filter(n => n.date.getTime() < thirtyMinsAgo && n.date.getTime() >= twoHoursAgo);
+
+            // Shuffle separately
+            priorityItems = shuffle(priorityItems);
+            standardItems = shuffle(standardItems);
+
+            // Combine: Priority first, then Standard
+            let finalQueue = [...priorityItems, ...standardItems];
+
+            // Fallback if empty
+            if (finalQueue.length === 0) {
+                 finalQueue = validItems.sort((a,b) => b.date - a.date).slice(0, 10);
+            }
+
+            state.mainItems = finalQueue;
+
+            const newTicker = state.allNews.filter(n => (now - n.date) < 14400000).sort((a,b) => b.date - a.date); 
+            state.tickerItems = newTicker.length > 5 ? newTicker : [...state.allNews].sort((a,b) => b.date - a.date).slice(0, 50); 
+        }
         
         async function checkBreaking() { 
             if (state.isLocked && state.isClockRunning) return; 
             const now = Date.now(); 
-            // 3 MINUTE WINDOW FOR BREAKING NEWS (szigorított időablak)
             state.allNews.filter(n => (now - n.date.getTime()) <= 180000).sort((a,b) => a.date - b.date).forEach(item => { 
                 if (!state.seenBreaking.has(item.link)) { 
                     state.breakingQueue.push(item); 
                     state.seenBreaking.add(item.link);
                 } 
             }); 
-            // Deduplicate
             state.breakingQueue = state.breakingQueue.filter((item, index, self) => index === self.findIndex((t) => t.link === item.link));
 
             if (state.breakingQueue.length > 0 && !state.isBreakingActive && state.initialLoadComplete && state.nextBreakingTriggerTime === 0) { 
@@ -1351,17 +1459,14 @@
         }
         
         function scheduleBreakingTrigger() {
-            // Random késleltetés, hogy ne azonnal jelenjen meg, hanem "betoppanjon"
-            const randomDelay = Math.floor(Math.random() * 20000) + 5000; // 5-25 másodperc
+            const randomDelay = Math.floor(Math.random() * 20000) + 5000;
             state.nextBreakingTriggerTime = Date.now() + randomDelay;
         }
         
         function scheduleBreakingDisplay() {
              const now = new Date();
              if (state.nextBreakingTriggerTime !== 0 && Date.now() >= state.nextBreakingTriggerTime) {
-                 // Ütközés ellenőrzése (Nagy óra előtt 59. percben már ne induljon)
                  if(now.getMinutes() === 59 && now.getSeconds() > 30) {
-                     // Toljuk el későbbre
                      state.nextBreakingTriggerTime = Date.now() + 65000;
                      return;
                  }
@@ -1369,7 +1474,6 @@
                      processBreakingQueue();
                      state.nextBreakingTriggerTime = 0; 
                  } else {
-                     // Ha foglalt a rendszer, próba később
                      state.nextBreakingTriggerTime = Date.now() + 10000;
                  }
              }
@@ -1414,19 +1518,13 @@
 
             if(isOverflow) { 
                 const dist = scrollH - bodyH + 30; 
-                // Lassú olvasási sebesség
-                const scrollDuration = Math.max(3, dist / 20); // pixel / sec
-                
-                // 4 másodperc várakozás az elején (fix)
+                const scrollDuration = Math.max(3, dist / 20); 
                 setTimeout(() => { 
                     wrapper.style.transition = `transform ${scrollDuration}s linear`; 
                     wrapper.style.transform = `translateY(-${dist}px)`; 
                 }, 4000); 
-                
-                // Teljes idő: 4s start + scroll + 5s vége olvasásra
                 totalDuration = 4000 + (scrollDuration * 1000) + 5000;
             } else {
-                // Ha nincs scroll, akkor karakterszám alapján számolunk
                 totalDuration = Math.max(10000, (item.title.length + item.desc.length) * 80);
             }
 
@@ -1446,7 +1544,7 @@
 
         function closeBreaking() { DOM.sidebar.classList.remove('breaking-active'); setTimeout(() => { state.isBreakingActive = false; checkNightMode(); }, 1000); }
         
-        async function triggerSpecialMeteoSequence(startPhase = 0) { crawlNews(false); state.isSpecial = true; state.isLocked = true; toggleLiveBadge(true); setTimeout(() => { DOM.liveBadge.classList.add('delayed-visible'); }, 2000); clearNewsBackgrounds(); [ {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'}].forEach(ui => { let el = document.getElementById(ui.id); if(el) el.classList.add(`hide-${ui.t}`); }); DOM.logoBox.classList.remove('force-hide'); DOM.logoBox.classList.add('high-z'); setMeteoBackground(); DOM.special.style.display = 'flex'; setTimeout(() => DOM.special.classList.add('active'), 50); const sequence = [ { type: "list", title: "SZABOLCS-SZATMÁR-BEREG VÁRMEGYE", list: shuffle([...SZABOLCS_STATIONS]).slice(0, 12) }, { type: "ny_detailed", title: "NYÍREGYHÁZA RÉSZLETES ADATOK" }, { type: "hourly", title: "NYÍREGYHÁZA - KÖVETKEZŐ 6 ÓRA" }, { type: "hourly_part2", title: "NYÍREGYHÁZA - KÉSŐBB" }, { type: "forecast", title: "ELŐREJELZÉS - KÖVETKEZŐ NAPOK" }, { type: "astro", title: "ASZTROLÓGIAI ÉS EGÉSZSÉGÜGYI ADATOK" }, { type: "air_uv", title: "LEVEGŐMINŐSÉG ÉS UV ADATOK (ÉLŐ)" }, { type: "list", title: "EXTRÉM VILÁGTÁJAK I.", list: shuffle([...EXOTIC_STATIONS]).slice(0, 12) }, { type: "list", title: "EXTRÉM VILÁGTÁJAK II.", list: shuffle([...EXOTIC_STATIONS_2]).slice(0, 10) }, { type: "list", title: "MAGYARORSZÁG NAGYVÁROSAI", list: shuffle([...HU_MAJOR_STATIONS]) }, { type: "list", title: "EURÓPAI KÖRKÉP", list: shuffle([...EUROPE_MAJOR_STATIONS]).slice(0, 12) } ]; const slideDuration = 27000; let phase = startPhase; const runPhase = async () => { if (phase >= sequence.length) { state.specialMeteoInterval = setTimeout(() => { state.mainIdx = -1; state.tickerIdx = -1; closeAllOverlays(); }, 2000); return; } const currentTheme = sequence[phase]; DOM.smGrid.style.opacity = 0; document.getElementById('sm-source-footer').innerText = "FORRÁS: WEATHER.COM / IBM CLOUD / OPEN-METEO"; DOM.smGrid.style.gridTemplateRows = "repeat(3, 1fr)"; setTimeout(async () => { DOM.smGrid.style.display = 'grid'; if (currentTheme.type === "list") { await renderSpecialBatch(currentTheme.list, currentTheme.title); } else if (currentTheme.type === "ny_detailed") { await renderNyiregyhazaDetailed(); } else if (currentTheme.type === "hourly") { DOM.smGrid.style.gridTemplateRows = "repeat(1, 1fr)"; await renderHourlyForecast(0); DOM.smTitle.innerText = currentTheme.title; } else if (currentTheme.type === "hourly_part2") { DOM.smGrid.style.gridTemplateRows = "repeat(1, 1fr)"; await renderHourlyForecast(6); DOM.smTitle.innerText = currentTheme.title; } else if (currentTheme.type === "forecast") { DOM.smGrid.style.gridTemplateRows = "1fr"; await renderRealForecast(); DOM.smTitle.innerText = currentTheme.title; } else if (currentTheme.type === "astro") { DOM.smGrid.style.gridTemplateRows = "repeat(2, 1fr)"; await renderRealAstro(); DOM.smTitle.innerText = currentTheme.title; } else if (currentTheme.type === "air_uv") { DOM.smGrid.style.gridTemplateRows = "repeat(2, 1fr)"; await renderRealAirQuality(); DOM.smTitle.innerText = currentTheme.title; } DOM.smGrid.style.opacity = 1; }, 300); phase++; state.meteoPhaseTimer = setTimeout(runPhase, slideDuration); }; runPhase(); }
+        async function triggerSpecialMeteoSequence(startPhase = 0) { crawlNews(false); state.isSpecial = true; state.isLocked = true; toggleLiveBadge(true); setTimeout(() => { DOM.liveBadge.classList.add('delayed-visible'); }, 2000); clearNewsBackgrounds(); [ {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'}].forEach(ui => { let el = document.getElementById(ui.id); if(el) el.classList.add(`hide-${ui.t}`); }); DOM.logoBox.classList.remove('force-hide'); DOM.logoBox.classList.add('high-z'); setMeteoBackground(); DOM.special.style.display = 'flex'; setTimeout(() => DOM.special.classList.add('active'), 50); const sequence = [ { type: "list", title: "SZABOLCS-SZATMÁR-BEREG VÁRMEGYE", list: shuffle([...SZABOLCS_STATIONS]).slice(0, 12) }, { type: "ny_detailed", title: "NYÍREGYHÁZA RÉSZLETES ADATOK" }, { type: "hourly", title: "NYÍREGYHÁZA - KÖVETKEZŐ 6 ÓRA" }, { type: "hourly_part2", title: "NYÍREGYHÁZA - KÉSŐBB" }, { type: "forecast", title: "ELŐREJELZÉS - KÖVETKEZŐ NAPOK" }, { type: "astro", title: "ASZTROLÓGIAI ÉS EGÉSZSÉGÜGYI ADATOK" }, { type: "air_uv", title: "LEVEGŐMINŐSÉG ÉS UV ADATOK (ÉLŐ)" }, { type: "list", title: "EXTRÉM VILÁGTÁJAK I.", list: shuffle([...EXOTIC_STATIONS]).slice(0, 12) }, { type: "list", title: "EXTRÉM VILÁGTÁJAK II.", list: shuffle([...EXOTIC_STATIONS_2]).slice(0, 10) }, { type: "list", title: "EXTRÉM VILÁGTÁJAK III.", list: shuffle([...EXTREME_LOCATIONS_NEW]).slice(0, 10) }, { type: "list", title: "MAGYARORSZÁG NAGYVÁROSAI", list: shuffle([...HU_MAJOR_STATIONS]) }, { type: "list", title: "EURÓPAI KÖRKÉP", list: shuffle([...EUROPE_MAJOR_STATIONS]).slice(0, 12) } ]; const slideDuration = 27000; let phase = startPhase; const runPhase = async () => { if (phase >= sequence.length) { state.specialMeteoInterval = setTimeout(() => { state.mainIdx = -1; state.tickerIdx = -1; closeAllOverlays(); }, 2000); return; } const currentTheme = sequence[phase]; DOM.smGrid.style.opacity = 0; document.getElementById('sm-source-footer').innerText = "FORRÁS: WEATHER.COM / IBM CLOUD / OPEN-METEO"; DOM.smGrid.style.gridTemplateRows = "repeat(3, 1fr)"; setTimeout(async () => { DOM.smGrid.style.display = 'grid'; if (currentTheme.type === "list") { await renderSpecialBatch(currentTheme.list, currentTheme.title); } else if (currentTheme.type === "ny_detailed") { await renderNyiregyhazaDetailed(); } else if (currentTheme.type === "hourly") { DOM.smGrid.style.gridTemplateRows = "repeat(1, 1fr)"; await renderHourlyForecast(0); DOM.smTitle.innerText = currentTheme.title; } else if (currentTheme.type === "hourly_part2") { DOM.smGrid.style.gridTemplateRows = "repeat(1, 1fr)"; await renderHourlyForecast(6); DOM.smTitle.innerText = currentTheme.title; } else if (currentTheme.type === "forecast") { DOM.smGrid.style.gridTemplateRows = "1fr"; await renderRealForecast(); DOM.smTitle.innerText = currentTheme.title; } else if (currentTheme.type === "astro") { DOM.smGrid.style.gridTemplateRows = "repeat(2, 1fr)"; await renderRealAstro(); DOM.smTitle.innerText = currentTheme.title; } else if (currentTheme.type === "air_uv") { DOM.smGrid.style.gridTemplateRows = "repeat(2, 1fr)"; await renderRealAirQuality(); DOM.smTitle.innerText = currentTheme.title; } DOM.smGrid.style.opacity = 1; }, 300); phase++; state.meteoPhaseTimer = setTimeout(runPhase, slideDuration); }; runPhase(); }
         
         function setMeteoBackground() { const now = new Date(); const month = now.getMonth(); let colors = ['#001a4d', '#004d66']; DOM.smBg.style.backgroundImage = `none`; DOM.smBg.style.background = `linear-gradient(135deg, ${colors[0]} 0%, #000 100%)`; if(!document.querySelector('.sm-pattern')) { const pat = document.createElement('div'); pat.className = 'sm-pattern'; DOM.smBg.appendChild(pat); } }
         async function fetchWeatherDotCom(lat, lon) { try { const url = `https://api.weather.com/v3/wx/observations/current?geocode=${lat},${lon}&format=json&units=m&language=hu-HU&apiKey=${WU_KEY}`; const res = await fetch(url); if(res.ok) return await res.json(); return null; } catch(e) { return null; } }
@@ -1667,20 +1765,16 @@
                 const winW = window.innerWidth;
                 const winH = window.innerHeight;
                 
-                // Calculate scale ratio preserving aspect but filling viewport best as possible
-                // We prioritize ensuring height fits for ticker/header visibility
                 const scaleX = winW / baseW;
                 const scaleY = winH / baseH;
                 const scale = Math.min(scaleX, scaleY);
                 
-                // Set CSS Variable
                 document.documentElement.style.setProperty('--base-scale', scale);
             }
         };
 
         function updateTickerClock() {
             const now = new Date();
-            // Monospace format
             const h = String(now.getHours()).padStart(2, '0');
             const m = String(now.getMinutes()).padStart(2, '0');
             const s = String(now.getSeconds()).padStart(2, '0');
@@ -1712,6 +1806,7 @@
                     updateHourlyCubes(); 
                     
                     if (m === 0 && s === 0) { 
+                        // --- HOURLY CURRENCY UPDATE (ONLY HERE) ---
                         fetchCurrency(); 
                         generateHourlySchedule(); 
                     } 
@@ -1728,7 +1823,11 @@
                     } 
                     
                     if (!state.isNightMode && s === 0) { 
-                        if (m === 5 || m === 20 || m === 40) { backgroundRefresh(true, true); } 
+                        if (m === 5 || m === 20 || m === 40) { 
+                            // AUTO UPDATE TRIGGER FOR NEWS ONLY
+                            // Pass false to NOT reset everything, just append new
+                            refreshNewsOnly(false, true); 
+                        } 
                     } 
                     
                     // --- BREAKING NEWS CHECK & TRIGGER ---
@@ -1772,7 +1871,7 @@
             
             startClock(); startMainLoop(); generateHourlySchedule();
             const d = document.createElement('div'); d.className='term-line'; d.innerText = ">> RENDSZER KÉSZ"; DOM.term.appendChild(d); DOM.fill.style.width = "100%";
-            crawlNews(false); fetchCurrency(); fetchOther(); fetchWunderground();
+            refreshNewsOnly(false); fetchCurrency(); fetchOther(); fetchWunderground();
             setTimeout(() => { if(DOM.loader && DOM.loader.parentNode) { state.initialLoadComplete = true; DOM.loader.style.opacity = 0; setTimeout(() => DOM.loader.remove(), 1000); } }, 8000);
             setInterval(updateWeatherCard, 10000); setInterval(fetchOther, 120000); setInterval(fetchWunderground, 20000); updateTopRightPws(); cycleMain(); cycleTicker();
         }
