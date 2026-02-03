@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V21.02 CLEAN WATERMARK</title>
+    <title>TKP NEWS - V21.03 NIGHT MODE FIX</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -236,7 +236,15 @@
             white-space: nowrap; display: none; opacity: 0;
             animation: fadeInRight 0.5s forwards;
         }
-        .status-badge.replay { background: #444; color: #ccc; }
+        
+        /* FAINTER REPLAY BADGE */
+        .status-badge.replay { 
+            background: rgba(68, 68, 68, 0.5); 
+            color: rgba(204, 204, 204, 0.7);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(2px);
+        }
+        
         .status-badge.visible { display: block; opacity: 1; }
 
         /* ANIMATIONS */
@@ -506,14 +514,28 @@
         .ha-h { font-family: var(--font-data); font-size: 1.3rem; font-weight: bold; color: #fff; }
         .ha-desc { font-family: var(--font-data); font-size: 0.9rem; color: #bbb; margin-top: 5px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
-        .night-msg { display: none; width: 100%; height: 100%; background: linear-gradient(90deg, #0a0a0a 0%, #151515 50%, #0a0a0a 100%); padding-left: 20px; align-items: center; justify-content: space-between; box-shadow: inset 0 0 30px rgba(0,0,0,0.8); }
+        /* --- UPDATED NIGHT MODE LAYOUT --- */
+        .night-msg { 
+            display: none; width: 100%; height: 100%; 
+            background: linear-gradient(90deg, #0a0a0a 0%, #151515 50%, #0a0a0a 100%); 
+            padding-left: 20px; align-items: center; justify-content: flex-start; /* Changed from space-between to flex-start */
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8); 
+            position: relative; /* Context for absolute positioning */
+        }
         .night-msg.active { display: flex; }
         .nm-left { display: flex; align-items: center; gap: 20px; height: 100%; }
-        .nm-icon-box { background: rgba(255,255,255,0.05); height: 100%; display: flex; align-items: center; padding: 0 20px; font-size: 2rem; border-right: 1px solid #333; color: #666; }
+        .nm-icon-box { background: rgba(255,255,255,0.05); height: 100%; display: flex; align-items: center; padding: 0 15px; font-size: 1.5rem; border-right: 1px solid #333; color: #666; }
         .nm-text { display: flex; flex-direction: column; justify-content: center; }
-        .nm-title { font-family: var(--font-tech); color: var(--accent); font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; font-weight: bold; margin-bottom: 3px; }
-        .nm-desc { font-family: var(--font-main); color: #fff; font-size: 1.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
-        .nm-timeline { display: flex; gap: 4px; margin-right: 2vw; height: 60%; align-items: center; }
+        /* Smaller font sizes */
+        .nm-title { font-family: var(--font-tech); color: var(--accent); font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; font-weight: bold; margin-bottom: 2px; }
+        .nm-desc { font-family: var(--font-main); color: #fff; font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        
+        /* Centered Timeline */
+        .nm-timeline { 
+            display: flex; gap: 4px; height: 60%; align-items: center; 
+            position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); /* Centered */
+            margin-right: 0;
+        }
         .nm-t-item { background: #1a1a1a; color: #666; font-family: var(--font-mono); font-size: 0.75rem; font-weight: bold; padding: 0 15px; text-align: center; border-radius: 2px; display: flex; flex-direction: column; justify-content: center; height: 100%; border: 1px solid #333; position: relative; overflow: hidden; }
         .nm-t-item.active { background: linear-gradient(180deg, rgba(255,204,0,0.1), rgba(255,204,0,0.05)); color: var(--accent); border-color: var(--accent); box-shadow: 0 0 15px rgba(255,204,0,0.15); }
         .nm-t-item.active::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: var(--accent); }
