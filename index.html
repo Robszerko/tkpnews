@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V21.03 NIGHT MODE FIX</title>
+    <title>TKP NEWS - V21.05 ART CLOCK (24H VARIATIONS)</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,9 +40,9 @@
             --rtl-purple: #5b2a86; 
             --rtl-blue: #009ee3;
 
-            /* Dynamic Sun Phase Colors */
-            --sun-accent: #ffcc00; /* Default */
-            --sun-bg-grad: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
+            /* Dynamic Sun Phase Colors - Realtime calculated */
+            --sun-accent: #00d4ff; /* Default Day */
+            --sun-bg-grad: linear-gradient(180deg, #0a1a2a 0%, #1a2a3a 100%);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; outline: none; }
@@ -409,9 +409,9 @@
         /* --- TICKER BAR REDESIGN --- */
         .ticker-bar { 
             position: absolute; bottom: 0; left: 0; width: 100%; height: var(--footer-h); 
-            /* MODIFIED: Dynamic background based on sun cycle */
+            /* MODIFIED: Dynamic background based on sun cycle - REALTIME */
             background: var(--sun-bg-grad);
-            /* MODIFIED: Dynamic top border color */
+            /* MODIFIED: Dynamic top border color - REALTIME */
             border-top: 4px solid var(--sun-accent); 
             display: flex; z-index: 40; 
             box-shadow: 0 -10px 40px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.15); 
@@ -553,20 +553,47 @@
         .bc-in-cnt { font-family: var(--font-mono); font-size: 0.6rem; color: #fff; font-weight: bold; }
         .bc-main-panel { position: relative; display: flex; justify-content: center; align-items: center; flex-direction: column; transition: all 1s ease-in-out; }
         .bc-clock-wrapper { position: relative; width: 60vh; height: 60vh; display: flex; justify-content: center; align-items: center; transition: transform 1s; }
-        #bc-analog-clock { width: 100%; height: 100%; position: relative; background: radial-gradient(circle at center, #2b2b2b 0%, #1a1a1a 40%, #000000 100%); border-radius: 50%; border: 8px solid #c0c0c0; box-shadow: 0 0 0 2px #444, 0 0 0 12px #e0e0e0, inset 0 0 40px #000, 0 20px 50px rgba(0,0,0,0.9); box-sizing: border-box; transform: translateY(30px); overflow: hidden; }
-        #bc-analog-clock::after { content: ''; position: absolute; top: -12px; left: -12px; right: -12px; bottom: -12px; border-radius: 50%; background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 40%, transparent 60%, rgba(255,255,255,0.2) 100%); pointer-events: none; z-index: 25; }
-        #bc-analog-clock::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 50%; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.05) 0%, transparent 60%); pointer-events: none; z-index: 20; }
-        .clock-tick { position: absolute; width: 2px; height: 12px; background: linear-gradient(to bottom, #fff, #999); left: 50%; top: 6px; transform-origin: 50% calc(30vh - 14px); box-shadow: 0 2px 2px rgba(0,0,0,0.5); }
+        
+        /* --- NEW ART CLOCK STYLES (Generative Abstract) --- */
+        #bc-analog-clock { 
+            width: 100%; height: 100%; position: relative; 
+            /* Default Background - updated by JS */
+            background: #222;
+            border-radius: 50%; 
+            border: 4px solid #444; 
+            box-shadow: 0 0 0 4px #111, 0 0 0 8px #555, 0 20px 60px rgba(0,0,0,0.9); 
+            box-sizing: border-box; 
+            transform: translateY(30px); 
+            overflow: hidden; 
+            transition: background 1s ease;
+        }
+
+        /* Abstract Lines Container */
+        .clock-art-lines {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 2;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        
+        /* Dynamic Abstract Lines - 4 Layers */
+        .cal-1, .cal-2, .cal-3, .cal-4 {
+            position: absolute; border-radius: 50%; 
+            transition: all 1s ease; filter: drop-shadow(0 0 2px #fff);
+        }
+
+        .clock-tick { position: absolute; width: 2px; height: 12px; background: linear-gradient(to bottom, #fff, #999); left: 50%; top: 6px; transform-origin: 50% calc(30vh - 14px); box-shadow: 0 2px 2px rgba(0,0,0,0.5); z-index: 20; }
         .clock-tick.major { width: 4px; height: 18px; background: linear-gradient(to bottom, #fff, #bbb); box-shadow: 0 2px 4px rgba(0,0,0,0.8); }
-        .clock-number { position: absolute; width: 40px; height: 40px; line-height: 40px; text-align: center; color: #e0e0e0; font-family: var(--font-serif); font-size: 2.5rem; font-weight: 700; transform: translate(-50%, -50%); text-shadow: 0 2px 5px #000; }
-        .clock-digital-display { position: absolute; bottom: 25%; left: 50%; transform: translateX(-50%); font-family: var(--font-mono); font-size: 1.1rem; color: #00d4ff; font-weight: bold; background: rgba(0, 0, 0, 0.4); padding: 4px 12px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); box-shadow: inset 0 0 10px rgba(0,0,0,0.5); z-index: 5; letter-spacing: 2px; }
-        .clock-branding { position: absolute; top: 22%; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; opacity: 0.9; }
-        .hand { position: absolute; left: 50%; bottom: 50%; transform-origin: 50% 100%; border-radius: 50% 50% 0 0; z-index: 10; box-shadow: 0 5px 15px rgba(0,0,0,0.6); }
-        .hand-h { width: 12px; height: 26%; background: linear-gradient(to right, #ccc, #fff, #ccc); margin-left: -6px; z-index: 11; clip-path: polygon(50% 0, 100% 20%, 100% 100%, 0 100%, 0 20%); }
-        .hand-m { width: 8px; height: 40%; background: linear-gradient(to right, #ccc, #fff, #ccc); margin-left: -4px; z-index: 12; clip-path: polygon(50% 0, 100% 15%, 100% 100%, 0 100%, 0 15%); }
-        .hand-s { width: 2px; height: 50%; background: #cc0000; left: 50%; bottom: 50%; margin-left: -1px; transform-origin: 50% 100%; z-index: 13; box-shadow: none; border-radius: 2px 2px 0 0; }
-        .hand-s::after { content: ''; position: absolute; top: 100%; left: -2px; width: 6px; height: 25px; background: #cc0000; border-radius: 0 0 2px 2px; box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-        .clock-center { position: absolute; width: 14px; height: 14px; background: radial-gradient(circle at 30% 30%, #fff, #c0c0c0); border-radius: 50%; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 15; box-shadow: 0 2px 5px rgba(0,0,0,0.8); border: 1px solid #666; }
+        .clock-number { position: absolute; width: 40px; height: 40px; line-height: 40px; text-align: center; color: #e0e0e0; font-family: var(--font-serif); font-size: 2.5rem; font-weight: 700; transform: translate(-50%, -50%); text-shadow: 0 2px 5px #000; z-index: 20; }
+        .clock-digital-display { position: absolute; bottom: 25%; left: 50%; transform: translateX(-50%); font-family: var(--font-mono); font-size: 1.1rem; color: #00d4ff; font-weight: bold; background: rgba(0, 0, 0, 0.6); padding: 4px 12px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.2); box-shadow: inset 0 0 10px rgba(0,0,0,0.5); z-index: 25; letter-spacing: 2px; }
+        .clock-branding { position: absolute; top: 22%; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; opacity: 0.9; z-index: 25; }
+        .hand { position: absolute; left: 50%; bottom: 50%; transform-origin: 50% 100%; border-radius: 50% 50% 0 0; z-index: 30; box-shadow: 0 5px 15px rgba(0,0,0,0.6); }
+        .hand-h { width: 12px; height: 26%; background: linear-gradient(to right, #ccc, #fff, #ccc); margin-left: -6px; z-index: 31; clip-path: polygon(50% 0, 100% 20%, 100% 100%, 0 100%, 0 20%); }
+        .hand-m { width: 8px; height: 40%; background: linear-gradient(to right, #ccc, #fff, #ccc); margin-left: -4px; z-index: 32; clip-path: polygon(50% 0, 100% 15%, 100% 100%, 0 100%, 0 15%); }
+        .hand-s { width: 2px; height: 50%; background: #fff; left: 50%; bottom: 50%; margin-left: -1px; transform-origin: 50% 100%; z-index: 33; box-shadow: 0 0 5px #fff; border-radius: 2px 2px 0 0; }
+        .hand-s::after { content: ''; position: absolute; top: 100%; left: -2px; width: 6px; height: 25px; background: #fff; border-radius: 0 0 2px 2px; box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .clock-center { position: absolute; width: 14px; height: 14px; background: radial-gradient(circle at 30% 30%, #fff, #c0c0c0); border-radius: 50%; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 35; box-shadow: 0 2px 5px rgba(0,0,0,0.8); border: 1px solid #666; }
+        
         .bc-layout-center .bc-schedule-panel { opacity: 0; transform: translateX(-100px); pointer-events: none; }
         .bc-layout-center .bc-main-panel { transform: translateX(-33%); }
         .bc-layout-center .bc-clock-wrapper { transform: scale(1.3); }
@@ -765,6 +792,12 @@
         <div class="bc-main-panel">
             <div class="bc-clock-wrapper">
                 <div id="bc-analog-clock">
+                    <div class="clock-art-lines">
+                        <div class="cal-1" id="cal-1"></div>
+                        <div class="cal-2" id="cal-2"></div>
+                        <div class="cal-3" id="cal-3"></div>
+                        <div class="cal-4" id="cal-4"></div>
+                    </div>
                     <div id="clock-face"></div>
                     <div class="clock-branding">
                         <div class="clock-embedded-logo">
@@ -1064,8 +1097,6 @@
 
         function updateAnalogHands() { const now = new Date(); const s = now.getSeconds(); const ms = now.getMilliseconds(); const smoothS = s + ms/1000; const m = now.getMinutes() + smoothS/60; const h = now.getHours() % 12 + m/60; const sDeg = s * 6; const mDeg = m * 6; const hDeg = h * 30; const hs = document.getElementById('hand-s'); const hm = document.getElementById('hand-m'); const hh = document.getElementById('hand-h'); if(hs) hs.style.transform = `rotate(${sDeg}deg)`; if(hm) hm.style.transform = `rotate(${mDeg}deg)`; if(hh) hh.style.transform = `rotate(${hDeg}deg)`; const digi = document.getElementById('bc-digital-display'); if(digi) digi.innerText = now.toLocaleTimeString('hu-HU'); }
 
-        function getSunPhaseBackground() { const now = new Date(); const h = now.getHours(); const month = now.getMonth(); const isWinter = (month >= 10 || month <= 1); const isSummer = (month >= 4 && month <= 7); if (isWinter) { if (h >= 7 && h < 9) return 'linear-gradient(135deg, #cc5500 0%, #330000 100%)'; if (h >= 9 && h < 15) return 'linear-gradient(135deg, #56CCF2 0%, #2F80ED 100%)'; if (h >= 15 && h < 17) return 'linear-gradient(135deg, #662200 0%, #1a0033 100%)'; return 'radial-gradient(circle at 70% 50%, #000a1a 0%, #000 90%)'; } else if (isSummer) { if (h >= 5 && h < 8) return 'linear-gradient(135deg, #ff9966 0%, #ff5e62 100%)'; if (h >= 8 && h < 19) return 'linear-gradient(135deg, #2980B9 0%, #6DD5FA 100%)'; if (h >= 19 && h < 21) return 'linear-gradient(135deg, #f12711 0%, #f5af19 100%)'; return 'radial-gradient(circle at 70% 50%, #001a4d 0%, #000 80%)'; } else { if (h >= 6 && h < 8) return 'linear-gradient(135deg, #ff9966 0%, #ff5e62 100%)'; if (h >= 8 && h < 17) return 'linear-gradient(135deg, #56CCF2 0%, #2F80ED 100%)'; if (h >= 17 && h < 19) return 'linear-gradient(135deg, #4568dc 0%, #b06ab3 100%)'; return 'radial-gradient(circle at 70% 50%, #001a4d 0%, #000 80%)'; } }
-
         function backgroundRefresh(isReset = false, silent = false) { crawlNews(isReset, silent); fetchCurrency(); fetchWunderground(true); }
 
         function prepareAndTriggerClock() { state.isSpecial = true; state.isLocked = true; animateLogoOut(); setTimeout(() => { triggerBigClockSequence(); }, 5000); }
@@ -1107,7 +1138,114 @@
             DOM.logoBox.classList.add('watermark-active');
         }
 
-        function triggerBigClockSequence() { state.isSpecial = true; state.isLocked = true; state.isClockRunning = true; state.clockPhase = 0; state.updateTriggered = false; state.clockFinishTriggered = false; state.logoExitTriggered = false; DOM.bigClockOverlay.style.background = getSunPhaseBackground(); DOM.bigClockOverlay.style.display = 'grid'; DOM.bigClockOverlay.style.opacity = '0'; DOM.bigClockOverlay.classList.remove('bc-layout-center'); setTimeout(() => { DOM.bigClockOverlay.style.transition = 'opacity 0.8s ease-in-out'; DOM.bigClockOverlay.style.opacity = '1'; DOM.bigClockOverlay.classList.add('active'); generateAnalogClockFace(); runBigClockLoop(); }, 50); }
+        // --- CLOCK ART GENERATOR (24 VARIATIONS) ---
+        const CLOCK_ART_DB = [
+            // 00 - RED HORIZON (Original Reference)
+            { bg: "linear-gradient(to bottom, #111 0%, #222 30%, #8a0000 30%, #ff0000 50%, #8a0000 70%, #222 70%, #111 100%)", lines: [{t:40,l:-10,w:120,h:60,r:50,rot:-15,b:"2px solid rgba(255,255,255,0.6)"}, {t:60,l:-10,w:120,h:60,r:50,rot:15,b:"2px solid rgba(255,255,255,0.4)"}] },
+            // 01 - DEEP BLUE
+            { bg: "radial-gradient(circle at center, #001f3f 0%, #000 90%)", lines: [{t:10,l:10,w:80,h:80,r:50,rot:0,b:"2px solid cyan"}, {t:20,l:20,w:60,h:60,r:50,rot:45,b:"1px solid rgba(0,255,255,0.3)"}] },
+            // 02 - GOLDEN EYE
+            { bg: "conic-gradient(from 0deg, #ffd700, #000, #ffd700, #000, #ffd700)", lines: [{t:45,l:-20,w:140,h:10,r:0,rot:-45,b:"4px solid #fff"}, {t:45,l:-20,w:140,h:10,r:0,rot:45,b:"4px solid #fff"}] },
+            // 03 - EMERALD
+            { bg: "linear-gradient(135deg, #004d00 0%, #000 100%)", lines: [{t:0,l:0,w:100,h:100,r:50,rot:0,b:"1px dashed #0f0"}, {t:10,l:10,w:80,h:80,r:50,rot:20,b:"1px dashed #0f0"}] },
+            // 04 - ROYAL PURPLE
+            { bg: "radial-gradient(circle at 30% 30%, #4b0082, #000)", lines: [{t:30,l:-10,w:120,h:40,r:50,rot:-20,b:"3px solid rgba(255,255,255,0.5)"}, {t:50,l:-10,w:120,h:40,r:50,rot:20,b:"3px solid rgba(255,0,255,0.5)"}] },
+            // 05 - MAGMA
+            { bg: "linear-gradient(to right, #330000, #ff4500, #330000)", lines: [{t:-10,l:40,w:20,h:120,r:0,rot:10,b:"2px solid #fff"}, {t:-10,l:60,w:20,h:120,r:0,rot:-10,b:"2px solid #fff"}] },
+            // 06 - NEON CITY
+            { bg: "linear-gradient(180deg, #000 0%, #000033 50%, #ff00ff 50%, #000 100%)", lines: [{t:48,l:0,w:100,h:4,r:0,rot:0,b:"4px solid cyan"}] },
+            // 07 - STEEL
+            { bg: "linear-gradient(45deg, #eee 0%, #999 100%)", lines: [{t:0,l:0,w:100,h:100,r:50,rot:0,b:"10px solid #333"}] },
+            // 08 - AZURE WAVE
+            { bg: "linear-gradient(to bottom, #000 0%, #00ffff 50%, #000 100%)", lines: [{t:30,l:-20,w:140,h:60,r:50,rot:10,b:"2px solid white"}, {t:50,l:-20,w:140,h:60,r:50,rot:-10,b:"2px solid white"}] },
+            // 09 - CRIMSON EDGE
+            { bg: "linear-gradient(-45deg, #800000 50%, #000 50%)", lines: [{t:0,l:0,w:100,h:100,r:0,rot:0,b:"5px solid #ff0000"}] },
+            // 10 - VIOLET STORM
+            { bg: "repeating-radial-gradient(#2e004f, #000 10px, #2e004f 20px)", lines: [{t:40,l:40,w:20,h:20,r:50,rot:0,b:"5px solid #fff"}] },
+            // 11 - SUNSET STRIP
+            { bg: "linear-gradient(to top, #4b0082, #ff1493, #ffa500)", lines: [{t:70,l:0,w:100,h:2,r:0,rot:0,b:"2px solid #000"}, {t:80,l:0,w:100,h:2,r:0,rot:0,b:"2px solid #000"}] },
+            // 12 - CARBON
+            { bg: "repeating-linear-gradient(45deg, #111, #111 10px, #222 10px, #222 20px)", lines: [{t:10,l:10,w:80,h:80,r:10,rot:0,b:"2px solid #00d4ff"}] },
+            // 13 - ICE AGE
+            { bg: "radial-gradient(circle, #fff, #add8e6, #00008b)", lines: [{t:0,l:0,w:100,h:100,r:50,rot:0,b:"10px double #fff"}] },
+            // 14 - COPPER
+            { bg: "linear-gradient(60deg, #3d2b1f, #b87333, #3d2b1f)", lines: [{t:20,l:-20,w:140,h:2,r:0,rot:30,b:"2px solid #fff"}, {t:40,l:-20,w:140,h:2,r:0,rot:30,b:"2px solid #fff"}] },
+            // 15 - MATRIX
+            { bg: "linear-gradient(0deg, #000, #003300, #000)", lines: [{t:0,l:20,w:2,h:100,r:0,rot:0,b:"2px dotted #0f0"}, {t:0,l:80,w:2,h:100,r:0,rot:0,b:"2px dotted #0f0"}] },
+            // 16 - CANDY
+            { bg: "radial-gradient(circle at 70% 30%, #ff69b4, #00ffff)", lines: [{t:20,l:20,w:60,h:60,r:50,rot:0,b:"5px solid #fff"}] },
+            // 17 - STORM
+            { bg: "linear-gradient(to bottom, #333, #666, #333)", lines: [{t:45,l:-10,w:120,h:10,r:0,rot:-10,b:"2px solid #ffcc00"}, {t:55,l:-10,w:120,h:10,r:0,rot:10,b:"2px solid #ffcc00"}] },
+            // 18 - NEBULA
+            { bg: "radial-gradient(circle, #000, #4b0082, #000)", lines: [{t:0,l:0,w:100,h:100,r:50,rot:0,b:"1px solid rgba(255,255,255,0.2)"}, {t:10,l:10,w:80,h:80,r:50,rot:0,b:"1px solid rgba(255,255,255,0.4)"}] },
+            // 19 - RETRO
+            { bg: "linear-gradient(to right, #ff9900, #ffcc00, #ff9900)", lines: [{t:30,l:0,w:100,h:40,r:20,rot:0,b:"4px solid #333"}] },
+            // 20 - VAMPIRE
+            { bg: "radial-gradient(circle, #800000, #000)", lines: [{t:0,l:0,w:100,h:100,r:50,rot:0,b:"20px solid #000"}] },
+            // 21 - ZEN
+            { bg: "linear-gradient(to bottom, #fff 50%, #000 50%)", lines: [{t:49,l:0,w:100,h:2,r:0,rot:0,b:"2px solid #ff0000"}] },
+            // 22 - CYBERPUNK
+            { bg: "linear-gradient(90deg, #ffff00 50%, #00ffff 50%)", lines: [{t:20,l:20,w:60,h:60,r:0,rot:45,b:"4px solid #000"}] },
+            // 23 - MIDNIGHT
+            { bg: "#050505", lines: [{t:48,l:0,w:100,h:4,r:0,rot:0,b:"2px solid #333"}, {t:0,l:48,w:4,h:100,r:0,rot:0,b:"2px solid #333"}] }
+        ];
+
+        function applyClockArt(hour) {
+            const art = CLOCK_ART_DB[hour % CLOCK_ART_DB.length];
+            const clock = document.getElementById('bc-analog-clock');
+            if(!clock) return;
+            
+            // Set Background
+            clock.style.background = art.bg;
+            
+            // Reset Lines
+            for(let i=1; i<=4; i++) {
+                const el = document.getElementById(`cal-${i}`);
+                if(el) {
+                    el.style.border = 'none';
+                    el.style.borderTop = 'none';
+                    el.style.borderBottom = 'none';
+                    el.style.background = 'transparent';
+                }
+            }
+
+            // Apply New Lines
+            art.lines.forEach((line, idx) => {
+                const el = document.getElementById(`cal-${idx+1}`);
+                if(el) {
+                    el.style.top = line.t + '%';
+                    el.style.left = line.l + '%';
+                    el.style.width = line.w + '%';
+                    el.style.height = line.h + '%';
+                    el.style.borderRadius = line.r + '%';
+                    el.style.transform = `rotate(${line.rot}deg)`;
+                    
+                    if(line.b.includes('dashed') || line.b.includes('double')) {
+                        el.style.border = line.b;
+                    } else {
+                        // For arcs like the reference
+                        el.style.borderTop = line.b;
+                        el.style.borderBottom = line.b; 
+                    }
+                }
+            });
+        }
+
+        function triggerBigClockSequence() { 
+            state.isSpecial = true; state.isLocked = true; state.isClockRunning = true; 
+            state.clockPhase = 0; state.updateTriggered = false; 
+            state.clockFinishTriggered = false; state.logoExitTriggered = false; 
+            
+            // 1. Set Sun Phase Background Overlay
+            const phase = SunCycle.getPhase();
+            DOM.bigClockOverlay.style.background = phase.g; 
+            
+            // 2. Set Clock Art based on Hour
+            const currentHour = new Date().getHours();
+            applyClockArt(currentHour);
+
+            DOM.bigClockOverlay.style.display = 'grid'; DOM.bigClockOverlay.style.opacity = '0'; DOM.bigClockOverlay.classList.remove('bc-layout-center'); setTimeout(() => { DOM.bigClockOverlay.style.transition = 'opacity 0.8s ease-in-out'; DOM.bigClockOverlay.style.opacity = '1'; DOM.bigClockOverlay.classList.add('active'); generateAnalogClockFace(); runBigClockLoop(); }, 50); 
+        }
 
         function runBigClockLoop() { const now = new Date(); let nextHour = now.getHours() + 1; if (nextHour > 23) nextHour = 0; const bcInterval = setInterval(() => { updateAnalogHands(); const s = new Date().getSeconds(); if (s < 45 && state.clockPhase !== 1) { state.clockPhase = 1; DOM.bigClockOverlay.classList.remove('bc-layout-center'); DOM.bcInfoText.style.opacity = 1; } else if (s >= 45 && s < 50 && state.clockPhase !== 2) { state.clockPhase = 2; DOM.bcInfoText.style.opacity = 0; } else if (s >= 50 && s < 59 && state.clockPhase !== 3) { state.clockPhase = 3; DOM.bigClockOverlay.classList.add('bc-layout-center'); } if (s === 45 && !state.updateTriggered && !state.isNightMode) { state.updateTriggered = true; backgroundRefresh(true, true); } if (s === 0 && state.isClockRunning && state.clockPhase >= 1 && !state.clockFinishTriggered) { state.clockFinishTriggered = true; clearInterval(bcInterval); finishClockSequence(); } }, 50); state.bigClockTimeout = setTimeout(() => { if(state.isClockRunning) { clearInterval(bcInterval); finishClockSequence(); } }, 70000); }
 
@@ -1420,44 +1558,100 @@
 
         function cycleMain(manual = false, preserveIndex = false) { if (state.isLocked) return; if (!state.mainItems.length || state.isSpecial || state.isSummary) return; if (!manual) { state.mainIdx++; if (state.mainIdx >= state.mainItems.length) state.mainIdx = 0; } else if (!preserveIndex) { state.mainIdx = 0; } if (state.mainIdx < 0) state.mainIdx = state.mainItems.length - 1; if (state.mainIdx >= state.mainItems.length) state.mainIdx = 0; const item = state.mainItems[state.mainIdx]; state.currentMainLink = item.link; DOM.mainContainerBox.classList.remove('active'); setTimeout(() => { if (state.isLocked) return; DOM.mainTitle.innerText = item.title; DOM.mainDesc.innerText = item.desc; document.getElementById('nav-count').innerText = `${state.mainIdx + 1} / ${state.mainItems.length}`; const timeStr = item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'}); if(DOM.mainCatText) { const feed = RSS_FEEDS.find(f => f.name === item.source); const logoUrl = feed ? `https://www.google.com/s2/favicons?domain=${feed.domain}&sz=64` : ''; DOM.mainCatText.innerHTML = `<img src="${logoUrl}"> ${item.source} • ${timeStr}`; } const img = document.createElement('img'); img.src = item.img; img.className = 'bg-img'; DOM.stage.appendChild(img); img.onerror = () => { img.remove(); DOM.mainTitle.innerText = "KÉP BETÖLTÉSE SIKERTELEN..."; setTimeout(() => cycleMain(), 2000); }; img.onload = () => { if(state.isLocked) { img.remove(); return; } img.classList.add('active'); const imgs = DOM.stage.querySelectorAll('.bg-img'); if (imgs.length > 2) imgs[0].remove(); DOM.mainContainerBox.classList.add('active'); }; DOM.mainPrg.style.transition = 'none'; DOM.mainPrg.style.width = '0%'; setTimeout(() => { DOM.mainPrg.style.transition = 'width 21.8s linear'; DOM.mainPrg.style.width = '100%'; }, 50); }, 600); }
 
-        // --- SUN CYCLE ENGINE (NYÍREGYHÁZA DETAILED) ---
+        // --- SUN CYCLE ENGINE (REALTIME NYÍREGYHÁZA) ---
         const SunCycle = {
             calc: (date, lat, lon) => {
-                // Simplified orbital mechanics for robust standalone usage
-                const d = new Date(date);
-                const n = Math.floor((d - new Date(d.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
-                const h = d.getHours() + d.getMinutes() / 60;
-                // Approx sunrise/sunset
-                const declination = 23.45 * Math.sin((2 * Math.PI * (284 + n)) / 365);
-                const hourAngle = Math.acos(-Math.tan(lat * Math.PI/180) * Math.tan(declination * Math.PI/180)) * 180/Math.PI;
-                const sunrise = 12 - hourAngle / 15;
-                const sunset = 12 + hourAngle / 15;
-                // Correct for longitude (Nyíregyháza is East, so earlier)
-                const lonCorr = (15 - lon) * 4 / 60; // hours
-                return { rise: sunrise + lonCorr - 0.5, set: sunset + lonCorr + 0.5 }; // approximate local time adjustment
+                const start = new Date(date.getFullYear(), 0, 0);
+                const diff = date - start;
+                const oneDay = 1000 * 60 * 60 * 24;
+                const day = Math.floor(diff / oneDay);
+                
+                // Accurate enough Solar declination for visual UI
+                const declination = 23.45 * Math.sin((360 / 365) * (day - 81) * (Math.PI / 180));
+                
+                // Equation of time
+                const b = (360 / 365) * (day - 81) * (Math.PI / 180);
+                const eot = 9.87 * Math.sin(2 * b) - 7.53 * Math.cos(b) - 1.5 * Math.sin(b);
+                
+                const rad = Math.PI / 180;
+                const zenith = 90.833 * rad; // Official
+                const latRad = lat * rad;
+                const decRad = declination * rad;
+                
+                // Hour angle
+                const cosH = (Math.cos(zenith) - Math.sin(latRad)*Math.sin(decRad)) / (Math.cos(latRad)*Math.cos(decRad));
+                
+                if (cosH < -1 || cosH > 1) return { rise: 6, set: 18 }; // Polar fallback
+                
+                const hourAngle = Math.acos(cosH) * (180 / Math.PI) / 15;
+                
+                // UTC Times (approx)
+                const riseUTC = 12 - hourAngle - (lon / 15) - (eot / 60);
+                const setUTC = 12 + hourAngle - (lon / 15) - (eot / 60);
+                
+                // Local time offset
+                const offset = -date.getTimezoneOffset() / 60;
+                
+                return { rise: riseUTC + offset, set: setUTC + offset };
             },
             getPhase: () => {
-                // Returns color theme and gradient based on Nyíregyháza sun position
                 const now = new Date();
-                // Get accurate rise/set from API if available, else approximate
-                let rise = 6, set = 18;
-                // Manual overrides for Nyíregyháza typical times if no API
-                const m = now.getMonth();
-                if(m === 11 || m < 1) { rise = 7.5; set = 16; } // Winter
-                else if(m > 4 && m < 8) { rise = 4.5; set = 20.5; } // Summer
-                else { rise = 6; set = 18; } // Equinox
+                const lat = 47.95; 
+                const lon = 21.71;
+                const sun = SunCycle.calc(now, lat, lon);
+                const h = now.getHours() + now.getMinutes() / 60;
 
-                const h = now.getHours() + now.getMinutes()/60;
+                // Thresholds
+                const twilight = 0.8;
+                const golden = 1.0;
+
+                // 1. NIGHT (Before Dawn)
+                if (h < sun.rise - twilight) return { 
+                    n: 'NIGHT', c: '#3366cc', 
+                    g: 'linear-gradient(180deg, #000000 0%, #050510 100%)' 
+                }; 
                 
-                // Define Phases
-                if (h < rise - 1) return { n: 'NIGHT', c: '#3366cc', g: 'linear-gradient(180deg, #000510 0%, #001a33 100%)' }; // Deep Night
-                if (h < rise) return { n: 'DAWN', c: '#ff9966', g: 'linear-gradient(180deg, #1a0520 0%, #4d1a33 100%)' }; // Dawn
-                if (h < rise + 0.5) return { n: 'SUNRISE', c: '#ffcc00', g: 'linear-gradient(180deg, #331a00 0%, #cc5500 100%)' }; // Sunrise
-                if (h < set - 1) return { n: 'DAY', c: '#00d4ff', g: 'linear-gradient(180deg, #0a1a2a 0%, #1a2a3a 100%)' }; // Day
-                if (h < set) return { n: 'GOLDEN', c: '#ffcc00', g: 'linear-gradient(180deg, #332200 0%, #664400 100%)' }; // Golden Hour
-                if (h < set + 0.5) return { n: 'SUNSET', c: '#ff4444', g: 'linear-gradient(180deg, #330000 0%, #660000 100%)' }; // Sunset
-                if (h < set + 1.5) return { n: 'DUSK', c: '#9933cc', g: 'linear-gradient(180deg, #1a0033 0%, #330066 100%)' }; // Dusk
-                return { n: 'NIGHT', c: '#3366cc', g: 'linear-gradient(180deg, #000510 0%, #001a33 100%)' };
+                // 2. DAWN
+                if (h < sun.rise) return { 
+                    n: 'DAWN', c: '#d946ef', 
+                    g: 'linear-gradient(180deg, #100010 0%, #240b36 100%)' 
+                };
+                
+                // 3. SUNRISE
+                if (h < sun.rise + 0.5) return { 
+                    n: 'SUNRISE', c: '#ff6600', 
+                    g: 'linear-gradient(180deg, #1a0500 0%, #331000 100%)' 
+                };
+
+                // 4. DAY (Standard Cyan/Blue)
+                if (h < sun.set - golden) return { 
+                    n: 'DAY', c: '#00d4ff', 
+                    g: 'linear-gradient(180deg, #0a1a2a 0%, #1a2a3a 100%)' 
+                };
+                
+                // 5. GOLDEN HOUR
+                if (h < sun.set) return { 
+                    n: 'GOLDEN', c: '#ffcc00', 
+                    g: 'linear-gradient(180deg, #1a1500 0%, #332b00 100%)' 
+                };
+
+                // 6. SUNSET
+                if (h < sun.set + 0.5) return { 
+                    n: 'SUNSET', c: '#ff4444', 
+                    g: 'linear-gradient(180deg, #1a0000 0%, #330000 100%)' 
+                };
+                
+                // 7. DUSK
+                if (h < sun.set + twilight + 0.5) return { 
+                    n: 'DUSK', c: '#663399', 
+                    g: 'linear-gradient(180deg, #0a001a 0%, #140033 100%)' 
+                };
+
+                // 8. NIGHT (After Dusk)
+                return { 
+                    n: 'NIGHT', c: '#3366cc', 
+                    g: 'linear-gradient(180deg, #000000 0%, #050510 100%)' 
+                };
             }
         };
 
@@ -1498,7 +1692,7 @@
             document.getElementById('tc-s').innerText = `:${s}`;
             document.getElementById('tc-date').innerText = `${dateStr}. • ${dayStr.toUpperCase()}`;
 
-            // Apply Sun Phase Styling
+            // Apply Sun Phase Styling - Realtime
             const phase = SunCycle.getPhase();
             document.documentElement.style.setProperty('--sun-accent', phase.c);
             document.documentElement.style.setProperty('--sun-bg-grad', phase.g);
@@ -1558,6 +1752,7 @@
         function renderCurrency(r, source) { let huf, eur, chf, gbp, usd; if (state.currencyBase === 'USD') { huf = r.HUF; eur = huf / r.EUR; chf = huf / r.CHF; gbp = huf / r.GBP; usd = huf; } else { huf = 1; eur = 1 / r.EUR; chf = 1 / r.CHF; gbp = 1 / r.GBP; usd = 1 / r.USD; } const iconStyle = 'width:20px; height:auto; margin-right:8px; vertical-align:middle; border-radius:2px;'; document.getElementById('finance-rows').innerHTML = ` <div class="data-row"><span class="data-label"><img src="https://flagcdn.com/24x18/eu.png" style="${iconStyle}">EURÓ (EUR)</span><span class="data-val">${eur.toFixed(2)} FT</span></div><div class="data-row"><span class="data-label"><img src="https://flagcdn.com/24x18/us.png" style="${iconStyle}">USA DOLLÁR (USD)</span><span class="data-val">${usd.toFixed(2)} FT</span></div><div class="data-row"><span class="data-label"><img src="https://flagcdn.com/24x18/ch.png" style="${iconStyle}">SVÁJCI FRANK (CHF)</span><span class="data-val">${chf.toFixed(2)} FT</span></div><div class="data-row"><span class="data-label"><img src="https://flagcdn.com/24x18/gb.png" style="${iconStyle}">ANGOL FONT (GBP)</span><span class="data-val">${gbp.toFixed(2)} FT</span></div>`; document.getElementById('fin-stamp').innerText = getTime(); const logoUrl = "https://www.google.com/s2/favicons?domain=exchangerate-api.com&sz=64"; document.getElementById('fx-source-container').innerHTML = `<strong>ADAT: ${source}</strong> <img src="${logoUrl}" style="height:12px; margin-left:5px; vertical-align:middle; border-radius:50%;">`; }
 
         async function fetchOther() { try { const allStations = SIDEBAR_STATIONS; const batch = []; for(let i=0; i<10; i++) { const idx = (state.stationPointer + i) % allStations.length; batch.push(allStations[idx]); } state.stationPointer = (state.stationPointer + 10) % allStations.length; const promises = batch.map(s => fetchMeteoRobust(s.lat, s.lon)); const results = await Promise.all(promises); state.weatherData = []; results.forEach((d, i) => { if(d) { state.weatherData.push({ name: batch[i].name, flagCode: batch[i].code, t: formatVal(d.temperature), f: formatVal(d.temperatureFeelsLike), h: d.relativeHumidity, w: formatVal(d.windSpeed), wd: d.windDirection, p: d.pressureAltimeter || d.pressure || 1013, uv: d.uvIndex !== undefined ? d.uvIndex : 0, v: d.visibility || 10, iconCode: d.iconCode, dayOrNight: d.dayOrNight || 'D' }); } }); updateWeatherCard(); } catch(e) {} }
+        
         function updateWeatherCard() { if (!state.weatherData.length) return; const w = state.weatherData[state.wxIdx]; const wmo = getWmoDesc(w.iconCode, w.dayOrNight); document.getElementById('city-wx-name').innerHTML = `<div style="display:flex; align-items:center;"><img src="https://flagcdn.com/24x18/${w.flagCode}.png" style="margin-right:10px; border-radius:2px;">${w.name.toUpperCase()}</div><span class="wx-live-badge" style="background:#cc0000; color:#fff; font-size:0.6rem; padding:1px 4px; border-radius:2px; letter-spacing:1px; box-shadow:0 0 5px rgba(204,0,0,0.5);">ÉLŐ</span>`; document.getElementById('wx-rows').innerHTML = `<div class="wx-dashboard"><div class="wx-main-row"><div class="wx-temp-big">${w.t}°</div><div class="wx-right-col"><div class="wx-cond-text" title="${wmo.t}">${wmo.i} ${wmo.t}</div><div class="wx-feels-like">ÉRZET: ${w.f}°</div></div></div><div class="wx-wind-row"><div class="wx-wind-label">SZÉL (10M)</div><div class="wx-wind-val">${w.w} KM/H • ${getWind(w.wd)}</div></div><div class="wx-details-grid"><div class="wx-cell"><span class="wx-c-label">PÁRATARTALOM</span><span class="wx-c-val">${w.h}%</span></div><div class="wx-cell"><span class="wx-c-label">LÉGNYOMÁS</span><span class="wx-c-val">${typeof w.p === 'number' ? w.p.toFixed(0) : w.p} hPa</span></div><div class="wx-cell"><span class="wx-c-label">UV INDEX</span><span class="wx-c-val">${w.uv}</span></div><div class="wx-cell"><span class="wx-c-label">LÁTÓTÁVOLSÁG</span><span class="wx-c-val">${formatVal(w.v)} KM</span></div></div></div>`; document.getElementById('wx-stamp').innerText = getTime(); state.wxIdx = (state.wxIdx + 1) % state.weatherData.length; }
 
         function checkNightMode() { const now = new Date(); const h = now.getHours(); let isNight = state.forcedNightMode; if(!state.forcedNightMode) { if (h >= 0 && h < 6) isNight = true; } if (isNight !== state.isNightMode) { state.isNightMode = isNight; if (isNight) { DOM.tickerWindow.style.display = 'none'; DOM.tickerNav.style.display ='none'; DOM.nightMsg.classList.add('active'); DOM.hourlyNavBar.classList.remove('active'); DOM.mainDesc.innerText = "Kérjük várjon, amíg a rendszer betölti az előző nap híreit."; toggleLiveBadge(false); DOM.replayBadge.classList.add('visible'); DOM.logoBox.classList.add('night-theme'); } else { DOM.tickerWindow.style.display = 'block'; DOM.tickerNav.style.display = 'flex'; DOM.nightMsg.classList.remove('active'); DOM.hourlyNavBar.classList.add('active'); DOM.replayBadge.classList.remove('visible'); DOM.logoBox.classList.remove('night-theme'); updateLists(); cycleMain(); cycleTicker(1); } } if (isNight) { let slot = 0, startHour = 6, endHour = 12, timeText = "REGGELI HÍREK 06:00 - 12:00"; if (h >= 2 && h < 4) { slot = 1; startHour = 12; endHour = 18; timeText = "DÉLUTÁNI HÍREK 12:00 - 18:00"; } else if (h >= 4 && h < 6) { slot = 2; startHour = 18; endHour = 24; timeText = "ESTI HÍREK 18:00 - 00:00"; } const y = new Date(now); y.setDate(y.getDate() - 1); const tStart = new Date(y).setHours(startHour, 0, 0, 0); const tEnd = new Date(y).setHours(endHour, 0, 0, 0); let nightItems = state.allNews.filter(n => { const t = n.date.getTime(); return t >= tStart && t < tEnd && n.img; }); if (nightItems.length === 0) { const fallbackStart = new Date(y).setHours(0,0,0,0); const fallbackEnd = new Date(y).setHours(23,59,59,999); nightItems = [...state.allNews].filter(n => n.img && n.date.getTime() >= fallbackStart && n.date.getTime() <= fallbackEnd).slice(0, 30); } nightItems.sort((a,b) => a.date - b.date); state.mainItems = nightItems; DOM.nightMsg.innerHTML = `<div class="nm-left"><div class="nm-icon-box">🌙</div><div class="nm-text"><div class="nm-title">ÉJSZAKAI ADÁS - AZ ELŐZŐ NAP HÍREI</div><div class="nm-desc">${timeText}</div></div></div><div class="nm-timeline"><div class="nm-t-item ${slot===0?'active':''}">00-02<br>REGGEL</div><div class="nm-t-item ${slot===1?'active':''}">02-04<br>DÉLUTÁN</div><div class="nm-t-item ${slot===2?'active':''}">04-06<br>ESTE</div></div>`; } }
