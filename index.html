@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V21.10 METEO FIX & EXTREME PACK</title>
+    <title>TKP NEWS - V21.13</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -138,7 +138,7 @@
         .refresh-btn-side:hover { background: rgba(255,255,255,0.15); color: #fff; border-top-color: var(--accent); box-shadow: 0 0 15px rgba(0,0,0,0.5); }
         .refresh-btn-side.loading { color: #888; pointer-events: none; animation: pulse 1s infinite; }
 
-        /* --- REDESIGNED TKP LOGO (RESIZED & ANIMATED) --- */
+        /* --- LOGO DEFINITIONS --- */
         .logo-box { 
             position: fixed; top: 4vh; left: 4vw; width: auto; z-index: 9999; 
             pointer-events: auto; cursor: pointer; 
@@ -152,55 +152,41 @@
         }
 
         .logo-letters {
-            display: flex; gap: 2px; z-index: 2; /* Spacing reduced */
+            display: flex; gap: 2px; z-index: 2; 
         }
 
-        /* REDUCED LOGO SIZE */
         .logo-block {
-            width: 26px; height: 26px; /* Was 34px */
+            width: 26px; height: 26px; 
             display: flex; align-items: center; justify-content: center;
             color: #fff; font-family: 'Inter', sans-serif; font-weight: 900; 
-            font-size: 1.1rem; /* Was 1.4rem */
+            font-size: 1.1rem; 
             border-radius: 2px;
             border: 1px solid rgba(255,255,255,0.25);
             box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-            
-            /* Initial state for PopIn */
             transform: scale(0); opacity: 0; 
-            
             text-shadow: 0 1px 2px rgba(0,0,0,0.5);
             transition: background 1.5s ease, border-color 1.5s ease, color 1.5s ease, box-shadow 1.5s ease, text-shadow 1.5s ease;
         }
 
-        /* LOGO COLORS */
         .lb-t { background: linear-gradient(135deg, #d00000 0%, #900000 100%); }
         .lb-k { background: linear-gradient(135deg, #702082 0%, #4a1555 100%); }
         .lb-p { background: linear-gradient(135deg, #009ee3 0%, #006c9b 100%); }
 
-        /* 3-SECOND JUMPING ANIMATION */
         @keyframes logoColorJump {
             0% { filter: brightness(1); transform: translateY(0) scale(1); }
             50% { filter: brightness(1.3) saturate(1.2); transform: translateY(-2px) scale(1); }
             100% { filter: brightness(1); transform: translateY(0) scale(1); }
         }
         
-        /* 
-           CRITICAL FIX: 
-           Exclude .logo-entry from this rule so the PopIn animation (scale 0->1) can run first!
-           Only run jumping when NOT watermark, NOT exit, and NOT entry.
-        */
         .logo-box:not(.watermark-active):not(.logo-exit):not(.logo-entry) .logo-block {
             animation: logoColorJump 0.6s infinite alternate;
-            /* Force opacity/scale to 1 just in case, but after entry is removed */
             opacity: 1; transform: scale(1); 
         }
         
-        /* Stagger the jumps */
         .logo-box:not(.watermark-active):not(.logo-exit):not(.logo-entry) .lb-t { animation-delay: 0s; }
         .logo-box:not(.watermark-active):not(.logo-exit):not(.logo-entry) .lb-k { animation-delay: 0.1s; }
         .logo-box:not(.watermark-active):not(.logo-exit):not(.logo-entry) .lb-p { animation-delay: 0.2s; }
 
-        /* NEWS BAR */
         .logo-news-bar {
             background: #000;
             color: #fff;
@@ -208,7 +194,7 @@
             text-align: center;
             font-family: 'Oswald', sans-serif;
             font-weight: 700;
-            font-size: 0.75rem; /* Reduced from 0.9rem */
+            font-size: 0.75rem;
             letter-spacing: 3px;
             padding: 1px 0;
             border-bottom: 2px solid rgba(255,255,255,0.3);
@@ -220,13 +206,11 @@
             transition: background 1.5s ease, color 1.5s ease, border-color 1.5s ease, box-shadow 1.5s ease;
         }
         
-        /* FIX: Keep News Bar visible during jumping state */
         .logo-box:not(.logo-entry):not(.logo-exit) .logo-news-bar {
             transform: scaleY(1);
             opacity: 1;
         }
 
-        /* LIVE & REPLAY BADGES */
         .status-badge {
             position: absolute; left: 100%; top: 0; margin-left: 6px;
             background: #cc0000; color: #fff;
@@ -237,7 +221,6 @@
             animation: fadeInRight 0.5s forwards;
         }
         
-        /* FAINTER REPLAY BADGE */
         .status-badge.replay { 
             background: rgba(68, 68, 68, 0.5); 
             color: rgba(204, 204, 204, 0.7);
@@ -247,7 +230,6 @@
         
         .status-badge.visible { display: block; opacity: 1; }
 
-        /* ANIMATIONS */
         @keyframes logoPopIn { 
             0% { transform: scale(0); opacity: 0; } 
             60% { transform: scale(1.15); opacity: 1; } 
@@ -266,40 +248,35 @@
             100% { transform: scaleY(0); opacity: 0; } 
         }
 
-        /* ENTRY STATE - Triggers ONCE when class is added */
         .logo-box.logo-entry .lb-t { animation: logoPopIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.1s; }
         .logo-box.logo-entry .lb-k { animation: logoPopIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.2s; }
         .logo-box.logo-entry .lb-p { animation: logoPopIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.3s; }
         .logo-box.logo-entry .logo-news-bar { animation: newsUnfold 0.5s ease-out forwards 0.7s; }
 
-        /* EXIT STATE */
         .logo-box.logo-exit .logo-news-bar { animation: newsFold 0.3s ease-in forwards; }
         .logo-box.logo-exit .lb-t { animation: logoPopOut 0.4s ease-in forwards 0.3s; }
         .logo-box.logo-exit .lb-k { animation: logoPopOut 0.4s ease-in forwards 0.2s; }
         .logo-box.logo-exit .lb-p { animation: logoPopOut 0.4s ease-in forwards 0.1s; }
 
-        /* WATERMARK ACTIVE STATE (Strict Overrides) */
         .logo-box.watermark-active .logo-block {
             background: rgba(80, 80, 80, 0.25) !important;
             border-color: rgba(255, 255, 255, 0.15) !important;
             box-shadow: none !important;
             color: rgba(255, 255, 255, 0.6) !important;
             text-shadow: none !important;
-            animation: none !important; /* Stop jumping */
+            animation: none !important; 
             transform: scale(1) !important; opacity: 1 !important;
         }
         .logo-box.watermark-active .logo-news-bar {
             background: transparent !important;
             color: rgba(255, 255, 255, 0.6) !important;
-            border-bottom: none !important; /* FIXED: Removed line in watermark mode */
+            border-bottom: none !important; 
             box-shadow: none !important;
             text-shadow: 0 1px 2px #000 !important;
         }
 
-        /* NIGHT MODE (Manual Override) */
         .logo-box.night-theme { opacity: 0.85; filter: grayscale(0.3); }
         
-        /* INLINE LOGO FOR TEXT */
         .text-inline-logo {
             display: inline-flex; flex-direction: column; align-items: flex-start;
             vertical-align: middle;
@@ -317,7 +294,6 @@
             opacity: 1 !important;
         }
         
-        /* EMBEDDED WATERMARK FOR BIG CLOCK */
         .clock-embedded-logo {
             display: flex; flex-direction: column; align-items: center;
             opacity: 0.9;
@@ -328,7 +304,7 @@
             border-color: rgba(255, 255, 255, 0.4);
             color: #ddd;
             box-shadow: none;
-            transform: scale(1); opacity: 1; /* Force visible */
+            transform: scale(1); opacity: 1; 
             text-shadow: none;
             animation: none !important;
         }
@@ -337,7 +313,7 @@
             color: #ddd;
             border-bottom: 2px solid rgba(255,255,255,0.2);
             box-shadow: none;
-            transform: scaleY(1); opacity: 1; /* Force visible */
+            transform: scaleY(1); opacity: 1; 
         }
 
         .sidebar { position: relative; width: 100%; height: auto; pointer-events: auto; z-index: 40; perspective: 1000px; flex-shrink: 0; }
@@ -346,7 +322,6 @@
         .sidebar-front { position: relative; width: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; transform-style: preserve-3d; display: flex; flex-direction: column; gap: 10px; z-index: 2; }
         .sidebar-back { position: absolute; top: 0; left: 0; height: 100%; width: 100%; transform: rotateY(180deg); -webkit-backface-visibility: hidden; backface-visibility: hidden; z-index: 1; display: flex; flex-direction: column; }
 
-        /* COMPACT CARD PADDING & FONTS */
         .card { background: linear-gradient(135deg, rgba(0,20,50,0.7), rgba(0,10,30,0.85)); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.2); border-right: 4px solid var(--accent); padding: 12px 15px 20px 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); position: relative; border-radius: 4px; pointer-events: auto; }
         .card-title { font-family: var(--font-main); font-size: 1.1rem; color: var(--accent); border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 5px; margin-bottom: 8px; font-weight: 700; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; letter-spacing: 0.5px; }
         .data-row { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -356,18 +331,145 @@
         .footer-pill { background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 4px; padding: 1px 5px; font-family: var(--font-tech); font-size: 0.6rem; color: #bbb; backdrop-filter: blur(2px); display: flex; align-items: center; gap: 5px; }
         .footer-pill strong { color: #ddd; font-weight: 700; letter-spacing: 0.5px; }
 
-        .breaking-card { background: linear-gradient(135deg, #7a0000 0%, #330000 100%); border: 1px solid #ff4444; border-left: 8px solid #fff; padding: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.9); height: 100%; min-height: 350px; display: flex; flex-direction: column; pointer-events: auto; cursor: pointer; position: relative; overflow: hidden; }
-        .breaking-card.night-summary-card { background: linear-gradient(135deg, #001a4d 0%, #000 100%); border-color: var(--primary); border-left-color: var(--accent); }
-        .breaking-card.night-summary-card .bk-card-header { border-bottom-color: var(--accent); }
-        .breaking-card.night-summary-card .bk-card-headline { background: linear-gradient(180deg, #002266 0%, #001133 100%); }
-        .bk-card-header { font-family: var(--font-tech); color: #fff; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; border-bottom: 2px solid #ff4444; padding-bottom: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 10; }
-        .bk-watermark { display: flex; align-items: center; gap: 4px; opacity: 1; padding: 0; border: none; background: transparent; }
-        .bk-card-headline { font-family: var(--font-main); font-weight: 800; font-size: 1.3rem; line-height: 1.1; color: #fff; margin-bottom: 12px; text-transform: uppercase; z-index: 5; background: rgba(0,0,0,0.3); box-shadow: 0 2px 10px rgba(0,0,0,0.3); padding: 6px; border-radius: 4px; }
-        .bk-card-body { font-family: var(--font-data); font-size: 1.05rem; line-height: 1.35; color: #eee; flex-grow: 1; overflow: hidden; position: relative; mask-image: linear-gradient(to bottom, black 85%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%); }
-        .bk-scroll-wrapper { position: relative; top: 0; will-change: transform; transition: transform 0.1s linear; }
-        .bk-card-meta { font-family: var(--font-mono); font-size: 0.75rem; color: #ffcc00; margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 4px; display: flex; align-items: center; justify-content: flex-end; gap: 8px; z-index: 5; }
-        .source-logo { height: 18px; width: auto; vertical-align: middle; border-radius: 2px; }
-        .bk-logo-wrapper { display: flex; flex-direction: column; align-items: center; transform-origin: right center; transform: scale(0.9); }
+        /* --- 15-MINUTE SUMMARY CARD DESIGN --- */
+        .summary-card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(0, 0, 0, 0.98) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-left: 5px solid #00d4ff;
+            height: 100%;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            pointer-events: auto;
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        }
+        
+        .summary-header {
+            background: linear-gradient(90deg, rgba(0, 51, 153, 0.3) 0%, transparent 100%);
+            padding: 10px 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .summ-head-title {
+            font-family: var(--font-main);
+            font-size: 1.1rem;
+            color: #fff;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .summ-head-badge {
+            background: #00d4ff;
+            color: #000;
+            font-family: var(--font-tech);
+            font-size: 0.7rem;
+            padding: 2px 5px;
+            border-radius: 2px;
+            font-weight: 800;
+        }
+
+        .summary-list {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 10px 0;
+            gap: 8px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .summary-item {
+            padding: 8px 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            flex-direction: column;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+        .summary-item:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        .summary-item:last-child { border-bottom: none; }
+        
+        .summ-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: #aaa;
+            margin-bottom: 2px;
+        }
+        
+        .summ-time { color: var(--accent); font-weight: bold; }
+        .summ-source { color: #00d4ff; text-transform: uppercase; font-weight: bold; font-family: var(--font-tech); }
+        
+        .summ-title {
+            font-family: var(--font-data);
+            font-size: 0.95rem;
+            color: #fff;
+            line-height: 1.2;
+            font-weight: 600;
+            margin-bottom: 2px;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        
+        .summ-desc {
+            font-family: var(--font-inter);
+            font-size: 0.75rem;
+            color: #888;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Dedicated Footer for Centered Logo */
+        .summary-footer {
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(0deg, rgba(0,0,0,0.5) 0%, transparent 100%);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            margin-top: auto;
+        }
+
+        .summary-footer .text-inline-logo {
+            transform: scale(0.65); /* Slightly Adjusted Size */
+            margin: 0;
+            opacity: 1; 
+            filter: none;
+        }
+        /* Override specific logo block styles for footer (to ensure color) */
+        .summary-footer .text-inline-logo .logo-block {
+             /* Remove background override to let lb-t/k/p gradients show */
+             border: 1px solid rgba(255,255,255,0.3) !important;
+             box-shadow: 0 2px 5px rgba(0,0,0,0.5) !important;
+             color: #fff !important;
+             animation: none !important;
+             transform: scale(1) !important; 
+             opacity: 1 !important;
+             text-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+        }
+        /* Override specific news bar styles for footer */
+        .summary-footer .text-inline-logo .logo-news-bar {
+             background: #000 !important; /* Keep black like main logo */
+             color: #fff !important;
+             border-bottom: 2px solid rgba(255,255,255,0.3) !important;
+             box-shadow: none !important;
+             opacity: 1 !important;
+             transform: scaleY(1) !important;
+        }
 
         .wx-dashboard { display: flex; flex-direction: column; gap: 4px; padding-top: 4px; }
         .wx-main-row { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; padding-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 2px; }
@@ -409,13 +511,10 @@
         /* --- TICKER BAR REDESIGN --- */
         .ticker-bar { 
             position: absolute; bottom: 0; left: 0; width: 100%; height: var(--footer-h); 
-            /* MODIFIED: Dynamic background based on sun cycle - REALTIME */
             background: var(--sun-bg-grad);
-            /* MODIFIED: Dynamic top border color - REALTIME */
             border-top: 4px solid var(--sun-accent); 
             display: flex; z-index: 40; 
             box-shadow: 0 -10px 40px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.15); 
-            /* MODIFIED: Added background and border-color transition */
             transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s, background 3s ease, border-color 3s ease; 
             pointer-events: auto; 
         }
@@ -449,7 +548,7 @@
         
         /* TICKER WINDOW & PATTERN */
         .ticker-window { 
-            flex-grow: 1; height: 100%; position: relative; overflow: hidden; z-index: 45; padding-right: 140px; /* Adjusted from 200px */
+            flex-grow: 1; height: 100%; position: relative; overflow: hidden; z-index: 45; padding-right: 140px; 
             background-image: repeating-linear-gradient(45deg, transparent 0, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px);
             mask-image: linear-gradient(to right, black 85%, transparent 100%); -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%); 
         }
@@ -477,20 +576,26 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.5);
             text-transform: uppercase; letter-spacing: 1px;
         }
+
+        /* RESIZED LOGOS IN TICKER */
+        .ticker-meta img {
+            max-height: 14px;
+            width: auto;
+            object-fit: contain;
+            vertical-align: middle;
+        }
         
-        /* ORGANIZED BOTTOM RIGHT CLOCK - COMPACT VERSION */
+        /* ORGANIZED BOTTOM RIGHT CLOCK */
         .ticker-clock { 
-            position: absolute; right: 0; top: 0; height: 100%; width: 130px; /* Reduced from 160px */
+            position: absolute; right: 0; top: 0; height: 100%; width: 130px; 
             background: var(--sun-bg-grad); border-left: 4px solid var(--sun-accent); 
             z-index: 60; display: flex; flex-direction: column; justify-content: center; align-items: center; 
             box-shadow: -10px 0 30px rgba(0,0,0,1); transition: all 3s ease; 
             padding: 0 2px;
         }
         .tc-time-row { display: flex; align-items: baseline; justify-content: center; width: 100%; margin-bottom: 2px; }
-        /* Smaller fonts for time */
         .tc-hm { font-family: var(--font-mono); font-size: 1.5rem; color: #fff; font-weight: 700; line-height: 1; letter-spacing: -1px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); font-variant-numeric: tabular-nums; }
         .tc-s { font-family: var(--font-mono); font-size: 0.85rem; color: var(--sun-accent); font-weight: 500; margin-left: 3px; transition: color 3s ease; font-variant-numeric: tabular-nums; opacity: 0.9; }
-        /* Organized Date Row */
         .tc-date-row { font-family: var(--font-main); font-size: 0.65rem; color: #ccc; text-transform: uppercase; font-weight: 700; margin-top: 2px; letter-spacing: 0.5px; opacity: 0.9; width: 100%; text-align: center; border-top: 1px solid rgba(255,255,255,0.25); padding-top: 3px; line-height: 1.2; }
 
         .hourly-nav-bar { position: absolute; bottom: var(--footer-h); left: 20px; width: auto; max-width: 80vw; height: 40px; background: transparent; display: flex; justify-content: flex-start; align-items: flex-end; padding-bottom: 0; gap: 6px; z-index: 55; opacity: 0; pointer-events: none; transition: opacity 0.5s; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
@@ -521,22 +626,21 @@
         .night-msg { 
             display: none; width: 100%; height: 100%; 
             background: linear-gradient(90deg, #0a0a0a 0%, #151515 50%, #0a0a0a 100%); 
-            padding-left: 20px; align-items: center; justify-content: flex-start; /* Changed from space-between to flex-start */
+            padding-left: 20px; align-items: center; justify-content: flex-start; 
             box-shadow: inset 0 0 30px rgba(0,0,0,0.8); 
-            position: relative; /* Context for absolute positioning */
+            position: relative; 
         }
         .night-msg.active { display: flex; }
         .nm-left { display: flex; align-items: center; gap: 20px; height: 100%; }
         .nm-icon-box { background: rgba(255,255,255,0.05); height: 100%; display: flex; align-items: center; padding: 0 15px; font-size: 1.5rem; border-right: 1px solid #333; color: #666; }
         .nm-text { display: flex; flex-direction: column; justify-content: center; }
-        /* Smaller font sizes */
+        
         .nm-title { font-family: var(--font-tech); color: var(--accent); font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; font-weight: bold; margin-bottom: 2px; }
         .nm-desc { font-family: var(--font-main); color: #fff; font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
         
-        /* Centered Timeline */
         .nm-timeline { 
             display: flex; gap: 4px; height: 60%; align-items: center; 
-            position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); /* Centered */
+            position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); 
             margin-right: 0;
         }
         .nm-t-item { background: #1a1a1a; color: #666; font-family: var(--font-mono); font-size: 0.75rem; font-weight: bold; padding: 0 15px; text-align: center; border-radius: 2px; display: flex; flex-direction: column; justify-content: center; height: 100%; border: 1px solid #333; position: relative; overflow: hidden; }
@@ -546,18 +650,21 @@
         #big-clock-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000000; display: none; opacity: 0; transition: opacity 0.8s ease-in-out; overflow: hidden; grid-template-columns: 1fr 1.5fr; pointer-events: auto; }
         #big-clock-overlay.active { display: grid; opacity: 1; }
         .bc-schedule-panel { padding: 80px 50px; display: flex; flex-direction: column; justify-content: center; background: linear-gradient(90deg, rgba(0,0,0,0.9) 0%, transparent 100%); border-right: 1px solid rgba(255,255,255,0.05); transition: opacity 0.5s, transform 0.5s; }
-        .bc-info-text { font-family: var(--font-main); font-size: clamp(1.2rem, 2.3vw, 1.6rem); color: #ddd; line-height: 1.5; opacity: 0; transform: translateX(-30px); animation: slideInLeft 0.8s forwards 0.2s; transition: opacity 0.5s; border-left: 4px solid var(--accent); padding-left: 20px; }
-        .bc-info-highlight { color: var(--accent); font-weight: bold; text-transform: uppercase; }
+        .bc-info-text { font-family: var(--font-main); font-size: 1.3rem; color: #ddd; line-height: 1.4; opacity: 0; transform: translateX(-30px); animation: slideInLeft 0.8s forwards 0.2s; transition: opacity 0.5s; border-left: 4px solid var(--accent); padding-left: 20px; }
+        .bc-schedule-list { display: flex; flex-direction: column; gap: 15px; margin: 25px 0; border-left: 1px solid rgba(255,255,255,0.1); padding-left: 20px; }
+        .bc-sched-item { display: flex; flex-direction: column; }
+        .bc-sched-time { color: var(--accent); font-family: var(--font-tech); font-weight: bold; font-size: 1.1rem; }
+        .bc-sched-desc { color: #aaa; font-family: var(--font-data); font-size: 1rem; text-transform: uppercase; }
+        .bc-highlight { color: #00d4ff; font-weight: bold; }
+
         .bc-inline-nav { display: inline-flex; align-items: center; gap: 4px; vertical-align: middle; background: rgba(0, 10, 20, 0.8); border: 1px solid rgba(255,255,255,0.3); padding: 2px 4px; border-radius: 2px; transform: scale(0.9); }
         .bc-in-btn { width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.5); color: #fff; font-size: 0.5rem; border: 1px solid #555; border-radius: 2px; }
         .bc-in-cnt { font-family: var(--font-mono); font-size: 0.6rem; color: #fff; font-weight: bold; }
         .bc-main-panel { position: relative; display: flex; justify-content: center; align-items: center; flex-direction: column; transition: all 1s ease-in-out; }
         .bc-clock-wrapper { position: relative; width: 60vh; height: 60vh; display: flex; justify-content: center; align-items: center; transition: transform 1s; }
         
-        /* --- NEW ART CLOCK STYLES (Generative Abstract) --- */
         #bc-analog-clock { 
             width: 100%; height: 100%; position: relative; 
-            /* Default Background - updated by JS */
             background: #222;
             border-radius: 50%; 
             border: 4px solid #444; 
@@ -568,7 +675,6 @@
             transition: background 1s ease;
         }
 
-        /* Abstract Lines Container */
         .clock-art-lines {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 2;
@@ -576,7 +682,6 @@
             overflow: hidden;
         }
         
-        /* Dynamic Abstract Lines - 4 Layers */
         .cal-1, .cal-2, .cal-3, .cal-4 {
             position: absolute; border-radius: 50%; 
             transition: all 1s ease; filter: drop-shadow(0 0 2px #fff);
@@ -659,18 +764,6 @@
         .emb-sep { height:20px; width:2px; background:var(--accent); }
         .emb-news { font-weight:700; letter-spacing:2px; color:#ddd; font-size:1rem; }
 
-        #prog-guide-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 5000; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.5s; overflow: hidden; }
-        #prog-guide-overlay.active { opacity: 1; pointer-events: auto; }
-        .pg-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; filter: blur(15px) brightness(0.4); transition: filter 10s ease-in-out, transform 15s linear; z-index: -1; }
-        .pg-container { display: flex; flex-direction: column; gap: 25px; transform: skewX(-10deg); margin-left: 20vw; z-index: 2; }
-        .pg-item { display: flex; flex-direction: column; align-items: flex-start; opacity: 0; transform: translateX(50px); animation: pgSlideIn 0.8s forwards; border-left: 5px solid var(--accent); padding-left: 20px; }
-        .pg-item.fading-out { animation: pgFadeOut 0.8s forwards !important; }
-        .pg-time { font-family: var(--font-tech); font-size: 2.5rem; color: var(--accent); font-weight: 700; line-height: 1; text-shadow: 0 0 15px rgba(255, 204, 0, 0.4); }
-        .pg-title { font-family: var(--font-main); font-size: 2rem; color: #fff; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; }
-        .pg-desc { font-family: var(--font-data); font-size: 1.2rem; color: #bbb; text-transform: uppercase; }
-        @keyframes pgSlideIn { 0% { opacity: 0; transform: translateX(50px); } 100% { opacity: 1; transform: translateX(0); } }
-        @keyframes pgFadeOut { 0% { opacity: 1; transform: translateX(0); } 100% { opacity: 0; transform: translateX(-50px); } }
-
         #auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .auth-box { background: #111; border: 1px solid #333; padding: 30px; border-left: 5px solid var(--accent); display: flex; flex-direction: column; align-items: center; gap: 15px; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
         .auth-title { font-family: var(--font-tech); color: var(--accent); font-size: 1.2rem; letter-spacing: 2px; margin-bottom: 10px; }
@@ -732,9 +825,9 @@
                 <button class="btn" onclick="prepareAndTriggerClock()">[⏰] NAGY ÓRA SHOW (KÉNYSZERÍTETT)</button>
                 <button class="btn" onclick="closeAllOverlays()">[X] MINDEN ABLAK BEZÁRÁSA</button>
                 <button class="btn" onclick="forceRefreshAll()">[⚡] AZONNALI FRISSÍTÉS</button>
-                <button class="btn" onclick="testBreaking()">[🔥] BREAKING NEWS TESZT</button>
                 <button class="btn" onclick="toggleNightTest()">[🌙] ÉJSZAKAI MÓD TESZT</button>
                 <button class="btn" onclick="forceDayTest()">[☀️] NAPPALI MÓD KÉNYSZERÍTÉSE</button>
+                <button class="btn" onclick="triggerSummarySequence()">[📋] 15 PERCES ÖSSZEFOGLALÓ TESZT</button>
             </div>
             <div class="dev-section" style="display:flex; flex-direction:column;">
                 <div class="dev-h">IDŐJÁRÁS & PWS</div>
@@ -778,9 +871,27 @@
                         <div class="logo-news-bar">NEWS</div>
                     </div>
                 </span> 
-                oldalát olvasod.<br><br>
-                Reggel 06-tól éjfélig minden nap a legfrissebb hirek futnak az oldalon, éjféltől reggel 06ig pedig az előző nap hireit olvashatod újra.<br><br>
-                <span style="color:var(--accent);">00:00-tól</span> az előnap reggeli illetve délelőtti hireit (06-12-ig), <span style="color:var(--accent);">02:00-tól</span> az előző nap napközben termett hireit (12-18-ig), <span style="color:var(--accent);">04:00-tól</span> pedig az előző nap esti hirei (18-23:59-ig) kerülnek terítékre.<br><br>
+                oldalát olvasod.<br>
+                Reggel 06-tól éjfélig minden nap a legfrissebb hírek futnak az oldalon, éjféltől reggel 06-ig pedig az előző nap híreit olvashatod újra.
+                
+                <div class="bc-schedule-list">
+                    <div class="bc-sched-item">
+                        <div class="bc-sched-time">00:00 - 02:00</div>
+                        <div class="bc-sched-desc">Az előző nap reggeli és délelőtti hírei (06-12-ig)</div>
+                    </div>
+                    <div class="bc-sched-item">
+                        <div class="bc-sched-time">02:00 - 04:00</div>
+                        <div class="bc-sched-desc">Az előző nap napközben beérkezett hírei (12-18-ig)</div>
+                    </div>
+                    <div class="bc-sched-item">
+                        <div class="bc-sched-time">04:00 - 06:00</div>
+                        <div class="bc-sched-desc">Az előző nap esti hírei (18-23:59-ig)</div>
+                    </div>
+                </div>
+
+                Hogy ne maradj le a friss hírekről, <span class="bc-highlight">éjszaka is 15 percenként</span> friss összefoglaló vár.
+                
+                <br><br>
                 Használd a lapozót 
                 <span class="bc-inline-nav">
                     <div class="bc-in-btn">◀</div>
@@ -856,7 +967,6 @@
         <div class="grid"></div>
     </div>
 
-    <!-- NEW LOGO STRUCTURE -->
     <div class="logo-box logo-entry" id="logo-box" onclick="openAuth()">
         <div class="new-logo-container">
             <div class="logo-letters">
@@ -924,24 +1034,25 @@
                     </div>
                     
                     <div class="sidebar-back">
-                        <div class="breaking-card" id="bk-card-clickable">
-                            <div class="bk-card-header">
-                                <span style="font-weight:bold;">MOST ÉRKEZETT</span>
-                                <div class="bk-watermark">
-                                    <span id="bk-time-stamp" style="margin-right:8px; font-size:0.75rem;">--:--</span>
-                                    <div class="bk-logo-wrapper">
-                                         <div class="rtl-boxes" style="gap:1px; margin-bottom:0;">
-                                             <div class="rtl-box ir-t" style="width:16px; height:16px; font-size:0.7rem; background:var(--rtl-red); opacity:1; transform:scale(1);">T</div>
-                                             <div class="rtl-box ir-k" style="width:16px; height:16px; font-size:0.7rem; background:var(--rtl-purple); opacity:1; transform:scale(1);">K</div>
-                                             <div class="rtl-box ir-p" style="width:16px; height:16px; font-size:0.7rem; background:var(--rtl-blue); opacity:1; transform:scale(1);">P</div>
-                                         </div>
-                                         <div class="rtl-news-text" style="font-size:0.6rem; margin-top:0; opacity:1; transform:none; color:#fff;">NEWS</div>
+                        <!-- NEW SUMMARY CARD STRUCTURE -->
+                        <div class="summary-card" id="summary-card">
+                            <div class="summary-header">
+                                <div class="summ-head-title"><i class="fas fa-history"></i> ELMÚLT 15 PERC</div>
+                                <div class="summ-head-badge">ÖSSZEFOGLALÓ</div>
+                            </div>
+                            <div class="summary-list" id="summary-list">
+                                <!-- ITEMS GENERATED BY JS -->
+                            </div>
+                            <div class="summary-footer">
+                                <div class="text-inline-logo">
+                                    <div class="logo-letters">
+                                        <div class="logo-block lb-t">T</div>
+                                        <div class="logo-block lb-k">K</div>
+                                        <div class="logo-block lb-p">P</div>
                                     </div>
+                                    <div class="logo-news-bar">NEWS</div>
                                 </div>
                             </div>
-                            <div class="bk-card-headline" id="bk-card-headline">...</div>
-                            <div class="bk-card-body" id="bk-card-body">...</div>
-                            <div class="bk-card-meta" id="bk-card-meta">FORRÁS</div>
                         </div>
                     </div>
                 </div>
@@ -978,7 +1089,6 @@
             </div>
             <div class="ticker-window" id="ticker-window"></div>
             
-            <!-- NEW DIGITAL CLOCK COMPONENT -->
             <div class="ticker-clock">
                 <div class="tc-time-row">
                     <div class="tc-hm" id="tc-hm">00:00</div>
@@ -1052,7 +1162,6 @@
         const EXOTIC_STATIONS_2 = [ { name: "Mariana-árok", lat: 11.35, lon: 142.20, code: "mp" }, { name: "Mount Everest", lat: 27.98, lon: 86.92, code: "np" }, { name: "Amazonas (Manaus)", lat: -3.11, lon: -60.02, code: "br" }, { name: "Gobi Sivatag", lat: 42.60, lon: 103.43, code: "mn" }, { name: "Húsvét-sziget", lat: -27.11, lon: -109.35, code: "cl" }, { name: "Galápagos", lat: -0.74, lon: -90.31, code: "ec" }, { name: "Svalbard", lat: 78.22, lon: 15.65, code: "no" }, { name: "Mekka", lat: 21.38, lon: 39.85, code: "sa" }, { name: "Grand Canyon", lat: 36.10, lon: -112.11, code: "us" }, { name: "Fudzsi-hegy", lat: 35.36, lon: 138.72, code: "jp" } ];
         const EXTREME_EXTRA_STATIONS = [ { name: "Jakutszk", lat: 62.03, lon: 129.74, code: "ru" }, { name: "Kuvaitváros", lat: 29.37, lon: 47.97, code: "kw" }, { name: "La Paz", lat: -16.50, lon: -68.12, code: "bo" }, { name: "Quito", lat: -0.18, lon: -78.47, code: "ec" }, { name: "Wellington", lat: -41.29, lon: 174.77, code: "nz" }, { name: "Reykjavík", lat: 64.14, lon: -21.90, code: "is" }, { name: "Perth", lat: -31.95, lon: 115.86, code: "au" }, { name: "Vlagyivosztok", lat: 43.11, lon: 131.88, code: "ru" }, { name: "Fairbanks", lat: 64.84, lon: -147.72, code: "us" }, { name: "Alice Springs", lat: -23.69, lon: 133.88, code: "au" } ];
         
-        // --- NEW: 20 MORE EXTREME LOCATIONS ---
         const EXTREME_LOCATIONS_NEW = [
              { name: "Danakil-mélyföld (Etiópia)", lat: 14.24, lon: 40.30, code: "et" },
              { name: "Vosztok Állomás (Antarktisz)", lat: -78.46, lon: 106.84, code: "aq" },
@@ -1076,7 +1185,6 @@
              { name: "Salar de Uyuni (Bolívia)", lat: -20.13, lon: -67.48, code: "bo" }
         ];
 
-        // COMBINED LIST FOR SIDEBAR (HUGE VARIETY)
         const SIDEBAR_STATIONS = shuffle([ 
             ...HU_MAJOR_STATIONS, 
             ...HU_EXTRA_STATIONS, 
@@ -1085,13 +1193,9 @@
             ...EXTREME_LOCATIONS_NEW
         ]);
 
-        const WEATHER_BACKGROUNDS = { rain: ['https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?q=80&w=1920&fit=crop'], snow: ['https://images.unsplash.com/photo-1485594050903-8e8ee5322318?q=80&w=1920&fit=crop'], fog: ['https://images.unsplash.com/photo-1485236715568-ddc5ee6ca227?q=80&w=1920&fit=crop'] };
-        const SEASONAL_BACKGROUNDS = { spring: ['https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=1920&fit=crop'], summer: ['https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1920&fit=crop'], autumn: ['https://images.unsplash.com/photo-1507371341162-63b5acf0d979?q=80&w=1920&fit=crop'], winter: ['https://images.unsplash.com/photo-1478265409131-1f65c88f965c?q=80&w=1920&fit=crop'] };
-        const BACKGROUNDS = { winter_night: SEASONAL_BACKGROUNDS.winter, winter_day: SEASONAL_BACKGROUNDS.winter, dawn: SEASONAL_BACKGROUNDS.spring, day: SEASONAL_BACKGROUNDS.summer, dusk: SEASONAL_BACKGROUNDS.autumn, night: SEASONAL_BACKGROUNDS.winter };
+        let state = { allNews: [], tickerItems: [], mainItems: [], weatherData: [], pwsData: { temp: '--', feel: '--', wind: '--', windDir: '', cond: '--', icon: '❓', updated: false, rainRate: 0, rainDay: 0, uv: 0, humidity: 0, pressure: 0, gust: 0 }, tickerIdx: 0, mainIdx: 0, wxIdx: 0, tickerTimer: null, mainTimer: null, isSpecial: false, isBreakingActive: false, feedStatus: {}, startTime: Date.now(), currentMainLink: null, pwsRotationIdx: 0, lastWxUpdate: 0, currentWxSource: '--', lastTickerUpdate: Date.now(), specialMeteoInterval: null, meteoPhaseTimer: null, schedule: [], initialLoadComplete: false, isNightMode: false, forcedNightMode: false, mainTimer: null, weatherAlertCooldown: {}, mainStarted: false, bigClockTimeout: null, isLocked: false, isClockRunning: false, testMiniRainState: false, testMiniAlertState: false, stationPointer: 0, nightSummaryQueue: [], hasFreshNews: false, manualRefreshRequested: false, clockPhase: 0, currencyRates: null, currencyBase: 'USD', updateTriggered: false, clockFinishTriggered: false, logoExitTriggered: false, pwsSlide: 0, pwsInterval: null, viewingArchiveHour: -1, nextClockTriggerSeconds: 0, sunData: null, logoWatermarkTimer: null, summaryTimer: null };
 
-        let state = { allNews: [], tickerItems: [], mainItems: [], weatherData: [], pwsData: { temp: '--', feel: '--', wind: '--', windDir: '', cond: '--', icon: '❓', updated: false, rainRate: 0, rainDay: 0, uv: 0, humidity: 0, pressure: 0, gust: 0 }, tickerIdx: 0, mainIdx: 0, wxIdx: 0, tickerTimer: null, mainTimer: null, isBreaking: false, isSpecial: false, seenBreaking: new Set(), breakingQueue: [], breakingHistory: new Set(), isBreakingActive: false, feedStatus: {}, startTime: Date.now(), currentMainLink: null, currentBreakingLink: null, currentBreakingItem: null, pwsRotationIdx: 0, lastWxUpdate: 0, currentWxSource: '--', lastTickerUpdate: Date.now(), specialMeteoInterval: null, meteoPhaseTimer: null, schedule: [], initialLoadComplete: false, isNightMode: false, forcedNightMode: false, mainTimer: null, weatherAlertCooldown: {}, mainStarted: false, bigClockTimeout: null, isLocked: false, isClockRunning: false, testMiniRainState: false, testMiniAlertState: false, stationPointer: 0, nightSummaryQueue: [], hasFreshNews: false, manualRefreshRequested: false, clockPhase: 0, hourlyTriggered: false, currencyRates: null, currencyBase: 'USD', refreshedThisShow: false, updateTriggered: false, clockFinishTriggered: false, logoExitTriggered: false, pwsSlide: 0, pwsInterval: null, viewingArchiveHour: -1, nextClockTriggerSeconds: 0, nextBreakingTriggerTime: 0, sunData: null, logoWatermarkTimer: null };
-
-        const DOM = { loader: document.getElementById('loader'), term: document.getElementById('term'), fill: document.getElementById('load-fill'), stage: document.getElementById('stage'), tickerWindow: document.getElementById('ticker-window'), mainContainerBox: document.getElementById('mn-container-box'), mainTitle: document.getElementById('m-title'), mainDesc: document.getElementById('m-desc'), mainCatText: document.getElementById('m-cat-text'), mainMeta: document.getElementById('m-meta'), mainPrg: document.getElementById('m-prg'), trPwsContent: document.getElementById('tr-pws-content'), special: document.getElementById('special-meteo'), smGrid: document.getElementById('sm-grid'), smTitle: document.getElementById('sm-main-title'), smBg: document.getElementById('sm-bg'), feedLog: document.getElementById('feed-log-table'), auth: document.getElementById('auth-overlay'), pin: document.getElementById('pin-input'), dev: document.getElementById('dev-panel'), devWxNext: document.getElementById('dev-wx-next'), devWxSrc: document.getElementById('dev-wx-src'), devBkQueue: document.getElementById('dev-bk-queue'), devScheduleTable: document.getElementById('dev-schedule-table').querySelector('tbody'), logoBox: document.getElementById('logo-box'), liveBadge: document.getElementById('live-badge'), replayBadge: document.getElementById('replay-badge'), nightMsg: document.getElementById('night-msg'), tickerNav: document.getElementById('ticker-nav'), sidebar: document.querySelector('.sidebar'), sidebarFlipper: document.querySelector('.sidebar-flipper'), bkCardHeadline: document.getElementById('bk-card-headline'), bkCardBody: document.getElementById('bk-card-body'), bkCardMeta: document.getElementById('bk-card-meta'), bkCardClickable: document.getElementById('bk-card-clickable'), fxSourceContainer: document.getElementById('fx-source-container'), bigClockOverlay: document.getElementById('big-clock-overlay'), hourlyNavBar: document.getElementById('hourly-nav-bar'), hourlyArchiveOverlay: document.getElementById('hourly-archive-overlay'), haTitle: document.getElementById('ha-title-text'), haList: document.getElementById('ha-list-container'), bcInfoText: document.getElementById('bc-info-text') };
+        const DOM = { loader: document.getElementById('loader'), term: document.getElementById('term'), fill: document.getElementById('load-fill'), stage: document.getElementById('stage'), tickerWindow: document.getElementById('ticker-window'), mainContainerBox: document.getElementById('mn-container-box'), mainTitle: document.getElementById('m-title'), mainDesc: document.getElementById('m-desc'), mainCatText: document.getElementById('m-cat-text'), mainMeta: document.getElementById('m-meta'), mainPrg: document.getElementById('m-prg'), trPwsContent: document.getElementById('tr-pws-content'), special: document.getElementById('special-meteo'), smGrid: document.getElementById('sm-grid'), smTitle: document.getElementById('sm-main-title'), smBg: document.getElementById('sm-bg'), feedLog: document.getElementById('feed-log-table'), auth: document.getElementById('auth-overlay'), pin: document.getElementById('pin-input'), dev: document.getElementById('dev-panel'), devWxNext: document.getElementById('dev-wx-next'), devWxSrc: document.getElementById('dev-wx-src'), devBkQueue: document.getElementById('dev-bk-queue'), devScheduleTable: document.getElementById('dev-schedule-table').querySelector('tbody'), logoBox: document.getElementById('logo-box'), liveBadge: document.getElementById('live-badge'), replayBadge: document.getElementById('replay-badge'), nightMsg: document.getElementById('night-msg'), tickerNav: document.getElementById('ticker-nav'), sidebar: document.querySelector('.sidebar'), sidebarFlipper: document.querySelector('.sidebar-flipper'), fxSourceContainer: document.getElementById('fx-source-container'), bigClockOverlay: document.getElementById('big-clock-overlay'), hourlyNavBar: document.getElementById('hourly-nav-bar'), hourlyArchiveOverlay: document.getElementById('hourly-archive-overlay'), haTitle: document.getElementById('ha-title-text'), haList: document.getElementById('ha-list-container'), bcInfoText: document.getElementById('bc-info-text'), summaryList: document.getElementById('summary-list') };
 
         function getTime() { return new Date().toLocaleTimeString('hu-HU'); }
         function getWind(deg) { if(deg===undefined) return ""; const s=['ÉSZAKI','ÉSZAK-KELETI','KELETI','DÉL-KELETI','DÉLI','DÉL-NYUGATI','NYUGATI','ÉSZAK-NYUGATI']; return s[Math.round(deg/45)%8]; }
@@ -1113,11 +1217,11 @@
         function forceDayTest() { state.forcedNightMode = false; state.isNightMode = false; DOM.tickerWindow.style.display = 'block'; DOM.tickerNav.style.display = 'flex'; DOM.nightMsg.classList.remove('active'); DOM.replayBadge.classList.remove('visible'); alert("Nappali mód kényszerítve!"); checkNightMode(); updateDevMonitor(); }
         function updateDevLog() { if (DOM.dev.style.display === 'none') return; document.getElementById('sys-feeds').innerText = state.allNews.length; const up = Math.floor((Date.now() - state.startTime)/1000); document.getElementById('sys-uptime').innerText = `${Math.floor(up/3600)}h ${Math.floor((up%3600)/60)}m ${up%60}s`; let html = ''; RSS_FEEDS.forEach(f => { const s = state.feedStatus[f.name]; let cls = 'status-wait', msg = 'VÁRAKOZÁS...'; if (s) { if(s.ok) { cls = 'status-ok'; msg = `OK (${s.proxy})`; } else { cls = 'status-fail'; msg = 'HIBA'; } } html += `<tr><td>${f.name}</td><td class="${cls}">${msg}</td></tr>`; }); DOM.feedLog.innerHTML = html; }
 
-        function updateDevMonitor() { if (DOM.dev.style.display === 'none') return; const now = new Date().getTime(); const elapsedWx = now - state.lastWxUpdate; const nextWx = 20000 - elapsedWx; DOM.devWxNext.innerText = nextWx > 0 ? (nextWx/1000).toFixed(0) + "s" : "MOST"; DOM.devWxSrc.innerText = state.currentWxSource; let html = ""; state.schedule.forEach(item => { let diff = item.time - now; let status = "VÁRAKOZÁS"; let duration = 0; if(item.type === 'clock') duration = 60000; else if(item.type === 'night_summary') duration = 180000; let timeStr = ""; let rowClass = ""; if (state.isNightMode && item.type !== 'clock' && !item.isNightEvent) { timeStr = "--:--"; status = "<span class='sch-off'>ÜZEMSZÜNET</span>"; rowClass = "opacity:0.5;"; } else { if (diff > 0) { let m = Math.floor(diff / 60000); let s = Math.floor((diff % 60000) / 1000); timeStr = `-${m}:${s.toString().padStart(2,'0')}`; status = "VÁRAKOZÁS"; } else if (diff > -duration) { timeStr = "00:00"; status = "<span class='sch-live'>ADÁSBAN</span>"; } else { timeStr = "---"; status = "VÉGE"; } } html += `<tr style="${rowClass}"><td>${item.label}</td><td class="sch-time">${timeStr}</td><td>${status}</td></tr>`; }); DOM.devScheduleTable.innerHTML = html; DOM.devBkQueue.innerText = state.breakingQueue.length; }
+        function updateDevMonitor() { if (DOM.dev.style.display === 'none') return; const now = new Date().getTime(); const elapsedWx = now - state.lastWxUpdate; const nextWx = 20000 - elapsedWx; DOM.devWxNext.innerText = nextWx > 0 ? (nextWx/1000).toFixed(0) + "s" : "MOST"; DOM.devWxSrc.innerText = state.currentWxSource; let html = ""; state.schedule.forEach(item => { let diff = item.time - now; let status = "VÁRAKOZÁS"; let duration = 0; if(item.type === 'clock') duration = 60000; else if(item.type === 'night_summary') duration = 180000; let timeStr = ""; let rowClass = ""; if (state.isNightMode && item.type !== 'clock' && !item.isNightEvent) { timeStr = "--:--"; status = "<span class='sch-off'>ÜZEMSZÜNET</span>"; rowClass = "opacity:0.5;"; } else { if (diff > 0) { let m = Math.floor(diff / 60000); let s = Math.floor((diff % 60000) / 1000); timeStr = `-${m}:${s.toString().padStart(2,'0')}`; status = "VÁRAKOZÁS"; } else if (diff > -duration) { timeStr = "00:00"; status = "<span class='sch-live'>ADÁSBAN</span>"; } else { timeStr = "---"; status = "VÉGE"; } } html += `<tr style="${rowClass}"><td>${item.label}</td><td class="sch-time">${timeStr}</td><td>${status}</td></tr>`; }); DOM.devScheduleTable.innerHTML = html; }
 
-        function generateHourlySchedule() { const now = new Date(); state.schedule = []; state.nextClockTriggerSeconds = Math.floor(Math.random() * 21) + 5; let clock = new Date(now); clock.setMinutes(59, state.nextClockTriggerSeconds, 0); if(clock > now) state.schedule.push({ time: clock.getTime(), type: 'clock', label: `NAGY ÓRA (59:${state.nextClockTriggerSeconds})` }); if (state.isNightMode || state.forcedNightMode) { let morning = new Date(now); morning.setHours(2,0,0,0); if(morning > now) state.schedule.push({ time: morning.getTime(), type: 'night_block', label: "REGGELI HÍREK (06-12)", isNightEvent: true }); let afternoon = new Date(now); afternoon.setHours(4,0,0,0); if(afternoon > now) state.schedule.push({ time: afternoon.getTime(), type: 'night_block', label: "DÉLUTÁNI HÍREK (12-18)", isNightEvent: true }); let evening = new Date(now); evening.setHours(6,0,0,0); if(evening > now) state.schedule.push({ time: evening.getTime(), type: 'night_block', label: "ESTI HÍREK (18-00)", isNightEvent: true }); let tempTime = new Date(now); tempTime.setHours(now.getHours()); tempTime.setMinutes(0,0,0); let t1 = new Date(tempTime); t1.setMinutes(0); let t2 = new Date(tempTime); t2.setMinutes(30); let t3 = new Date(tempTime); t3.setHours(tempTime.getHours()+1); t3.setMinutes(0); [t1, t2, t3].forEach(t => { if(t > now && t.getHours() < 6 && t.getHours() > 0) state.schedule.push({ time: t.getTime(), type: 'night_summary', label: "HÍRÖSSZEFOGLALÓ (ÉJJEL)", isNightEvent: true }); }); } state.schedule.sort((a,b) => a.time - b.time); }
+        function generateHourlySchedule() { const now = new Date(); state.schedule = []; state.nextClockTriggerSeconds = Math.floor(Math.random() * 21) + 5; let clock = new Date(now); clock.setMinutes(59, state.nextClockTriggerSeconds, 0); if(clock > now) state.schedule.push({ time: clock.getTime(), type: 'clock', label: `NAGY ÓRA (59:${state.nextClockTriggerSeconds})` }); if (state.isNightMode || state.forcedNightMode) { let morning = new Date(now); morning.setHours(2,0,0,0); if(morning > now) state.schedule.push({ time: morning.getTime(), type: 'night_block', label: "REGGELI HÍREK (06-12)", isNightEvent: true }); let afternoon = new Date(now); afternoon.setHours(4,0,0,0); if(afternoon > now) state.schedule.push({ time: afternoon.getTime(), type: 'night_block', label: "DÉLUTÁNI HÍREK (12-18)", isNightEvent: true }); let evening = new Date(now); evening.setHours(6,0,0,0); if(evening > now) state.schedule.push({ time: evening.getTime(), type: 'night_block', label: "ESTI HÍREK (18-00)", isNightEvent: true }); } state.schedule.sort((a,b) => a.time - b.time); }
 
-        function checkScheduleExecution() { if (state.isClockRunning) return; const now = Date.now(); state.schedule.forEach((item) => { if (now >= item.time && now < item.time + 10000 && !item.triggered) { item.triggered = true; if (state.isNightMode) { if (item.type === 'night_summary') { closeAllOverlays(); setTimeout(() => triggerNightSummary(), 1200); } } } }); state.schedule = state.schedule.filter(item => item.time > now - 600000); }
+        function checkScheduleExecution() { if (state.isClockRunning) return; const now = Date.now(); state.schedule.forEach((item) => { if (now >= item.time && now < item.time + 10000 && !item.triggered) { item.triggered = true; } }); state.schedule = state.schedule.filter(item => item.time > now - 600000); }
 
         function updateHourlyCubes() { const container = document.getElementById('hourly-nav-bar'); if(state.isNightMode || state.isSpecial || state.isLocked) { container.classList.remove('active'); return; } container.classList.add('active'); const now = new Date(); const currentHour = now.getHours(); if(container.dataset.lastHour == currentHour) return; container.dataset.lastHour = currentHour; const label = container.querySelector('.hour-nav-label'); container.innerHTML = ''; if(label) container.appendChild(label); for(let i=11; i>=0; i--) { let targetHour = currentHour - i; if(targetHour < 0) targetHour += 24; const hourStr = String(targetHour).padStart(2, '0'); const cube = document.createElement('div'); cube.className = 'hour-cube'; cube.innerHTML = `<span>${hourStr}:00</span>`; cube.addEventListener('click', () => { openHourlyArchive(targetHour); }); container.appendChild(cube); } setTimeout(() => { container.scrollLeft = container.scrollWidth; }, 100); }
         
@@ -1129,7 +1233,6 @@
 
         function updateAnalogHands() { const now = new Date(); const s = now.getSeconds(); const ms = now.getMilliseconds(); const smoothS = s + ms/1000; const m = now.getMinutes() + smoothS/60; const h = now.getHours() % 12 + m/60; const sDeg = s * 6; const mDeg = m * 6; const hDeg = h * 30; const hs = document.getElementById('hand-s'); const hm = document.getElementById('hand-m'); const hh = document.getElementById('hand-h'); if(hs) hs.style.transform = `rotate(${sDeg}deg)`; if(hm) hm.style.transform = `rotate(${mDeg}deg)`; if(hh) hh.style.transform = `rotate(${hDeg}deg)`; const digi = document.getElementById('bc-digital-display'); if(digi) digi.innerText = now.toLocaleTimeString('hu-HU'); }
 
-        // --- MODIFIED: NO CURRENCY FETCH HERE ---
         function refreshNewsOnly(isReset = false, silent = false) { 
             crawlNews(isReset, silent); 
             fetchWunderground(true); 
@@ -1138,10 +1241,7 @@
         function prepareAndTriggerClock() { state.isSpecial = true; state.isLocked = true; animateLogoOut(); setTimeout(() => { triggerBigClockSequence(); }, 5000); }
         
         function animateLogoOut() { 
-            // 1. Remove watermark (colors return)
             DOM.logoBox.classList.remove('watermark-active');
-
-            // 2. Wait 3 seconds (colors jumping), then fade out
             if(state.logoWatermarkTimer) clearTimeout(state.logoWatermarkTimer);
             state.logoWatermarkTimer = setTimeout(() => {
                  DOM.logoBox.classList.remove('logo-entry');
@@ -1151,78 +1251,41 @@
         
         function animateLogoIn() { 
             DOM.logoBox.classList.remove('logo-exit'); 
-            DOM.logoBox.classList.remove('watermark-active'); // Ensure colors are visible first
-            
-            // Add entry class to trigger PopIn animation
+            DOM.logoBox.classList.remove('watermark-active'); 
             DOM.logoBox.classList.add('logo-entry'); 
-            
-            // Wait 1s for PopIn to finish, then remove entry class to allow jumping animation
             setTimeout(() => {
                  DOM.logoBox.classList.remove('logo-entry');
             }, 1000);
-
-            // Wait 3 seconds total (1s entry + 2s jumping) then activate watermark
             if(state.logoWatermarkTimer) clearTimeout(state.logoWatermarkTimer);
             state.logoWatermarkTimer = setTimeout(() => {
                 DOM.logoBox.classList.add('watermark-active');
             }, 3000);
         }
 
-        // --- RANDOM WATERMARK TIMER ---
-        function scheduleLogoWatermark() {
-            if(state.logoWatermarkTimer) clearTimeout(state.logoWatermarkTimer);
-            DOM.logoBox.classList.add('watermark-active');
-        }
-
-        // --- CLOCK ART GENERATOR (24 VARIATIONS) ---
         const CLOCK_ART_DB = [
-            // 00 - RED HORIZON (Original Reference)
             { bg: "linear-gradient(to bottom, #111 0%, #222 30%, #8a0000 30%, #ff0000 50%, #8a0000 70%, #222 70%, #111 100%)", lines: [{t:40,l:-10,w:120,h:60,r:50,rot:-15,b:"2px solid rgba(255,255,255,0.6)"}, {t:60,l:-10,w:120,h:60,r:50,rot:15,b:"2px solid rgba(255,255,255,0.4)"}] },
-            // 01 - DEEP BLUE
             { bg: "radial-gradient(circle at center, #001f3f 0%, #000 90%)", lines: [{t:10,l:10,w:80,h:80,r:50,rot:0,b:"2px solid cyan"}, {t:20,l:20,w:60,h:60,r:50,rot:45,b:"1px solid rgba(0,255,255,0.3)"}] },
-            // 02 - GOLDEN EYE
             { bg: "conic-gradient(from 0deg, #ffd700, #000, #ffd700, #000, #ffd700)", lines: [{t:45,l:-20,w:140,h:10,r:0,rot:-45,b:"4px solid #fff"}, {t:45,l:-20,w:140,h:10,r:0,rot:45,b:"4px solid #fff"}] },
-            // 03 - EMERALD
             { bg: "linear-gradient(135deg, #004d00 0%, #000 100%)", lines: [{t:0,l:0,w:100,h:100,r:50,rot:0,b:"1px dashed #0f0"}, {t:10,l:10,w:80,h:80,r:50,rot:20,b:"1px dashed #0f0"}] },
-            // 04 - ROYAL PURPLE
             { bg: "radial-gradient(circle at 30% 30%, #4b0082, #000)", lines: [{t:30,l:-10,w:120,h:40,r:50,rot:-20,b:"3px solid rgba(255,255,255,0.5)"}, {t:50,l:-10,w:120,h:40,r:50,rot:20,b:"3px solid rgba(255,0,255,0.5)"}] },
-            // 05 - MAGMA
             { bg: "linear-gradient(to right, #330000, #ff4500, #330000)", lines: [{t:-10,l:40,w:20,h:120,r:0,rot:10,b:"2px solid #fff"}, {t:-10,l:60,w:20,h:120,r:0,rot:-10,b:"2px solid #fff"}] },
-            // 06 - NEON CITY
             { bg: "linear-gradient(180deg, #000 0%, #000033 50%, #ff00ff 50%, #000 100%)", lines: [{t:48,l:0,w:100,h:4,r:0,rot:0,b:"4px solid cyan"}] },
-            // 07 - STEEL
             { bg: "linear-gradient(45deg, #eee 0%, #999 100%)", lines: [{t:0,l:0,w:100,h:100,r:50,rot:0,b:"10px solid #333"}] },
-            // 08 - AZURE WAVE
             { bg: "linear-gradient(to bottom, #000 0%, #00ffff 50%, #000 100%)", lines: [{t:30,l:-20,w:140,h:60,r:50,rot:10,b:"2px solid white"}, {t:50,l:-20,w:140,h:60,r:50,rot:-10,b:"2px solid white"}] },
-            // 09 - CRIMSON EDGE
             { bg: "linear-gradient(-45deg, #800000 50%, #000 50%)", lines: [{t:0,l:0,w:100,h:100,r:0,rot:0,b:"5px solid #ff0000"}] },
-            // 10 - VIOLET STORM
             { bg: "repeating-radial-gradient(#2e004f, #000 10px, #2e004f 20px)", lines: [{t:40,l:40,w:20,h:20,r:50,rot:0,b:"5px solid #fff"}] },
-            // 11 - SUNSET STRIP
             { bg: "linear-gradient(to top, #4b0082, #ff1493, #ffa500)", lines: [{t:70,l:0,w:100,h:2,r:0,rot:0,b:"2px solid #000"}, {t:80,l:0,w:100,h:2,r:0,rot:0,b:"2px solid #000"}] },
-            // 12 - CARBON
             { bg: "repeating-linear-gradient(45deg, #111, #111 10px, #222 10px, #222 20px)", lines: [{t:10,l:10,w:80,h:80,r:10,rot:0,b:"2px solid #00d4ff"}] },
-            // 13 - ICE AGE
             { bg: "radial-gradient(circle, #fff, #add8e6, #00008b)", lines: [{t:0,l:0,w:100,h:100,r:50,rot:0,b:"10px double #fff"}] },
-            // 14 - COPPER
             { bg: "linear-gradient(60deg, #3d2b1f, #b87333, #3d2b1f)", lines: [{t:20,l:-20,w:140,h:2,r:0,rot:30,b:"2px solid #fff"}, {t:40,l:-20,w:140,h:2,r:0,rot:30,b:"2px solid #fff"}] },
-            // 15 - MATRIX
             { bg: "linear-gradient(0deg, #000, #003300, #000)", lines: [{t:0,l:20,w:2,h:100,r:0,rot:0,b:"2px dotted #0f0"}, {t:0,l:80,w:2,h:100,r:0,rot:0,b:"2px dotted #0f0"}] },
-            // 16 - CANDY
             { bg: "radial-gradient(circle at 70% 30%, #ff69b4, #00ffff)", lines: [{t:20,l:20,w:60,h:60,r:50,rot:0,b:"5px solid #fff"}] },
-            // 17 - STORM
             { bg: "linear-gradient(to bottom, #333, #666, #333)", lines: [{t:45,l:-10,w:120,h:10,r:0,rot:-10,b:"2px solid #ffcc00"}, {t:55,l:-10,w:120,h:10,r:0,rot:10,b:"2px solid #ffcc00"}] },
-            // 18 - NEBULA
             { bg: "radial-gradient(circle, #000, #4b0082, #000)", lines: [{t:0,l:0,w:100,h:100,r:50,rot:0,b:"1px solid rgba(255,255,255,0.2)"}, {t:10,l:10,w:80,h:80,r:50,rot:0,b:"1px solid rgba(255,255,255,0.4)"}] },
-            // 19 - RETRO
             { bg: "linear-gradient(to right, #ff9900, #ffcc00, #ff9900)", lines: [{t:30,l:0,w:100,h:40,r:20,rot:0,b:"4px solid #333"}] },
-            // 20 - VAMPIRE
             { bg: "radial-gradient(circle, #800000, #000)", lines: [{t:0,l:0,w:100,h:100,r:50,rot:0,b:"20px solid #000"}] },
-            // 21 - ZEN
             { bg: "linear-gradient(to bottom, #fff 50%, #000 50%)", lines: [{t:49,l:0,w:100,h:2,r:0,rot:0,b:"2px solid #ff0000"}] },
-            // 22 - CYBERPUNK
             { bg: "linear-gradient(90deg, #ffff00 50%, #00ffff 50%)", lines: [{t:20,l:20,w:60,h:60,r:0,rot:45,b:"4px solid #000"}] },
-            // 23 - MIDNIGHT
             { bg: "#050505", lines: [{t:48,l:0,w:100,h:4,r:0,rot:0,b:"2px solid #333"}, {t:0,l:48,w:4,h:100,r:0,rot:0,b:"2px solid #333"}] }
         ];
 
@@ -1230,39 +1293,18 @@
             const art = CLOCK_ART_DB[hour % CLOCK_ART_DB.length];
             const clock = document.getElementById('bc-analog-clock');
             if(!clock) return;
-            
-            // Set Background
             clock.style.background = art.bg;
-            
-            // Reset Lines
             for(let i=1; i<=4; i++) {
                 const el = document.getElementById(`cal-${i}`);
                 if(el) {
-                    el.style.border = 'none';
-                    el.style.borderTop = 'none';
-                    el.style.borderBottom = 'none';
-                    el.style.background = 'transparent';
+                    el.style.border = 'none'; el.style.borderTop = 'none'; el.style.borderBottom = 'none'; el.style.background = 'transparent';
                 }
             }
-
-            // Apply New Lines
             art.lines.forEach((line, idx) => {
                 const el = document.getElementById(`cal-${idx+1}`);
                 if(el) {
-                    el.style.top = line.t + '%';
-                    el.style.left = line.l + '%';
-                    el.style.width = line.w + '%';
-                    el.style.height = line.h + '%';
-                    el.style.borderRadius = line.r + '%';
-                    el.style.transform = `rotate(${line.rot}deg)`;
-                    
-                    if(line.b.includes('dashed') || line.b.includes('double')) {
-                        el.style.border = line.b;
-                    } else {
-                        // For arcs like the reference
-                        el.style.borderTop = line.b;
-                        el.style.borderBottom = line.b; 
-                    }
+                    el.style.top = line.t + '%'; el.style.left = line.l + '%'; el.style.width = line.w + '%'; el.style.height = line.h + '%'; el.style.borderRadius = line.r + '%'; el.style.transform = `rotate(${line.rot}deg)`;
+                    if(line.b.includes('dashed') || line.b.includes('double')) { el.style.border = line.b; } else { el.style.borderTop = line.b; el.style.borderBottom = line.b; }
                 }
             });
         }
@@ -1272,11 +1314,9 @@
             state.clockPhase = 0; state.updateTriggered = false; 
             state.clockFinishTriggered = false; state.logoExitTriggered = false; 
             
-            // 1. Set Sun Phase Background Overlay
             const phase = SunCycle.getPhase();
             DOM.bigClockOverlay.style.background = phase.g; 
             
-            // 2. Set Clock Art based on Hour
             const currentHour = new Date().getHours();
             applyClockArt(currentHour);
 
@@ -1332,10 +1372,83 @@
         function forceRefreshAll() { refreshNewsOnly(true); fetchCurrency(); alert("FRISSÍTÉS ELKÜLDVE"); }
         function manualRefresh() { const btn = document.getElementById('manual-refresh-btn'); btn.innerHTML = '[ FRISSÍTÉS... ]'; btn.classList.add('loading'); state.manualRefreshRequested = true; state.tickerIdx = -1; state.mainIdx = -1; crawlNews(true); fetchCurrency(); fetchWunderground(); setTimeout(() => { cycleMain(true); }, 1500); setTimeout(() => { btn.innerHTML = `[ ↻ FRISSÍTÉS ]`; btn.classList.remove('loading'); }, 5000); }
         
-        function testBreaking() { const now = new Date(); const longDesc = "EZ EGY TESZT ÜZENET. Ez a szöveg szándékosan hosszúra lett nyújtva, hogy meghaladja a rendelkezésre álló keret méretét."; document.getElementById('bk-card-headline').innerText = "RENDKÍVÜLI HÍR: TESZT ÜZEMMÓD"; document.getElementById('bk-card-body').innerHTML = `<div class="bk-scroll-wrapper">${longDesc}</div>`; document.getElementById('bk-card-meta').innerText = `TESZT`; document.getElementById('bk-time-stamp').innerText = now.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'}); DOM.bkCardClickable.dataset.link = "#"; state.isBreakingActive = true; DOM.sidebar.classList.add('breaking-active'); renderBreakingItemContent(); }
-        function triggerNightSummary() { const now = new Date(); const startOfDay = new Date(now); startOfDay.setHours(0,0,0,0); state.nightSummaryQueue = state.allNews.filter(n => n.date >= startOfDay).sort((a,b) => b.date - a.date); if(state.nightSummaryQueue.length === 0) return; state.isSpecial = true; state.isLocked = true; DOM.replayBadge.classList.remove('visible'); DOM.logoBox.classList.remove('force-hide'); DOM.sidebar.classList.add('breaking-active'); const card = document.querySelector('.breaking-card'); card.classList.add('night-summary-card'); const headerText = card.querySelector('.bk-card-header span:first-child'); if(headerText) headerText.innerText = "EZ TÖRTÉNT ÉJFÉL ÓTA"; processNightSummaryQueue(); }
-        function processNightSummaryQueue() { if(state.nightSummaryQueue.length === 0) { DOM.sidebar.classList.remove('breaking-active'); setTimeout(() => { document.querySelector('.breaking-card').classList.remove('night-summary-card'); const headerText = document.querySelector('.bk-card-header span:first-child'); if(headerText) headerText.innerText = "MOST ÉRKEZETT"; closeAllOverlays(); }, 1000); return; } const item = state.nightSummaryQueue.shift(); DOM.bkCardClickable.dataset.link = item.link; const timeStr = item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'}); DOM.bkCardHeadline.innerText = item.title; const logo = getLogoHtml(item.source); DOM.bkCardMeta.innerHTML = `${logo} ${item.source}`; document.getElementById('bk-time-stamp').innerText = timeStr; DOM.bkCardBody.innerHTML = ""; const wrapper = document.createElement("div"); wrapper.className = "bk-scroll-wrapper"; wrapper.innerText = item.desc; DOM.bkCardBody.appendChild(wrapper); const bodyH = DOM.bkCardBody.clientHeight; const charCount = (item.title.length + item.desc.length); let readTime = Math.max(12000, (charCount / 15) * 1000); setTimeout(() => { const scrollH = wrapper.scrollHeight; if(scrollH > bodyH) { const dist = scrollH - bodyH + 20; const duration = Math.max(2, dist * 0.05); wrapper.style.transition = `transform ${duration}s linear`; setTimeout(() => { wrapper.style.transform = `translateY(-${dist}px)`; }, 2000); readTime += duration * 1000; } }, 5000); setTimeout(() => { if(state.nightSummaryQueue.length > 0) { const card = document.querySelector('.breaking-card'); card.classList.add('flipped-state'); setTimeout(() => { processNightSummaryQueue(); card.classList.remove('flipped-state'); }, 500); } else { processNightSummaryQueue(); } }, readTime + 6000); }
-        
+        // --- 15-MINUTE SUMMARY LOGIC ---
+        function triggerSummarySequence() {
+            if (state.isLocked) return;
+            
+            const now = new Date();
+            const nowMs = now.getTime();
+            // STRICT 15 MINUTES LOGIC
+            const fifteenMinsAgo = nowMs - (15 * 60 * 1000);
+            
+            const recentNews = state.allNews.filter(n => {
+                const t = n.date.getTime();
+                return t >= fifteenMinsAgo && t <= nowMs;
+            }).sort((a,b) => b.date - a.date);
+            
+            if (recentNews.length === 0) {
+                // If empty in exact 15m window, do not trigger
+                return;
+            }
+
+            state.isBreakingActive = true; 
+            DOM.sidebar.classList.add('breaking-active');
+            
+            const chunks = [];
+            while (recentNews.length > 0) {
+                chunks.push(recentNews.splice(0, 4));
+            }
+            
+            renderSummaryCard(chunks, 0);
+        }
+
+        function renderSummaryCard(chunks, index) {
+            if (index >= chunks.length) {
+                closeSummary();
+                return;
+            }
+
+            const items = chunks[index];
+            DOM.summaryList.innerHTML = '';
+            
+            items.forEach((item, i) => {
+                const el = document.createElement('div');
+                el.className = 'summary-item';
+                // Click handler for direct link opening
+                el.onclick = () => window.open(item.link, '_blank');
+                
+                const timeStr = item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'});
+                el.innerHTML = `
+                    <div class="summ-meta">
+                        <span class="summ-time">${timeStr}</span>
+                        <span class="summ-source">${item.source}</span>
+                    </div>
+                    <div class="summ-title">${item.title}</div>
+                    <div class="summ-desc">${item.desc}</div>
+                `;
+                DOM.summaryList.appendChild(el);
+            });
+
+            // 23 seconds per card
+            clearTimeout(state.summaryTimer);
+            state.summaryTimer = setTimeout(() => {
+                if (index + 1 < chunks.length) {
+                    DOM.summaryList.style.opacity = '0';
+                    setTimeout(() => {
+                         renderSummaryCard(chunks, index + 1);
+                         DOM.summaryList.style.opacity = '1';
+                    }, 500);
+                } else {
+                    closeSummary();
+                }
+            }, 23000);
+        }
+
+        function closeSummary() {
+            DOM.sidebar.classList.remove('breaking-active');
+            state.isBreakingActive = false;
+        }
+
         async function fetchRobust(targetUrl, sourceName) { const proxyList = shuffle([...PROXIES]); for (let i = 0; i < proxyList.length; i++) { try { const controller = new AbortController(); const timeoutId = setTimeout(() => controller.abort(), 4000); const res = await fetch(proxyList[i] + encodeURIComponent(targetUrl), { signal: controller.signal }); clearTimeout(timeoutId); if (res.ok) { let text = await res.text(); if(proxyList[i].includes('allorigins') && text.trim().startsWith('{')) { try { const json = JSON.parse(text); if(json.contents) text = json.contents; } catch(e) {} } if (text.includes('<?xml') || text.includes('<rss') || text.includes('<feed')) { state.feedStatus[sourceName] = { ok: true, proxy: new URL(proxyList[i]).hostname }; return text; } } } catch (e) { } } state.feedStatus[sourceName] = { ok: false }; return null; }
         
         async function crawlNews(isReset = false, silent = false) { if(isReset) { state.mainItems = []; state.mainIdx = -1; state.tickerIdx = -1; state.allNews = []; } RSS_FEEDS.map(async (src) => { const text = await fetchRobust(src.url, src.name); if (text) { parseAndAdd(text, src.name); } }); }
@@ -1366,14 +1479,9 @@
                 
                 if(hasNew) {
                     state.hasFreshNews = true; 
-                    if(state.initialLoadComplete) {
-                        checkBreaking();
-                    }
-                    
                     updateLists(); 
                     updateDevLog(); 
 
-                    // --- LOGIC: FORCE IMMEDIATE DISPLAY OF NEW ITEM (MAIN NEWS) ---
                     if (addedItemLink && !state.isLocked && !state.isSpecial) {
                         const targetIdx = state.mainItems.findIndex(n => n.link === addedItemLink);
                         if (targetIdx !== -1) {
@@ -1385,7 +1493,6 @@
                         }
                     }
 
-                    // --- LOGIC: FORCE IMMEDIATE REFRESH OF TICKER (BLACK BAR) ---
                     if (!state.isLocked && !state.isSpecial && !state.isNightMode) {
                         state.tickerIdx = -1;
                         if(state.tickerTimer) clearTimeout(state.tickerTimer);
@@ -1407,144 +1514,24 @@
             } catch(e) {} 
         }
 
-        // --- MODIFIED UPDATE LISTS (PRIORITY LOGIC) ---
         function updateLists() { 
             if (state.isNightMode) return; 
-            
             const now = new Date(); 
             const thirtyMinsAgo = now.getTime() - (30 * 60 * 1000);
             const twoHoursAgo = now.getTime() - (2 * 60 * 60 * 1000);
-
-            // Filter valid items (must have image)
             const validItems = state.allNews.filter(n => n.img);
-
-            // 1. Priority Items (Last 30 mins)
             let priorityItems = validItems.filter(n => n.date.getTime() >= thirtyMinsAgo);
-            
-            // 2. Standard Items (Between 30m and 2h ago)
             let standardItems = validItems.filter(n => n.date.getTime() < thirtyMinsAgo && n.date.getTime() >= twoHoursAgo);
-
-            // Shuffle separately
             priorityItems = shuffle(priorityItems);
             standardItems = shuffle(standardItems);
-
-            // Combine: Priority first, then Standard
             let finalQueue = [...priorityItems, ...standardItems];
-
-            // Fallback if empty
-            if (finalQueue.length === 0) {
-                 finalQueue = validItems.sort((a,b) => b.date - a.date).slice(0, 10);
-            }
-
+            if (finalQueue.length === 0) { finalQueue = validItems.sort((a,b) => b.date - a.date).slice(0, 10); }
             state.mainItems = finalQueue;
-
             const newTicker = state.allNews.filter(n => (now - n.date) < 14400000).sort((a,b) => b.date - a.date); 
             state.tickerItems = newTicker.length > 5 ? newTicker : [...state.allNews].sort((a,b) => b.date - a.date).slice(0, 50); 
         }
         
-        async function checkBreaking() { 
-            if (state.isLocked && state.isClockRunning) return; 
-            const now = Date.now(); 
-            state.allNews.filter(n => (now - n.date.getTime()) <= 180000).sort((a,b) => a.date - b.date).forEach(item => { 
-                if (!state.seenBreaking.has(item.link)) { 
-                    state.breakingQueue.push(item); 
-                    state.seenBreaking.add(item.link);
-                } 
-            }); 
-            state.breakingQueue = state.breakingQueue.filter((item, index, self) => index === self.findIndex((t) => t.link === item.link));
-
-            if (state.breakingQueue.length > 0 && !state.isBreakingActive && state.initialLoadComplete && state.nextBreakingTriggerTime === 0) { 
-               scheduleBreakingTrigger();
-            } 
-        }
-        
-        function scheduleBreakingTrigger() {
-            const randomDelay = Math.floor(Math.random() * 20000) + 5000;
-            state.nextBreakingTriggerTime = Date.now() + randomDelay;
-        }
-        
-        function scheduleBreakingDisplay() {
-             const now = new Date();
-             if (state.nextBreakingTriggerTime !== 0 && Date.now() >= state.nextBreakingTriggerTime) {
-                 if(now.getMinutes() === 59 && now.getSeconds() > 30) {
-                     state.nextBreakingTriggerTime = Date.now() + 65000;
-                     return;
-                 }
-                 if(!state.isLocked && !state.isSpecial && !state.isBreakingActive && !state.isClockRunning) {
-                     processBreakingQueue();
-                     state.nextBreakingTriggerTime = 0; 
-                 } else {
-                     state.nextBreakingTriggerTime = Date.now() + 10000;
-                 }
-             }
-        }
-
-        function processBreakingQueue() { 
-            if (state.breakingQueue.length === 0) { closeBreaking(); return; } 
-            state.isBreakingActive = true; 
-            DOM.sidebar.classList.remove('hide-right', 'soft-hide', 'force-hide'); 
-            DOM.sidebar.classList.add('breaking-active'); 
-            const card = document.querySelector('.breaking-card'); 
-            card.classList.remove('night-summary-card'); 
-            const headerText = card.querySelector('.bk-card-header span:first-child'); 
-            if(headerText) headerText.innerText = "MOST ÉRKEZETT"; 
-            renderBreakingItemContent(); 
-        }
-
-        function renderBreakingItemContent() { 
-            if(state.breakingQueue.length > 0) state.currentBreakingItem = state.breakingQueue.shift(); 
-            else if(!state.currentBreakingItem) return; 
-
-            const item = state.currentBreakingItem; 
-            state.breakingHistory.add(item.link);
-
-            DOM.bkCardClickable.dataset.link = item.link; 
-            const timeStr = item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'}); 
-            DOM.bkCardHeadline.innerText = item.title; 
-            DOM.bkCardMeta.innerHTML = `FORRÁS: ${item.source}`; 
-            document.getElementById('bk-time-stamp').innerText = timeStr; 
-
-            DOM.bkCardBody.innerHTML = ""; 
-            const wrapper = document.createElement("div"); 
-            wrapper.className = "bk-scroll-wrapper"; 
-            wrapper.innerText = item.desc; 
-            DOM.bkCardBody.appendChild(wrapper); 
-            
-            const bodyH = DOM.bkCardBody.clientHeight; 
-            const scrollH = wrapper.scrollHeight; 
-            const isOverflow = scrollH > bodyH;
-            
-            let totalDuration = 0;
-
-            if(isOverflow) { 
-                const dist = scrollH - bodyH + 30; 
-                const scrollDuration = Math.max(3, dist / 20); 
-                setTimeout(() => { 
-                    wrapper.style.transition = `transform ${scrollDuration}s linear`; 
-                    wrapper.style.transform = `translateY(-${dist}px)`; 
-                }, 4000); 
-                totalDuration = 4000 + (scrollDuration * 1000) + 5000;
-            } else {
-                totalDuration = Math.max(10000, (item.title.length + item.desc.length) * 80);
-            }
-
-            setTimeout(() => { 
-                if (state.breakingQueue.length > 0) { 
-                    const card = document.querySelector('.breaking-card'); 
-                    card.classList.add('flipped-state'); 
-                    setTimeout(() => { 
-                        renderBreakingItemContent(); 
-                        card.classList.remove('flipped-state'); 
-                    }, 500); 
-                } else { 
-                    closeBreaking(); 
-                } 
-            }, totalDuration); 
-        }
-
-        function closeBreaking() { DOM.sidebar.classList.remove('breaking-active'); setTimeout(() => { state.isBreakingActive = false; checkNightMode(); }, 1000); }
-        
-        async function triggerSpecialMeteoSequence(startPhase = 0) { crawlNews(false); state.isSpecial = true; state.isLocked = true; toggleLiveBadge(true); setTimeout(() => { DOM.liveBadge.classList.add('delayed-visible'); }, 2000); clearNewsBackgrounds(); [ {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'}].forEach(ui => { let el = document.getElementById(ui.id); if(el) el.classList.add(`hide-${ui.t}`); }); DOM.logoBox.classList.remove('force-hide'); DOM.logoBox.classList.add('high-z'); setMeteoBackground(); DOM.special.style.display = 'flex'; setTimeout(() => DOM.special.classList.add('active'), 50); const sequence = [ { type: "list", title: "SZABOLCS-SZATMÁR-BEREG VÁRMEGYE", list: shuffle([...SZABOLCS_STATIONS]).slice(0, 12) }, { type: "ny_detailed", title: "NYÍREGYHÁZA RÉSZLETES ADATOK" }, { type: "hourly", title: "NYÍREGYHÁZA - KÖVETKEZŐ 6 ÓRA" }, { type: "hourly_part2", title: "NYÍREGYHÁZA - KÉSŐBB" }, { type: "forecast", title: "ELŐREJELZÉS - KÖVETKEZŐ NAPOK" }, { type: "astro", title: "ASZTROLÓGIAI ÉS EGÉSZSÉGÜGYI ADATOK" }, { type: "air_uv", title: "LEVEGŐMINŐSÉG ÉS UV ADATOK (ÉLŐ)" }, { type: "list", title: "EXTRÉM VILÁGTÁJAK I.", list: shuffle([...EXOTIC_STATIONS]).slice(0, 12) }, { type: "list", title: "EXTRÉM VILÁGTÁJAK II.", list: shuffle([...EXOTIC_STATIONS_2]).slice(0, 10) }, { type: "list", title: "EXTRÉM VILÁGTÁJAK III.", list: shuffle([...EXTREME_LOCATIONS_NEW]).slice(0, 10) }, { type: "list", title: "MAGYARORSZÁG NAGYVÁROSAI", list: shuffle([...HU_MAJOR_STATIONS]) }, { type: "list", title: "EURÓPAI KÖRKÉP", list: shuffle([...EUROPE_MAJOR_STATIONS]).slice(0, 12) } ]; const slideDuration = 27000; let phase = startPhase; const runPhase = async () => { if (phase >= sequence.length) { state.specialMeteoInterval = setTimeout(() => { state.mainIdx = -1; state.tickerIdx = -1; closeAllOverlays(); }, 2000); return; } const currentTheme = sequence[phase]; DOM.smGrid.style.opacity = 0; document.getElementById('sm-source-footer').innerText = "FORRÁS: WEATHER.COM / IBM CLOUD / OPEN-METEO"; DOM.smGrid.style.gridTemplateRows = "repeat(3, 1fr)"; setTimeout(async () => { DOM.smGrid.style.display = 'grid'; if (currentTheme.type === "list") { await renderSpecialBatch(currentTheme.list, currentTheme.title); } else if (currentTheme.type === "ny_detailed") { await renderNyiregyhazaDetailed(); } else if (currentTheme.type === "hourly") { DOM.smGrid.style.gridTemplateRows = "repeat(1, 1fr)"; await renderHourlyForecast(0); DOM.smTitle.innerText = currentTheme.title; } else if (currentTheme.type === "hourly_part2") { DOM.smGrid.style.gridTemplateRows = "repeat(1, 1fr)"; await renderHourlyForecast(6); DOM.smTitle.innerText = currentTheme.title; } else if (currentTheme.type === "forecast") { DOM.smGrid.style.gridTemplateRows = "1fr"; await renderRealForecast(); DOM.smTitle.innerText = currentTheme.title; } else if (currentTheme.type === "astro") { DOM.smGrid.style.gridTemplateRows = "repeat(2, 1fr)"; await renderRealAstro(); DOM.smTitle.innerText = currentTheme.title; } else if (currentTheme.type === "air_uv") { DOM.smGrid.style.gridTemplateRows = "repeat(2, 1fr)"; await renderRealAirQuality(); DOM.smTitle.innerText = currentTheme.title; } DOM.smGrid.style.opacity = 1; }, 300); phase++; state.meteoPhaseTimer = setTimeout(runPhase, slideDuration); }; runPhase(); }
+        async function triggerSpecialMeteoSequence(startPhase = 0) { crawlNews(false); state.isSpecial = true; state.isLocked = true; toggleLiveBadge(true); setTimeout(() => { DOM.liveBadge.classList.add('delayed-visible'); }, 2000); [ {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'}].forEach(ui => { let el = document.getElementById(ui.id); if(el) el.classList.add(`hide-${ui.t}`); }); DOM.logoBox.classList.remove('force-hide'); DOM.logoBox.classList.add('high-z'); setMeteoBackground(); DOM.special.style.display = 'flex'; setTimeout(() => DOM.special.classList.add('active'), 50); const sequence = [ { type: "list", title: "SZABOLCS-SZATMÁR-BEREG VÁRMEGYE", list: shuffle([...SZABOLCS_STATIONS]).slice(0, 12) }, { type: "ny_detailed", title: "NYÍREGYHÁZA RÉSZLETES ADATOK" }, { type: "hourly", title: "NYÍREGYHÁZA - KÖVETKEZŐ 6 ÓRA" }, { type: "hourly_part2", title: "NYÍREGYHÁZA - KÉSŐBB" }, { type: "forecast", title: "ELŐREJELZÉS - KÖVETKEZŐ NAPOK" }, { type: "astro", title: "ASZTROLÓGIAI ÉS EGÉSZSÉGÜGYI ADATOK" }, { type: "air_uv", title: "LEVEGŐMINŐSÉG ÉS UV ADATOK (ÉLŐ)" }, { type: "list", title: "EXTRÉM VILÁGTÁJAK I.", list: shuffle([...EXOTIC_STATIONS]).slice(0, 12) }, { type: "list", title: "EXTRÉM VILÁGTÁJAK II.", list: shuffle([...EXOTIC_STATIONS_2]).slice(0, 10) }, { type: "list", title: "EXTRÉM VILÁGTÁJAK III.", list: shuffle([...EXTREME_LOCATIONS_NEW]).slice(0, 10) }, { type: "list", title: "MAGYARORSZÁG NAGYVÁROSAI", list: shuffle([...HU_MAJOR_STATIONS]) }, { type: "list", title: "EURÓPAI KÖRKÉP", list: shuffle([...EUROPE_MAJOR_STATIONS]).slice(0, 12) } ]; const slideDuration = 27000; let phase = startPhase; const runPhase = async () => { if (phase >= sequence.length) { state.specialMeteoInterval = setTimeout(() => { state.mainIdx = -1; state.tickerIdx = -1; closeAllOverlays(); }, 2000); return; } const currentTheme = sequence[phase]; DOM.smGrid.style.opacity = 0; document.getElementById('sm-source-footer').innerText = "FORRÁS: WEATHER.COM / IBM CLOUD / OPEN-METEO"; DOM.smGrid.style.gridTemplateRows = "repeat(3, 1fr)"; setTimeout(async () => { DOM.smGrid.style.display = 'grid'; if (currentTheme.type === "list") { await renderSpecialBatch(currentTheme.list, currentTheme.title); } else if (currentTheme.type === "ny_detailed") { await renderNyiregyhazaDetailed(); } else if (currentTheme.type === "hourly") { DOM.smGrid.style.gridTemplateRows = "repeat(1, 1fr)"; await renderHourlyForecast(0); DOM.smTitle.innerText = currentTheme.title; } else if (currentTheme.type === "hourly_part2") { DOM.smGrid.style.gridTemplateRows = "repeat(1, 1fr)"; await renderHourlyForecast(6); DOM.smTitle.innerText = currentTheme.title; } else if (currentTheme.type === "forecast") { DOM.smGrid.style.gridTemplateRows = "1fr"; await renderRealForecast(); DOM.smTitle.innerText = currentTheme.title; } else if (currentTheme.type === "astro") { DOM.smGrid.style.gridTemplateRows = "repeat(2, 1fr)"; await renderRealAstro(); DOM.smTitle.innerText = currentTheme.title; } else if (currentTheme.type === "air_uv") { DOM.smGrid.style.gridTemplateRows = "repeat(2, 1fr)"; await renderRealAirQuality(); DOM.smTitle.innerText = currentTheme.title; } DOM.smGrid.style.opacity = 1; }, 300); phase++; state.meteoPhaseTimer = setTimeout(runPhase, slideDuration); }; runPhase(); }
         
         function setMeteoBackground() { const now = new Date(); const month = now.getMonth(); let colors = ['#001a4d', '#004d66']; DOM.smBg.style.backgroundImage = `none`; DOM.smBg.style.background = `linear-gradient(135deg, ${colors[0]} 0%, #000 100%)`; if(!document.querySelector('.sm-pattern')) { const pat = document.createElement('div'); pat.className = 'sm-pattern'; DOM.smBg.appendChild(pat); } }
         async function fetchWeatherDotCom(lat, lon) { try { const url = `https://api.weather.com/v3/wx/observations/current?geocode=${lat},${lon}&format=json&units=m&language=hu-HU&apiKey=${WU_KEY}`; const res = await fetch(url); if(res.ok) return await res.json(); return null; } catch(e) { return null; } }
@@ -1570,7 +1557,7 @@
         async function renderRealAstro() { DOM.smGrid.innerHTML = ''; DOM.smGrid.style.display = 'grid'; const data = await fetchOpenMeteoForecast(47.95, 21.71); if(data && data.daily) { const todayIdx = 0; const rise = new Date(data.daily.sunrise[todayIdx]).toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'}); const set = new Date(data.daily.sunset[todayIdx]).toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'}); const uv = data.daily.uv_index_max[todayIdx]; const sunshine = (data.daily.sunshine_duration[todayIdx] / 3600).toFixed(1); const rainProb = data.daily.precipitation_probability_max[todayIdx]; const windMax = data.daily.windspeed_10m_max[todayIdx]; const pressure = data.current ? data.current.surface_pressure.toFixed(0) : "1013"; const vis = data.current ? (data.current.visibility / 1000).toFixed(1) : "10"; const items = [ { l: "NAPKELTE", v: rise, i: "🌅" }, { l: "NAPNYUGTA", v: set, i: "🌇" }, { l: "UV MAXIMUM", v: uv.toFixed(1), i: "☀️" }, { l: "LÉGNYOMÁS", v: `${pressure} hPa`, i: "🍃" }, { l: "NAPSÜTÉS", v: `${sunshine} ÓRA`, i: "😎" }, { l: "CSAPADÉK ESÉLY", v: `${rainProb}%`, i: "☔" }, { l: "MAX SZÉL", v: `${Math.round(windMax)} KM/H`, i: "💨" }, { l: "LÁTÓTÁVOLSÁG", v: `${vis} KM`, i: "👁️" } ]; items.forEach(d => { const div = document.createElement('div'); div.className = 'sm-card-item astro-card'; div.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;"><div class="ny-d-label">${d.l}</div><div style="font-size:2.5rem; margin:5px 0;">${d.i}</div><div class="ny-d-val" style="font-size:1.5rem;">${d.v}</div></div><div class="sm-watermark">DATA: OPEN-METEO</div>`; DOM.smGrid.appendChild(div); }); } document.getElementById('sm-update-time').innerText = getTime(); }
         async function renderRealAirQuality() { DOM.smGrid.innerHTML = ''; DOM.smGrid.style.display = 'grid'; try { const res = await fetch("https://air-quality-api.open-meteo.com/v1/air-quality?latitude=47.95&longitude=21.71&current=us_aqi,pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone,uv_index&timezone=auto"); const d = await res.json(); if(d && d.current) { const c = d.current; const aqi = c.us_aqi; let aqiColor = "#0f0"; let aqiText = "KIVÁLÓ"; if(aqi > 20) { aqiText = "JÓ"; aqiColor = "#00d4ff"; } if(aqi > 50) { aqiColor = "#fc0"; aqiText = "MEGFELELŐ"; } if(aqi > 100) { aqiColor = "#f90"; aqiText = "SZENNYEZETT"; } if(aqi > 100) { aqiColor = "#f00"; aqiText = "VESZÉLYES"; } const items = [ { t: "LEVEGŐMINŐSÉG (AQI)", v: `${aqi} - ${aqiText}`, c: aqiColor }, { t: "SZÁLLÓ POR (PM10)", v: `${c.pm10} µg/m³`, c: "#fff" }, { t: "FINOM POR (PM2.5)", v: `${c.pm2_5} µg/m³`, c: "#fff" }, { t: "UV INDEX (JELENLEGI)", v: c.uv_index.toFixed(1), c: c.uv_index > 5 ? "#fc0" : "#0f0" }, { t: "NITROGÉN-DIOXID", v: `${c.nitrogen_dioxide} µg/m³`, c: "#ccc" }, { t: "ÓZON (O3)", v: `${c.ozone} µg/m³`, c: "#00d4ff" }, { t: "SZÉN-MONOXID", v: `${c.carbon_monoxide} µg/m³`, c: "#aaa" }, { t: "KÉN-DIOXID", v: `${c.sulphur_dioxide} µg/m³`, c: "#aaa" } ]; items.forEach(i => { const div = document.createElement('div'); div.className = 'sm-card-item'; div.style.borderLeftColor = i.c; div.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;"><div class="ny-d-label">${i.t}</div><div class="ny-d-val" style="color:${i.c}; font-size:1.6rem;">${i.v}</div></div><div class="sm-watermark">DATA: OPEN-METEO AIR API</div>`; DOM.smGrid.appendChild(div); }); } } catch(e) { DOM.smGrid.innerHTML = '<div style="color:#fff; font-size:2rem; width:100%; text-align:center;">LEVEGŐMINŐSÉG ADATOK NEM ELÉRHETŐEK</div>'; } }
 
-        function closeAllOverlays() { DOM.special.classList.remove('active'); DOM.logoBox.classList.remove('center-stage', 'high-z', 'logo-gradual-zoom'); DOM.logoBox.style.transform = ''; DOM.logoBox.classList.remove('logo-exit'); animateLogoIn(); clearTimeout(state.specialMeteoInterval); clearTimeout(state.meteoPhaseTimer); clearTimeout(state.bigClockTimeout); state.isClockRunning = false; state.clockPhase = 0; state.isSummary = false; state.isSpecial = false; toggleLiveBadge(false); DOM.liveBadge.classList.remove('delayed-visible'); setTimeout(() => { DOM.special.style.display = 'none'; DOM.special.style.pointerEvents = 'none'; DOM.bigClockOverlay.style.display = 'none'; DOM.bigClockOverlay.classList.remove('active', 'bc-layout-center'); DOM.logoBox.style.pointerEvents = 'auto'; DOM.logoBox.classList.remove('force-hide'); setTimeout(() => DOM.logoBox.classList.remove('logo-fade-out'), 3000); state.isLocked = false; DOM.hourlyArchiveOverlay.classList.remove('active'); }, 800); [ {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ].forEach(ui => { const el = document.getElementById(ui.id); if(el) el.classList.remove(`hide-${ui.t}`, 'soft-hide', 'force-hide'); }); const card = document.querySelector('.breaking-card'); if(card) card.classList.remove('night-summary-card'); DOM.sidebar.classList.remove('breaking-active'); if (state.isNightMode) { checkNightMode(); DOM.replayBadge.classList.add('visible'); } else { cycleMain(true); cycleTicker(1); } }
+        function closeAllOverlays() { DOM.special.classList.remove('active'); DOM.logoBox.classList.remove('center-stage', 'high-z', 'logo-gradual-zoom'); DOM.logoBox.style.transform = ''; DOM.logoBox.classList.remove('logo-exit'); animateLogoIn(); clearTimeout(state.specialMeteoInterval); clearTimeout(state.meteoPhaseTimer); clearTimeout(state.bigClockTimeout); state.isClockRunning = false; state.clockPhase = 0; state.isSpecial = false; toggleLiveBadge(false); DOM.liveBadge.classList.remove('delayed-visible'); setTimeout(() => { DOM.special.style.display = 'none'; DOM.special.style.pointerEvents = 'none'; DOM.bigClockOverlay.style.display = 'none'; DOM.bigClockOverlay.classList.remove('active', 'bc-layout-center'); DOM.logoBox.style.pointerEvents = 'auto'; DOM.logoBox.classList.remove('force-hide'); setTimeout(() => DOM.logoBox.classList.remove('logo-fade-out'), 3000); state.isLocked = false; DOM.hourlyArchiveOverlay.classList.remove('active'); }, 800); [ {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ].forEach(ui => { const el = document.getElementById(ui.id); if(el) el.classList.remove(`hide-${ui.t}`, 'soft-hide', 'force-hide'); }); DOM.sidebar.classList.remove('breaking-active'); if (state.isNightMode) { checkNightMode(); DOM.replayBadge.classList.add('visible'); } else { cycleMain(true); cycleTicker(1); } }
 
         // --- NEW SMART SCROLL TICKER LOGIC ---
         function cycleTicker(dir = 1) { 
@@ -1614,37 +1601,25 @@
             DOM.tickerWindow.appendChild(el); 
             document.getElementById('t-count').innerText = `${state.tickerIdx + 1} / ${state.tickerItems.length}`; 
             
-            // MEASURE AND ANIMATE LOGIC
             setTimeout(() => { 
                 const content = el.querySelector('.ticker-content'); 
-                
-                // FIX: Calculate available width correctly by subtracting padding
-                // The clock area is covered by padding-right: 180px on .ticker-window
                 const containerFullWidth = DOM.tickerWindow.getBoundingClientRect().width;
                 const paddingRight = parseFloat(window.getComputedStyle(DOM.tickerWindow).paddingRight) || 0;
                 const availableWidth = containerFullWidth - paddingRight;
                 
                 const contentWidth = content.getBoundingClientRect().width;
                 
-                // If content is wider than the AVAILABLE (visible) width
                 if (contentWidth > availableWidth) { 
-                    // Calculate overflow based on full content vs available space
-                    // Add buffer to scroll fully out of view or just enough? Usually "marquee" style
-                    // Here we scroll it to the left so the end is visible + some buffer
                     const overflow = contentWidth - availableWidth + 50; 
+                    const duration = Math.max(3000, (overflow / 50) * 1000); 
                     
-                    const duration = Math.max(3000, (overflow / 50) * 1000); // 50px per second speed
-                    
-                    // Initial delay for reading the start
                     setTimeout(() => {
                         content.style.transition = `transform ${duration}ms linear`; 
                         content.style.transform = `translateX(-${overflow}px)`; 
-                        
                         clearTimeout(state.tickerTimer); 
-                        state.tickerTimer = setTimeout(() => cycleTicker(1), duration + 3000); // Wait for scroll + 3s pause
+                        state.tickerTimer = setTimeout(() => cycleTicker(1), duration + 3000); 
                     }, 2000);
                 } 
-                // If content fits
                 else { 
                     clearTimeout(state.tickerTimer); 
                     state.tickerTimer = setTimeout(() => cycleTicker(1), 15000); 
@@ -1654,42 +1629,28 @@
 
         function manualTicker(dir) { clearTimeout(state.tickerTimer); cycleTicker(dir); }
 
-        function cycleMain(manual = false, preserveIndex = false) { if (state.isLocked) return; if (!state.mainItems.length || state.isSpecial || state.isSummary) return; if (!manual) { state.mainIdx++; if (state.mainIdx >= state.mainItems.length) state.mainIdx = 0; } else if (!preserveIndex) { state.mainIdx = 0; } if (state.mainIdx < 0) state.mainIdx = state.mainItems.length - 1; if (state.mainIdx >= state.mainItems.length) state.mainIdx = 0; const item = state.mainItems[state.mainIdx]; state.currentMainLink = item.link; DOM.mainContainerBox.classList.remove('active'); setTimeout(() => { if (state.isLocked) return; DOM.mainTitle.innerText = item.title; DOM.mainDesc.innerText = item.desc; document.getElementById('nav-count').innerText = `${state.mainIdx + 1} / ${state.mainItems.length}`; const timeStr = item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'}); if(DOM.mainCatText) { const feed = RSS_FEEDS.find(f => f.name === item.source); const logoUrl = feed ? `https://www.google.com/s2/favicons?domain=${feed.domain}&sz=64` : ''; DOM.mainCatText.innerHTML = `<img src="${logoUrl}"> ${item.source} • ${timeStr}`; } const img = document.createElement('img'); img.src = item.img; img.className = 'bg-img'; DOM.stage.appendChild(img); img.onerror = () => { img.remove(); DOM.mainTitle.innerText = "KÉP BETÖLTÉSE SIKERTELEN..."; setTimeout(() => cycleMain(), 2000); }; img.onload = () => { if(state.isLocked) { img.remove(); return; } img.classList.add('active'); const imgs = DOM.stage.querySelectorAll('.bg-img'); if (imgs.length > 2) imgs[0].remove(); DOM.mainContainerBox.classList.add('active'); }; DOM.mainPrg.style.transition = 'none'; DOM.mainPrg.style.width = '0%'; setTimeout(() => { DOM.mainPrg.style.transition = 'width 21.8s linear'; DOM.mainPrg.style.width = '100%'; }, 50); }, 600); }
+        function cycleMain(manual = false, preserveIndex = false) { if (state.isLocked) return; if (!state.mainItems.length || state.isSpecial) return; if (!manual) { state.mainIdx++; if (state.mainIdx >= state.mainItems.length) state.mainIdx = 0; } else if (!preserveIndex) { state.mainIdx = 0; } if (state.mainIdx < 0) state.mainIdx = state.mainItems.length - 1; if (state.mainIdx >= state.mainItems.length) state.mainIdx = 0; const item = state.mainItems[state.mainIdx]; state.currentMainLink = item.link; DOM.mainContainerBox.classList.remove('active'); setTimeout(() => { if (state.isLocked) return; DOM.mainTitle.innerText = item.title; DOM.mainDesc.innerText = item.desc; document.getElementById('nav-count').innerText = `${state.mainIdx + 1} / ${state.mainItems.length}`; const timeStr = item.date.toLocaleTimeString('hu-HU', {hour:'2-digit', minute:'2-digit'}); if(DOM.mainCatText) { const feed = RSS_FEEDS.find(f => f.name === item.source); const logoUrl = feed ? `https://www.google.com/s2/favicons?domain=${feed.domain}&sz=64` : ''; DOM.mainCatText.innerHTML = `<img src="${logoUrl}"> ${item.source} • ${timeStr}`; } const img = document.createElement('img'); img.src = item.img; img.className = 'bg-img'; DOM.stage.appendChild(img); img.onerror = () => { img.remove(); DOM.mainTitle.innerText = "KÉP BETÖLTÉSE SIKERTELEN..."; setTimeout(() => cycleMain(), 2000); }; img.onload = () => { if(state.isLocked) { img.remove(); return; } img.classList.add('active'); const imgs = DOM.stage.querySelectorAll('.bg-img'); if (imgs.length > 2) imgs[0].remove(); DOM.mainContainerBox.classList.add('active'); }; DOM.mainPrg.style.transition = 'none'; DOM.mainPrg.style.width = '0%'; setTimeout(() => { DOM.mainPrg.style.transition = 'width 21.8s linear'; DOM.mainPrg.style.width = '100%'; }, 50); }, 600); }
 
-        // --- SUN CYCLE ENGINE (REALTIME NYÍREGYHÁZA) ---
+        // --- SUN CYCLE ENGINE ---
         const SunCycle = {
             calc: (date, lat, lon) => {
                 const start = new Date(date.getFullYear(), 0, 0);
                 const diff = date - start;
                 const oneDay = 1000 * 60 * 60 * 24;
                 const day = Math.floor(diff / oneDay);
-                
-                // Accurate enough Solar declination for visual UI
                 const declination = 23.45 * Math.sin((360 / 365) * (day - 81) * (Math.PI / 180));
-                
-                // Equation of time
                 const b = (360 / 365) * (day - 81) * (Math.PI / 180);
                 const eot = 9.87 * Math.sin(2 * b) - 7.53 * Math.cos(b) - 1.5 * Math.sin(b);
-                
                 const rad = Math.PI / 180;
-                const zenith = 90.833 * rad; // Official
+                const zenith = 90.833 * rad; 
                 const latRad = lat * rad;
                 const decRad = declination * rad;
-                
-                // Hour angle
                 const cosH = (Math.cos(zenith) - Math.sin(latRad)*Math.sin(decRad)) / (Math.cos(latRad)*Math.cos(decRad));
-                
-                if (cosH < -1 || cosH > 1) return { rise: 6, set: 18 }; // Polar fallback
-                
+                if (cosH < -1 || cosH > 1) return { rise: 6, set: 18 }; 
                 const hourAngle = Math.acos(cosH) * (180 / Math.PI) / 15;
-                
-                // UTC Times (approx)
                 const riseUTC = 12 - hourAngle - (lon / 15) - (eot / 60);
                 const setUTC = 12 + hourAngle - (lon / 15) - (eot / 60);
-                
-                // Local time offset
                 const offset = -date.getTimezoneOffset() / 60;
-                
                 return { rise: riseUTC + offset, set: setUTC + offset };
             },
             getPhase: () => {
@@ -1698,62 +1659,19 @@
                 const lon = 21.71;
                 const sun = SunCycle.calc(now, lat, lon);
                 const h = now.getHours() + now.getMinutes() / 60;
-
-                // Thresholds
                 const twilight = 0.8;
                 const golden = 1.0;
-
-                // 1. NIGHT (Before Dawn)
-                if (h < sun.rise - twilight) return { 
-                    n: 'NIGHT', c: '#3366cc', 
-                    g: 'linear-gradient(180deg, #000000 0%, #050510 100%)' 
-                }; 
-                
-                // 2. DAWN
-                if (h < sun.rise) return { 
-                    n: 'DAWN', c: '#d946ef', 
-                    g: 'linear-gradient(180deg, #100010 0%, #240b36 100%)' 
-                };
-                
-                // 3. SUNRISE
-                if (h < sun.rise + 0.5) return { 
-                    n: 'SUNRISE', c: '#ff6600', 
-                    g: 'linear-gradient(180deg, #1a0500 0%, #331000 100%)' 
-                };
-
-                // 4. DAY (Standard Cyan/Blue)
-                if (h < sun.set - golden) return { 
-                    n: 'DAY', c: '#00d4ff', 
-                    g: 'linear-gradient(180deg, #0a1a2a 0%, #1a2a3a 100%)' 
-                };
-                
-                // 5. GOLDEN HOUR
-                if (h < sun.set) return { 
-                    n: 'GOLDEN', c: '#ffcc00', 
-                    g: 'linear-gradient(180deg, #1a1500 0%, #332b00 100%)' 
-                };
-
-                // 6. SUNSET
-                if (h < sun.set + 0.5) return { 
-                    n: 'SUNSET', c: '#ff4444', 
-                    g: 'linear-gradient(180deg, #1a0000 0%, #330000 100%)' 
-                };
-                
-                // 7. DUSK
-                if (h < sun.set + twilight + 0.5) return { 
-                    n: 'DUSK', c: '#663399', 
-                    g: 'linear-gradient(180deg, #0a001a 0%, #140033 100%)' 
-                };
-
-                // 8. NIGHT (After Dusk)
-                return { 
-                    n: 'NIGHT', c: '#3366cc', 
-                    g: 'linear-gradient(180deg, #000000 0%, #050510 100%)' 
-                };
+                if (h < sun.rise - twilight) return { n: 'NIGHT', c: '#3366cc', g: 'linear-gradient(180deg, #000000 0%, #050510 100%)' }; 
+                if (h < sun.rise) return { n: 'DAWN', c: '#d946ef', g: 'linear-gradient(180deg, #100010 0%, #240b36 100%)' };
+                if (h < sun.rise + 0.5) return { n: 'SUNRISE', c: '#ff6600', g: 'linear-gradient(180deg, #1a0500 0%, #331000 100%)' };
+                if (h < sun.set - golden) return { n: 'DAY', c: '#00d4ff', g: 'linear-gradient(180deg, #0a1a2a 0%, #1a2a3a 100%)' };
+                if (h < sun.set) return { n: 'GOLDEN', c: '#ffcc00', g: 'linear-gradient(180deg, #1a1500 0%, #332b00 100%)' };
+                if (h < sun.set + 0.5) return { n: 'SUNSET', c: '#ff4444', g: 'linear-gradient(180deg, #1a0000 0%, #330000 100%)' };
+                if (h < sun.set + twilight + 0.5) return { n: 'DUSK', c: '#663399', g: 'linear-gradient(180deg, #0a001a 0%, #140033 100%)' };
+                return { n: 'NIGHT', c: '#3366cc', g: 'linear-gradient(180deg, #000000 0%, #050510 100%)' };
             }
         };
 
-        // --- INTELLIGENT AUTO SCALER ---
         const AutoScaler = {
             init: () => {
                 window.addEventListener('resize', AutoScaler.apply);
@@ -1764,11 +1682,9 @@
                 const baseH = 1080;
                 const winW = window.innerWidth;
                 const winH = window.innerHeight;
-                
                 const scaleX = winW / baseW;
                 const scaleY = winH / baseH;
                 const scale = Math.min(scaleX, scaleY);
-                
                 document.documentElement.style.setProperty('--base-scale', scale);
             }
         };
@@ -1778,42 +1694,30 @@
             const h = String(now.getHours()).padStart(2, '0');
             const m = String(now.getMinutes()).padStart(2, '0');
             const s = String(now.getSeconds()).padStart(2, '0');
-            
             const dayStr = now.toLocaleDateString('hu-HU', { weekday: 'long' });
             const dateStr = now.toLocaleDateString('hu-HU', { month: 'long', day: 'numeric' }).replace(/\.$/, "").toUpperCase(); 
-            
             document.getElementById('tc-hm').innerText = `${h}:${m}`;
             document.getElementById('tc-s').innerText = `:${s}`;
             document.getElementById('tc-date').innerText = `${dateStr}. • ${dayStr.toUpperCase()}`;
-
-            // Apply Sun Phase Styling - Realtime
             const phase = SunCycle.getPhase();
             document.documentElement.style.setProperty('--sun-accent', phase.c);
             document.documentElement.style.setProperty('--sun-bg-grad', phase.g);
         }
 
         function startClock() { 
-            // 100ms interval for precise second updates without lag
             setInterval(() => { 
                 const now = new Date(); const m = now.getMinutes(); const s = now.getSeconds(); 
-                
                 updateTickerClock(); 
-
-                // Execute heavy logic only on full seconds
                 if (now.getMilliseconds() < 150) {
                     checkScheduleExecution(); 
                     if (!state.isClockRunning) { checkNightMode(); } 
                     updateHourlyCubes(); 
-                    
                     if (m === 0 && s === 0) { 
-                        // --- HOURLY CURRENCY UPDATE (ONLY HERE) ---
                         fetchCurrency(); 
                         generateHourlySchedule(); 
                     } 
-                    
                     updateDevMonitor(); 
                     
-                    // --- BIG CLOCK RANDOM START ---
                     if (m === 59 && s === (state.nextClockTriggerSeconds - 5) && !state.isNightMode && !state.logoExitTriggered && !state.isClockRunning) { 
                         state.logoExitTriggered = true; 
                         animateLogoOut(); 
@@ -1821,26 +1725,22 @@
                     if (m === 59 && s === state.nextClockTriggerSeconds && !state.isClockRunning && !state.isNightMode) { 
                         triggerBigClockSequence(); 
                     } 
-                    
                     if (!state.isNightMode && s === 0) { 
-                        if (m === 5 || m === 20 || m === 40) { 
-                            // AUTO UPDATE TRIGGER FOR NEWS ONLY
-                            // Pass false to NOT reset everything, just append new
-                            refreshNewsOnly(false, true); 
-                        } 
+                        if (m === 5 || m === 20 || m === 40) { refreshNewsOnly(false, true); } 
                     } 
-                    
-                    // --- BREAKING NEWS CHECK & TRIGGER ---
-                    if (s % 45 === 0) { checkBreaking(); } 
-                    scheduleBreakingDisplay();
+                    if (!state.isNightMode && (Date.now() - state.lastTickerUpdate > 16000) && !state.isSpecial) { cycleTicker(1); } 
 
-                    // Modified safety check for longer ticker duration ( > 16000 )
-                    if (!state.isNightMode && (Date.now() - state.lastTickerUpdate > 16000) && !state.isSpecial && !state.isSummary) { cycleTicker(1); } 
+                    // --- NEW 15-MINUTE SUMMARY TRIGGER ---
+                    if (s === 0 && !state.isNightMode && !state.isSpecial) {
+                        if (m === 15 || m === 30 || m === 45) {
+                            triggerSummarySequence();
+                        }
+                    }
                 }
             }, 100); 
         }
 
-        function startMainLoop() { if (state.mainTimer) clearInterval(state.mainTimer); state.mainTimer = setInterval(() => { if(!state.isSpecial && !state.isSummary) cycleMain(); }, 22000); }
+        function startMainLoop() { if (state.mainTimer) clearInterval(state.mainTimer); state.mainTimer = setInterval(() => { if(!state.isSpecial) cycleMain(); }, 22000); }
 
         async function fetchWunderground(silent = false) { state.lastWxUpdate = Date.now(); let validReadings = []; const promises = WU_STATIONS.map(async (id) => { try { const controller = new AbortController(); const timeoutId = setTimeout(() => controller.abort(), 1500); const res = await fetch(`https://api.weather.com/v2/pws/observations/current?stationId=${id}&format=json&units=m&apiKey=${WU_KEY}&numericPrecision=decimal`, { signal: controller.signal }); clearTimeout(timeoutId); if(res.ok) return await res.json(); return null; } catch(e) { return null; } }); const results = await Promise.allSettled(promises); results.forEach((res, index) => { if (res.status === 'fulfilled' && res.value) { const d = res.value; if (d.observations && d.observations.length > 0) { const o = d.observations[0]; if (o && o.metric && typeof o.metric.temp === 'number') { validReadings.push({ temp: o.metric.temp, hum: o.humidity || 50, wind: o.metric.windSpeed || 0, windGust: o.metric.windGust || 0, precipRate: o.metric.precipRate || 0, precipTotal: o.metric.precipTotal || 0, windDir: o.winddir || 0, pressure: o.metric.pressure || 1013, uv: o.uv || 0, id: WU_STATIONS[index] }); } } } }); if (validReadings.length === 0) { state.currentWxSource = 'OPEN-METEO (FALLBACK)'; const fallback = await fetchMeteoRobust(47.95, 21.71); if(fallback) { state.pwsData = { temp: formatVal(fallback.temperature), feel: formatVal(fallback.temperatureFeelsLike), wind: formatVal(fallback.windSpeed), windDir: getWind(fallback.windDirection), cond: getWmoDesc(fallback.iconCode, fallback.dayOrNight).t, icon: getWmoDesc(fallback.iconCode, fallback.dayOrNight).i, updated: true, rainRate: "0", rainDay: "0", uv: "0", humidity: fallback.relativeHumidity, pressure: "1013" }; if(!silent) { updateMiniWidgets(state.pwsData, 0); updateCubeWidget(); } } return; } const avgTemp = validReadings.reduce((sum, r) => sum + r.temp, 0) / validReadings.length; const avgHum = validReadings.reduce((sum, r) => sum + r.hum, 0) / validReadings.length; const avgWind = validReadings.reduce((sum, r) => sum + r.wind, 0) / validReadings.length; const avgPress = validReadings.reduce((sum, r) => sum + r.pressure, 0) / validReadings.length; const maxGust = Math.max(...validReadings.map(r => r.windGust)); const maxPrecipRate = Math.max(...validReadings.map(r => r.precipRate)); const maxPrecipTotal = Math.max(...validReadings.map(r => r.precipTotal)); const maxUv = Math.max(...validReadings.map(r => r.uv)); const windDir = validReadings[0].windDir; const feel = calculateAggregateRealFeel(avgTemp, avgHum, avgWind); state.currentWxSource = `PWS ÁTLAG (${validReadings.length})`; state.pwsData = { temp: formatVal(avgTemp), feel: formatVal(feel), wind: formatVal(avgWind), windDir: getWind(windDir), cond: maxPrecipRate > 0 ? "CSAPADÉK" : "SZÁRAZ", icon: maxPrecipRate > 0 ? "🌧️" : "☁️", humidity: avgHum.toFixed(0), pressure: avgPress.toFixed(0), rainRate: formatVal(maxPrecipRate), rainDay: formatVal(maxPrecipTotal), uv: maxUv.toFixed(1), gust: maxGust.toFixed(1), updated: true }; if(!silent) { updateMiniWidgets(state.pwsData, maxGust); updateCubeWidget(); } }
 
@@ -1859,16 +1759,10 @@
         document.addEventListener('visibilitychange', () => { if (!document.hidden) { if (!state.isNightMode && !state.isSpecial) { if (Date.now() - state.lastTickerUpdate > 15000) { cycleTicker(1); } } } });
 
         function init() {
-            if(DOM.bkCardClickable) DOM.bkCardClickable.onclick = () => { const link = DOM.bkCardClickable.dataset.link; if(link && link !== "#") window.open(link, '_blank'); };
             window.stepMain = function(dir) { if(!state.mainItems.length || state.isLocked) return; clearInterval(state.mainTimer); let newIdx = state.mainIdx + dir; if (newIdx < 0) newIdx = state.mainItems.length - 1; if (newIdx >= state.mainItems.length) newIdx = 0; state.mainIdx = newIdx; cycleMain(true, true); startMainLoop(); };
             const uiLeft = document.getElementById('ui-left'); if(uiLeft) uiLeft.onclick = (e) => { if (e.target.closest('.main-nav-bar') || e.target.classList.contains('mn-btn')) return; if (e.target.closest('.main-nav-overlay') || e.target.classList.contains('nav-btn-mini')) return; if(state.currentMainLink) window.open(state.currentMainLink, '_blank'); };
-            
-            // Start Auto Scaler
             AutoScaler.init();
-            
-            // FIX: Trigger the full logo animation on startup, not just the watermark
             animateLogoIn();
-            
             startClock(); startMainLoop(); generateHourlySchedule();
             const d = document.createElement('div'); d.className='term-line'; d.innerText = ">> RENDSZER KÉSZ"; DOM.term.appendChild(d); DOM.fill.style.width = "100%";
             refreshNewsOnly(false); fetchCurrency(); fetchOther(); fetchWunderground();
