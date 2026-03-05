@@ -336,19 +336,39 @@
         .hour-nav-label { transform: skewX(-15deg); background: #222; color: #888; border: 1px solid #444; padding: 5px 10px; font-family: var(--font-tech); font-size: 0.7rem; font-weight: bold; display: flex; align-items: center; height: 100%; margin-right: 10px; flex-shrink: 0; }
         .hour-nav-label span { transform: skewX(15deg); }
         
-        #hourly-archive-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 50% 50%, rgba(0, 20, 50, 0.8) 0%, rgba(0, 5, 15, 0.98) 100%); z-index: 8000; display: none; flex-direction: column; backdrop-filter: blur(10px); padding: 10vh 5vw 5vh 5vw; }
-        #hourly-archive-overlay::before { content: 'ARCHÍVUM'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-10deg); font-size: clamp(10rem, 20vw, 25rem); color: rgba(255,255,255,0.03); font-family: var(--font-main); font-weight: 900; pointer-events: none; z-index: 0; white-space: nowrap; text-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        #hourly-archive-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(ellipse at top, rgba(0, 30, 80, 0.85) 0%, rgba(0, 5, 15, 0.98) 70%, #000 100%); z-index: 8000; display: none; flex-direction: column; backdrop-filter: blur(15px); padding: 10vh 5vw 5vh 5vw; }
+        
+        #hourly-archive-overlay::after {
+            content: ''; position: absolute; top:0; left:0; width:100%; height:100%;
+            background-image: 
+                linear-gradient(rgba(0, 212, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px; z-index: 0; pointer-events: none;
+            mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+            -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+        }
+        
+        #hourly-archive-overlay::before { 
+            content: 'ADATBÁZIS'; position: absolute; top: 50%; left: 50%; 
+            transform: translate(-50%, -50%) rotate(-5deg); 
+            font-size: clamp(8rem, 18vw, 25rem); color: transparent; 
+            -webkit-text-stroke: 2px rgba(0, 212, 255, 0.07); 
+            text-shadow: 0 0 40px rgba(0, 212, 255, 0.05); 
+            font-family: var(--font-tech); font-weight: 900; letter-spacing: 20px;
+            pointer-events: none; z-index: 0; white-space: nowrap; 
+        }
+
         #hourly-archive-overlay.active { display: flex; }
         .ha-header, .ha-list { position: relative; z-index: 1; }
-        .ha-header { display: flex; justify-content: center; align-items: center; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 20px; margin-bottom: 20px; }
+        .ha-header { display: flex; justify-content: center; align-items: center; border-bottom: 2px solid rgba(0, 212, 255, 0.3); padding-bottom: 20px; margin-bottom: 20px; box-shadow: 0 10px 30px -10px rgba(0, 212, 255, 0.2); }
         .ha-title-wrapper { display: flex; align-items: center; gap: 20px; }
         .ha-nav-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: var(--accent); font-size: 1.5rem; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; border-radius: 4px; backdrop-filter: blur(5px); }
         .ha-nav-btn:hover { background: var(--accent); color: #000; box-shadow: 0 0 15px var(--accent); transform: scale(1.1); }
         .ha-nav-btn.disabled { opacity: 0.3; pointer-events: none; filter: grayscale(1); }
         .ha-title { text-align: center; font-family: var(--font-main); font-size: clamp(1.2rem, 2.5vw, 2.2rem); color: #fff; text-transform: uppercase; font-weight: 900; text-shadow: 0 2px 10px rgba(0,0,0,0.5); min-width: 300px; }
         .ha-list { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-right: 10px; }
-        .ha-item { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-left: 4px solid #444; padding: 15px; cursor: pointer; transition: 0.2s; }
-        .ha-item:hover { background: rgba(255,255,255,0.1); border-left-color: var(--accent); }
+        .ha-item { background: rgba(5, 15, 25, 0.85); border: 1px solid rgba(255,255,255,0.1); border-left: 4px solid #444; padding: 15px; cursor: pointer; transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); backdrop-filter: blur(10px); position: relative; z-index: 2; }
+        .ha-item:hover { background: rgba(15, 35, 60, 0.95); border-left-color: var(--accent); transform: translateX(8px); box-shadow: -5px 5px 20px rgba(0,0,0,0.5); }
         .ha-meta { font-family: var(--font-mono); font-size: 0.9rem; color: var(--accent); margin-bottom: 5px; display:flex; gap:10px; align-items:center; width: 100%; }
         .ha-new-badge { background: #00d4ff; color: #000; padding: 2px 8px; border-radius: 2px; font-weight: 800; font-size: 0.65rem; margin-left: auto; letter-spacing: 1px; font-family: var(--font-tech); box-shadow: 0 0 8px rgba(0,212,255,0.6); animation: blink 2s infinite; }
         .ha-h { font-family: var(--font-data); font-size: 1.3rem; font-weight: bold; color: #fff; }
@@ -909,7 +929,7 @@
         ]);
 
         let state = { 
-            allNews:[], tickerItems: [], mainItems: [], weatherData:[], 
+            allNews:[], tickerItems: [], mainItems:[], weatherData:[], 
             pwsData: { temp: '--', feel: '--', wind: '--', windDir: '', cond: '--', icon: '❓', updated: false, rainRate: 0, rainDay: 0, uv: 0, humidity: 0, pressure: 0, gust: 0 }, 
             tickerIdx: 0, mainIdx: 0, wxIdx: 0, tickerTimer: null, mainTimer: null, isSpecial: false, isBreakingActive: false, feedStatus: {}, 
             startTime: Date.now(), currentMainLink: null, pwsRotationIdx: 0, lastWxUpdate: 0, currentWxSource: '--', lastTickerUpdate: Date.now(), 
@@ -919,7 +939,8 @@
             manualRefreshRequested: false, clockPhase: 0, currencyRates: null, currencyBase: 'USD', updateTriggered: false, 
             clockFinishTriggered: false, logoExitTriggered: false, pwsSlide: 0, pwsInterval: null, viewingArchiveHour: -1, 
             nextClockTriggerSeconds: 0, sunData: null, logoWatermarkTimer: null, summaryTimer: null, archiveLiveInterval: null, 
-            displayedArchiveLinks: new Set(), currentArchiveStart: 0, currentArchiveEnd: 0, oldestArchiveHourLoaded: -1, archiveScrollLock: false 
+            displayedArchiveLinks: new Set(), currentArchiveStart: 0, currentArchiveEnd: 0, oldestArchiveHourLoaded: -1, archiveScrollLock: false,
+            lastTrackedHour: new Date().getHours()
         };
 
         const DOM = { loader: document.getElementById('loader'), term: document.getElementById('term'), fill: document.getElementById('load-fill'), stage: document.getElementById('stage'), tickerWindow: document.getElementById('ticker-window'), mainContainerBox: document.getElementById('mn-container-box'), mainTitle: document.getElementById('m-title'), mainDesc: document.getElementById('m-desc'), mainCatText: document.getElementById('m-cat-text'), mainMeta: document.getElementById('m-meta'), mainPrg: document.getElementById('m-prg'), trPwsContent: document.getElementById('tr-pws-content'), special: document.getElementById('special-meteo'), smGrid: document.getElementById('sm-grid'), smTitle: document.getElementById('sm-main-title'), smBg: document.getElementById('sm-bg'), feedLog: document.getElementById('feed-log-table'), auth: document.getElementById('auth-overlay'), pin: document.getElementById('pin-input'), dev: document.getElementById('dev-panel'), devWxNext: document.getElementById('dev-wx-next'), devWxSrc: document.getElementById('dev-wx-src'), devBkQueue: document.getElementById('dev-bk-queue'), devScheduleTable: document.getElementById('dev-schedule-table').querySelector('tbody'), logoBox: document.getElementById('logo-box'), liveBadge: document.getElementById('live-badge'), replayBadge: document.getElementById('replay-badge'), nightMsg: document.getElementById('night-msg'), tickerNav: document.getElementById('ticker-nav'), sidebar: document.querySelector('.sidebar'), sidebarFlipper: document.querySelector('.sidebar-flipper'), fxSourceContainer: document.getElementById('fx-source-container'), bigClockOverlay: document.getElementById('big-clock-overlay'), hourlyNavBar: document.getElementById('hourly-nav-bar'), hourlyArchiveOverlay: document.getElementById('hourly-archive-overlay'), haTitle: document.getElementById('ha-title-text'), haList: document.getElementById('ha-list-container'), bcInfoText: document.getElementById('bc-info-text'), summaryList: document.getElementById('summary-list') };
@@ -994,11 +1015,22 @@
                         badge.className = 'ha-new-badge';
                         badge.innerText = 'MOST ÉRKEZETT';
                         meta.appendChild(badge);
+
+                        // Véletlenszerű időzítő 30 és 60 másodperc között az eltűnéshez
+                        const randomTime = Math.floor(Math.random() * (60000 - 30000 + 1)) + 30000;
+                        setTimeout(() => {
+                            if (badge && badge.parentNode) {
+                                badge.style.transition = 'opacity 1s ease';
+                                badge.style.opacity = '0';
+                                setTimeout(() => badge.remove(), 1000);
+                            }
+                        }, randomTime);
                     }
 
                     el.style.backgroundColor = 'rgba(0, 212, 255, 0.2)';
                     DOM.haList.prepend(el);
                     
+                    // A háttér felvillanás rövid marad (3mp)
                     setTimeout(() => {
                         el.style.transition = 'background-color 2s ease';
                         el.style.backgroundColor = 'transparent';
@@ -1168,11 +1200,11 @@
             { tags: ['NIGHT'], bg: "radial-gradient(circle, #000033 0%, #000 90%)", lines:[{t:10,l:10,w:80,h:80,r:50,rot:0,b:"1px solid cyan"}] },
             { tags: ['NIGHT'], bg: "repeating-linear-gradient(45deg, #000, #000 10px, #111 10px, #111 20px)", lines:[{t:48,l:0,w:100,h:4,r:0,rot:45,b:"2px solid #333"}] },
             { tags:['NIGHT'], bg: "radial-gradient(circle at 30% 30%, #222, #000)", lines:[{t:20,l:20,w:60,h:60,r:50,rot:0,b:"1px dashed #fff"}] },
-            { tags: ['NIGHT'], bg: "#000", lines:[{t:0,l:49,w:100,h:2,r:0,rot:90,b:"1px solid #444"}, {t:49,l:0,w:100,h:2,r:0,rot:0,b:"1px solid #444"}] },
+            { tags:['NIGHT'], bg: "#000", lines:[{t:0,l:49,w:100,h:2,r:0,rot:90,b:"1px solid #444"}, {t:49,l:0,w:100,h:2,r:0,rot:0,b:"1px solid #444"}] },
             { tags: ['NIGHT'], bg: "linear-gradient(to bottom, #050510 0%, #000 100%)", lines:[{t:10,l:10,w:80,h:80,r:10,rot:0,b:"2px solid #00d4ff"}] },
             
             // DAWN (6-7)
-            { tags: ['DAWN'], bg: "linear-gradient(135deg, #240b36 0%, #c31432 100%)", lines:[{t:40,l:-10,w:120,h:60,r:50,rot:-10,b:"2px solid rgba(255,255,255,0.3)"}] },
+            { tags:['DAWN'], bg: "linear-gradient(135deg, #240b36 0%, #c31432 100%)", lines:[{t:40,l:-10,w:120,h:60,r:50,rot:-10,b:"2px solid rgba(255,255,255,0.3)"}] },
             { tags: ['DAWN'], bg: "radial-gradient(circle, #614385, #516395)", lines:[{t:0,l:0,w:100,h:100,r:50,rot:0,b:"10px double rgba(255,255,255,0.2)"}] },
             { tags:['DAWN'], bg: "linear-gradient(to top, #30cfd0 0%, #330867 100%)", lines:[{t:60,l:20,w:60,h:20,r:50,rot:0,b:"4px solid #fff"}] },
 
@@ -1189,7 +1221,7 @@
 
             // GOLDEN (16-18)
             { tags:['GOLDEN'], bg: "linear-gradient(to right, #f2994a, #f2c94c)", lines:[{t:20,l:-20,w:140,h:2,r:0,rot:30,b:"4px solid #fff"}] },
-            { tags: ['GOLDEN'], bg: "radial-gradient(circle, #cac531, #f3f9a7)", lines:[{t:0,l:0,w:100,h:100,r:50,rot:0,b:"15px solid rgba(0,0,0,0.1)"}] },
+            { tags:['GOLDEN'], bg: "radial-gradient(circle, #cac531, #f3f9a7)", lines:[{t:0,l:0,w:100,h:100,r:50,rot:0,b:"15px solid rgba(0,0,0,0.1)"}] },
             { tags: ['GOLDEN'], bg: "conic-gradient(from 90deg, #ffcc00, #ff9900, #ffcc00)", lines:[{t:10,l:10,w:80,h:80,r:50,rot:0,b:"2px dashed #000"}] },
 
             // SUNSET (18-19)
@@ -1636,6 +1668,17 @@
                 updateTickerClock(); 
 
                 if (now.getMilliseconds() < 150) {
+                    
+                    // --- ÓRAVÁLTÁS FIGYELÉSE ---
+                    const currentHour = now.getHours();
+                    if (state.lastTrackedHour !== currentHour) {
+                        state.lastTrackedHour = currentHour;
+                        // Ha meg van nyitva az archívum, automatikusan ugorjon az új aktuális órára
+                        if (DOM.hourlyArchiveOverlay.classList.contains('active')) {
+                            openHourlyArchive(currentHour); 
+                        }
+                    }
+
                     checkScheduleExecution(); 
                     if (!state.isClockRunning) { checkNightMode(); } 
                     updateHourlyCubes(); 
@@ -1680,7 +1723,7 @@
         function updateMiniWidgets(pws, gust) { if(DOM.miniRain && DOM.miniAlert) { const isRaining = parseFloat(pws.rainRate) > 0 || state.testMiniRainState; if(isRaining) { DOM.miniRain.classList.add('active'); const rate = state.testMiniRainState ? "TESZT" : pws.rainRate; const total = state.testMiniRainState ? "0.0" : pws.rainDay; DOM.miniRainTxt.innerHTML = `${rate} MM/H <span class="mini-sub">(NAPI: ${total})</span>`; } else { DOM.miniRain.classList.remove('active'); } const isAlert = gust > 45 || state.testMiniAlertState; if(isAlert) { DOM.miniAlert.classList.add('active'); const val = state.testMiniAlertState ? "TESZT" : gust.toFixed(0); DOM.miniAlertTxt.innerHTML = `VIHAROS SZÉL <span class="mini-sub">(${val} KM/H)</span>`; } else { DOM.miniAlert.classList.remove('active'); } } }
         function testMiniRain(active) { state.testMiniRainState = active; updateMiniWidgets(state.pwsData, 0); updateCubeWidget(); }
         
-        async function fetchCurrency() { const currentMonth = new Date().getMonth() + 1; const isOdd = currentMonth % 2 !== 0; const api1 = {k:'8258c9489622103635e16227fd9dadd7b8d1', n:'API1 (CurrencyAPI)'}; const api2 = {k:'426709d24c8d4420f140ac7c451db300edfa', n:'API2 (CurrencyAPI)'}; const priority = isOdd ?[api1, api2] :[api2, api1]; let success = false; for (const item of priority) { try { const res = await fetch(`https://currencyapi.net/api/v1/rates?key=${item.k}&output=JSON`); if(res.ok) {const data = await res.json(); if(data.valid) { state.currencyRates = data.rates; state.currencyBase = 'USD'; renderCurrency(data.rates, item.n); success = true; break; } } } catch(e) { console.error(e); } } if (!success) { try { const res = await fetch("https://open.er-api.com/v6/latest/HUF"); const data = await res.json(); if(data.result === "success") { state.currencyRates = data.rates; state.currencyBase = 'HUF'; renderCurrency(data.rates, 'OPEN-ER (BACKUP)'); } } catch(e) {} } }
+        async function fetchCurrency() { const currentMonth = new Date().getMonth() + 1; const isOdd = currentMonth % 2 !== 0; const api1 = {k:'8258c9489622103635e16227fd9dadd7b8d1', n:'API1 (CurrencyAPI)'}; const api2 = {k:'426709d24c8d4420f140ac7c451db300edfa', n:'API2 (CurrencyAPI)'}; const priority = isOdd ?[api1, api2] :[api2, api1]; let success = false; for (const item of priority) { try { const res = await fetch(`https://currencyapi.net/api/v1/rates?key=${item.k}&output=JSON`); if(res.ok) { const data = await res.json(); if(data.valid) { state.currencyRates = data.rates; state.currencyBase = 'USD'; renderCurrency(data.rates, item.n); success = true; break; } } } catch(e) { console.error(e); } } if (!success) { try { const res = await fetch("https://open.er-api.com/v6/latest/HUF"); const data = await res.json(); if(data.result === "success") { state.currencyRates = data.rates; state.currencyBase = 'HUF'; renderCurrency(data.rates, 'OPEN-ER (BACKUP)'); } } catch(e) {} } }
         function renderCurrency(r, source) { let huf, eur, chf, gbp, usd; if (state.currencyBase === 'USD') { huf = r.HUF; eur = huf / r.EUR; chf = huf / r.CHF; gbp = huf / r.GBP; usd = huf; } else { huf = 1; eur = 1 / r.EUR; chf = 1 / r.CHF; gbp = 1 / r.GBP; usd = 1 / r.USD; } const iconStyle = 'width:20px; height:auto; margin-right:8px; vertical-align:middle; border-radius:2px;'; document.getElementById('finance-rows').innerHTML = ` <div class="data-row"><span class="data-label"><img src="https://flagcdn.com/24x18/eu.png" style="${iconStyle}">EURÓ (EUR)</span><span class="data-val">${eur.toFixed(2)} FT</span></div><div class="data-row"><span class="data-label"><img src="https://flagcdn.com/24x18/us.png" style="${iconStyle}">USA DOLLÁR (USD)</span><span class="data-val">${usd.toFixed(2)} FT</span></div><div class="data-row"><span class="data-label"><img src="https://flagcdn.com/24x18/ch.png" style="${iconStyle}">SVÁJCI FRANK (CHF)</span><span class="data-val">${chf.toFixed(2)} FT</span></div><div class="data-row"><span class="data-label"><img src="https://flagcdn.com/24x18/gb.png" style="${iconStyle}">ANGOL FONT (GBP)</span><span class="data-val">${gbp.toFixed(2)} FT</span></div>`; document.getElementById('fin-stamp').innerText = getTime(); const logoUrl = "https://www.google.com/s2/favicons?domain=exchangerate-api.com&sz=64"; document.getElementById('fx-source-container').innerHTML = `<strong>ADAT: ${source}</strong> <img src="${logoUrl}" style="height:12px; margin-left:5px; vertical-align:middle; border-radius:50%;">`; }
 
         async function fetchOther() { try { const allStations = SIDEBAR_STATIONS; const batch =[]; for(let i=0; i<10; i++) { const idx = (state.stationPointer + i) % allStations.length; batch.push(allStations[idx]); } state.stationPointer = (state.stationPointer + 10) % allStations.length; const promises = batch.map(s => fetchMeteoRobust(s.lat, s.lon)); const results = await Promise.all(promises); state.weatherData =[]; results.forEach((d, i) => { if(d) { state.weatherData.push({ name: batch[i].name, flagCode: batch[i].code, t: formatVal(d.temperature), f: formatVal(d.temperatureFeelsLike), h: d.relativeHumidity, w: formatVal(d.windSpeed), wd: d.windDirection, p: d.pressureAltimeter || d.pressure || 1013, uv: d.uvIndex !== undefined ? d.uvIndex : 0, v: d.visibility || 10, iconCode: d.iconCode, dayOrNight: d.dayOrNight || 'D' }); } }); updateWeatherCard(); } catch(e) {} }
@@ -1689,7 +1732,19 @@
 
         function checkNightMode() { const now = new Date(); const h = now.getHours(); let isNight = state.forcedNightMode; if(!state.forcedNightMode) { if (h >= 0 && h < 6) isNight = true; } if (isNight !== state.isNightMode) { state.isNightMode = isNight; if (isNight) { DOM.tickerWindow.style.display = 'none'; DOM.tickerNav.style.display ='none'; DOM.nightMsg.classList.add('active'); DOM.hourlyNavBar.classList.remove('active'); DOM.mainDesc.innerText = "Kérjük várjon, amíg a rendszer betölti az előző nap híreit."; toggleLiveBadge(false); DOM.replayBadge.classList.add('visible'); DOM.logoBox.classList.add('night-theme'); } else { DOM.tickerWindow.style.display = 'block'; DOM.tickerNav.style.display = 'flex'; DOM.nightMsg.classList.remove('active'); DOM.hourlyNavBar.classList.add('active'); DOM.replayBadge.classList.remove('visible'); DOM.logoBox.classList.remove('night-theme'); updateLists(); cycleMain(); cycleTicker(1); } } if (isNight) { let slot = 0, startHour = 6, endHour = 12, timeText = "REGGELI HÍREK 06:00 - 12:00"; if (h >= 2 && h < 4) { slot = 1; startHour = 12; endHour = 18; timeText = "DÉLUTÁNI HÍREK 12:00 - 18:00"; } else if (h >= 4 && h < 6) { slot = 2; startHour = 18; endHour = 24; timeText = "ESTI HÍREK 18:00 - 00:00"; } const y = new Date(now); y.setDate(y.getDate() - 1); const tStart = new Date(y).setHours(startHour, 0, 0, 0); const tEnd = new Date(y).setHours(endHour, 0, 0, 0); let nightItems = state.allNews.filter(n => { const t = n.date.getTime(); return t >= tStart && t < tEnd && n.img; }); if (nightItems.length === 0) { const fallbackStart = new Date(y).setHours(0,0,0,0); const fallbackEnd = new Date(y).setHours(23,59,59,999); nightItems =[...state.allNews].filter(n => n.img && n.date.getTime() >= fallbackStart && n.date.getTime() <= fallbackEnd).slice(0, 30); } nightItems.sort((a,b) => a.date - b.date); state.mainItems = nightItems; DOM.nightMsg.innerHTML = `<div class="nm-left"><div class="nm-icon-box">🌙</div><div class="nm-text"><div class="nm-title">ÉJSZAKAI ADÁS - AZ ELŐZŐ NAP HÍREI</div><div class="nm-desc">${timeText}</div></div></div><div class="nm-timeline"><div class="nm-t-item ${slot===0?'active':''}">00-02<br>REGGEL</div><div class="nm-t-item ${slot===1?'active':''}">02-04<br>DÉLUTÁN</div><div class="nm-t-item ${slot===2?'active':''}">04-06<br>ESTE</div></div>`; } }
 
-        document.addEventListener('visibilitychange', () => { if (!document.hidden) { if (!state.isNightMode && !state.isSpecial) { if (Date.now() - state.lastTickerUpdate > 15000) { cycleTicker(1); } } } });
+        document.addEventListener('visibilitychange', () => { 
+            if (!document.hidden) { 
+                
+                // AZONNALI CRAWL A FÜLVÁLTÁSKOR
+                crawlNews(false, true); 
+
+                if (!state.isNightMode && !state.isSpecial) { 
+                    if (Date.now() - state.lastTickerUpdate > 15000) { 
+                        cycleTicker(1); 
+                    } 
+                } 
+            } 
+        });
 
         function init() {
             window.stepMain = function(dir) { if(!state.mainItems.length || state.isLocked) return; clearInterval(state.mainTimer); let newIdx = state.mainIdx + dir; if (newIdx < 0) newIdx = state.mainItems.length - 1; if (newIdx >= state.mainItems.length) newIdx = 0; state.mainIdx = newIdx; cycleMain(true, true); startMainLoop(); };
