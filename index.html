@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKP NEWS - V21.17</title>
+    <title>TKP NEWS - V21.18</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,10 +34,6 @@
             --accent-interactive-night: #00BFFF;
             --text-primary-night: #EAEAEA;
             --text-secondary-night: #BCCCDC;
-
-            --rtl-red: #d00000;
-            --rtl-purple: #5b2a86; 
-            --rtl-blue: #009ee3;
 
             /* Dynamic Sun Phase Colors - Realtime calculated */
             --sun-accent: #00d4ff; 
@@ -214,49 +210,38 @@
         @keyframes newsUnfold { 0% { transform: scaleY(0); opacity: 0; } 100% { transform: scaleY(1); opacity: 1; } }
         @keyframes newsFold { 0% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(0); opacity: 0; } }
 
-        /* Apply Entry Animations */
         .logo-entry-1 .lb-t { animation: logoPopIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.1s; }
         .logo-entry-1 .lb-k { animation: logoPopIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.2s; }
         .logo-entry-1 .lb-p { animation: logoPopIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.3s; }
-        
         .logo-entry-2 .lb-t { animation: logoSlideDown 0.6s ease forwards 0.1s; }
         .logo-entry-2 .lb-k { animation: logoSlideDown 0.6s ease forwards 0.2s; }
         .logo-entry-2 .lb-p { animation: logoSlideDown 0.6s ease forwards 0.3s; }
-
         .logo-entry-3 .lb-t { animation: logoSpinIn 0.7s ease-out forwards 0.1s; }
         .logo-entry-3 .lb-k { animation: logoSpinIn 0.7s ease-out forwards 0.2s; }
         .logo-entry-3 .lb-p { animation: logoSpinIn 0.7s ease-out forwards 0.3s; }
-
         .logo-entry-4 .lb-t { animation: logoFlipIn 0.6s ease-out forwards 0.1s; }
         .logo-entry-4 .lb-k { animation: logoFlipIn 0.6s ease-out forwards 0.2s; }
         .logo-entry-4 .lb-p { animation: logoFlipIn 0.6s ease-out forwards 0.3s; }
-
         .logo-entry-5 .lb-t { animation: logoFadeScale 0.7s ease-out forwards 0.1s; }
         .logo-entry-5 .lb-k { animation: logoFadeScale 0.7s ease-out forwards 0.2s; }
         .logo-entry-5 .lb-p { animation: logoFadeScale 0.7s ease-out forwards 0.3s; }
 
-        /* Apply Exit Animations */
         .logo-exit-1 .lb-t { animation: logoPopOut 0.4s ease-in forwards 0.3s; }
         .logo-exit-1 .lb-k { animation: logoPopOut 0.4s ease-in forwards 0.2s; }
         .logo-exit-1 .lb-p { animation: logoPopOut 0.4s ease-in forwards 0.1s; }
-
         .logo-exit-2 .lb-t { animation: logoSlideUp 0.4s ease-in forwards 0.3s; }
         .logo-exit-2 .lb-k { animation: logoSlideUp 0.4s ease-in forwards 0.2s; }
         .logo-exit-2 .lb-p { animation: logoSlideUp 0.4s ease-in forwards 0.1s; }
-
         .logo-exit-3 .lb-t { animation: logoSpinOut 0.5s ease-in forwards 0.3s; }
         .logo-exit-3 .lb-k { animation: logoSpinOut 0.5s ease-in forwards 0.2s; }
         .logo-exit-3 .lb-p { animation: logoSpinOut 0.5s ease-in forwards 0.1s; }
-
         .logo-exit-4 .lb-t { animation: logoFlipOut 0.4s ease-in forwards 0.3s; }
         .logo-exit-4 .lb-k { animation: logoFlipOut 0.4s ease-in forwards 0.2s; }
         .logo-exit-4 .lb-p { animation: logoFlipOut 0.4s ease-in forwards 0.1s; }
-
         .logo-exit-5 .lb-t { animation: logoFadeScaleOut 0.5s ease-in forwards 0.3s; }
         .logo-exit-5 .lb-k { animation: logoFadeScaleOut 0.5s ease-in forwards 0.2s; }
         .logo-exit-5 .lb-p { animation: logoFadeScaleOut 0.5s ease-in forwards 0.1s; }
 
-        /* News Bar Fold/Unfold */
         [class*="logo-entry-"] .logo-news-bar { animation: newsUnfold 0.5s ease-out forwards 0.7s; }[class*="logo-exit-"] .logo-news-bar { animation: newsFold 0.3s ease-in forwards; }
 
         /* COLORFUL & CLEAR WATERMARK */
@@ -393,15 +378,7 @@
 
         /* HAGYOMÁNYOS ARCHÍVUM CSS */
         #hourly-archive-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(ellipse at top, rgba(0, 30, 80, 0.85) 0%, rgba(0, 5, 15, 0.98) 70%, #000 100%); z-index: 8000; display: none; flex-direction: column; backdrop-filter: blur(15px); padding: 10vh 5vw 5vh 5vw; }
-        #hourly-archive-overlay::after {
-            content: ''; position: absolute; top:0; left:0; width:100%; height:100%;
-            background-image: 
-                linear-gradient(rgba(0, 212, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 212, 255, 0.05) 1px, transparent 1px);
-            background-size: 50px 50px; z-index: 0; pointer-events: none;
-            mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
-            -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
-        }
+        #hourly-archive-overlay::after { content: ''; position: absolute; top:0; left:0; width:100%; height:100%; background-image: linear-gradient(rgba(0, 212, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 212, 255, 0.05) 1px, transparent 1px); background-size: 50px 50px; z-index: 0; pointer-events: none; mask-image: radial-gradient(circle at center, black 30%, transparent 80%); -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 80%); }
         #hourly-archive-overlay::before { content: 'ADATBÁZIS'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-5deg); font-size: clamp(8rem, 18vw, 25rem); color: transparent; -webkit-text-stroke: 2px rgba(0, 212, 255, 0.07); text-shadow: 0 0 40px rgba(0, 212, 255, 0.05); font-family: var(--font-tech); font-weight: 900; letter-spacing: 20px; pointer-events: none; z-index: 0; white-space: nowrap; }
         #hourly-archive-overlay.active { display: flex; }
         
@@ -428,15 +405,11 @@
         }
         #live-feed-overlay::before {
             content: ''; position: absolute; top:0; left:0; right:0; bottom:0;
-            background-image:
-                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-            z-index: 0; pointer-events: none;
+            background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 40px 40px; z-index: 0; pointer-events: none;
             mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
             -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
         }
-        /* Finom "szkenner" hatás, ami lassan megy végig a képernyőn villogás nélkül */
         .lf-scanner {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.02), transparent);
@@ -448,19 +421,45 @@
         
         .lf-header-container { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; margin-bottom: 30px; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
         .lf-header-main { display: flex; align-items: center; gap: 15px; }
-        .lf-live-indicator { width: 12px; height: 12px; background: #cc0000; border-radius: 50%; box-shadow: 0 0 10px #cc0000; animation: lfPulse 4s ease-in-out infinite; }
-        @keyframes lfPulse { 0%, 100% { opacity: 0.8; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); box-shadow: 0 0 15px #ff0000; } }
+        .lf-live-indicator { width: 12px; height: 12px; background: #cc0000; border-radius: 50%; box-shadow: 0 0 10px #cc0000; animation: lfPulse 2s ease-in-out infinite; }
+        @keyframes lfPulse { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); box-shadow: 0 0 15px #ff0000; } }
         .lf-title { font-family: var(--font-tech); font-size: 2.5rem; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
         .lf-subtitle { font-family: var(--font-mono); font-size: 0.9rem; color: var(--sun-accent); letter-spacing: 4px; margin-top: -5px; }
 
-        .lf-list-wrapper { position: relative; z-index: 2; padding-left: 20px; flex-grow: 1; overflow-y: auto; border-left: 2px solid rgba(255,255,255,0.1); margin-left: 30px; padding-right: 10px; }
-        .lf-item { position: relative; display: flex; gap: 20px; margin-bottom: 25px; opacity: 0; animation: lfFadeIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-        @keyframes lfFadeIn { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
+        /* Tökéletesített Idővonal Geometria */
+        .lf-list-wrapper { 
+            position: relative; z-index: 2; flex-grow: 1; overflow-y: auto; 
+            padding-left: 10px; margin-left: 20px; padding-right: 10px;
+        }
+        .lf-list-wrapper::before {
+            content: ''; position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.15);
+        }
+        .lf-item { 
+            position: relative; display: flex; gap: 20px; padding-left: 45px; margin-bottom: 25px; 
+            opacity: 0; animation: lfFadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; 
+        }
+        @keyframes lfFadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .lf-timeline-dot { position: absolute; left: -27px; top: 12px; width: 12px; height: 12px; border-radius: 50%; background: var(--sun-accent); border: 2px solid #000; box-shadow: 0 0 10px var(--sun-accent); }
-        .lf-time-box { flex-shrink: 0; width: 70px; font-family: var(--font-tech); font-size: 1.4rem; color: var(--sun-accent); font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.8); text-align: right; margin-top: 5px; }
-        .lf-content-box { background: rgba(10, 20, 30, 0.75); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 15px 20px; flex-grow: 1; transition: transform 0.3s, background 0.3s, border-color 0.3s; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
-        .lf-content-box:hover { transform: translateX(5px); background: rgba(20, 35, 50, 0.9); border-color: var(--sun-accent); }
+        /* A pötty pontosan a vonalon ül */
+        .lf-timeline-dot { 
+            position: absolute; left: 16px; top: 22px; width: 12px; height: 12px; 
+            border-radius: 50%; background: var(--sun-accent); 
+            transform: translateX(-50%);
+            box-shadow: 0 0 10px var(--sun-accent); 
+        }
+        
+        .lf-time-box { 
+            flex-shrink: 0; width: 65px; font-family: var(--font-tech); font-size: 1.4rem; 
+            color: var(--sun-accent); font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.8); 
+            text-align: right; margin-top: 10px; 
+        }
+        .lf-content-box { 
+            background: rgba(10, 20, 30, 0.65); backdrop-filter: blur(10px); 
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 15px 20px; 
+            flex-grow: 1; transition: transform 0.3s, background 0.3s, border-color 0.3s; 
+            cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.4); 
+        }
+        .lf-content-box:hover { transform: translateX(5px); background: rgba(20, 35, 50, 0.85); border-color: var(--sun-accent); }
         
         .lf-meta { display: flex; gap: 10px; align-items: center; font-family: var(--font-mono); font-size: 0.8rem; color: #aaa; margin-bottom: 8px; text-transform: uppercase; font-weight:bold; }
         .lf-source-title { font-family: var(--font-main); font-size: 1.3rem; color: #fff; font-weight: bold; line-height: 1.2; margin-bottom: 8px; }
@@ -772,9 +771,7 @@
                 <div class="ha-nav-btn" id="ha-next" onclick="stepArchive(1)">&#10095;</div>
             </div>
         </div>
-        <div class="ha-list" id="ha-list-container">
-            <div id="ha-archive-list" style="display:flex; flex-direction:column; gap:10px;"></div>
-        </div>
+        <div class="ha-list" id="ha-list-container"></div>
     </div>
 
     <!-- ÚJ: PERCRŐL PERCRE ÉLŐ HÍRFOLYAM -->
@@ -1057,7 +1054,7 @@
             lastTrackedHour: new Date().getHours(), liveFeedInterval: null, displayedLiveLinks: new Set()
         };
 
-        const DOM = { loader: document.getElementById('loader'), term: document.getElementById('term'), fill: document.getElementById('load-fill'), stage: document.getElementById('stage'), tickerWindow: document.getElementById('ticker-window'), mainContainerBox: document.getElementById('mn-container-box'), mainTitle: document.getElementById('m-title'), mainDesc: document.getElementById('m-desc'), mainCatText: document.getElementById('m-cat-text'), mainMeta: document.getElementById('m-meta'), mainPrg: document.getElementById('m-prg'), trPwsContent: document.getElementById('tr-pws-content'), special: document.getElementById('special-meteo'), smGrid: document.getElementById('sm-grid'), smTitle: document.getElementById('sm-main-title'), smBg: document.getElementById('sm-bg'), feedLog: document.getElementById('feed-log-table'), auth: document.getElementById('auth-overlay'), pin: document.getElementById('pin-input'), dev: document.getElementById('dev-panel'), devWxNext: document.getElementById('dev-wx-next'), devWxSrc: document.getElementById('dev-wx-src'), devBkQueue: document.getElementById('dev-bk-queue'), devScheduleTable: document.getElementById('dev-schedule-table').querySelector('tbody'), logoBox: document.getElementById('logo-box'), liveBadge: document.getElementById('live-badge'), replayBadge: document.getElementById('replay-badge'), nightMsg: document.getElementById('night-msg'), tickerNav: document.getElementById('ticker-nav'), sidebar: document.querySelector('.sidebar'), sidebarFlipper: document.querySelector('.sidebar-flipper'), fxSourceContainer: document.getElementById('fx-source-container'), bigClockOverlay: document.getElementById('big-clock-overlay'), hourlyNavBar: document.getElementById('hourly-nav-bar'), hourlyArchiveOverlay: document.getElementById('hourly-archive-overlay'), haTitle: document.getElementById('ha-title-text'), haList: document.getElementById('ha-archive-list'), bcInfoText: document.getElementById('bc-info-text'), summaryList: document.getElementById('summary-list'), liveFeedOverlay: document.getElementById('live-feed-overlay'), lfList: document.getElementById('lf-list-container') };
+        const DOM = { loader: document.getElementById('loader'), term: document.getElementById('term'), fill: document.getElementById('load-fill'), stage: document.getElementById('stage'), tickerWindow: document.getElementById('ticker-window'), mainContainerBox: document.getElementById('mn-container-box'), mainTitle: document.getElementById('m-title'), mainDesc: document.getElementById('m-desc'), mainCatText: document.getElementById('m-cat-text'), mainMeta: document.getElementById('m-meta'), mainPrg: document.getElementById('m-prg'), trPwsContent: document.getElementById('tr-pws-content'), special: document.getElementById('special-meteo'), smGrid: document.getElementById('sm-grid'), smTitle: document.getElementById('sm-main-title'), smBg: document.getElementById('sm-bg'), feedLog: document.getElementById('feed-log-table'), auth: document.getElementById('auth-overlay'), pin: document.getElementById('pin-input'), dev: document.getElementById('dev-panel'), devWxNext: document.getElementById('dev-wx-next'), devWxSrc: document.getElementById('dev-wx-src'), devBkQueue: document.getElementById('dev-bk-queue'), devScheduleTable: document.getElementById('dev-schedule-table').querySelector('tbody'), logoBox: document.getElementById('logo-box'), liveBadge: document.getElementById('live-badge'), replayBadge: document.getElementById('replay-badge'), nightMsg: document.getElementById('night-msg'), tickerNav: document.getElementById('ticker-nav'), sidebar: document.querySelector('.sidebar'), sidebarFlipper: document.querySelector('.sidebar-flipper'), fxSourceContainer: document.getElementById('fx-source-container'), bigClockOverlay: document.getElementById('big-clock-overlay'), hourlyNavBar: document.getElementById('hourly-nav-bar'), hourlyArchiveOverlay: document.getElementById('hourly-archive-overlay'), haTitle: document.getElementById('ha-title-text'), haList: document.getElementById('ha-list-container'), bcInfoText: document.getElementById('bc-info-text'), summaryList: document.getElementById('summary-list'), liveFeedOverlay: document.getElementById('live-feed-overlay'), lfList: document.getElementById('lf-list-container') };
 
         function getTime() { return new Date().toLocaleTimeString('hu-HU'); }
         function getWind(deg) { if(deg===undefined) return ""; const s=['ÉSZAKI','ÉSZAK-KELETI','KELETI','DÉL-KELETI','DÉLI','DÉL-NYUGATI','NYUGATI','ÉSZAK-NYUGATI']; return s[Math.round(deg/45)%8]; }
@@ -1170,8 +1167,12 @@
         function checkLiveFeedUpdates() {
             if(!DOM.liveFeedOverlay.classList.contains('active')) return;
             
-            const newItems = state.allNews.filter(item => !state.displayedLiveLinks.has(item.link));
+            let newItems = state.allNews.filter(item => !state.displayedLiveLinks.has(item.link));
             
+            // Szűrjük ki a túl régi híreket (pl. max 6 órás), hogy a megkésett RSS bejegyzések ne ugorjanak a friss feed tetejére
+            const cutoffTime = Date.now() - (6 * 3600 * 1000);
+            newItems = newItems.filter(item => item.date.getTime() > cutoffTime);
+
             if (newItems.length > 0) {
                 const oldBadges = DOM.lfList.querySelectorAll('.lf-new-badge');
                 oldBadges.forEach(b => {
@@ -1180,6 +1181,8 @@
                     setTimeout(() => b.remove(), 1000);
                 });
                 
+                // Növekvő sorrendbe rendezzük a beszúrás előtt (legrégebbitől a legújabbig)
+                // Így mivel prepend-et használunk, a legújabb hír kerül a legfelülre a végén.
                 newItems.sort((a,b) => a.date - b.date).forEach(item => {
                     state.displayedLiveLinks.add(item.link);
                     const el = createLiveFeedItemElement(item, true);
@@ -1589,6 +1592,10 @@
                 
                 if(hasNew) {
                     state.hasFreshNews = true; 
+                    
+                    // AZONNALI CSÖKKENŐ RENDEZÉS MINDEN MÓDOSÍTÁSKOR A GLOBÁLIS TÖMBÖN
+                    state.allNews.sort((a,b) => b.date - a.date);
+
                     updateLists(); 
                     updateDevLog(); 
 
@@ -1673,7 +1680,6 @@
 
         function closeAllOverlays() { DOM.special.classList.remove('active'); DOM.logoBox.classList.remove('center-stage', 'high-z', 'logo-gradual-zoom'); DOM.logoBox.style.transform = ''; for(let i=1; i<=5; i++) { DOM.logoBox.classList.remove(`logo-exit-${i}`); } animateLogoIn(); clearTimeout(state.specialMeteoInterval); clearTimeout(state.meteoPhaseTimer); clearTimeout(state.bigClockTimeout); if(state.archiveLiveInterval) clearInterval(state.archiveLiveInterval); if(state.liveFeedInterval) clearInterval(state.liveFeedInterval); state.isClockRunning = false; state.clockPhase = 0; state.isSpecial = false; toggleLiveBadge(false); DOM.liveBadge.classList.remove('delayed-visible'); setTimeout(() => { DOM.special.style.display = 'none'; DOM.special.style.pointerEvents = 'none'; DOM.bigClockOverlay.style.display = 'none'; DOM.bigClockOverlay.classList.remove('active', 'bc-layout-center'); DOM.logoBox.style.pointerEvents = 'auto'; DOM.logoBox.classList.remove('force-hide'); setTimeout(() => DOM.logoBox.classList.remove('logo-fade-out'), 3000); state.isLocked = false; DOM.hourlyArchiveOverlay.classList.remove('active'); DOM.liveFeedOverlay.classList.remove('active'); }, 800);[ {id:'ui-right',t:'right'}, {id:'ui-left',t:'left'}, {id:'ui-bottom',t:'bottom'} ].forEach(ui => { const el = document.getElementById(ui.id); if(el) el.classList.remove(`hide-${ui.t}`, 'soft-hide', 'force-hide'); }); const card = document.querySelector('.breaking-card'); if(card) card.classList.remove('night-summary-card'); DOM.sidebar.classList.remove('breaking-active'); if (state.isNightMode) { checkNightMode(); } else { cycleMain(true); cycleTicker(1); } }
 
-        // --- NEW SMART SCROLL TICKER LOGIC ---
         function cycleTicker(dir = 1) { 
             if (state.isLocked) return; 
             if (state.isNightMode) return; 
