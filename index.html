@@ -171,7 +171,7 @@
             background: linear-gradient(135deg, var(--glass-card) 0%, rgba(88, 166, 255, 0.08) 100%);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-lg);
-            padding: 2rem 1.5rem; /* Nagyobb tér a kényelmes középre igazításhoz */
+            padding: 2rem 1.5rem; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
         }
         .header-banner::before {
@@ -182,7 +182,7 @@
 
         .header-content { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; }
         .feed-title { font-size: 2rem; font-weight: 800; letter-spacing: -0.03em; display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 8px;}
-        .feed-subtitle { font-size: 0.85rem; color: var(--text-secondary); font-weight: 500; font-family: var(--font-mono); opacity: 0.8; word-break: break-all; max-width: 90%; }
+        .feed-subtitle { font-size: 0.85rem; color: var(--text-secondary); font-weight: 500; font-family: var(--font-mono); opacity: 0.8; word-break: break-all; max-width: 90%; text-align: center; }
 
         .sort-tabs-container {
             display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap;
@@ -203,7 +203,7 @@
         .feed-pill:hover { background: rgba(88, 166, 255, 0.1); color: var(--accent-blue); }
         .feed-pill.active { background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%); color: #fff; box-shadow: 0 4px 15px rgba(88,166,255,0.3); }
 
-        /* KÁRTYÁK - Színpompás, finomított elrendezés */
+        /* KÁRTYÁK - Színpompás elrendezés (Okosabb Subreddit Címke) */
         #feed { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; align-items: start; min-width: 800px;}
 
         .card { 
@@ -232,19 +232,18 @@
         .card-img-fallback svg { width: 56px; height: 56px; fill: rgba(255,255,255,0.3); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); transition: 0.4s ease; }
         .card:hover .card-img-fallback svg { transform: scale(1.1); fill: rgba(255,255,255,0.5); }
 
-        .card-sub-badge {
-            position: absolute; top: 12px; left: 12px;
-            padding: 4px 10px; border-radius: 8px;
-            font-size: 0.65rem; font-weight: 700;
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            z-index: 2; text-transform: uppercase; letter-spacing: 0.5px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-
         .card-body { padding: 1.25rem; display: flex; flex-direction: column; flex-grow: 1; gap: 0.8rem; }
-        .card-meta { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-secondary); font-weight: 500; align-items: center;}
-        .card-author { color: var(--text-primary); font-weight: 600; opacity: 0.8; display: flex; align-items: center; gap: 4px; }
-        .card-author::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--text-secondary); opacity: 0.5; }
+        
+        /* Címkék optimalizálva (nincsenek a képen, elegánsan a meta részben) */
+        .card-sub-badge {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 3px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.5px; line-height: 1;
+        }
+        
+        .card-meta { display: flex; flex-direction: column; gap: 6px; font-size: 0.75rem; color: var(--text-secondary); font-weight: 500; }
+        .card-author-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .card-author { color: var(--text-primary); font-weight: 600; opacity: 0.8; }
         
         .card-title { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.4; margin: 0; }
         .card-title a { color: var(--text-primary); text-decoration: none; transition: 0.2s; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;}
@@ -256,7 +255,6 @@
         .stat-badge.down { color: var(--accent-red); background: rgba(248, 81, 73, 0.1); border-color: rgba(248, 81, 73, 0.2); }
         .stat-badge.ratio { color: var(--accent-blue); background: rgba(88, 166, 255, 0.1); border-color: rgba(88, 166, 255, 0.2); }
 
-        /* KÁRTYA ALSÓ SÁV - KÖVETÉS ÉS KOMMENT */
         .card-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 0.5rem;}
         
         .follow-controls { display: flex; gap: 4px; flex: 1.2; min-width: 0; }
@@ -287,60 +285,55 @@
 
         #scroll-sentinel { text-align: center; padding: 3rem 0; color: var(--text-secondary); font-family: var(--font-mono); font-size: 0.85rem; grid-column: 1 / -1; }
 
-        /* --- 3. OSZLOP: ÉLŐ CHAT (ÚJ FEJLÉC ÉS FIGYELMEZTETÉS) --- */
+        /* --- 3. OSZLOP: ÉLŐ CHAT (ÚJ KÖZÉPRE ZÁRT FEJLÉC ÉS KAPSZULA FIGYELMEZTETÉS) --- */
         .sidebar-live { width: 350px; flex-shrink: 0; display: flex; flex-direction: column; }
         
         .live-header { 
-            padding: 1.25rem 1rem 1rem 1rem; 
+            padding: 1.5rem 1rem 1rem 1rem; 
             border-bottom: 1px solid var(--glass-border);
             position: relative;
         }
         
-        /* Flexbox a fejléc elemeinek dinamikus elrendezéséhez */
         .live-header-content {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
         }
 
         .live-title-group {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
-            font-weight: 700;
-            font-size: 1.05rem;
+            font-weight: 800;
+            font-size: 1.25rem;
             letter-spacing: 0.5px;
+            width: 100%;
+            position: relative;
         }
         .live-pulse { width: 10px; height: 10px; background-color: var(--accent-green); border-radius: 50%; box-shadow: 0 0 12px var(--accent-green); animation: live-glow 1.5s infinite; flex-shrink: 0;}
         
-        .live-warning-group {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .age-badge-small {
-            border: 1px solid var(--accent-red);
-            background: rgba(248, 81, 73, 0.15);
-            color: var(--accent-red);
-            font-size: 0.65rem;
-            font-weight: 800;
-            padding: 2px 6px;
-            border-radius: 4px;
-            white-space: nowrap;
-        }
-        .age-warning-text {
-            color: #ff8a8a;
-            font-size: 0.75rem;
-            font-weight: 600;
-            white-space: nowrap;
+        .live-status-text {
+            position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+            font-size: 0.75rem; color: var(--text-secondary); font-weight: normal;
         }
 
-        .live-status-text {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            font-weight: normal;
-            margin-left: auto; /* Ha van hely a sorban, jobbra tolja magát */
+        .live-warning-group {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            background: rgba(248, 81, 73, 0.05); border: 1px solid rgba(248, 81, 73, 0.15);
+            padding: 6px 12px; border-radius: var(--radius-md); width: 100%;
+        }
+        
+        .age-badge-small {
+            border: 1.5px solid var(--accent-red); background: rgba(248, 81, 73, 0.15);
+            color: var(--accent-red); font-size: 0.7rem; font-weight: 800;
+            padding: 2px 8px; border-radius: 12px; white-space: nowrap; flex-shrink: 0;
+        }
+        .age-warning-text {
+            color: #ff8a8a; font-size: 0.75rem; font-weight: 600; text-align: center; line-height: 1.2;
         }
 
         @keyframes live-glow {
@@ -349,8 +342,12 @@
             100% { box-shadow: 0 0 0 0 rgba(63, 185, 80, 0); }
         }
 
+        /* Gördülést és Akadást Gátló Rendszer */
         .chat-scroll-wrapper { position: relative; flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .live-feed-container { flex-grow: 1; overflow-y: auto; padding: 1rem 0.5rem; display: flex; flex-direction: column; scroll-behavior: smooth; }
+        .live-feed-container { flex-grow: 1; overflow-y: auto; padding: 1rem 0.5rem; scroll-behavior: smooth; }
+        
+        /* Belső lista, ami megakadályozza a mérethibákat a megfigyelő számára */
+        #chat-inner-list { display: flex; flex-direction: column; justify-content: flex-end; min-height: 100%; }
 
         /* ÚJ ÜZENET LEBEGŐ GOMB */
         .chat-new-msg-btn {
@@ -386,12 +383,35 @@
         .chat-message-text { font-size: 0.9rem; color: var(--text-primary); line-height: 1.5; word-wrap: break-word; }
         .chat-message-text img { max-width: 100%; border-radius: 8px; margin-top: 6px; max-height: 200px; object-fit: contain; border: 1px solid var(--glass-border); }
 
+        /* OKOS KONTEXTUS IDÉZET (Kinek válaszolt) */
         .chat-parent-quote {
-            border-left: 3px solid var(--accent-purple); padding-left: 10px; margin-bottom: 6px; color: var(--text-secondary);
-            font-size: 0.75rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-            background: linear-gradient(90deg, rgba(138,43,226,0.1) 0%, transparent 100%); border-radius: 0 4px 4px 0; padding: 4px 10px;
+            border-left: 3px solid var(--accent-purple); 
+            padding-left: 10px; 
+            margin-bottom: 8px; 
+            color: var(--text-secondary);
+            font-size: 0.8rem; 
+            display: -webkit-box; 
+            -webkit-line-clamp: 3; 
+            -webkit-box-orient: vertical; 
+            overflow: hidden;
+            background: rgba(138, 43, 226, 0.08); 
+            border-radius: 0 6px 6px 0; 
+            padding: 8px 10px;
         }
-        .chat-parent-quote .quote-author { font-weight: 600; margin-right: 4px; color: var(--accent-blue); }
+        .chat-parent-quote .quote-author { 
+            font-weight: 700; 
+            margin-right: 4px; 
+            color: var(--accent-purple); 
+            display: block;
+            margin-bottom: 2px;
+            font-size: 0.75rem;
+        }
+
+        /* RENDSZERÜZENET (Üresjárat esetére) */
+        .system-idle-msg {
+            background: rgba(88, 166, 255, 0.05); border: 1px dashed rgba(88, 166, 255, 0.3); margin-top: 1rem;
+        }
+        .system-idle-msg:hover { background: rgba(88, 166, 255, 0.08); }
 
         /* --- GLOBÁLIS MODÁLIS --- */
         #global-modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 9999; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
@@ -427,7 +447,6 @@
 </head>
 <body>
 
-    <!-- Finom lélegző háttér animáció -->
     <div class="ambient-background">
         <div class="ambient-glow"></div>
         <div class="ambient-glow"></div>
@@ -530,20 +549,22 @@
                     <div class="live-title-group">
                         <div class="live-pulse" id="live-pulse-dot"></div>
                         <span>Élő Chat</span>
+                        <span class="live-status-text" id="live-status-text"></span>
                     </div>
                     <div class="live-warning-group">
                         <span class="age-badge-small" title="Korhatáros tartalom!">18+</span>
                         <span class="age-warning-text">Szókimondó, olykor vulgáris tartalom!</span>
                     </div>
-                    <span class="live-status-text" id="live-status-text"></span>
                 </div>
             </div>
 
             <!-- Wrapper a chat számára és az új üzenet gombnak -->
             <div class="chat-scroll-wrapper">
                 <div class="live-feed-container" id="live-feed-container">
-                    <div id="live-placeholder" style="text-align:center; color:var(--text-secondary); font-size:0.9rem; margin-top:1rem;">
-                        Várakozás az adatokra...
+                    <div id="chat-inner-list">
+                        <div id="live-placeholder" style="text-align:center; color:var(--text-secondary); font-size:0.9rem; margin-top:1rem;">
+                            Várakozás az adatokra...
+                        </div>
                     </div>
                 </div>
                 
@@ -756,14 +777,14 @@
                 sortTabs.style.display = 'none';
                 headerTitle.innerHTML = `⭐ ${feedDisplayName}`;
                 headerSub.innerHTML = `Minden mentett cikked itt található`;
-                document.getElementById('live-feed-container').innerHTML = '<div style="text-align:center; color:var(--text-secondary); font-size:0.9rem; margin-top:2rem;">A követett nézetben az élő hírfolyam szünetel.</div>';
+                document.getElementById('live-placeholder').innerHTML = '<div style="text-align:center; color:var(--text-secondary); font-size:0.9rem; margin-top:2rem;">A követett nézetben az élő hírfolyam szünetel.</div>';
             } else {
                 sortTabs.style.display = 'flex';
                 let icon = activeTab ? activeTab.innerText.split(' ')[0] : '📰';
                 let subtext = feedName.includes('+') ? 'r/hungary+askhungary+kiszamolo+budapest...' : `r/${feedName}`;
                 headerTitle.innerHTML = `${icon} ${feedDisplayName}`;
                 headerSub.innerHTML = subtext;
-                document.getElementById('live-feed-container').innerHTML = '<div id="live-placeholder" style="text-align:center; color:var(--text-secondary); font-size:0.9rem; margin-top:2rem;">Várakozás az adatokra...</div>'; 
+                document.getElementById('live-placeholder').innerHTML = '<div style="text-align:center; color:var(--text-secondary); font-size:0.9rem; margin-top:2rem;">Várakozás az adatokra...</div>'; 
             }
             loadRedditPosts(true, false);
         }
@@ -862,7 +883,7 @@
         }, 1000);
 
         setInterval(() => {
-            getFollowedPosts(); // Automatikusan tisztítja a lejártakat
+            getFollowedPosts(); 
             updateFollowCountUI();
         }, 60000); updateFollowCountUI();
 
@@ -900,11 +921,11 @@
             else if (postData.thumbnail && postData.thumbnail.startsWith('http')) imgUrl = postData.thumbnail;
 
             const subColor = stringToColor(postData.subreddit);
-            const subBadgeHtml = `<div class="card-sub-badge" style="background: ${subColor}30; color: ${subColor}; border: 1px solid ${subColor}50;">r/${postData.subreddit}</div>`;
+            const subBadgeHtml = `<span class="card-sub-badge" style="background: ${subColor}25; color: ${subColor}; border: 1px solid ${subColor}40;">r/${postData.subreddit}</span>`;
 
             let imageHtml = imgUrl 
-                ? `<div class="card-img-wrapper">${subBadgeHtml}<img src="${imgUrl}" class="card-img" loading="lazy" alt="Thumbnail"></div>` 
-                : `<div class="card-img-wrapper card-img-fallback">${subBadgeHtml}<svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12c0 6.628 5.373 12 12 12s12-5.372 12-12C24 5.373 18.627 0 12 0zm7.152 14.123c-.34.34-.89.34-1.232 0l-1.077-1.077c-1.393.99-3.13 1.577-5.02 1.637v-2.45l1.92-1.365a1.866 1.866 0 0 0 .52-1.928c-.283-.807-1.05-1.34-1.91-1.34H8.76a.87.87 0 1 0 0 1.74h3.593c.27 0 .51.17.6.43.09.256.01.543-.2.7l-1.92 1.36v2.455c-1.89-.06-3.627-.647-5.02-1.637l-1.077 1.077a.872.872 0 1 1-1.233-1.232l1.328-1.328c-1.424-1.744-2.278-3.957-2.278-6.36C2.553 5.438 7.37 1.385 13.565 1.385c6.196 0 11.012 4.053 11.012 9.475 0 2.404-.854 4.617-2.278 6.36l1.328 1.328c.34.34.34.892 0 1.232l-.475-.475zM12 16.5c-2.485 0-4.5-1.567-4.5-3.5h9c0 1.933-2.015 3.5-4.5 3.5zm-3-5.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm6 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg></div>`;
+                ? `<div class="card-img-wrapper"><img src="${imgUrl}" class="card-img" loading="lazy" alt="Thumbnail"></div>` 
+                : `<div class="card-img-wrapper card-img-fallback"><svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12c0 6.628 5.373 12 12 12s12-5.372 12-12C24 5.373 18.627 0 12 0zm7.152 14.123c-.34.34-.89.34-1.232 0l-1.077-1.077c-1.393.99-3.13 1.577-5.02 1.637v-2.45l1.92-1.365a1.866 1.866 0 0 0 .52-1.928c-.283-.807-1.05-1.34-1.91-1.34H8.76a.87.87 0 1 0 0 1.74h3.593c.27 0 .51.17.6.43.09.256.01.543-.2.7l-1.92 1.36v2.455c-1.89-.06-3.627-.647-5.02-1.637l-1.077 1.077a.872.872 0 1 1-1.233-1.232l1.328-1.328c-1.424-1.744-2.278-3.957-2.278-6.36C2.553 5.438 7.37 1.385 13.565 1.385c6.196 0 11.012 4.053 11.012 9.475 0 2.404-.854 4.617-2.278 6.36l1.328 1.328c.34.34.34.892 0 1.232l-.475-.475zM12 16.5c-2.485 0-4.5-1.567-4.5-3.5h9c0 1.933-2.015 3.5-4.5 3.5zm-3-5.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm6 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg></div>`;
 
             const { ups, downs } = calculateVotes(postData.ups, postData.upvote_ratio);
             const ratioPct = Math.round(postData.upvote_ratio * 100);
@@ -917,8 +938,13 @@
                     ${imageHtml}
                     <div class="card-body">
                         <div class="card-meta">
-                            <span class="card-author">u/${postData.author}</span>
-                            <span>🕒 ${timeString}</span>
+                            <div class="card-author-row">
+                                ${subBadgeHtml}
+                                <span class="card-author">u/${postData.author}</span>
+                            </div>
+                            <div style="display:flex; justify-content: space-between;">
+                                <span>🕒 ${timeString}</span>
+                            </div>
                         </div>
                         <h2 class="card-title"><a href="https://www.reddit.com${postData.permalink}" target="_blank">${postData.title}</a></h2>
                         
@@ -1053,22 +1079,44 @@
         }
         setInterval(syncLivePostData, 15000); 
 
-        // --- ÉLŐ CHAT GÖRDÜLÉS ÉS GOMB LOGIKA ---
+        // --- TÖKÉLETESÍTETT ÉLŐ CHAT GÖRDÜLÉS (ResizeObserver) ---
         
         const liveFeedContainer = document.getElementById('live-feed-container');
+        const chatInnerList = document.getElementById('chat-inner-list');
         const newMsgBtn = document.getElementById('new-msg-btn');
+        
         let userIsScrolledUp = false;
+        let lastScrollTop = 0;
 
         function initChatScrollLogic() {
+            // Görgetés figyelése
             liveFeedContainer.addEventListener('scroll', () => {
-                let isNearBottom = liveFeedContainer.scrollHeight - liveFeedContainer.scrollTop <= liveFeedContainer.clientHeight + 80;
+                let currentScrollTop = liveFeedContainer.scrollTop;
+                let maxScrollTop = liveFeedContainer.scrollHeight - liveFeedContainer.clientHeight;
+                
+                // Ha közel van az aljához (150px tűréshatár a gyors képbetöltések miatt)
+                let isNearBottom = (maxScrollTop - currentScrollTop) <= 150;
+
                 if (isNearBottom) {
-                    newMsgBtn.classList.remove('show');
                     userIsScrolledUp = false;
+                    newMsgBtn.classList.remove('show');
                 } else {
-                    userIsScrolledUp = true;
+                    // Ha a görgetési pozíció CSÖKKENT (felfelé tekert a user), akkor átváltunk olvasó módba
+                    if (currentScrollTop < lastScrollTop - 5) {
+                        userIsScrolledUp = true;
+                    }
+                }
+                lastScrollTop = currentScrollTop;
+            }, { passive: true });
+
+            // Ez az observer GARANTÁLJA, hogy egyetlen GIF/Kép sem akasztja meg a görgetést!
+            const resizeObserver = new ResizeObserver(() => {
+                if (!userIsScrolledUp) {
+                    liveFeedContainer.scrollTop = liveFeedContainer.scrollHeight;
+                    lastScrollTop = liveFeedContainer.scrollTop; 
                 }
             });
+            resizeObserver.observe(chatInnerList);
         }
 
         function scrollToChatBottom() {
@@ -1081,6 +1129,9 @@
         let liveCommentQueue =[];
         let isProcessingLiveQueue = false;
         let isLiveFeedHovered = false;
+        
+        let lastLiveMessageTime = Date.now();
+        let idleMessageShown = false;
 
         const liveSidebarPanel = document.getElementById('sidebar-live-panel');
         const liveStatusText = document.getElementById('live-status-text');
@@ -1131,6 +1182,44 @@
         }
         setInterval(pollLiveComments, 30000); 
 
+        // RENDSZERÜZENET ÜRESJÁRAT ESETÉRE (10 PERC)
+        function showIdleSystemMessage() {
+            let wasAtBottom = !userIsScrolledUp;
+
+            let idleHtml = `
+                <div class="chat-message system-idle-msg">
+                    <div class="chat-message-avatar" style="background-color: var(--accent-blue)">📡</div>
+                    <div class="chat-message-content">
+                        <div class="chat-message-header">
+                            <span class="chat-message-author" style="color: var(--accent-blue)">Rendszerüzenet</span>
+                            <span class="chat-message-time">${new Date().toLocaleTimeString('hu-HU', { hour: '2-digit', minute: '2-digit' })}</span>
+                        </div>
+                        <div class="chat-message-text" style="color: var(--text-secondary); font-style: italic;">
+                            Jelenleg csendes a hálózat. Az elmúlt 10 percben nem érkezett új hozzászólás. 
+                            A PRO Terminál 0-24 órában aktívan figyel a háttérben, az adás automatikusan folytatódik, amint új tartalom születik!
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            chatInnerList.insertAdjacentHTML('beforeend', idleHtml);
+
+            if (wasAtBottom) {
+                liveFeedContainer.scrollTop = liveFeedContainer.scrollHeight;
+            } else {
+                newMsgBtn.classList.add('show');
+            }
+        }
+
+        setInterval(() => {
+            if (currentFeed === 'followed') return;
+            const now = Date.now();
+            if (now - lastLiveMessageTime > 10 * 60 * 1000 && !idleMessageShown) {
+                showIdleSystemMessage();
+                idleMessageShown = true;
+            }
+        }, 60000);
+
         async function processLiveQueue() {
             if (isProcessingLiveQueue) return;
             
@@ -1153,7 +1242,9 @@
         }
 
         async function renderLiveBubble(cData) {
-            let container = liveFeedContainer;
+            lastLiveMessageTime = Date.now();
+            idleMessageShown = false;
+
             let placeholder = document.getElementById('live-placeholder');
             if (placeholder) placeholder.remove();
 
@@ -1165,11 +1256,24 @@
             if (cData.parent_id && cData.parent_id.startsWith('t1_')) {
                 let pData = await fetchParentComment(cData.parent_id);
                 if (pData) {
+                    // Okosabb szövegkinyerés és média felismerés a kontextushoz
                     let pText = pData.body || '';
-                    if(pText.length > 70) pText = pText.substring(0, 70) + '...';
+                    
+                    if (!pText || pText.trim() === '') {
+                        if (pData.media_metadata || (pData.body_html && pData.body_html.includes('img'))) {
+                            pText = '🖼️[Képet vagy GIF-et küldött]';
+                        } else {
+                            pText = '📎[Média tartalom]';
+                        }
+                    } else {
+                        pText = pText.replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1'); // Tisztítja a markdown linkeket
+                        if(pText.length > 150) pText = pText.substring(0, 150) + '...';
+                    }
+
                     parentHtml = `
                         <div class="chat-parent-quote">
-                            <span class="quote-author">@${pData.author}</span> ${pText}
+                            <span class="quote-author">↳ Válasz @${pData.author} kommentjére:</span>
+                            ${pText}
                         </div>
                     `;
                 }
@@ -1181,7 +1285,7 @@
             let userColor = stringToColor(cData.author);
             let initial = cData.author.substring(0, 1).toUpperCase();
 
-            let isNearBottom = !userIsScrolledUp;
+            let wasAtBottom = !userIsScrolledUp;
 
             let bubbleHtml = `
                 <div class="chat-message" id="live-chat-${cData.id}">
@@ -1196,23 +1300,25 @@
                         </div>
                         ${parentHtml}
                         <div class="chat-message-text">
-                            ${processCommentBody(cData)}
+                            ${processCommentBody(cData, true)}
                         </div>
                     </div>
                 </div>
             `;
 
-            container.insertAdjacentHTML('beforeend', bubbleHtml);
+            chatInnerList.insertAdjacentHTML('beforeend', bubbleHtml);
 
-            if (isNearBottom) {
-                container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+            // A ResizeObserver garantálja a görgetést, ha kép vagy szöveg tölt be
+            if (wasAtBottom) {
+                liveFeedContainer.scrollTop = liveFeedContainer.scrollHeight;
+                lastScrollTop = liveFeedContainer.scrollTop;
             } else {
                 newMsgBtn.classList.add('show');
             }
 
-            while(container.children.length > 40) {
-                if (container.firstElementChild && container.firstElementChild.id !== 'live-placeholder') {
-                    container.firstElementChild.remove();
+            while(chatInnerList.children.length > 40) {
+                if (chatInnerList.firstElementChild && chatInnerList.firstElementChild.id !== 'live-placeholder') {
+                    chatInnerList.firstElementChild.remove();
                 }
             }
         }
@@ -1235,17 +1341,19 @@
             return result;
         }
 
-        function processCommentBody(cData) {
+        function processCommentBody(cData, isLiveChat = false) {
             let html = '';
+            let lazyAttr = isLiveChat ? '' : 'loading="lazy"'; // Élő chatnél NINCS lazy load, hogy azonnal görgessen!
+
             if (cData.body_html) {
                 html = decodeHtml(cData.body_html);
                 html = html.replace(/<a /g, '<a target="_blank" rel="noopener noreferrer" ');
-                html = html.replace(/<a[^>]*href=["'](https?:\/\/(?:preview\.redd\.it|i\.redd\.it)[^"']+)["'][^>]*>.*?<\/a>/gi, '<img src="$1" loading="lazy">');
-                html = html.replace(/<a[^>]*href=["']https?:\/\/(?:www\.)?giphy\.com\/gifs\/(?:[a-zA-Z0-9-]+-)?([a-zA-Z0-9]+)["'][^>]*>.*?<\/a>/gi, '<a href="https://giphy.com/gifs/$1" target="_blank"><img src="https://media.giphy.com/media/$1/giphy.gif" loading="lazy"></a>');
-                html = html.replace(/<a[^>]*href=["'](https?:\/\/[^"']+\.(?:jpg|jpeg|png|gif)(?:\?[^"']*)?)["'][^>]*>.*?<\/a>/gi, '<a href="$1" target="_blank"><img src="$1" loading="lazy"></a>');
+                html = html.replace(/<a[^>]*href=["'](https?:\/\/(?:preview\.redd\.it|i\.redd\.it)[^"']+)["'][^>]*>.*?<\/a>/gi, `<img src="$1" ${lazyAttr}>`);
+                html = html.replace(/<a[^>]*href=["']https?:\/\/(?:www\.)?giphy\.com\/gifs\/(?:[a-zA-Z0-9-]+-)?([a-zA-Z0-9]+)["'][^>]*>.*?<\/a>/gi, `<a href="https://giphy.com/gifs/$1" target="_blank"><img src="https://media.giphy.com/media/$1/giphy.gif" ${lazyAttr}></a>`);
+                html = html.replace(/<a[^>]*href=["'](https?:\/\/[^"']+\.(?:jpg|jpeg|png|gif)(?:\?[^"']*)?)["'][^>]*>.*?<\/a>/gi, `<a href="$1" target="_blank"><img src="$1" ${lazyAttr}></a>`);
             } else {
                 html = cData.body || ''; 
-                html = html.replace(/(https?:\/\/(?:preview\.redd\.it|i\.redd\.it)[^\s]+)/gi, '<img src="$1" loading="lazy">');
+                html = html.replace(/(https?:\/\/(?:preview\.redd\.it|i\.redd\.it)[^\s]+)/gi, `<img src="$1" ${lazyAttr}>`);
             }
 
             if (cData.media_metadata) {
@@ -1253,7 +1361,7 @@
                     let media = cData.media_metadata[key];
                     if (media.status === 'valid' && (media.e === 'Image' || media.e === 'AnimatedImage')) {
                         let imgUrl = media.s.u ? media.s.u.replace(/&amp;/g, '&') : (media.s.gif ? media.s.gif.replace(/&amp;/g, '&') : null);
-                        if (imgUrl) html += `<br><img src="${imgUrl}" loading="lazy">`;
+                        if (imgUrl) html += `<br><img src="${imgUrl}" ${lazyAttr}>`;
                     }
                 }
             } return html;
@@ -1418,7 +1526,7 @@
                             ${scoreHtml}
                             <span class="c-time">${cDateString}</span>
                         </div>
-                        <div class="comment-body">${processCommentBody(cData)}</div>
+                        <div class="comment-body">${processCommentBody(cData, false)}</div>
                     </div>
                 `;
             }
