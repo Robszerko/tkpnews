@@ -8,7 +8,7 @@
     <style id="dynamic-theme"></style>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=JetBrains+Mono:wght@400;700&display=swap');
 
         /* Alapértelmezett változók */
         :root {
@@ -19,12 +19,15 @@
             --accent-red: #f85149;
             --accent-yellow: #d29922;
             --accent-purple: #8a2be2;
+            
+            /* TŰÉLES SZÖVEGSZÍNEK - Átlátszóság (RGBA) helyett fix HEX színek! */
             --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.65);
-            --radius-sm: 8px;
-            --radius-md: 16px;
-            --radius-lg: 24px;
-            --radius-xl: 32px;
+            --text-secondary: #a3abb6; 
+            
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --radius-xl: 24px;
             --font-ui: 'Inter', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
             
@@ -36,13 +39,26 @@
             --glass-border-bright: rgba(255, 255, 255, 0.15);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        /* TŰÉLES (4K) RENDERELÉS MOTOR */
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            -webkit-font-smoothing: subpixel-antialiased !important;
+            -moz-osx-font-smoothing: auto !important;
+            text-rendering: geometricPrecision !important;
+            font-optical-sizing: auto;
+        }
 
         body {
-            font-family: var(--font-ui); color: var(--text-primary);
-            line-height: 1.5; -webkit-font-smoothing: antialiased; overflow: hidden; 
+            font-family: var(--font-ui); 
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.5; 
+            overflow: hidden; 
             background-color: var(--bg-base); 
-            padding: 1.5rem; 
+            padding: 20px; 
             transition: background-color 2s ease;
         }
         body.modal-open { overflow: hidden; }
@@ -73,7 +89,7 @@
         @keyframes highlight-new-post {
             0%   { box-shadow: 0 0 0 0 rgba(88, 166, 255, 0.4); border-color: var(--accent-blue); transform: translateY(-5px); opacity: 0;}
             10%  { opacity: 1; transform: translateY(0); }
-            100% { box-shadow: 0 0 0 0 rgba(88, 166, 255, 0); border-color: var(--glass-border-bright); }
+            100% { box-shadow: 0 0 0 0 rgba(88, 166, 255, 0); border-color: var(--glass-border-bright); transform: none; }
         }
         .new-post-anim { animation: highlight-new-post 3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
 
@@ -85,7 +101,7 @@
         .soft-pulse { animation: soft-pulse-green 2s ease-out forwards; }
 
         /* --- FŐ ELRENDEZÉS --- */
-        .app-layout { display: flex; flex-direction: row; gap: 1.5rem; height: calc(100vh - 3rem); width: 100%; position: relative; z-index: 1; }
+        .app-layout { display: flex; flex-direction: row; gap: 20px; height: calc(100vh - 40px); width: 100%; position: relative; z-index: 1; }
 
         .bento-panel {
             background: var(--glass-panel);
@@ -98,72 +114,72 @@
 
         /* --- 1. OSZLOP: NAVIGÁCIÓ --- */
         .sidebar-nav {
-            width: 260px; flex-shrink: 0; background: transparent; border: none; box-shadow: none;
-            display: flex; flex-direction: column; gap: 1rem; overflow-y: auto; overflow-x: hidden;
+            width: 250px; flex-shrink: 0; background: transparent; border: none; box-shadow: none;
+            display: flex; flex-direction: column; gap: 14px; overflow-y: auto; overflow-x: hidden;
         }
         
         .bento-module {
             background: var(--glass-panel); border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg); padding: 1.25rem; backdrop-filter: blur(24px);
+            border-radius: var(--radius-lg); padding: 16px; backdrop-filter: blur(24px);
             box-shadow: inset 0 1px 1px rgba(255,255,255,0.03), 0 8px 24px rgba(0,0,0,0.15);
         }
 
         .brand { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; text-decoration: none; }
-        .brand-header { display: flex; align-items: center; gap: 10px; }
-        .brand-header svg { width: 28px; height: 28px; flex-shrink: 0; filter: drop-shadow(0 2px 8px rgba(255,69,0,0.5)); }
-        .brand-title { color: var(--text-primary); font-weight: 800; font-size: 1.35rem; letter-spacing: -0.03em; line-height: 1;}
+        .brand-header { display: flex; align-items: center; gap: 8px; }
+        .brand-header svg { width: 24px; height: 24px; flex-shrink: 0; filter: drop-shadow(0 2px 8px rgba(255,69,0,0.5)); shape-rendering: geometricPrecision; }
+        .brand-title { color: var(--text-primary); font-weight: 800; font-size: 20px; letter-spacing: -0.03em; line-height: 1;}
 
-        .brand-datetime { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--text-secondary); font-weight: 500; margin-left: 2px;}
+        .brand-datetime { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-secondary); font-weight: 600; margin-left: 2px;}
         .clock-time-inline { font-family: var(--font-mono); font-weight: 700; color: var(--text-primary); display: flex; align-items: baseline;}
-        .clock-sec-inline { font-size: 0.65rem; color: var(--accent-blue); font-weight: 400; margin-left: 1px;}
+        .clock-sec-inline { font-size: 10px; color: var(--accent-blue); font-weight: 400; margin-left: 1px;}
 
-        .search-form { display: flex; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border-bright); border-radius: var(--radius-sm); overflow: hidden; transition: 0.3s; margin-bottom: 1.5rem;}
+        .search-form { display: flex; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border-bright); border-radius: var(--radius-sm); overflow: hidden; transition: 0.3s; margin-bottom: 20px;}
         .search-form:focus-within { border-color: var(--accent-blue); box-shadow: 0 0 0 2px rgba(88,166,255,0.2); }
-        .search-form input { background: transparent; border: none; color: var(--text-primary); padding: 0.6rem 0.75rem; font-family: var(--font-ui); font-size: 0.8rem; width: 100%; outline: none; }
+        .search-form input { background: transparent; border: none; color: var(--text-primary); padding: 8px 10px; font-family: var(--font-ui); font-size: 13px; font-weight: 500; width: 100%; outline: none; }
         .search-form input::placeholder { color: var(--text-secondary); }
-        .search-form button { background: transparent; border: none; color: var(--text-secondary); padding: 0 0.75rem; cursor: pointer; transition: color 0.2s; }
+        .search-form button { background: transparent; border: none; color: var(--text-secondary); padding: 0 10px; cursor: pointer; transition: color 0.2s; }
         .search-form button:hover { color: var(--text-primary); }
 
-        .nav-title { font-size: 0.65rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 700; letter-spacing: 1.5px; margin-bottom: 0.75rem; padding-left: 0.25rem; }
-        .nav-menu { display: flex; flex-direction: column; gap: 6px; }
-        .nav-item { background: transparent; border: 1px solid transparent; color: var(--text-secondary); text-align: left; padding: 0.7rem 0.85rem; border-radius: var(--radius-md); font-family: var(--font-ui); font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: space-between; }
+        .nav-title { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 10px; padding-left: 4px; }
+        .nav-menu { display: flex; flex-direction: column; gap: 4px; }
+        .nav-item { background: transparent; border: 1px solid transparent; color: var(--text-secondary); text-align: left; padding: 10px 12px; border-radius: var(--radius-md); font-family: var(--font-ui); font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: space-between; }
         .nav-item:hover { background: var(--glass-hover); color: var(--text-primary); }
-        .nav-item.active { background: rgba(88, 166, 255, 0.15); color: var(--accent-blue); border-color: rgba(88, 166, 255, 0.3); font-weight: 600; box-shadow: 0 4px 12px rgba(88, 166, 255, 0.1);}
+        .nav-item.active { background: rgba(88, 166, 255, 0.15); color: var(--accent-blue); border-color: rgba(88, 166, 255, 0.3); font-weight: 700; box-shadow: 0 4px 12px rgba(88, 166, 255, 0.1);}
 
         /* NAPI TOP 3 WIDGET */
-        .trending-list { display: flex; flex-direction: column; gap: 10px; }
+        .trending-list { display: flex; flex-direction: column; gap: 8px; }
         .trending-item { 
             background: var(--glass-card); border: 1px solid var(--glass-border); border-radius: var(--radius-md); 
-            padding: 0.85rem; cursor: pointer; transition: 0.3s; display: flex; gap: 12px; align-items: center; 
+            padding: 12px; cursor: pointer; transition: 0.3s; display: flex; gap: 10px; align-items: center; 
         }
         .trending-item:hover { border-color: var(--accent-blue); transform: translateY(-2px); background: var(--glass-hover); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
-        .trending-medal-container { display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; width: 35px; }
-        .trending-medal { font-size: 1.6rem; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+        .trending-medal-container { display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; width: 30px; }
+        .trending-medal { font-size: 22px; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
         .trending-content { display: flex; flex-direction: column; flex: 1; min-width: 0; }
-        .trending-meta { font-size: 0.65rem; color: var(--text-secondary); font-weight: 600; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;}
-        .trending-title { font-size: 0.8rem; color: var(--text-primary); font-weight: 500; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .trending-meta { font-size: 10px; color: var(--text-secondary); font-weight: 700; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;}
+        .trending-title { font-size: 13px; color: var(--text-primary); font-weight: 600; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
         /* KIS LÁBLÉC */
-        .app-footer { margin-top: auto; display: flex; flex-direction: column; gap: 8px; align-items: center; padding: 1rem; text-align: center;}
-        .reddit-attribution { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.75rem;}
-        .reddit-attribution span { font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;}
+        .app-footer { margin-top: auto; display: flex; flex-direction: column; gap: 6px; align-items: center; padding: 12px; text-align: center;}
+        .reddit-attribution { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 11px;}
+        .reddit-attribution span { font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;}
         .reddit-logo-wrap { display: flex; align-items: center; justify-content: center; gap: 4px; user-select: none; }
-        .reddit-logo-wordmark { color: #ffffff; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: -1px; line-height: 1; }
-        .footer-credits { font-size: 0.65rem; color: var(--text-secondary); margin-top: 4px;}
+        .reddit-logo-wordmark { color: #ffffff; font-family: 'Inter', sans-serif; font-weight: 800; font-size: 16px; letter-spacing: -1px; line-height: 1; }
+        .footer-credits { font-size: 10px; color: var(--text-secondary); font-weight: 600; margin-top: 2px;}
 
         /* --- 2. OSZLOP: FŐ TARTALOM (HÍRFOLYAM) --- */
         .main-content { flex: 1; min-width: 0; position: relative; padding: 0; }
         
-        .main-scroll-area { padding: 2rem; overflow-y: auto; height: 100%; position: relative;}
+        .main-scroll-area { padding: 24px; overflow-y: auto; height: 100%; position: relative;}
 
         /* Színpompás Fejléc és Rendező Tabok - KÖZÉPRE IGAZÍTVA */
         .content-header { 
-            position: sticky; top: -2rem; 
+            position: sticky; top: -24px; 
             background: rgba(15, 17, 21, 0.85); 
             backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            padding: 1rem 0 1.5rem 0; margin-bottom: 1.5rem; 
+            padding: 12px 0 20px 0; margin-bottom: 20px; 
             border-bottom: 1px solid var(--glass-border-bright); 
-            z-index: 10; display: flex; flex-direction: column; gap: 1.25rem;
+            z-index: 10; display: flex; flex-direction: column; gap: 16px;
         }
 
         .header-banner {
@@ -171,7 +187,7 @@
             background: linear-gradient(135deg, var(--glass-card) 0%, rgba(88, 166, 255, 0.08) 100%);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-lg);
-            padding: 2rem 1.5rem; 
+            padding: 24px 20px; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
         }
         .header-banner::before {
@@ -181,21 +197,21 @@
         }
 
         .header-content { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; }
-        .feed-title { font-size: 2rem; font-weight: 800; letter-spacing: -0.03em; display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 8px;}
-        .feed-subtitle { font-size: 0.85rem; color: var(--text-secondary); font-weight: 500; font-family: var(--font-mono); opacity: 0.8; word-break: break-all; max-width: 90%; text-align: center; }
+        .feed-title { font-size: 28px; font-weight: 800; letter-spacing: -0.03em; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 6px;}
+        .feed-subtitle { font-size: 13px; color: var(--text-secondary); font-weight: 600; font-family: var(--font-mono); opacity: 0.8; word-break: break-all; max-width: 90%; text-align: center; }
 
         .sort-tabs-container {
             display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap;
-            background: var(--glass-card); padding: 8px; 
+            background: var(--glass-card); padding: 6px; 
             border-radius: var(--radius-md); border: 1px solid var(--glass-border);
         }
         .sort-pill { 
             background: transparent; border: none; color: var(--text-secondary); 
-            padding: 0.5rem 1rem; border-radius: 10px; font-size: 0.85rem; font-weight: 600; 
+            padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; 
             cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px;
         }
         .sort-pill:hover { background: var(--glass-hover); color: var(--text-primary); }
-        .sort-pill.active { background: var(--text-primary); color: #000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .sort-pill.active { background: var(--text-primary); color: #000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 700;}
         
         .pill-divider { width: 4px; height: 4px; border-radius: 50%; background-color: var(--glass-border-bright); margin: 0 4px; }
         
@@ -203,8 +219,8 @@
         .feed-pill:hover { background: rgba(88, 166, 255, 0.1); color: var(--accent-blue); }
         .feed-pill.active { background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%); color: #fff; box-shadow: 0 4px 15px rgba(88,166,255,0.3); }
 
-        /* KÁRTYÁK - Színpompás elrendezés (Okosabb Subreddit Címke) */
-        #feed { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; align-items: start; min-width: 800px;}
+        /* KÁRTYÁK - Színpompás elrendezés */
+        #feed { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; align-items: start; min-width: 800px;}
 
         .card { 
             background: linear-gradient(180deg, var(--glass-card) 0%, rgba(255,255,255,0.02) 100%);
@@ -224,43 +240,51 @@
             display: flex; align-items: center; justify-content: center; 
             border-bottom: 1px solid var(--glass-border); 
             border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            background: rgba(0,0,0,0.2);
         }
-        .card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+        .card-img { 
+            width: 100%; height: 100%; 
+            object-fit: cover; 
+            transition: transform 0.6s ease; 
+            image-rendering: -webkit-optimize-contrast;
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+        }
         .card:hover .card-img { transform: scale(1.04); } 
         
         .card-img-fallback { background: linear-gradient(135deg, rgba(88,166,255,0.15) 0%, rgba(138,43,226,0.15) 100%); }
-        .card-img-fallback svg { width: 56px; height: 56px; fill: rgba(255,255,255,0.3); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); transition: 0.4s ease; }
+        .card-img-fallback svg { width: 56px; height: 56px; fill: rgba(255,255,255,0.3); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); transition: 0.4s ease; shape-rendering: geometricPrecision;}
         .card:hover .card-img-fallback svg { transform: scale(1.1); fill: rgba(255,255,255,0.5); }
 
-        .card-body { padding: 1.25rem; display: flex; flex-direction: column; flex-grow: 1; gap: 0.8rem; }
+        .card-body { padding: 16px; display: flex; flex-direction: column; flex-grow: 1; gap: 10px; }
         
-        /* Címkék optimalizálva (nincsenek a képen, elegánsan a meta részben) */
+        /* Címkék optimalizálva */
         .card-sub-badge {
             display: inline-flex; align-items: center; justify-content: center;
-            padding: 3px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 700;
+            padding: 3px 6px; border-radius: 4px; font-size: 10px; font-weight: 800;
             text-transform: uppercase; letter-spacing: 0.5px; line-height: 1;
         }
         
-        .card-meta { display: flex; flex-direction: column; gap: 6px; font-size: 0.75rem; color: var(--text-secondary); font-weight: 500; }
+        .card-meta { display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: var(--text-secondary); font-weight: 600; }
         .card-author-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .card-author { color: var(--text-primary); font-weight: 600; opacity: 0.8; }
+        .card-author { color: var(--text-primary); font-weight: 700; opacity: 0.9; }
         
-        .card-title { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.4; margin: 0; }
+        .card-title { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.4; margin: 0; }
         .card-title a { color: var(--text-primary); text-decoration: none; transition: 0.2s; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;}
         .card-title a:hover { color: var(--accent-blue); }
 
-        .card-stats { display: flex; gap: 0.5rem; flex-wrap: wrap; padding-bottom: 0.8rem; border-bottom: 1px solid var(--glass-border); }
-        .stat-badge { font-size: 0.75rem; font-weight: 700; padding: 0.25rem 0.6rem; border-radius: 6px; border: 1px solid var(--glass-border); }
+        .card-stats { display: flex; gap: 6px; flex-wrap: wrap; padding-bottom: 10px; border-bottom: 1px solid var(--glass-border); }
+        .stat-badge { font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--glass-border); }
         .stat-badge.up { color: var(--accent-green); background: rgba(63, 185, 80, 0.1); border-color: rgba(63, 185, 80, 0.2); }
         .stat-badge.down { color: var(--accent-red); background: rgba(248, 81, 73, 0.1); border-color: rgba(248, 81, 73, 0.2); }
         .stat-badge.ratio { color: var(--accent-blue); background: rgba(88, 166, 255, 0.1); border-color: rgba(88, 166, 255, 0.2); }
 
-        .card-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 0.5rem;}
+        .card-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 6px;}
         
         .follow-controls { display: flex; gap: 4px; flex: 1.2; min-width: 0; }
         .btn-follow { 
             background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border-bright); color: var(--text-primary); 
-            padding: 0.6rem; border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 600; 
+            padding: 8px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; 
             cursor: pointer; flex: 1; text-align: center; transition: 0.3s;
             display: flex; align-items: center; justify-content: center; gap: 6px;
         }
@@ -269,27 +293,27 @@
         
         .btn-extend {
             background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border-bright); color: var(--text-secondary);
-            padding: 0 0.4rem; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 700;
+            padding: 0 6px; border-radius: var(--radius-sm); font-size: 11px; font-weight: 700;
             cursor: pointer; transition: 0.3s; flex-shrink: 0;
         }
         .btn-extend:hover { background: rgba(210, 153, 34, 0.2); border-color: var(--accent-yellow); color: var(--accent-yellow); }
         
-        .follow-timer { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: -0.5px; }
+        .follow-timer { font-family: var(--font-mono); font-size: 11px; letter-spacing: -0.5px; }
 
         .btn-comment { 
             background: rgba(88, 166, 255, 0.05); border: 1px solid rgba(88, 166, 255, 0.2); color: var(--accent-blue); 
-            padding: 0.6rem; border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 700; cursor: pointer; 
+            padding: 8px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 700; cursor: pointer; 
             flex: 1; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 6px; 
         }
         .btn-comment:hover { background: var(--accent-blue); border-color: var(--accent-blue); color: #fff; box-shadow: 0 4px 12px rgba(88,166,255,0.3);}
 
-        #scroll-sentinel { text-align: center; padding: 3rem 0; color: var(--text-secondary); font-family: var(--font-mono); font-size: 0.85rem; grid-column: 1 / -1; }
+        #scroll-sentinel { text-align: center; padding: 32px 0; color: var(--text-secondary); font-family: var(--font-mono); font-size: 13px; font-weight: 600; grid-column: 1 / -1; }
 
-        /* --- 3. OSZLOP: ÉLŐ CHAT (ÚJ KÖZÉPRE ZÁRT FEJLÉC ÉS KAPSZULA FIGYELMEZTETÉS) --- */
+        /* --- 3. OSZLOP: ÉLŐ CHAT --- */
         .sidebar-live { width: 350px; flex-shrink: 0; display: flex; flex-direction: column; }
         
         .live-header { 
-            padding: 1.5rem 1rem 1rem 1rem; 
+            padding: 20px 16px 12px 16px; 
             border-bottom: 1px solid var(--glass-border);
             position: relative;
         }
@@ -299,7 +323,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 10px;
             width: 100%;
         }
 
@@ -309,7 +333,7 @@
             justify-content: center;
             gap: 8px;
             font-weight: 800;
-            font-size: 1.25rem;
+            font-size: 18px;
             letter-spacing: 0.5px;
             width: 100%;
             position: relative;
@@ -318,22 +342,22 @@
         
         .live-status-text {
             position: absolute; right: 0; top: 50%; transform: translateY(-50%);
-            font-size: 0.75rem; color: var(--text-secondary); font-weight: normal;
+            font-size: 11px; color: var(--text-secondary); font-weight: 600;
         }
 
         .live-warning-group {
-            display: flex; align-items: center; justify-content: center; gap: 8px;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
             background: rgba(248, 81, 73, 0.05); border: 1px solid rgba(248, 81, 73, 0.15);
-            padding: 6px 12px; border-radius: var(--radius-md); width: 100%;
+            padding: 6px 10px; border-radius: var(--radius-md); width: 100%;
         }
         
         .age-badge-small {
             border: 1.5px solid var(--accent-red); background: rgba(248, 81, 73, 0.15);
-            color: var(--accent-red); font-size: 0.7rem; font-weight: 800;
-            padding: 2px 8px; border-radius: 12px; white-space: nowrap; flex-shrink: 0;
+            color: var(--accent-red); font-size: 10px; font-weight: 800;
+            padding: 2px 6px; border-radius: 10px; white-space: nowrap; flex-shrink: 0;
         }
         .age-warning-text {
-            color: #ff8a8a; font-size: 0.75rem; font-weight: 600; text-align: center; line-height: 1.2;
+            color: #ff8a8a; font-size: 11px; font-weight: 700; text-align: center; line-height: 1.2;
         }
 
         @keyframes live-glow {
@@ -342,76 +366,88 @@
             100% { box-shadow: 0 0 0 0 rgba(63, 185, 80, 0); }
         }
 
-        /* Gördülést és Akadást Gátló Rendszer */
         .chat-scroll-wrapper { position: relative; flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .live-feed-container { flex-grow: 1; overflow-y: auto; padding: 1rem 0.5rem; scroll-behavior: smooth; }
-        
-        /* Belső lista, ami megakadályozza a mérethibákat a megfigyelő számára */
+        .live-feed-container { flex-grow: 1; overflow-y: auto; padding: 12px 8px; scroll-behavior: smooth; }
         #chat-inner-list { display: flex; flex-direction: column; justify-content: flex-end; min-height: 100%; }
 
         /* ÚJ ÜZENET LEBEGŐ GOMB */
         .chat-new-msg-btn {
             position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%) translateY(60px);
-            background: var(--accent-blue); color: #fff; padding: 6px 16px; border-radius: 20px;
-            font-size: 0.8rem; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.5); border: none;
+            background: var(--accent-blue); color: #fff; padding: 6px 14px; border-radius: 20px;
+            font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.5); border: none;
             opacity: 0; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 10; display: flex; align-items: center; gap: 6px;
         }
         .chat-new-msg-btn.show { transform: translateX(-50%) translateY(0); opacity: 1; }
         .chat-new-msg-btn:hover { background: var(--text-primary); color: #000; }
 
-        /* Letisztult Chat Üzenet Dizájn */
-        .chat-message { display: flex; gap: 12px; padding: 10px 12px; border-radius: var(--radius-md); margin-bottom: 8px; transition: background-color 0.2s; animation: chatSlideIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; transform: translateY(20px); opacity: 0; will-change: transform, opacity; }
+        /* GPU DETACH A CHAT ÜZENETEKRŐL (TŰÉLES SZÖVEG) */
+        .chat-message { display: flex; gap: 10px; padding: 10px 12px; border-radius: var(--radius-md); margin-bottom: 8px; transition: background-color 0.2s; animation: chatSlideIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; transform: translateY(20px); opacity: 0; }
         .chat-message:hover { background-color: var(--glass-hover); }
 
-        @keyframes chatSlideIn { to { transform: translateY(0); opacity: 1; } }
+        @keyframes chatSlideIn { 
+            to { transform: none; opacity: 1; } 
+        }
 
-        .chat-message-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 700; font-size: 0.85rem; color: #fff; box-shadow: inset 0 -2px 4px rgba(0,0,0,0.2), 0 2px 8px rgba(0,0,0,0.15); text-shadow: 0 1px 2px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); }
+        .chat-message-avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 800; font-size: 13px; color: #fff; box-shadow: inset 0 -2px 4px rgba(0,0,0,0.2), 0 2px 8px rgba(0,0,0,0.15); text-shadow: 0 1px 2px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); }
         .chat-message-content { display: flex; flex-direction: column; flex-grow: 1; min-width: 0; }
-        .chat-message-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; }
-        .chat-message-author { font-weight: 700; font-size: 0.85rem; letter-spacing: -0.01em; }
-        .chat-message-time { font-size: 0.7rem; color: var(--text-secondary); font-family: var(--font-mono); }
+        .chat-message-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+        .chat-message-author { font-weight: 800; font-size: 13px; letter-spacing: -0.01em; }
+        .chat-message-time { font-size: 11px; color: var(--text-secondary); font-family: var(--font-mono); font-weight: 600;}
 
-        /* TELJES, OLVASHATÓ POSZT CÍM A CHATBEN */
         .chat-message-post-ref {
-            display: block; font-size: 0.75rem; color: var(--text-primary);
+            display: block; font-size: 11px; font-weight: 600; color: var(--text-primary);
             background: rgba(0,0,0,0.2); padding: 6px 10px; border-radius: 6px;
-            margin-bottom: 8px; cursor: pointer; border: 1px solid var(--glass-border-bright);
+            margin-bottom: 6px; cursor: pointer; border: 1px solid var(--glass-border-bright);
             border-left: 3px solid var(--accent-yellow); transition: 0.2s; line-height: 1.4; word-wrap: break-word;
         }
         .chat-message-post-ref:hover { background: rgba(210, 153, 34, 0.15); border-color: rgba(210, 153, 34, 0.4); border-left-color: var(--accent-yellow); }
 
-        .chat-message-text { font-size: 0.9rem; color: var(--text-primary); line-height: 1.5; word-wrap: break-word; }
-        .chat-message-text img { max-width: 100%; border-radius: 8px; margin-top: 6px; max-height: 200px; object-fit: contain; border: 1px solid var(--glass-border); }
+        .chat-message-text { font-size: 14px; font-weight: 500; color: var(--text-primary); line-height: 1.5; word-wrap: break-word; }
+        
+        .comment-inline-image {
+            max-width: 100%;
+            max-height: 350px;
+            border-radius: 8px;
+            margin-top: 8px;
+            border: 1px solid var(--glass-border);
+            object-fit: contain; 
+            background: rgba(0,0,0,0.15);
+            image-rendering: -webkit-optimize-contrast;
+        }
 
-        /* OKOS KONTEXTUS IDÉZET (Kinek válaszolt) */
         .chat-parent-quote {
             border-left: 3px solid var(--accent-purple); 
             padding-left: 10px; 
-            margin-bottom: 8px; 
+            margin-bottom: 6px; 
             color: var(--text-secondary);
-            font-size: 0.8rem; 
+            font-size: 12px; 
+            font-weight: 500;
             display: -webkit-box; 
             -webkit-line-clamp: 3; 
             -webkit-box-orient: vertical; 
             overflow: hidden;
             background: rgba(138, 43, 226, 0.08); 
             border-radius: 0 6px 6px 0; 
-            padding: 8px 10px;
+            padding: 6px 10px;
         }
         .chat-parent-quote .quote-author { 
-            font-weight: 700; 
+            font-weight: 800; 
             margin-right: 4px; 
             color: var(--accent-purple); 
             display: block;
             margin-bottom: 2px;
-            font-size: 0.75rem;
+            font-size: 11px;
         }
 
-        /* RENDSZERÜZENET (Üresjárat esetére) */
-        .system-idle-msg {
-            background: rgba(88, 166, 255, 0.05); border: 1px dashed rgba(88, 166, 255, 0.3); margin-top: 1rem;
+        /* ÚJ RENDSZERÜZENET / TÁJÉKOZTATÓ DOBOZ */
+        .system-intro-box {
+            background: rgba(255, 69, 0, 0.05); 
+            border: 1px dashed rgba(255, 69, 0, 0.3); 
+            margin-top: 16px;
+            box-shadow: 0 4px 15px rgba(255, 69, 0, 0.05);
+            transition: opacity 0.3s, transform 0.3s;
         }
-        .system-idle-msg:hover { background: rgba(88, 166, 255, 0.08); }
+        .system-intro-box:hover { background: rgba(255, 69, 0, 0.08); }
 
         /* --- GLOBÁLIS MODÁLIS --- */
         #global-modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 9999; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
@@ -419,30 +455,29 @@
         .modal-content { background: var(--glass-panel); width: 95vw; max-width: 900px; height: 90vh; border-radius: var(--radius-xl); border: 1px solid var(--glass-border-bright); display: flex; flex-direction: column; overflow: hidden; transform: scale(0.98); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 30px 60px rgba(0,0,0,0.6); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);}
         #global-modal-overlay.active .modal-content { transform: scale(1); }
 
-        .modal-header { background: rgba(0,0,0,0.2); padding: 1.5rem; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
-        .modal-header h3 { font-size: 1.2rem; font-weight: 600; line-height: 1.4; margin: 0; }
-        .btn-close { background: var(--glass-card); border: 1px solid var(--glass-border-bright); color: var(--text-primary); padding: 0.5rem 1rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: 0.2s; flex-shrink: 0; }
+        .modal-header { background: rgba(0,0,0,0.2); padding: 20px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+        .modal-header h3 { font-size: 18px; font-weight: 700; line-height: 1.4; margin: 0; }
+        .btn-close { background: var(--glass-card); border: 1px solid var(--glass-border-bright); color: var(--text-primary); padding: 8px 16px; border-radius: var(--radius-sm); font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.2s; flex-shrink: 0; }
         .btn-close:hover { background: var(--accent-red); border-color: var(--accent-red); color: white; }
 
-        .modal-body { flex-grow: 1; overflow-y: auto; padding: 2rem; background: transparent; }
-        .comment-controls { display: flex; gap: 1rem; margin-bottom: 2rem; }
-        .comment-select { background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border-bright); color: var(--text-primary); padding: 0.6rem 1.2rem; border-radius: var(--radius-sm); font-family: var(--font-ui); font-size: 0.9rem; cursor: pointer; flex: 1; outline: none; transition: 0.3s; }
-        .btn-refresh { background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border-bright); color: var(--text-primary); padding: 0.6rem 1.2rem; border-radius: var(--radius-sm); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .modal-body { flex-grow: 1; overflow-y: auto; padding: 24px; background: transparent; }
+        .comment-controls { display: flex; gap: 12px; margin-bottom: 24px; }
+        .comment-select { background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border-bright); color: var(--text-primary); padding: 8px 16px; border-radius: var(--radius-sm); font-family: var(--font-ui); font-size: 14px; font-weight: 600; cursor: pointer; flex: 1; outline: none; transition: 0.3s; }
+        .btn-refresh { background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border-bright); color: var(--text-primary); padding: 8px 16px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.2s; }
         .btn-refresh:hover { border-color: var(--text-primary); background: var(--glass-hover);}
 
-        .comment { background: rgba(0,0,0,0.15); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.25rem; border-left: 4px solid var(--glass-border-bright); position: relative;}
-        .comment-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 0.8rem; flex-wrap: wrap;}
-        .c-author { font-weight: 600; color: var(--text-primary); font-size: 0.9rem; }
-        .c-time { font-size: 0.8rem; color: var(--text-secondary); }
-        .c-score { margin-left: auto; font-size: 0.8rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: rgba(0,0,0,0.3); color: var(--text-secondary); }
+        .comment { background: rgba(0,0,0,0.15); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 16px; margin-bottom: 16px; border-left: 4px solid var(--glass-border-bright); position: relative;}
+        .comment-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap;}
+        .c-author { font-weight: 700; color: var(--text-primary); font-size: 14px; }
+        .c-time { font-size: 12px; color: var(--text-secondary); font-weight: 600; }
+        .c-score { margin-left: auto; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 6px; background: rgba(0,0,0,0.3); color: var(--text-secondary); }
 
-        .comment-body { font-size: 0.95rem; color: var(--text-primary); line-height: 1.6; word-wrap: break-word; }
-        .comment-body p { margin-bottom: 0.75rem; }
+        .comment-body { font-size: 15px; font-weight: 500; color: var(--text-primary); line-height: 1.6; word-wrap: break-word; }
+        .comment-body p { margin-bottom: 12px; }
         .comment-body p:last-child { margin-bottom: 0; }
-        .comment-body a { color: var(--accent-blue); text-decoration: none; }
-        .comment-inline-image { max-width: 100%; max-height: 400px; border-radius: 8px; margin-top: 0.75rem; border: 1px solid var(--glass-border); }
+        .comment-body a { color: var(--accent-blue); text-decoration: none; font-weight: 600;}
         
-        @media (max-width: 1200px) { .main-scroll-area { overflow-x: auto; padding-bottom: 1rem; } }
+        @media (max-width: 1200px) { .main-scroll-area { overflow-x: auto; padding-bottom: 16px; } }
     </style>
 </head>
 <body>
@@ -511,7 +546,7 @@
             </div>
         </aside>
 
-        <!-- 2. OSZLOP: FŐ TARTALOM (Hírfolyam) -->
+        <!-- 2. OSZLOP: FŐ TARTALOM (HÍRFOLYAM) -->
         <main class="bento-panel main-content">
             <div class="main-scroll-area" id="main-scroll-area">
                 
@@ -562,7 +597,7 @@
             <div class="chat-scroll-wrapper">
                 <div class="live-feed-container" id="live-feed-container">
                     <div id="chat-inner-list">
-                        <div id="live-placeholder" style="text-align:center; color:var(--text-secondary); font-size:0.9rem; margin-top:1rem;">
+                        <div id="live-placeholder" style="text-align:center; color:var(--text-secondary); font-size:14px; font-weight:600; margin-top:20px; display:none;">
                             Várakozás az adatokra...
                         </div>
                     </div>
@@ -598,12 +633,25 @@
         const fetchLimit = 21; 
         let afterToken = null;
         let isFetching = false;
+        let currentRequestId = 0; 
+        
         const renderedPostIds = new Set();
         let modalSyncInterval = null;
+
+        // Változók az élő üzenetek várakoztatásához
+        let chatPausedForIntro = false;
+        let isProcessingLiveQueue = false;
 
         document.addEventListener('DOMContentLoaded', () => {
             loadTrendingTopics(); 
             initChatScrollLogic();
+            
+            // Tájékoztató szöveg aktiválása induláskor
+            chatPausedForIntro = true;
+            showIntroMessage(true);
+            
+            // Azonnali adatletöltés indítása a háttérben, hogy mire letelik az idő, tele legyen az üzenetsor
+            pollLiveComments();
         });
 
         function stringToColor(str) {
@@ -763,6 +811,7 @@
         function decodeHtml(html) { var txt = document.createElement("textarea"); txt.innerHTML = html; return txt.value; }
 
         function changeFeed(tabId, feedName, feedDisplayName) {
+            isFetching = false; 
             currentFeed = feedName;
             
             document.querySelectorAll('.nav-item, .feed-pill').forEach(tab => tab.classList.remove('active'));
@@ -777,19 +826,28 @@
                 sortTabs.style.display = 'none';
                 headerTitle.innerHTML = `⭐ ${feedDisplayName}`;
                 headerSub.innerHTML = `Minden mentett cikked itt található`;
-                document.getElementById('live-placeholder').innerHTML = '<div style="text-align:center; color:var(--text-secondary); font-size:0.9rem; margin-top:2rem;">A követett nézetben az élő hírfolyam szünetel.</div>';
+                let livePh = document.getElementById('live-placeholder');
+                if (livePh) {
+                    livePh.style.display = 'block';
+                    livePh.innerHTML = 'A követett nézetben az élő hírfolyam szünetel.';
+                }
             } else {
                 sortTabs.style.display = 'flex';
                 let icon = activeTab ? activeTab.innerText.split(' ')[0] : '📰';
                 let subtext = feedName.includes('+') ? 'r/hungary+askhungary+kiszamolo+budapest...' : `r/${feedName}`;
                 headerTitle.innerHTML = `${icon} ${feedDisplayName}`;
                 headerSub.innerHTML = subtext;
-                document.getElementById('live-placeholder').innerHTML = '<div style="text-align:center; color:var(--text-secondary); font-size:0.9rem; margin-top:2rem;">Várakozás az adatokra...</div>'; 
+                let livePh = document.getElementById('live-placeholder');
+                if (livePh && !document.getElementById('system-intro-msg')) {
+                    livePh.style.display = 'block';
+                    livePh.innerHTML = 'Várakozás az adatokra...';
+                }
             }
             loadRedditPosts(true, false);
         }
 
         function changeSort(sortName) {
+            isFetching = false; 
             currentSort = sortName;
             document.querySelectorAll('.sort-pill:not(.feed-pill)').forEach(btn => btn.classList.remove('active'));
             const activeSortBtn = document.getElementById(`sort-${sortName}`);
@@ -830,7 +888,10 @@
             updateFollowCountUI(); 
             
             updateCardFollowUI(postId);
-            if (currentFeed === 'followed' && index > -1) loadRedditPosts(true, false);
+            if (currentFeed === 'followed') {
+                isFetching = false; 
+                loadRedditPosts(true); 
+            }
         }
 
         function extendFollow(postId, hours) {
@@ -914,11 +975,46 @@
             return { ups: Math.round(total * ratio), downs: Math.round(total - Math.round(total * ratio)) };
         }
 
+        // TÖKÉLETESÍTETT KÉPKINYERŐ RENDSZER (HD/4K fókusszal)
         function generatePostCardHtml(postData, isFollowed, timeString, extraClass = '') {
             let imgUrl = null;
-            if (postData.preview && postData.preview.images && postData.preview.images.length > 0) imgUrl = postData.preview.images[0].source.url.replace(/&amp;/g, '&');
-            else if (postData.url && postData.url.match(/\.(jpeg|jpg|gif|png)$/i)) imgUrl = postData.url;
-            else if (postData.thumbnail && postData.thumbnail.startsWith('http')) imgUrl = postData.thumbnail;
+
+            if (postData.is_gallery && postData.media_metadata) {
+                const galleryItems = Object.values(postData.media_metadata);
+                for (const item of galleryItems) {
+                    if (item.status === 'valid' && item.s && item.s.u) {
+                        imgUrl = item.s.u.replace(/&amp;/g, '&');
+                        break;
+                    }
+                }
+            }
+
+            if (!imgUrl && postData.media && postData.media.oembed && postData.media.oembed.thumbnail_url) {
+                imgUrl = postData.media.oembed.thumbnail_url.replace(/&amp;/g, '&');
+            }
+
+            if (!imgUrl && postData.crosspost_parent_list && postData.crosspost_parent_list.length > 0) {
+                const cp = postData.crosspost_parent_list[0];
+                if (cp.preview && cp.preview.images && cp.preview.images.length > 0) {
+                    imgUrl = cp.preview.images[0].source.url.replace(/&amp;/g, '&');
+                } else if (cp.url && cp.url.match(/\.(jpeg|jpg|gif|png)$/i)) {
+                    imgUrl = cp.url;
+                } else if (cp.media && cp.media.oembed && cp.media.oembed.thumbnail_url) {
+                    imgUrl = cp.media.oembed.thumbnail_url.replace(/&amp;/g, '&');
+                }
+            }
+
+            if (!imgUrl && postData.preview && postData.preview.images && postData.preview.images.length > 0) {
+                imgUrl = postData.preview.images[0].source.url.replace(/&amp;/g, '&');
+            } 
+            
+            if (!imgUrl && postData.url && postData.url.match(/\.(jpeg|jpg|gif|png)$/i)) {
+                imgUrl = postData.url;
+            }
+
+            if (!imgUrl && postData.thumbnail && postData.thumbnail.startsWith('http')) {
+                imgUrl = postData.thumbnail.replace(/&amp;/g, '&');
+            }
 
             const subColor = stringToColor(postData.subreddit);
             const subBadgeHtml = `<span class="card-sub-badge" style="background: ${subColor}25; color: ${subColor}; border: 1px solid ${subColor}40;">r/${postData.subreddit}</span>`;
@@ -974,6 +1070,8 @@
         async function loadRedditPosts(isReset = false) {
             if (isFetching) return;
             isFetching = true;
+            const reqId = ++currentRequestId; 
+
             const feedContainer = document.getElementById('feed');
             const sentinel = document.getElementById('scroll-sentinel');
             
@@ -984,49 +1082,75 @@
                 document.getElementById('main-scroll-area').scrollTo({ top: 0, behavior: 'smooth' }); 
             }
 
-            let posts =[];
+            try {
+                let posts =[];
 
-            if (currentFeed === 'followed') {
-                const followedList = getFollowedPosts();
-                posts = followedList.map(item => ({ data: item.data }));
-                sentinel.style.display = 'none'; 
-                if (posts.length === 0) { feedContainer.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 3rem; color:var(--text-secondary);">Még nincs követett tartalom.</div>'; isFetching = false; return; }
-            } else {
-                sentinel.style.display = 'block'; sentinel.innerText = "📡 ADATOK BETÖLTÉSE...";
-                let fetchUrl = `https://www.reddit.com/r/${currentFeed}/${currentSort}.json?limit=${fetchLimit}`;
-                if (currentSort === 'top') fetchUrl += '&t=day'; 
-                if (!isReset && afterToken) fetchUrl += `&after=${afterToken}`;
-                try {
-                    const response = await fetch(fetchUrl); const data = await response.json();
-                    posts = data.data.children; afterToken = data.data.after;
-                } catch(e) { sentinel.innerHTML = "⚠️ KAPCSOLATI HIBA."; isFetching = false; return;}
-            }
+                if (currentFeed === 'followed') {
+                    const followedList = getFollowedPosts();
+                    posts = followedList.map(item => ({ data: item.data }));
+                    sentinel.style.display = 'none'; 
+                    if (posts.length === 0) { 
+                        feedContainer.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 48px; color:var(--text-secondary); font-weight:600;">Még nincs követett tartalom.</div>'; 
+                        return; 
+                    }
+                } else {
+                    sentinel.style.display = 'block'; sentinel.innerText = "📡 ADATOK BETÖLTÉSE...";
+                    let fetchUrl = `https://www.reddit.com/r/${currentFeed}/${currentSort}.json?limit=${fetchLimit}`;
+                    if (currentSort === 'top') fetchUrl += '&t=day'; 
+                    if (!isReset && afterToken) fetchUrl += `&after=${afterToken}`;
+                    
+                    const response = await fetch(fetchUrl); 
+                    const data = await response.json();
+                    
+                    if (reqId !== currentRequestId) return; 
 
-            posts = posts.filter(post => !renderedPostIds.has(post.data.name));
-            if (currentSort === 'new') posts.sort((a, b) => b.data.created_utc - a.data.created_utc);
+                    if (data && data.data && data.data.children) {
+                        posts = data.data.children; 
+                        afterToken = data.data.after;
+                    } else {
+                        throw new Error("Érvénytelen válasz a szervertől");
+                    }
+                }
 
-            let newHtml = ''; 
+                if (reqId !== currentRequestId) return; 
 
-            posts.forEach(post => {
-                const postData = post.data; window.postCache[postData.name] = postData; 
-                const date = new Date(postData.created_utc * 1000);
-                const timeString = `${date.toLocaleDateString('hu-HU', {month:'short', day:'numeric'})} ${date.toLocaleTimeString('hu-HU', { hour: '2-digit', minute: '2-digit' })}`;
+                posts = posts.filter(post => !renderedPostIds.has(post.data.name));
+                if (currentSort === 'new') posts.sort((a, b) => b.data.created_utc - a.data.created_utc);
+
+                let newHtml = ''; 
+
+                posts.forEach(post => {
+                    const postData = post.data; window.postCache[postData.name] = postData; 
+                    const date = new Date(postData.created_utc * 1000);
+                    const timeString = `${date.toLocaleDateString('hu-HU', {month:'short', day:'numeric'})} ${date.toLocaleTimeString('hu-HU', { hour: '2-digit', minute: '2-digit' })}`;
+                    
+                    newHtml += generatePostCardHtml(postData, false, timeString); 
+                    renderedPostIds.add(postData.name);
+                });
+
+                if (newHtml !== '') feedContainer.insertAdjacentHTML('beforeend', newHtml);
                 
-                newHtml += generatePostCardHtml(postData, false, timeString); 
-                renderedPostIds.add(postData.name);
-            });
+                if (currentFeed !== 'followed') {
+                    sentinel.innerHTML = afterToken ? "⬇ Görgess a továbbiakhoz ⬇" : "NINCS TÖBB ARCHÍV ADAT.";
+                }
 
-            if (newHtml !== '') feedContainer.insertAdjacentHTML('beforeend', newHtml);
-            if (currentFeed !== 'followed') sentinel.innerHTML = afterToken ? "⬇ Görgess a továbbiakhoz ⬇" : "NINCS TÖBB ARCHÍV ADAT.";
-            isFetching = false;
+            } catch(e) { 
+                if (reqId === currentRequestId) sentinel.innerHTML = "⚠️ KAPCSOLATI HIBA VAGY TÚLTERHELÉS."; 
+            } finally {
+                if (reqId === currentRequestId) isFetching = false;
+            }
         }
 
         async function autoFetchNewPosts() {
             if (currentFeed === 'followed' || currentSort !== 'new') return; 
+            const savedFeed = currentFeed;
             try {
                 let fetchUrl = `https://www.reddit.com/r/${currentFeed}/new.json?limit=10`;
                 let response = await fetch(fetchUrl);
                 let json = await response.json();
+                
+                if (currentFeed !== savedFeed) return; 
+                
                 let posts = json.data.children;
                 let newPosts = posts.filter(p => !renderedPostIds.has(p.data.name));
                 
@@ -1079,8 +1203,6 @@
         }
         setInterval(syncLivePostData, 15000); 
 
-        // --- TÖKÉLETESÍTETT ÉLŐ CHAT GÖRDÜLÉS (ResizeObserver) ---
-        
         const liveFeedContainer = document.getElementById('live-feed-container');
         const chatInnerList = document.getElementById('chat-inner-list');
         const newMsgBtn = document.getElementById('new-msg-btn');
@@ -1089,19 +1211,16 @@
         let lastScrollTop = 0;
 
         function initChatScrollLogic() {
-            // Görgetés figyelése
             liveFeedContainer.addEventListener('scroll', () => {
                 let currentScrollTop = liveFeedContainer.scrollTop;
                 let maxScrollTop = liveFeedContainer.scrollHeight - liveFeedContainer.clientHeight;
                 
-                // Ha közel van az aljához (150px tűréshatár a gyors képbetöltések miatt)
                 let isNearBottom = (maxScrollTop - currentScrollTop) <= 150;
 
                 if (isNearBottom) {
                     userIsScrolledUp = false;
                     newMsgBtn.classList.remove('show');
                 } else {
-                    // Ha a görgetési pozíció CSÖKKENT (felfelé tekert a user), akkor átváltunk olvasó módba
                     if (currentScrollTop < lastScrollTop - 5) {
                         userIsScrolledUp = true;
                     }
@@ -1109,7 +1228,6 @@
                 lastScrollTop = currentScrollTop;
             }, { passive: true });
 
-            // Ez az observer GARANTÁLJA, hogy egyetlen GIF/Kép sem akasztja meg a görgetést!
             const resizeObserver = new ResizeObserver(() => {
                 if (!userIsScrolledUp) {
                     liveFeedContainer.scrollTop = liveFeedContainer.scrollHeight;
@@ -1127,7 +1245,6 @@
 
         let seenLiveComments = new Set();
         let liveCommentQueue =[];
-        let isProcessingLiveQueue = false;
         let isLiveFeedHovered = false;
         
         let lastLiveMessageTime = Date.now();
@@ -1163,9 +1280,12 @@
 
         async function pollLiveComments() {
             if (currentFeed === 'followed') return;
+            const savedFeed = currentFeed;
             try {
                 let res = await fetch(`https://www.reddit.com/r/${currentFeed}/comments.json?limit=15`);
                 let json = await res.json();
+                if (currentFeed !== savedFeed) return;
+
                 let comments = json.data.children;
 
                 for (let i = comments.length - 1; i >= 0; i--) {
@@ -1182,46 +1302,80 @@
         }
         setInterval(pollLiveComments, 30000); 
 
-        // RENDSZERÜZENET ÜRESJÁRAT ESETÉRE (10 PERC)
-        function showIdleSystemMessage() {
-            let wasAtBottom = !userIsScrolledUp;
+        // RENDSZERÜZENET MUTATÁSA (Bevezető / Üresjárat)
+        function showIntroMessage(isInitial) {
+            let existing = document.getElementById('system-intro-msg');
+            if (existing) existing.remove();
+            
+            let placeholder = document.getElementById('live-placeholder');
+            if (placeholder) placeholder.style.display = 'none';
 
-            let idleHtml = `
-                <div class="chat-message system-idle-msg">
-                    <div class="chat-message-avatar" style="background-color: var(--accent-blue)">📡</div>
+            let introHtml = `
+                <div class="chat-message system-intro-box" id="system-intro-msg">
+                    <div class="chat-message-avatar" style="background-color: var(--accent-brand)">⚠️</div>
                     <div class="chat-message-content">
                         <div class="chat-message-header">
-                            <span class="chat-message-author" style="color: var(--accent-blue)">Rendszerüzenet</span>
-                            <span class="chat-message-time">${new Date().toLocaleTimeString('hu-HU', { hour: '2-digit', minute: '2-digit' })}</span>
+                            <span class="chat-message-author" style="color: var(--accent-brand)">Rendszerüzenet</span>
                         </div>
-                        <div class="chat-message-text" style="color: var(--text-secondary); font-style: italic;">
-                            Jelenleg csendes a hálózat. Az elmúlt 10 percben nem érkezett új hozzászólás. 
-                            A PRO Terminál 0-24 órában aktívan figyel a háttérben, az adás automatikusan folytatódik, amint új tartalom születik!
+                        <div class="chat-message-text" style="color: var(--text-primary); font-size: 14px; line-height: 1.6;">
+                            <strong>Üdv a PRO Terminálban! 👋</strong><br><br>
+                            Ez az oldal a Reddit legfrissebb magyar tartalmait hozza el neked. Bal oldalt a csatornákat és a napi top témákat találod, középen a hírfolyam pörög, itt jobbra pedig a közösség aktuális pulzusát láthatod élőben.<br><br>
+                            <span style="color: var(--accent-red); font-weight: 800;">FONTOS TÁJÉKOZTATÁS:</span><br>
+                            Ez az élő chat a Reddit kommentek cenzúrázatlan, nyers folyamát mutatja! Szókimondó, olykor vulgáris és 18+ kifejezéseket tartalmazhat, amelyek automatikusan, szűrés nélkül jelennek meg.<br><br>
+                            <em>Jó szórakozást kívánok! 🚀</em>
                         </div>
                     </div>
                 </div>
             `;
+            chatInnerList.insertAdjacentHTML('beforeend', introHtml);
+            liveFeedContainer.scrollTop = liveFeedContainer.scrollHeight;
 
-            chatInnerList.insertAdjacentHTML('beforeend', idleHtml);
-
-            if (wasAtBottom) {
-                liveFeedContainer.scrollTop = liveFeedContainer.scrollHeight;
-            } else {
-                newMsgBtn.classList.add('show');
+            if (isInitial) {
+                // 25 másodpercig tartjuk a képernyőn mielőtt ráengedjük az üzeneteket
+                setTimeout(async () => {
+                    chatPausedForIntro = false;
+                    // Ha időközben érkeztek a háttérben üzenetek, azonnal be is vágjuk az elsőt!
+                    if (liveCommentQueue.length > 0) {
+                        isProcessingLiveQueue = true;
+                        const cData = liveCommentQueue.shift(); 
+                        await renderLiveBubble(cData);
+                        
+                        let waitTime = liveCommentQueue.length > 5 ? 1500 : 6000;
+                        setTimeout(() => {
+                            isProcessingLiveQueue = false;
+                            processLiveQueue();
+                        }, waitTime);
+                    } else {
+                        // Ha esetleg nagyon csendes az adatfolyam, szimplán elrejtjük
+                        hideIntroMessage();
+                        processLiveQueue();
+                    }
+                }, 25000);
             }
         }
 
+        // RENDSZERÜZENET ELREJTÉSE
+        function hideIntroMessage() {
+            let existing = document.getElementById('system-intro-msg');
+            if (existing) {
+                existing.remove();
+            }
+            idleMessageShown = false;
+        }
+
+        // ÜRESJÁRAT FIGYELŐ (10 PERC UTÁN)
         setInterval(() => {
             if (currentFeed === 'followed') return;
             const now = Date.now();
             if (now - lastLiveMessageTime > 10 * 60 * 1000 && !idleMessageShown) {
-                showIdleSystemMessage();
+                showIntroMessage(false);
                 idleMessageShown = true;
             }
         }, 60000);
 
         async function processLiveQueue() {
-            if (isProcessingLiveQueue) return;
+            // Ha várakoztatjuk az üzeneteket induláskor, megszakítjuk a ciklust
+            if (chatPausedForIntro || isProcessingLiveQueue) return;
             
             if (isLiveFeedHovered || liveCommentQueue.length === 0) {
                 setTimeout(processLiveQueue, 1000); 
@@ -1243,10 +1397,6 @@
 
         async function renderLiveBubble(cData) {
             lastLiveMessageTime = Date.now();
-            idleMessageShown = false;
-
-            let placeholder = document.getElementById('live-placeholder');
-            if (placeholder) placeholder.remove();
 
             let postId = cData.link_id.replace('t3_', 't3_');
             let post = window.postCache[postId];
@@ -1256,9 +1406,7 @@
             if (cData.parent_id && cData.parent_id.startsWith('t1_')) {
                 let pData = await fetchParentComment(cData.parent_id);
                 if (pData) {
-                    // Okosabb szövegkinyerés és média felismerés a kontextushoz
                     let pText = pData.body || '';
-                    
                     if (!pText || pText.trim() === '') {
                         if (pData.media_metadata || (pData.body_html && pData.body_html.includes('img'))) {
                             pText = '🖼️[Képet vagy GIF-et küldött]';
@@ -1266,7 +1414,7 @@
                             pText = '📎[Média tartalom]';
                         }
                     } else {
-                        pText = pText.replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1'); // Tisztítja a markdown linkeket
+                        pText = pText.replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1'); 
                         if(pText.length > 150) pText = pText.substring(0, 150) + '...';
                     }
 
@@ -1306,9 +1454,14 @@
                 </div>
             `;
 
+            // Közvetlenül a kirajzolás előtt tüntetjük el a tájékoztatót, így abszolút NINCS üresjárat!
+            hideIntroMessage();
+
+            let placeholder = document.getElementById('live-placeholder');
+            if (placeholder) placeholder.remove();
+
             chatInnerList.insertAdjacentHTML('beforeend', bubbleHtml);
 
-            // A ResizeObserver garantálja a görgetést, ha kép vagy szöveg tölt be
             if (wasAtBottom) {
                 liveFeedContainer.scrollTop = liveFeedContainer.scrollHeight;
                 lastScrollTop = liveFeedContainer.scrollTop;
@@ -1322,8 +1475,6 @@
                 }
             }
         }
-
-        processLiveQueue();
 
         function flattenComments(commentsArr, level = 0, sortOrder = 'desc') {
             let result =[];
@@ -1343,17 +1494,17 @@
 
         function processCommentBody(cData, isLiveChat = false) {
             let html = '';
-            let lazyAttr = isLiveChat ? '' : 'loading="lazy"'; // Élő chatnél NINCS lazy load, hogy azonnal görgessen!
+            let lazyAttr = isLiveChat ? '' : 'loading="lazy"'; 
 
             if (cData.body_html) {
                 html = decodeHtml(cData.body_html);
                 html = html.replace(/<a /g, '<a target="_blank" rel="noopener noreferrer" ');
-                html = html.replace(/<a[^>]*href=["'](https?:\/\/(?:preview\.redd\.it|i\.redd\.it)[^"']+)["'][^>]*>.*?<\/a>/gi, `<img src="$1" ${lazyAttr}>`);
-                html = html.replace(/<a[^>]*href=["']https?:\/\/(?:www\.)?giphy\.com\/gifs\/(?:[a-zA-Z0-9-]+-)?([a-zA-Z0-9]+)["'][^>]*>.*?<\/a>/gi, `<a href="https://giphy.com/gifs/$1" target="_blank"><img src="https://media.giphy.com/media/$1/giphy.gif" ${lazyAttr}></a>`);
-                html = html.replace(/<a[^>]*href=["'](https?:\/\/[^"']+\.(?:jpg|jpeg|png|gif)(?:\?[^"']*)?)["'][^>]*>.*?<\/a>/gi, `<a href="$1" target="_blank"><img src="$1" ${lazyAttr}></a>`);
+                html = html.replace(/<a[^>]*href=["'](https?:\/\/(?:preview\.redd\.it|i\.redd\.it)[^"']+)["'][^>]*>.*?<\/a>/gi, `<img src="$1" ${lazyAttr} class="comment-inline-image">`);
+                html = html.replace(/<a[^>]*href=["']https?:\/\/(?:www\.)?giphy\.com\/gifs\/(?:[a-zA-Z0-9-]+-)?([a-zA-Z0-9]+)["'][^>]*>.*?<\/a>/gi, `<a href="https://giphy.com/gifs/$1" target="_blank"><img src="https://media.giphy.com/media/$1/giphy.gif" ${lazyAttr} class="comment-inline-image"></a>`);
+                html = html.replace(/<a[^>]*href=["'](https?:\/\/[^"']+\.(?:jpg|jpeg|png|gif)(?:\?[^"']*)?)["'][^>]*>.*?<\/a>/gi, `<a href="$1" target="_blank"><img src="$1" ${lazyAttr} class="comment-inline-image"></a>`);
             } else {
                 html = cData.body || ''; 
-                html = html.replace(/(https?:\/\/(?:preview\.redd\.it|i\.redd\.it)[^\s]+)/gi, `<img src="$1" ${lazyAttr}>`);
+                html = html.replace(/(https?:\/\/(?:preview\.redd\.it|i\.redd\.it)[^\s]+)/gi, `<img src="$1" ${lazyAttr} class="comment-inline-image">`);
             }
 
             if (cData.media_metadata) {
@@ -1361,7 +1512,7 @@
                     let media = cData.media_metadata[key];
                     if (media.status === 'valid' && (media.e === 'Image' || media.e === 'AnimatedImage')) {
                         let imgUrl = media.s.u ? media.s.u.replace(/&amp;/g, '&') : (media.s.gif ? media.s.gif.replace(/&amp;/g, '&') : null);
-                        if (imgUrl) html += `<br><img src="${imgUrl}" ${lazyAttr}>`;
+                        if (imgUrl) html += `<br><img src="${imgUrl}" ${lazyAttr} class="comment-inline-image">`;
                     }
                 }
             } return html;
@@ -1500,10 +1651,10 @@
             const startIndex = dataObj.renderedCount; const batchSize = 15;
 
             if (startIndex >= comments.length) {
-                if(startIndex === 0) { listContainer.innerHTML = `<div style="text-align:center; padding: 2rem; color:var(--text-secondary);">Még nincs hozzászólás.</div>`; } 
+                if(startIndex === 0) { listContainer.innerHTML = `<div style="text-align:center; padding: 24px; color:var(--text-secondary); font-weight:600;">Még nincs hozzászólás.</div>`; } 
                 else {
                     const existingEnd = listContainer.querySelector('.end-of-comments'); if (existingEnd) existingEnd.remove();
-                    listContainer.insertAdjacentHTML('beforeend', `<div class="end-of-comments" style="text-align:center; margin-top:20px; color:var(--text-secondary);">--- Vége a beszélgetésnek ---</div>`);
+                    listContainer.insertAdjacentHTML('beforeend', `<div class="end-of-comments" style="text-align:center; margin-top:20px; color:var(--text-secondary); font-weight:600;">--- Vége a beszélgetésnek ---</div>`);
                 } return;
             }
 
