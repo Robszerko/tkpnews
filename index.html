@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
     <title>Reddit | Információs Irányítópult</title>
     
     <style id="dynamic-theme"></style>
@@ -66,7 +67,7 @@
 
         /* --- FELSŐ NAVIGÁCIÓS SÁV --- */
         .top-navbar {
-            height: 48px; /* Keskenyebb fejléc */
+            height: 48px;
             background-color: var(--bg-surface);
             border-bottom: 1px solid var(--border-color);
             display: flex;
@@ -110,11 +111,23 @@
         }
         .global-search button:hover { background: var(--accent-primary); color: #fff;}
 
-        /* Idő/Dátum panel */
+        /* Idő/Dátum panel + IDŐJÁRÁS */
         .top-meta {
-            display: flex; align-items: center; gap: 16px;
+            display: flex; align-items: center; gap: 12px;
             font-size: 12px; color: var(--text-muted); font-weight: 600;
         }
+        
+        .weather-widget {
+            font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+            display: flex; align-items: center; gap: 6px;
+            background: var(--bg-body); padding: 4px 10px; border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color); color: var(--text-muted);
+        }
+        .weather-widget .loc { color: var(--text-muted); }
+        .weather-widget .temp { color: var(--text-main); font-weight: 800; font-size: 12px; }
+        .weather-widget .feels { color: var(--accent-warning); font-weight: 700; }
+        .weather-widget .w-sep { opacity: 0.3; margin: 0 2px; }
+
         .top-meta .clock {
             font-family: var(--font-mono); font-weight: 700; color: var(--text-main);
             background: var(--bg-body); padding: 4px 10px;
@@ -167,20 +180,18 @@
             overflow-y: auto; position: relative;
         }
         
-        /* KOMPAKT FEJLÉC KIALAKÍTÁS - Hírek Layer */
+        /* FEJLÉC (Hírek Header + Ticker sáv) */
         .feed-header-wrap {
             position: sticky; top: 0; background-color: var(--bg-body);
-            padding: 12px 20px; border-bottom: 1px solid var(--border-color);
-            z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+            z-index: 10; display: flex; flex-direction: column;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .scroll-progress-bar {
-            position: absolute; bottom: -1px; left: 0; height: 2px;
-            background: var(--accent-primary); width: 0%; z-index: 20;
-            transition: width 0.1s ease-out; 
+        .header-main-row {
+            padding: 12px 20px;
+            display: flex; align-items: center; justify-content: space-between; gap: 16px;
         }
 
-        /* Egy sávos cím blokk */
         .feed-title-block { display: flex; align-items: center; gap: 12px; }
         .feed-title { font-size: 18px; font-weight: 800; line-height: 1; margin: 0; }
         .feed-subtitle { font-size: 12px; color: var(--text-muted); font-family: var(--font-mono); line-height: 1; display: flex; align-items: center; }
@@ -194,9 +205,37 @@
         .sort-btn:hover { color: var(--text-main); border-color: var(--border-highlight); }
         .sort-btn.active { background: var(--text-main); color: var(--bg-body); border-color: var(--text-main); }
 
+        /* VÉKONY HÍRCSÍK SÁV */
+        .news-ticker-strip {
+            background-color: var(--bg-surface);
+            border-top: 1px solid var(--border-color);
+            padding: 0 20px;
+            display: flex; align-items: center;
+            height: 28px; /* Nagyon vékony sáv */
+            overflow: hidden;
+        }
+
+        .ticker-content {
+            display: flex; align-items: center; gap: 8px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            width: 100%; font-size: 12px;
+            transition: opacity 0.4s ease; /* Finom áttűnés */
+        }
+
+        .ticker-time { font-family: var(--font-mono); font-weight: 700; color: var(--text-muted); font-size: 11px; flex-shrink: 0;}
+        .ticker-source { font-weight: 800; color: var(--accent-info); font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0;}
+        .ticker-title { font-weight: 600; color: var(--text-main); text-decoration: none; overflow: hidden; text-overflow: ellipsis; }
+        .ticker-title:hover { color: var(--accent-primary); text-decoration: underline; }
+
+        .scroll-progress-bar {
+            position: absolute; bottom: -1px; left: 0; height: 2px;
+            background: var(--accent-primary); width: 0%; z-index: 20;
+            transition: width 0.1s ease-out; 
+        }
+
+        /* GRID ÉS KÁRTYÁK */
         .feed-grid {
             padding: 20px; display: grid; gap: 16px; align-items: start;
-            /* Garantáljuk, hogy kisebb helyen is legalább 2 elférjen */
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         }
 
@@ -260,21 +299,15 @@
         .card:hover .card-hover-overlay { opacity: 1; }
         
         .hover-content-text {
-            font-size: 12px;
-            line-height: 1.5;
-            font-weight: 500;
-            display: -webkit-box;
-            -webkit-line-clamp: 8;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+            font-size: 12px; line-height: 1.5; font-weight: 500;
+            display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical;
+            overflow: hidden; text-shadow: 0 1px 2px rgba(0,0,0,0.8);
         }
 
         #scroll-sentinel { text-align: center; padding: 40px; color: var(--text-muted); font-family: var(--font-mono); font-size: 13px; }
 
         .scroll-to-top {
-            position: absolute; bottom: 30px; right: 30px;
-            width: 40px; height: 40px; border-radius: 50%;
+            position: absolute; bottom: 30px; right: 30px; width: 40px; height: 40px; border-radius: 50%;
             background: var(--bg-surface); border: 1px solid var(--border-color);
             color: var(--text-main); font-size: 18px; font-weight: bold; cursor: pointer;
             display: flex; align-items: center; justify-content: center;
@@ -286,22 +319,16 @@
 
         /* --- 3. JOBB OSZLOP: ÉLŐ CHAT --- */
         .right-sidebar {
-            width: 320px; /* Keskenyebb méret */
-            flex-shrink: 0;
-            background-color: var(--bg-surface);
-            border-left: 1px solid var(--border-color);
-            display: flex; flex-direction: column; position: relative;
+            width: 320px; flex-shrink: 0; background-color: var(--bg-surface);
+            border-left: 1px solid var(--border-color); display: flex; flex-direction: column; position: relative;
         }
 
-        /* KOMPAKT FEJLÉC KIALAKÍTÁS - Chat Layer */
         .chat-header {
             padding: 12px 20px; border-bottom: 1px solid var(--border-color);
             display: flex; flex-direction: row; align-items: center; justify-content: space-between;
-            position: relative; z-index: 15; background: var(--bg-surface);
+            position: relative; z-index: 15; background: var(--bg-surface); height: 48px;
         }
-        .chat-title-group {
-            display: flex; align-items: center;
-        }
+        .chat-title-group { display: flex; align-items: center; }
         .chat-title { font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 8px; margin: 0; line-height: 1;}
         .live-dot { width: 8px; height: 8px; background-color: var(--accent-danger); border-radius: 50%; }
         
@@ -313,11 +340,8 @@
 
         .chat-subtitle { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); margin-left: 8px; }
 
-        /* --- VÉLETLENSZERŰ PATTOGÓ FIGYELMEZTETÉS --- */
         .chat-warning-popup {
-            position: absolute;
-            top: 55px; /* A vékonyabb fejléc alá igazítva */
-            left: 16px; right: 16px;
+            position: absolute; top: 55px; left: 16px; right: 16px;
             background: var(--bg-body); border: 1px solid var(--accent-danger); border-left: 4px solid var(--accent-danger);
             border-radius: var(--radius-md); padding: 12px; color: var(--text-main); font-size: 11px; font-weight: 600;
             text-align: left; line-height: 1.4; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); z-index: 10;
@@ -338,65 +362,46 @@
             0% { opacity: 1; transform: perspective(400px) rotateX(0deg); }
             100% { opacity: 0; transform: perspective(400px) rotateX(-90deg); }
         }
-
         .chat-warning-popup.show { animation: bounceFlipDown 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         .chat-warning-popup.hide { animation: flipUpHide 0.4s ease-in forwards; }
 
-        /* --- CHAT FEED --- */
         .chat-feed { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-
-        #chat-inner-list {
-            display: flex; flex-direction: column; gap: 12px;
-        }
+        #chat-inner-list { display: flex; flex-direction: column; gap: 12px; }
 
         .chat-bubble {
             background-color: var(--bg-body); border: 1px solid var(--border-color);
-            border-radius: var(--radius-md); padding: 10px 12px;
-            max-width: 95%; 
-            align-self: flex-start;
+            border-radius: var(--radius-md); padding: 10px 12px; max-width: 95%; align-self: flex-start;
         }
-        
         .chat-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 10px; color: var(--text-muted); }
-        
         .chat-author-wrap { display: flex; align-items: center; }
         .chat-avatar {
-            width: 18px; height: 18px; border-radius: 50%;
-            display: inline-flex; align-items: center; justify-content: center;
+            width: 18px; height: 18px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
             font-size: 9px; font-weight: 800; color: white; margin-right: 6px; flex-shrink: 0;
         }
         .chat-author { font-weight: 700; color: var(--accent-primary); font-size: 11px; }
-        
         .chat-ref {
-            font-size: 10px; font-weight: 600; color: var(--text-muted);
-            background: var(--bg-surface); padding: 4px 6px; border-radius: var(--radius-sm);
+            font-size: 10px; font-weight: 600; color: var(--text-muted); background: var(--bg-surface); padding: 4px 6px; border-radius: var(--radius-sm);
             margin-bottom: 6px; cursor: pointer; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; border: 1px solid var(--border-color);
         }
         .chat-ref:hover { border-color: var(--accent-primary); color: var(--text-main); }
-
         .chat-text { font-size: 12px; line-height: 1.4; color: var(--text-main); word-break: break-word; }
         .chat-text img { max-width: 100%; border-radius: var(--radius-sm); margin-top: 6px; border: 1px solid var(--border-color); }
-        
-        .chat-quote {
-            border-left: 2px solid var(--border-highlight); padding-left: 6px; margin-bottom: 6px; font-size: 11px; color: var(--text-muted);
-        }
+        .chat-quote { border-left: 2px solid var(--border-highlight); padding-left: 6px; margin-bottom: 6px; font-size: 11px; color: var(--text-muted); }
 
         .new-msg-btn {
             position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
             background: var(--accent-info); color: #fff; padding: 6px 14px; border-radius: 20px;
-            font-size: 11px; font-weight: 700; cursor: pointer; border: none;
-            display: none; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); z-index: 10;
+            font-size: 11px; font-weight: 700; cursor: pointer; border: none; display: none; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); z-index: 10;
         }
         .new-msg-btn.show { display: block; }
 
         /* --- MODAL --- */
         .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(15, 23, 42, 0.9); z-index: 9999; display: none; align-items: center; justify-content: center;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.9); z-index: 9999; display: none; align-items: center; justify-content: center;
         }
         .modal-overlay.active { display: flex; }
         .modal-content {
-            background: var(--bg-surface); width: 90vw; max-width: 800px; height: 85vh;
-            border-radius: var(--radius-lg); border: 1px solid var(--border-color);
+            background: var(--bg-surface); width: 90vw; max-width: 800px; height: 85vh; border-radius: var(--radius-lg); border: 1px solid var(--border-color);
             display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
         .modal-header {
@@ -429,7 +434,6 @@
         .c-body { font-size: 13px; line-height: 1.6; }
         .c-body a { color: var(--accent-info); text-decoration: none; }
 
-        /* Animációk */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeIn 0.3s ease forwards; }
 
@@ -465,6 +469,9 @@
 
         <div class="top-meta">
             <span id="date-display">Dátum betöltése...</span>
+            <div class="weather-widget" id="weather-display">
+                <span class="loc" style="opacity: 0.5;">Időjárás adatok lekérése...</span>
+            </div>
             <div class="clock" id="clock-display">--:--:--</div>
         </div>
     </header>
@@ -506,16 +513,27 @@
         <!-- KÖZÉPSŐ OSZLOP -->
         <main class="feed-area" id="main-scroll-area">
             <div class="feed-header-wrap">
-                <div class="feed-title-block">
-                    <h1 class="feed-title" id="current-feed-title">Fő Hírek</h1>
-                    <div class="feed-subtitle" id="current-feed-subtitle">Aktuális hazai tartalmak</div>
+                <!-- Fő sor -->
+                <div class="header-main-row">
+                    <div class="feed-title-block">
+                        <h1 class="feed-title" id="current-feed-title">Fő Hírek</h1>
+                        <div class="feed-subtitle" id="current-feed-subtitle">Aktuális hazai tartalmak</div>
+                    </div>
+                    <div class="sort-tabs" id="sort-tabs">
+                        <button class="sort-btn active" id="sort-new" onclick="changeSort('new')">Legfrissebb</button>
+                        <button class="sort-btn" id="sort-hot" onclick="changeSort('hot')">Felkapott</button>
+                        <button class="sort-btn" id="sort-top" onclick="changeSort('top')">Napi Top</button>
+                        <button class="sort-btn" id="sort-rising" onclick="changeSort('rising')">Feltörekvő</button>
+                    </div>
                 </div>
-                <div class="sort-tabs" id="sort-tabs">
-                    <button class="sort-btn active" id="sort-new" onclick="changeSort('new')">Legfrissebb</button>
-                    <button class="sort-btn" id="sort-hot" onclick="changeSort('hot')">Felkapott</button>
-                    <button class="sort-btn" id="sort-top" onclick="changeSort('top')">Napi Top</button>
-                    <button class="sort-btn" id="sort-rising" onclick="changeSort('rising')">Feltörekvő</button>
+                
+                <!-- Hírcsík (Ticker) -->
+                <div class="news-ticker-strip">
+                    <div class="ticker-content" id="ticker-content">
+                        <span class="ticker-time" style="opacity: 0.5;">A legfrissebb napi hírek betöltése folyamatban...</span>
+                    </div>
                 </div>
+
                 <div class="scroll-progress-bar" id="feed-progress"></div>
             </div>
 
@@ -601,11 +619,14 @@
             
             loadRedditPosts(true); 
             
-            // Random ablak aktiválása
+            // Ticker & Weather init
+            fetchWeatherPWS();
+            fetchRssForTicker(); // Kezdeti lekérés
+            
             initRandomWarningPopup();
         });
 
-        // === ÓRA, TÉMA ÉS ÉV (Copyright) ===
+        // === ÓRA, TÉMA ÉS ÉV (Copyright) ÉS HÍRCSÍK IDŐZÍTŐ ===
         function initClock() {
             const dateEl = document.getElementById('date-display');
             const clockEl = document.getElementById('clock-display');
@@ -616,7 +637,6 @@
                 const now = new Date();
                 const yyyy = now.getFullYear();
                 
-                // Copyright év frissítése
                 copyYearEl.innerText = yyyy;
 
                 const mm = String(now.getMonth() + 1).padStart(2, '0');
@@ -629,32 +649,243 @@
                 const sec = String(now.getSeconds()).padStart(2, '0');
                 clockEl.innerText = `${hr}:${min}:${sec}`;
                 
+                // Pontosan 15 percenkénti hírcsík adatfrissítés (00, 15, 30, 45)
+                const minNum = now.getMinutes();
+                const secNum = now.getSeconds();
+                if ((minNum === 0 || minNum === 15 || minNum === 30 || minNum === 45) && secNum === 0) {
+                    const timeSinceLastFetch = Date.now() - lastTickerFetchTime;
+                    // Csak akkor frissítünk menetrend szerint, ha legalább 5 perc (300000 ms) eltelt az utolsó lekérés óta
+                    if (timeSinceLastFetch >= 5 * 60 * 1000) {
+                        fetchRssForTicker();
+                    }
+                }
+
                 applySimpleTheme(now.getHours());
             }, 1000);
         }
 
         function applySimpleTheme(hour = new Date().getHours()) {
             let bgBody, bgSurface, textMain, border;
-            
             if (hour >= 6 && hour < 18) {
                 bgBody = '#f8fafc'; bgSurface = '#ffffff'; textMain = '#0f172a'; border = '#e2e8f0';
             } else {
                 bgBody = '#0f172a'; bgSurface = '#1e293b'; textMain = '#f8fafc'; border = '#334155';
             }
+            document.getElementById('dynamic-theme').innerHTML = `:root { --bg-body: ${bgBody}; --bg-surface: ${bgSurface}; --text-main: ${textMain}; --border-color: ${border}; }`;
+        }
 
-            document.getElementById('dynamic-theme').innerHTML = `
-                :root {
-                    --bg-body: ${bgBody}; --bg-surface: ${bgSurface};
-                    --text-main: ${textMain}; --border-color: ${border};
+        // === PWS IDŐJÁRÁS LOGIKA (ÁTLAGOLÁSSAL) ===
+        const WUNDERGROUND_API_KEY = "e1f10a1e78da46f5b10a1e78da96f525";
+        const PWS_IDS =["INYREG42", "INYREG26", "INYREG37"]; // Több Nyíregyházi állomás
+
+        function calculateFeelsLike(temp, hum, windKmh) {
+            if (temp <= 10 && windKmh > 4.8) {
+                return 13.12 + 0.6215 * temp - 11.37 * Math.pow(windKmh, 0.16) + 0.3965 * temp * Math.pow(windKmh, 0.16);
+            }
+            const e = (hum / 100) * 6.105 * Math.exp((17.27 * temp) / (237.7 + temp));
+            const windMs = windKmh / 3.6;
+            return temp + (0.33 * e) - (0.70 * windMs) - 4.00;
+        }
+
+        async function fetchWeatherPWS() {
+            let totalTemp = 0;
+            let totalWind = 0;
+            let totalHum = 0;
+            let validCount = 0;
+
+            const promises = PWS_IDS.map(async (id) => {
+                try {
+                    const url = `https://api.weather.com/v2/pws/observations/current?stationId=${id}&format=json&units=m&apiKey=${WUNDERGROUND_API_KEY}&numericPrecision=decimal`;
+                    const res = await fetch(url, { signal: AbortSignal.timeout(10000), referrerPolicy: "no-referrer" });
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data.observations && data.observations.length > 0) {
+                            return data.observations[0];
+                        }
+                    }
+                } catch (e) {}
+                return null;
+            });
+
+            const results = await Promise.allSettled(promises);
+            results.forEach(result => {
+                if (result.status === 'fulfilled' && result.value) {
+                    const obs = result.value;
+                    if (obs.metric && typeof obs.metric.temp === 'number') {
+                        totalTemp += obs.metric.temp;
+                        totalWind += obs.metric.windSpeed;
+                        totalHum += obs.humidity;
+                        validCount++;
+                    }
                 }
-            `;
+            });
+
+            if (validCount > 0) {
+                const avgTemp = totalTemp / validCount;
+                const avgWind = totalWind / validCount;
+                const avgHum = totalHum / validCount;
+                
+                const tempStr = avgTemp.toFixed(1);
+                const feelsLikeStr = calculateFeelsLike(avgTemp, avgHum, avgWind).toFixed(1);
+
+                document.getElementById('weather-display').innerHTML = 
+                    `<span class="loc">Nyíregyháza</span> 
+                     <span class="temp">${tempStr}°C</span> 
+                     <span class="w-sep">|</span> 
+                     <span class="feels">Hőérzet: ${feelsLikeStr}°C</span>`;
+            }
+        }
+        setInterval(fetchWeatherPWS, 60000); // 1 percenként frissít
+
+
+        // === 4 ÓRÁS HÍRCSÍK (TICKER) LOGIKA ===
+        const TICKER_RSS_FEEDS = {
+            "Telex": "https://telex.hu/rss",
+            "Index": "https://index.hu/24ora/rss/",
+            "24.hu": "https://24.hu/feed/",
+            "HVG": "https://hvg.hu/rss",
+            "444": "https://444.hu/feed",
+            "Portfolio": "https://www.portfolio.hu/rss/all.xml",
+            "Origo": "https://www.origo.hu/contentpartner/rss/hir-cent/origo.xml",
+            "RTL": "https://rtl.hu/rss"
+        };
+        const CORS_PROXIES =["https://api.allorigins.win/raw?url=", "https://api.codetabs.com/v1/proxy?quest=", "https://corsproxy.io/?"];
+        
+        let tickerItems =[];
+        let currentTickerIndex = 0;
+        let lastTickerFetchTime = 0;
+        let tickerTimeout;
+        let isFetchingTicker = false;
+
+        async function fetchWithProxyFallback(url) {
+            for (const proxy of CORS_PROXIES) {
+                try {
+                    const targetUrl = proxy.includes('codetabs') ? proxy + url : proxy + encodeURIComponent(url);
+                    const res = await fetch(targetUrl, { signal: AbortSignal.timeout(8000), referrerPolicy: "no-referrer" });
+                    if (res.ok) return res;
+                } catch (e) {}
+            }
+            throw new Error('Minden proxy hibára futott.');
+        }
+
+        async function fetchRssForTicker() {
+            if (isFetchingTicker) return;
+            isFetchingTicker = true;
+            
+            let allItems =[];
+            const now = Date.now();
+            const fourHoursAgo = now - (4 * 60 * 60 * 1000); // Csak az elmúlt 4 órás ablak
+
+            try {
+                const fetchPromises = Object.entries(TICKER_RSS_FEEDS).map(async ([source, url]) => {
+                    try {
+                        const res = await fetchWithProxyFallback(url + '?cb=' + now);
+                        const txt = await res.text();
+                        if(txt.includes('<html') && !txt.includes('<rss') && !txt.includes('<feed')) return;
+
+                        const xml = new DOMParser().parseFromString(txt, "text/xml");
+                        xml.querySelectorAll("item, entry").forEach(item => {
+                            const title = item.querySelector("title")?.textContent || "";
+                            let link = item.querySelector("link")?.textContent;
+                            if (!link && item.querySelector("link[href]")) link = item.querySelector("link[href]").getAttribute("href");
+                            const dateStr = item.querySelector("pubDate, published, updated")?.textContent;
+
+                            if (title && dateStr && link) {
+                                const date = new Date(dateStr);
+                                // Csak az elmúlt 4 óra hírei kellenek
+                                if (date.getTime() >= fourHoursAgo && date.getTime() <= now) {
+                                    allItems.push({ title, link, source, date });
+                                }
+                            }
+                        });
+                    } catch (e) {}
+                });
+
+                await Promise.allSettled(fetchPromises);
+
+                // Időrendi sorrend (Legfrissebb elöl)
+                allItems.sort((a, b) => b.date - a.date);
+
+                // Duplikáció szűrés
+                const unique =[];
+                const seen = new Set();
+                for (const item of allItems) {
+                    if (!seen.has(item.link)) {
+                        unique.push(item);
+                        seen.add(item.link);
+                    }
+                }
+
+                if (unique.length > 0) {
+                    tickerItems = unique;
+                    currentTickerIndex = 0; // Új adat érkezésekor az első, azaz a legfrissebb hírhez ugrik
+                    lastTickerFetchTime = Date.now(); // Mentjük a legutóbbi lekérés időpontját
+                    
+                    // Ha ez az első betöltés, azonnal indítsuk el a rotációt
+                    if(document.getElementById('ticker-content').innerText.includes('betöltése folyamatban')) {
+                        rotateTicker();
+                    }
+                }
+            } finally {
+                isFetchingTicker = false;
+            }
+        }
+
+        function rotateTicker() {
+            clearTimeout(tickerTimeout);
+
+            if (tickerItems.length === 0) {
+                tickerTimeout = setTimeout(rotateTicker, 9000);
+                return;
+            }
+
+            // Ha végigértünk a listán, azonnali frissítés a sorrend előtt, és a legelső elemet mutatjuk majd
+            if (currentTickerIndex >= tickerItems.length) {
+                fetchRssForTicker().then(() => {
+                    displayCurrentTickerItem();
+                });
+            } else {
+                displayCurrentTickerItem();
+            }
+        }
+
+        function displayCurrentTickerItem() {
+            if (tickerItems.length === 0) {
+                tickerTimeout = setTimeout(rotateTicker, 9000);
+                return;
+            }
+
+            // Extra biztonsági ellenőrzés
+            if (currentTickerIndex >= tickerItems.length) {
+                currentTickerIndex = 0;
+            }
+
+            const item = tickerItems[currentTickerIndex];
+            const contentDiv = document.getElementById('ticker-content');
+
+            // Fade out
+            contentDiv.style.opacity = 0;
+
+            setTimeout(() => {
+                const timeStr = item.date.toLocaleTimeString('hu-HU', { hour: '2-digit', minute: '2-digit' });
+                contentDiv.innerHTML = `
+                    <span class="ticker-time">[${timeStr}]</span>
+                    <span class="ticker-source">${item.source}</span>
+                    <a href="${item.link}" target="_blank" class="ticker-title">${item.title}</a>
+                `;
+                // Fade in
+                contentDiv.style.opacity = 1;
+                
+                currentTickerIndex++; // A következő körre növeljük az indexet
+                tickerTimeout = setTimeout(rotateTicker, 9000); // 9 másodperc múlva váltja a következőt
+            }, 400); 
         }
 
         // === RANDOM PATTOGÓ FIGYELMEZTETÉS ===
         function initRandomWarningPopup() {
             function scheduleNext() {
-                const minMs = 60000;  // 1 perc
-                const maxMs = 180000; // 3 perc
+                const minMs = 60000; 
+                const maxMs = 180000;
                 const randomDelay = Math.floor(Math.random() * (maxMs - minMs + 1)) + minMs;
                 setTimeout(showPopup, randomDelay);
             }
@@ -664,20 +895,17 @@
                 if(popup) {
                     popup.classList.remove('hide');
                     popup.classList.add('show');
-                    
-                    // 10 másodperc után visszacsukódik
                     setTimeout(() => {
                         popup.classList.remove('show');
                         popup.classList.add('hide');
-                        scheduleNext(); // Újabb sorsolás
+                        scheduleNext(); 
                     }, 10000); 
                 }
             }
-            
             scheduleNext();
         }
 
-        // === SEGÉDFÜGGVÉNYEK ÉS UI EXTRA FUNKCIÓK ===
+        // === SEGÉDFÜGGVÉNYEK ===
         function decodeHtml(html) { var txt = document.createElement("textarea"); txt.innerHTML = html; return txt.value; }
         
         function calculateVotes(score, ratio) {
@@ -849,7 +1077,6 @@
                 <div class="card ${extraClass}" id="card-${postData.name}">
                     ${imageHtml}
                     
-                    <!-- RÉSZLETES HOVER RÉTEG -->
                     <div class="card-hover-overlay">
                         <div class="hover-content-text">${hoverHint}</div>
                     </div>
@@ -940,7 +1167,6 @@
             }
         }
 
-        // --- AUTOMATIKUS FRISSÍTÉS ---
         async function autoFetchNewPosts() {
             if (currentFeed === 'followed' || currentSort !== 'new') return; 
             const savedFeed = currentFeed;
@@ -970,7 +1196,6 @@
         }
         setInterval(autoFetchNewPosts, 60000); 
 
-        // Top 3 lekérés
         async function loadTrendingTopics() {
             try {
                 let res = await fetch(`https://www.reddit.com/r/hungary+askhungary+kiszamolo+budapest+hungary2+FostTalicska+talk_hunfluencers/top.json?limit=15&t=day`);
@@ -997,7 +1222,6 @@
             } catch(e) {}
         }
 
-        // Infinite Scroll
         const observer = new IntersectionObserver((entries) => { 
             if (entries[0].isIntersecting && afterToken && !isFetching && currentFeed !== 'followed') { loadRedditPosts(false); }
         }, { root: document.getElementById('main-scroll-area'), rootMargin: '300px' });
