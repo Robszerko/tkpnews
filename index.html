@@ -205,21 +205,21 @@
         .sort-btn:hover { color: var(--text-main); border-color: var(--border-highlight); }
         .sort-btn.active { background: var(--text-main); color: var(--bg-body); border-color: var(--text-main); }
 
-        /* VÉKONY HÍRCSÍK SÁV */
+        /* KISZÉLESÍTETT HÍRCSÍK SÁV + SZÍNÁTMENET */
         .news-ticker-strip {
-            background-color: var(--bg-surface);
+            background: linear-gradient(90deg, rgba(20, 184, 166, 0.15) 0%, rgba(30, 41, 59, 0.02) 100%);
             border-top: 1px solid var(--border-color);
             padding: 0 20px;
             display: flex; align-items: center;
-            height: 28px; /* Nagyon vékony sáv */
+            height: 38px;
             overflow: hidden;
         }
 
         .ticker-content {
             display: flex; align-items: center; gap: 8px;
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-            width: 100%; font-size: 12px;
-            transition: opacity 0.4s ease; /* Finom áttűnés */
+            width: 100%; font-size: 13px; 
+            transition: opacity 0.4s ease; 
         }
 
         .ticker-time { font-family: var(--font-mono); font-weight: 700; color: var(--text-muted); font-size: 11px; flex-shrink: 0;}
@@ -365,7 +365,7 @@
         .chat-warning-popup.show { animation: bounceFlipDown 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         .chat-warning-popup.hide { animation: flipUpHide 0.4s ease-in forwards; }
 
-        .chat-feed { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+        .chat-feed { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
         #chat-inner-list { display: flex; flex-direction: column; gap: 12px; }
 
         .chat-bubble {
@@ -394,6 +394,16 @@
             font-size: 11px; font-weight: 700; cursor: pointer; border: none; display: none; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); z-index: 10;
         }
         .new-msg-btn.show { display: block; }
+
+        /* LÁGY ANIMÁCIÓ CHAT ÜZENETEKHEZ */
+        @keyframes smoothInsert {
+            0% { opacity: 0; transform: translateY(15px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .new-arrival { animation: smoothInsert 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.3s ease forwards; }
 
         /* --- MODAL --- */
         .modal-overlay {
@@ -433,9 +443,6 @@
         .c-author { font-weight: 700; color: var(--text-main); font-size: 12px;}
         .c-body { font-size: 13px; line-height: 1.6; }
         .c-body a { color: var(--accent-info); text-decoration: none; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        .fade-in { animation: fadeIn 0.3s ease forwards; }
 
         @keyframes newsFlash {
             0% { opacity: 0; transform: translateY(-30px) scale(0.98); box-shadow: 0 0 0 rgba(20, 184, 166, 0); border-color: var(--border-color); }
@@ -738,7 +745,7 @@
         setInterval(fetchWeatherPWS, 60000); // 1 percenként frissít
 
 
-        // === 4 ÓRÁS HÍRCSÍK (TICKER) LOGIKA ===
+        // === 4 ÓRÁS HÍRCSÍK (TICKER) LOGIKA ERŐSEBB ADATKINYERÉSSEL ===
         const TICKER_RSS_FEEDS = {
             "Telex": "https://telex.hu/rss",
             "Index": "https://index.hu/24ora/rss/",
@@ -749,7 +756,12 @@
             "Origo": "https://www.origo.hu/contentpartner/rss/hir-cent/origo.xml",
             "RTL": "https://rtl.hu/rss"
         };
-        const CORS_PROXIES =["https://api.allorigins.win/raw?url=", "https://api.codetabs.com/v1/proxy?quest=", "https://corsproxy.io/?"];
+        const CORS_PROXIES =[
+            "https://api.allorigins.win/raw?url=", 
+            "https://api.codetabs.com/v1/proxy?quest=", 
+            "https://corsproxy.io/?url=",
+            "https://thingproxy.freeboard.io/fetch/"
+        ];
         
         let tickerItems =[];
         let currentTickerIndex = 0;
@@ -774,7 +786,7 @@
             
             let allItems =[];
             const now = Date.now();
-            const fourHoursAgo = now - (4 * 60 * 60 * 1000); // Csak az elmúlt 4 órás ablak
+            const fourHoursAgo = now - (4 * 60 * 60 * 1000); 
 
             try {
                 const fetchPromises = Object.entries(TICKER_RSS_FEEDS).map(async ([source, url]) => {
@@ -785,14 +797,21 @@
 
                         const xml = new DOMParser().parseFromString(txt, "text/xml");
                         xml.querySelectorAll("item, entry").forEach(item => {
-                            const title = item.querySelector("title")?.textContent || "";
-                            let link = item.querySelector("link")?.textContent;
+                            const title = item.querySelector("title")?.textContent?.trim() || "";
+                            
+                            let link = item.querySelector("link")?.textContent?.trim();
                             if (!link && item.querySelector("link[href]")) link = item.querySelector("link[href]").getAttribute("href");
-                            const dateStr = item.querySelector("pubDate, published, updated")?.textContent;
+                            
+                            let dateStr = item.querySelector("pubDate, published, updated")?.textContent;
+                            if (!dateStr) {
+                                const dcDate = item.getElementsByTagName("dc:date")[0];
+                                if (dcDate) dateStr = dcDate.textContent;
+                            }
 
-                            if (title && dateStr && link) {
-                                const date = new Date(dateStr);
-                                // Csak az elmúlt 4 óra hírei kellenek
+                            let date = dateStr ? new Date(dateStr) : new Date();
+                            if (isNaN(date.getTime())) date = new Date(); 
+
+                            if (title && link) {
                                 if (date.getTime() >= fourHoursAgo && date.getTime() <= now) {
                                     allItems.push({ title, link, source, date });
                                 }
@@ -803,10 +822,8 @@
 
                 await Promise.allSettled(fetchPromises);
 
-                // Időrendi sorrend (Legfrissebb elöl)
                 allItems.sort((a, b) => b.date - a.date);
 
-                // Duplikáció szűrés
                 const unique =[];
                 const seen = new Set();
                 for (const item of allItems) {
@@ -818,10 +835,9 @@
 
                 if (unique.length > 0) {
                     tickerItems = unique;
-                    currentTickerIndex = 0; // Új adat érkezésekor az első, azaz a legfrissebb hírhez ugrik
-                    lastTickerFetchTime = Date.now(); // Mentjük a legutóbbi lekérés időpontját
+                    currentTickerIndex = 0; 
+                    lastTickerFetchTime = Date.now(); 
                     
-                    // Ha ez az első betöltés, azonnal indítsuk el a rotációt
                     if(document.getElementById('ticker-content').innerText.includes('betöltése folyamatban')) {
                         rotateTicker();
                     }
@@ -839,7 +855,6 @@
                 return;
             }
 
-            // Ha végigértünk a listán, azonnali frissítés a sorrend előtt, és a legelső elemet mutatjuk majd
             if (currentTickerIndex >= tickerItems.length) {
                 fetchRssForTicker().then(() => {
                     displayCurrentTickerItem();
@@ -855,7 +870,6 @@
                 return;
             }
 
-            // Extra biztonsági ellenőrzés
             if (currentTickerIndex >= tickerItems.length) {
                 currentTickerIndex = 0;
             }
@@ -863,7 +877,6 @@
             const item = tickerItems[currentTickerIndex];
             const contentDiv = document.getElementById('ticker-content');
 
-            // Fade out
             contentDiv.style.opacity = 0;
 
             setTimeout(() => {
@@ -873,11 +886,10 @@
                     <span class="ticker-source">${item.source}</span>
                     <a href="${item.link}" target="_blank" class="ticker-title">${item.title}</a>
                 `;
-                // Fade in
                 contentDiv.style.opacity = 1;
                 
-                currentTickerIndex++; // A következő körre növeljük az indexet
-                tickerTimeout = setTimeout(rotateTicker, 9000); // 9 másodperc múlva váltja a következőt
+                currentTickerIndex++; 
+                tickerTimeout = setTimeout(rotateTicker, 9000); 
             }, 400); 
         }
 
@@ -1227,14 +1239,13 @@
         }, { root: document.getElementById('main-scroll-area'), rootMargin: '300px' });
         window.addEventListener('DOMContentLoaded', () => { observer.observe(document.getElementById('scroll-sentinel')); });
 
-        // === ÉLŐ CHAT LOGIKA ===
+        // === ÉLŐ CHAT LOGIKA LÁGY GÖRGETÉSSEL ÉS OLVASÁSVÉDELEMMEL ===
         const liveFeedContainer = document.getElementById('live-feed-container');
         const chatInnerList = document.getElementById('chat-inner-list');
         const newMsgBtn = document.getElementById('new-msg-btn');
         const livePulse = document.getElementById('live-pulse');
         
         let userIsScrolledUp = false;
-        let lastScrollTop = 0;
         let seenLiveComments = new Set();
         let liveCommentQueue =[];
         let isLiveFeedHovered = false;
@@ -1250,21 +1261,28 @@
             liveFeedContainer.addEventListener('scroll', () => {
                 let currentScrollTop = liveFeedContainer.scrollTop;
                 let maxScrollTop = liveFeedContainer.scrollHeight - liveFeedContainer.clientHeight;
-                let isNearBottom = (maxScrollTop - currentScrollTop) <= 50;
-
-                if (isNearBottom) { userIsScrolledUp = false; newMsgBtn.classList.remove('show'); } 
-                else if (currentScrollTop < lastScrollTop - 5) { userIsScrolledUp = true; }
-                lastScrollTop = currentScrollTop;
+                
+                // Ha az aljától több mint 50px-re van, akkor úgy vesszük, hogy feljebb olvas
+                if (maxScrollTop - currentScrollTop > 50) { 
+                    userIsScrolledUp = true; 
+                } else {
+                    userIsScrolledUp = false; 
+                    newMsgBtn.classList.remove('show'); 
+                }
             }, { passive: true });
 
             new ResizeObserver(() => {
-                if (!userIsScrolledUp) { liveFeedContainer.scrollTop = liveFeedContainer.scrollHeight; lastScrollTop = liveFeedContainer.scrollTop; }
+                // Sima görgetés, ha az alján vagyunk és valami átméreteződik
+                if (!userIsScrolledUp) { 
+                    liveFeedContainer.scrollTo({ top: liveFeedContainer.scrollHeight, behavior: 'smooth' }); 
+                }
             }).observe(chatInnerList);
         }
 
         function scrollToChatBottom() {
             liveFeedContainer.scrollTo({ top: liveFeedContainer.scrollHeight, behavior: 'smooth' });
-            newMsgBtn.classList.remove('show'); userIsScrolledUp = false;
+            newMsgBtn.classList.remove('show'); 
+            userIsScrolledUp = false;
         }
 
         function showIntroMessage(isInitial) {
@@ -1288,13 +1306,13 @@
                 </div>
             `;
             chatInnerList.insertAdjacentHTML('beforeend', introHtml);
-            liveFeedContainer.scrollTop = liveFeedContainer.scrollHeight;
+            liveFeedContainer.scrollTo({ top: liveFeedContainer.scrollHeight, behavior: 'auto' });
 
             if (isInitial) {
                 setTimeout(async () => {
                     chatPausedForIntro = false;
                     let existingMsg = document.getElementById('system-intro-msg');
-                    if (existingMsg) existingMsg.remove();
+                    if (existingMsg && !userIsScrolledUp) existingMsg.remove();
                     processLiveQueue();
                 }, 10000); 
             }
@@ -1328,6 +1346,7 @@
 
         async function processLiveQueue() {
             if (chatPausedForIntro || isProcessingLiveQueue) return;
+            // Ha az egered a doboz felett van (olvasol), a folyamat szünetel, így megvédve az ugrástól
             if (isLiveFeedHovered || liveCommentQueue.length === 0) { setTimeout(processLiveQueue, 1000); return; }
 
             isProcessingLiveQueue = true;
@@ -1353,7 +1372,7 @@
                 let avatarInitial = cData.author ? cData.author.charAt(0).toUpperCase() : '?';
 
                 let bubbleHtml = `
-                    <div class="chat-bubble fade-in">
+                    <div class="chat-bubble new-arrival">
                         <div class="chat-meta">
                             <div class="chat-author-wrap">
                                 <div class="chat-avatar" style="background-color: ${avatarColor}">${avatarInitial}</div>
@@ -1372,12 +1391,18 @@
 
                 chatInnerList.insertAdjacentHTML('beforeend', bubbleHtml);
 
+                // Ha lent vagyunk ráküldünk egy FINOM görgetést (a behavior:'smooth' teszi lággyá)
                 if (wasAtBottom) {
-                    liveFeedContainer.scrollTop = liveFeedContainer.scrollHeight;
-                    lastScrollTop = liveFeedContainer.scrollTop;
-                } else { newMsgBtn.classList.add('show'); }
+                    liveFeedContainer.scrollTo({ top: liveFeedContainer.scrollHeight, behavior: 'smooth' });
+                } else { 
+                    newMsgBtn.classList.add('show'); 
+                }
 
-                while(chatInnerList.children.length > 30) chatInnerList.firstElementChild.remove();
+                // KIZÁRÓLAG akkor töröljük a régi elemeket, ha LENT van a felhasználó.
+                // Ha fent olvas a történetben, elkerüljük az azonnali pozíció-vesztést.
+                if (!userIsScrolledUp) {
+                    while(chatInnerList.children.length > 30) chatInnerList.firstElementChild.remove();
+                }
             }
 
             setTimeout(() => { isProcessingLiveQueue = false; processLiveQueue(); }, 2000); 
