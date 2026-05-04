@@ -3,818 +3,741 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reddit Hírstúdió | PRO Terminál</title>
+    <title>Reddit | Információs Irányítópult</title>
     
     <style id="dynamic-theme"></style>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=JetBrains+Mono:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
 
-        /* Alapértelmezett változók */
+        /* --- FLAT & CLEAN DESIGN VÁLTOZÓK --- */
         :root {
-            --bg-base: #0f1115;
-            --accent-brand: #ff4500;   
-            --accent-blue: #58a6ff;
-            --accent-green: #3fb950;
-            --accent-red: #f85149;
-            --accent-yellow: #d29922;
-            --accent-purple: #8a2be2;
+            --bg-body: #0f172a;       
+            --bg-surface: #1e293b;    
+            --bg-surface-hover: #334155;
             
-            /* TŰÉLES SZÖVEGSZÍNEK - Átlátszóság (RGBA) helyett fix HEX színek! */
-            --text-primary: #ffffff;
-            --text-secondary: #a3abb6; 
+            --border-color: #334155;
+            --border-highlight: #475569;
             
-            --radius-sm: 6px;
-            --radius-md: 12px;
-            --radius-lg: 18px;
-            --radius-xl: 24px;
-            --font-ui: 'Inter', sans-serif;
+            --accent-primary: #14b8a6; 
+            --accent-primary-hover: #0d9488;
+            --accent-danger: #ef4444;
+            --accent-warning: #f59e0b;
+            --accent-success: #10b981;
+            --accent-info: #3b82f6;
+
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            
+            --font-ui: 'Plus Jakarta Sans', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
-            
-            /* Üveg/Bento hatás színei */
-            --glass-panel: rgba(255, 255, 255, 0.04);
-            --glass-card: rgba(255, 255, 255, 0.06);
-            --glass-hover: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --glass-border-bright: rgba(255, 255, 255, 0.15);
         }
 
-        /* TŰÉLES (4K) RENDERELÉS MOTOR */
+        /* RESET & BASE */
         * { 
             box-sizing: border-box; 
             margin: 0; 
             padding: 0; 
-            -webkit-font-smoothing: subpixel-antialiased !important;
-            -moz-osx-font-smoothing: auto !important;
-            text-rendering: geometricPrecision !important;
-            font-optical-sizing: auto;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
         }
 
         body {
             font-family: var(--font-ui); 
-            color: var(--text-primary);
+            color: var(--text-main);
             font-size: 14px;
-            font-weight: 500;
-            line-height: 1.5; 
+            background-color: var(--bg-body); 
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
             overflow: hidden; 
-            background-color: var(--bg-base); 
-            padding: 20px; 
-            transition: background-color 2s ease;
         }
+        
         body.modal-open { overflow: hidden; }
-
-        /* --- LÉLEGZŐ AMBIENT HÁTTÉR --- */
-        .ambient-background {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: -1; pointer-events: none; overflow: hidden;
-        }
-        .ambient-glow {
-            position: absolute; width: 60vw; height: 60vw; border-radius: 50%;
-            background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
-            filter: blur(90px); animation: floatGlow 20s infinite alternate ease-in-out;
-        }
-        .ambient-glow:nth-child(1) { top: -20%; left: -10%; }
-        .ambient-glow:nth-child(2) { bottom: -20%; right: -10%; animation-delay: -10s; }
-        @keyframes floatGlow {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(8%, 8%) scale(1.2); }
-        }
 
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--glass-border-bright); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent-blue); }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
 
-        /* --- FINOM ANIMÁCIÓK --- */
-        @keyframes highlight-new-post {
-            0%   { box-shadow: 0 0 0 0 rgba(88, 166, 255, 0.4); border-color: var(--accent-blue); transform: translateY(-5px); opacity: 0;}
-            10%  { opacity: 1; transform: translateY(0); }
-            100% { box-shadow: 0 0 0 0 rgba(88, 166, 255, 0); border-color: var(--glass-border-bright); transform: none; }
+        /* --- FELSŐ NAVIGÁCIÓS SÁV --- */
+        .top-navbar {
+            height: 48px; /* Keskenyebb fejléc */
+            background-color: var(--bg-surface);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            flex-shrink: 0;
+            z-index: 100;
         }
-        .new-post-anim { animation: highlight-new-post 3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
 
-        @keyframes soft-pulse-green {
-            0%   { box-shadow: 0 0 0 0 rgba(63, 185, 80, 0.3); border-color: var(--accent-green); }
-            50%  { box-shadow: 0 0 0 5px rgba(63, 185, 80, 0); border-color: var(--accent-green); }
-            100% { box-shadow: 0 0 0 0 rgba(63, 185, 80, 0); border-color: transparent; }
+        .brand-container {
+            display: flex; align-items: center; gap: 12px; white-space: nowrap; 
         }
-        .soft-pulse { animation: soft-pulse-green 2s ease-out forwards; }
+
+        .brand-logo {
+            display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 18px;
+            color: var(--text-main); text-decoration: none; letter-spacing: -0.5px;
+        }
+        .brand-logo svg { filter: drop-shadow(0 2px 4px rgba(255, 69, 0, 0.3)); width: 20px; height: 20px; }
+
+        .copyright-text {
+            font-size: 11px; color: var(--text-muted); font-weight: 600;
+            font-family: var(--font-mono); letter-spacing: -0.2px; padding-top: 2px; 
+        }
+
+        /* Google Kereső */
+        .global-search { flex: 1; max-width: 450px; margin: 0 20px; }
+        .global-search form {
+            display: flex; background-color: var(--bg-body); border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm); overflow: hidden; transition: border-color 0.15s;
+        }
+        .global-search form:focus-within { border-color: var(--accent-primary); }
+        .global-search input {
+            flex: 1; background: transparent; border: none; color: var(--text-main); 
+            padding: 6px 12px; font-family: var(--font-ui); font-size: 13px; outline: none;
+        }
+        .global-search input::placeholder { color: var(--text-muted); }
+        .global-search button {
+            background: var(--bg-surface-hover); border: none; color: var(--text-main);
+            padding: 0 16px; cursor: pointer; font-weight: 600; font-size: 13px; transition: background 0.15s;
+        }
+        .global-search button:hover { background: var(--accent-primary); color: #fff;}
+
+        /* Idő/Dátum panel */
+        .top-meta {
+            display: flex; align-items: center; gap: 16px;
+            font-size: 12px; color: var(--text-muted); font-weight: 600;
+        }
+        .top-meta .clock {
+            font-family: var(--font-mono); font-weight: 700; color: var(--text-main);
+            background: var(--bg-body); padding: 4px 10px;
+            border-radius: var(--radius-sm); border: 1px solid var(--border-color);
+        }
 
         /* --- FŐ ELRENDEZÉS --- */
-        .app-layout { display: flex; flex-direction: row; gap: 20px; height: calc(100vh - 40px); width: 100%; position: relative; z-index: 1; }
+        .main-container { display: flex; flex: 1; overflow: hidden; }
 
-        .bento-panel {
-            background: var(--glass-panel);
-            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            box-shadow: inset 0 1px 1px rgba(255,255,255,0.05), 0 12px 32px rgba(0,0,0,0.2);
-            display: flex; flex-direction: column; overflow: hidden;
+        /* --- 1. BAL OSZLOP: NAVIGÁCIÓ --- */
+        .left-sidebar {
+            width: 260px; background-color: var(--bg-surface);
+            border-right: 1px solid var(--border-color);
+            display: flex; flex-direction: column; overflow-y: auto;
+            flex-shrink: 0;
         }
 
-        /* --- 1. OSZLOP: NAVIGÁCIÓ --- */
-        .sidebar-nav {
-            width: 250px; flex-shrink: 0; background: transparent; border: none; box-shadow: none;
-            display: flex; flex-direction: column; gap: 14px; overflow-y: auto; overflow-x: hidden;
-        }
-        
-        .bento-module {
-            background: var(--glass-panel); border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg); padding: 16px; backdrop-filter: blur(24px);
-            box-shadow: inset 0 1px 1px rgba(255,255,255,0.03), 0 8px 24px rgba(0,0,0,0.15);
+        .sidebar-section { padding: 16px 20px; border-bottom: 1px solid var(--border-color); }
+        .sidebar-section:last-child { border-bottom: none; }
+
+        .section-title {
+            font-size: 11px; text-transform: uppercase; font-weight: 700;
+            color: var(--text-muted); letter-spacing: 1px; margin-bottom: 12px;
         }
 
-        .brand { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; text-decoration: none; }
-        .brand-header { display: flex; align-items: center; gap: 8px; }
-        .brand-header svg { width: 24px; height: 24px; flex-shrink: 0; filter: drop-shadow(0 2px 8px rgba(255,69,0,0.5)); shape-rendering: geometricPrecision; }
-        .brand-title { color: var(--text-primary); font-weight: 800; font-size: 20px; letter-spacing: -0.03em; line-height: 1;}
-
-        .brand-datetime { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-secondary); font-weight: 600; margin-left: 2px;}
-        .clock-time-inline { font-family: var(--font-mono); font-weight: 700; color: var(--text-primary); display: flex; align-items: baseline;}
-        .clock-sec-inline { font-size: 10px; color: var(--accent-blue); font-weight: 400; margin-left: 1px;}
-
-        .search-form { display: flex; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border-bright); border-radius: var(--radius-sm); overflow: hidden; transition: 0.3s; margin-bottom: 20px;}
-        .search-form:focus-within { border-color: var(--accent-blue); box-shadow: 0 0 0 2px rgba(88,166,255,0.2); }
-        .search-form input { background: transparent; border: none; color: var(--text-primary); padding: 8px 10px; font-family: var(--font-ui); font-size: 13px; font-weight: 500; width: 100%; outline: none; }
-        .search-form input::placeholder { color: var(--text-secondary); }
-        .search-form button { background: transparent; border: none; color: var(--text-secondary); padding: 0 10px; cursor: pointer; transition: color 0.2s; }
-        .search-form button:hover { color: var(--text-primary); }
-
-        .nav-title { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 10px; padding-left: 4px; }
-        .nav-menu { display: flex; flex-direction: column; gap: 4px; }
-        .nav-item { background: transparent; border: 1px solid transparent; color: var(--text-secondary); text-align: left; padding: 10px 12px; border-radius: var(--radius-md); font-family: var(--font-ui); font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: space-between; }
-        .nav-item:hover { background: var(--glass-hover); color: var(--text-primary); }
-        .nav-item.active { background: rgba(88, 166, 255, 0.15); color: var(--accent-blue); border-color: rgba(88, 166, 255, 0.3); font-weight: 700; box-shadow: 0 4px 12px rgba(88, 166, 255, 0.1);}
-
-        /* NAPI TOP 3 WIDGET */
-        .trending-list { display: flex; flex-direction: column; gap: 8px; }
-        .trending-item { 
-            background: var(--glass-card); border: 1px solid var(--glass-border); border-radius: var(--radius-md); 
-            padding: 12px; cursor: pointer; transition: 0.3s; display: flex; gap: 10px; align-items: center; 
+        .nav-list { display: flex; flex-direction: column; gap: 4px; }
+        .nav-item {
+            background: transparent; border: none; color: var(--text-main);
+            padding: 8px 12px; border-radius: var(--radius-md);
+            font-family: var(--font-ui); font-size: 13px; font-weight: 500;
+            text-align: left; cursor: pointer; transition: background 0.15s;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        .trending-item:hover { border-color: var(--accent-blue); transform: translateY(-2px); background: var(--glass-hover); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
-        .trending-medal-container { display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; width: 30px; }
-        .trending-medal { font-size: 22px; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
-        .trending-content { display: flex; flex-direction: column; flex: 1; min-width: 0; }
-        .trending-meta { font-size: 10px; color: var(--text-secondary); font-weight: 700; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;}
-        .trending-title { font-size: 13px; color: var(--text-primary); font-weight: 600; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .nav-item:hover { background-color: var(--bg-surface-hover); }
+        .nav-item.active { background-color: var(--accent-primary); color: #fff; font-weight: 600; }
 
-        /* KIS LÁBLÉC */
-        .app-footer { margin-top: auto; display: flex; flex-direction: column; gap: 6px; align-items: center; padding: 12px; text-align: center;}
-        .reddit-attribution { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 11px;}
-        .reddit-attribution span { font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;}
-        .reddit-logo-wrap { display: flex; align-items: center; justify-content: center; gap: 4px; user-select: none; }
-        .reddit-logo-wordmark { color: #ffffff; font-family: 'Inter', sans-serif; font-weight: 800; font-size: 16px; letter-spacing: -1px; line-height: 1; }
-        .footer-credits { font-size: 10px; color: var(--text-secondary); font-weight: 600; margin-top: 2px;}
-
-        /* --- 2. OSZLOP: FŐ TARTALOM (HÍRFOLYAM) --- */
-        .main-content { flex: 1; min-width: 0; position: relative; padding: 0; }
-        
-        .main-scroll-area { padding: 24px; overflow-y: auto; height: 100%; position: relative;}
-
-        /* Színpompás Fejléc és Rendező Tabok - KÖZÉPRE IGAZÍTVA */
-        .content-header { 
-            position: sticky; top: -24px; 
-            background: rgba(15, 17, 21, 0.85); 
-            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            padding: 12px 0 20px 0; margin-bottom: 20px; 
-            border-bottom: 1px solid var(--glass-border-bright); 
-            z-index: 10; display: flex; flex-direction: column; gap: 16px;
+        .trending-item {
+            background-color: var(--bg-body); border: 1px solid var(--border-color);
+            border-radius: var(--radius-md); padding: 10px 12px; margin-bottom: 8px;
+            cursor: pointer; transition: border-color 0.15s;
         }
+        .trending-item:hover { border-color: var(--accent-primary); }
+        .trending-meta { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; }
+        .trending-title { font-size: 12px; font-weight: 600; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-        .header-banner {
-            position: relative; overflow: hidden;
-            background: linear-gradient(135deg, var(--glass-card) 0%, rgba(88, 166, 255, 0.08) 100%);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            padding: 24px 20px; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
-        }
-        .header-banner::before {
-            content: ''; position: absolute; right: -5%; top: -60%; width: 250px; height: 250px;
-            background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path fill="rgba(88,166,255,0.06)" d="M42.7,-73.4C54.5,-66.2,62.8,-52.1,69.5,-38.4C76.2,-24.7,81.4,-11.4,79.5,1.1C77.6,13.6,68.7,25.4,60.1,36.5C51.5,47.6,43.2,58,32.3,66.3C21.4,74.5,7.9,80.7,-5.7,82.5C-19.3,84.4,-33.1,81.8,-43.8,73.8C-54.5,65.8,-62.1,52.3,-69.1,38.8C-76.1,25.3,-82.5,11.8,-82.3,-1.5C-82.1,-14.8,-75.3,-27.9,-66.3,-38.5C-57.3,-49.1,-46,-57.2,-34.1,-64.1C-22.2,-71,-9.7,-76.8,3.2,-81C16.1,-85.2,30.9,-80.6,42.7,-73.4Z"/></svg>');
-            background-repeat: no-repeat; background-size: contain; z-index: 0; pointer-events: none;
-        }
-
-        .header-content { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; }
-        .feed-title { font-size: 28px; font-weight: 800; letter-spacing: -0.03em; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 6px;}
-        .feed-subtitle { font-size: 13px; color: var(--text-secondary); font-weight: 600; font-family: var(--font-mono); opacity: 0.8; word-break: break-all; max-width: 90%; text-align: center; }
-
-        .sort-tabs-container {
-            display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap;
-            background: var(--glass-card); padding: 6px; 
-            border-radius: var(--radius-md); border: 1px solid var(--glass-border);
-        }
-        .sort-pill { 
-            background: transparent; border: none; color: var(--text-secondary); 
-            padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; 
-            cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px;
-        }
-        .sort-pill:hover { background: var(--glass-hover); color: var(--text-primary); }
-        .sort-pill.active { background: var(--text-primary); color: #000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 700;}
-        
-        .pill-divider { width: 4px; height: 4px; border-radius: 50%; background-color: var(--glass-border-bright); margin: 0 4px; }
-        
-        .feed-pill { color: var(--accent-blue); }
-        .feed-pill:hover { background: rgba(88, 166, 255, 0.1); color: var(--accent-blue); }
-        .feed-pill.active { background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%); color: #fff; box-shadow: 0 4px 15px rgba(88,166,255,0.3); }
-
-        /* KÁRTYÁK - Színpompás elrendezés */
-        #feed { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; align-items: start; min-width: 800px;}
-
-        .card { 
-            background: linear-gradient(180deg, var(--glass-card) 0%, rgba(255,255,255,0.02) 100%);
-            border: 1px solid var(--glass-border-bright); 
-            border-radius: var(--radius-lg); overflow: hidden; display: flex; flex-direction: column; 
-            transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); position: relative;
-        }
-        .card:hover { 
-            transform: translateY(-4px); 
-            box-shadow: 0 12px 30px rgba(0,0,0,0.3), 0 0 20px rgba(88, 166, 255, 0.1); 
-            border-color: rgba(88, 166, 255, 0.4); 
-            background: linear-gradient(180deg, var(--glass-hover) 0%, rgba(255,255,255,0.04) 100%);
-        }
-
-        .card-img-wrapper { 
-            width: 100%; aspect-ratio: 16 / 9; position: relative; overflow: hidden; 
-            display: flex; align-items: center; justify-content: center; 
-            border-bottom: 1px solid var(--glass-border); 
-            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-            background: rgba(0,0,0,0.2);
-        }
-        .card-img { 
-            width: 100%; height: 100%; 
-            object-fit: cover; 
-            transition: transform 0.6s ease; 
-            image-rendering: -webkit-optimize-contrast;
-            transform-style: preserve-3d;
-            backface-visibility: hidden;
-        }
-        .card:hover .card-img { transform: scale(1.04); } 
-        
-        .card-img-fallback { background: linear-gradient(135deg, rgba(88,166,255,0.15) 0%, rgba(138,43,226,0.15) 100%); }
-        .card-img-fallback svg { width: 56px; height: 56px; fill: rgba(255,255,255,0.3); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); transition: 0.4s ease; shape-rendering: geometricPrecision;}
-        .card:hover .card-img-fallback svg { transform: scale(1.1); fill: rgba(255,255,255,0.5); }
-
-        .card-body { padding: 16px; display: flex; flex-direction: column; flex-grow: 1; gap: 10px; }
-        
-        /* Címkék optimalizálva */
-        .card-sub-badge {
-            display: inline-flex; align-items: center; justify-content: center;
-            padding: 3px 6px; border-radius: 4px; font-size: 10px; font-weight: 800;
-            text-transform: uppercase; letter-spacing: 0.5px; line-height: 1;
+        /* --- 2. KÖZÉPSŐ OSZLOP: HÍRFOLYAM --- */
+        .feed-area {
+            flex: 1; 
+            background-color: var(--bg-body);
+            overflow-y: auto; position: relative;
         }
         
-        .card-meta { display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: var(--text-secondary); font-weight: 600; }
-        .card-author-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .card-author { color: var(--text-primary); font-weight: 700; opacity: 0.9; }
-        
-        .card-title { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.4; margin: 0; }
-        .card-title a { color: var(--text-primary); text-decoration: none; transition: 0.2s; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;}
-        .card-title a:hover { color: var(--accent-blue); }
-
-        .card-stats { display: flex; gap: 6px; flex-wrap: wrap; padding-bottom: 10px; border-bottom: 1px solid var(--glass-border); }
-        .stat-badge { font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--glass-border); }
-        .stat-badge.up { color: var(--accent-green); background: rgba(63, 185, 80, 0.1); border-color: rgba(63, 185, 80, 0.2); }
-        .stat-badge.down { color: var(--accent-red); background: rgba(248, 81, 73, 0.1); border-color: rgba(248, 81, 73, 0.2); }
-        .stat-badge.ratio { color: var(--accent-blue); background: rgba(88, 166, 255, 0.1); border-color: rgba(88, 166, 255, 0.2); }
-
-        .card-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 6px;}
-        
-        .follow-controls { display: flex; gap: 4px; flex: 1.2; min-width: 0; }
-        .btn-follow { 
-            background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border-bright); color: var(--text-primary); 
-            padding: 8px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; 
-            cursor: pointer; flex: 1; text-align: center; transition: 0.3s;
-            display: flex; align-items: center; justify-content: center; gap: 6px;
+        /* KOMPAKT FEJLÉC KIALAKÍTÁS - Hírek Layer */
+        .feed-header-wrap {
+            position: sticky; top: 0; background-color: var(--bg-body);
+            padding: 12px 20px; border-bottom: 1px solid var(--border-color);
+            z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: 16px;
         }
-        .btn-follow:hover { border-color: var(--accent-yellow); color: var(--accent-yellow); background: rgba(210, 153, 34, 0.1); }
-        .btn-follow.active { background: rgba(210, 153, 34, 0.2); border-color: var(--accent-yellow); color: var(--accent-yellow); }
-        
-        .btn-extend {
-            background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border-bright); color: var(--text-secondary);
-            padding: 0 6px; border-radius: var(--radius-sm); font-size: 11px; font-weight: 700;
-            cursor: pointer; transition: 0.3s; flex-shrink: 0;
+
+        .scroll-progress-bar {
+            position: absolute; bottom: -1px; left: 0; height: 2px;
+            background: var(--accent-primary); width: 0%; z-index: 20;
+            transition: width 0.1s ease-out; 
         }
-        .btn-extend:hover { background: rgba(210, 153, 34, 0.2); border-color: var(--accent-yellow); color: var(--accent-yellow); }
-        
-        .follow-timer { font-family: var(--font-mono); font-size: 11px; letter-spacing: -0.5px; }
 
-        .btn-comment { 
-            background: rgba(88, 166, 255, 0.05); border: 1px solid rgba(88, 166, 255, 0.2); color: var(--accent-blue); 
-            padding: 8px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 700; cursor: pointer; 
-            flex: 1; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 6px; 
+        /* Egy sávos cím blokk */
+        .feed-title-block { display: flex; align-items: center; gap: 12px; }
+        .feed-title { font-size: 18px; font-weight: 800; line-height: 1; margin: 0; }
+        .feed-subtitle { font-size: 12px; color: var(--text-muted); font-family: var(--font-mono); line-height: 1; display: flex; align-items: center; }
+
+        .sort-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+        .sort-btn {
+            background: var(--bg-surface); border: 1px solid var(--border-color);
+            color: var(--text-muted); padding: 4px 12px; border-radius: 20px;
+            font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.15s;
         }
-        .btn-comment:hover { background: var(--accent-blue); border-color: var(--accent-blue); color: #fff; box-shadow: 0 4px 12px rgba(88,166,255,0.3);}
+        .sort-btn:hover { color: var(--text-main); border-color: var(--border-highlight); }
+        .sort-btn.active { background: var(--text-main); color: var(--bg-body); border-color: var(--text-main); }
 
-        #scroll-sentinel { text-align: center; padding: 32px 0; color: var(--text-secondary); font-family: var(--font-mono); font-size: 13px; font-weight: 600; grid-column: 1 / -1; }
+        .feed-grid {
+            padding: 20px; display: grid; gap: 16px; align-items: start;
+            /* Garantáljuk, hogy kisebb helyen is legalább 2 elférjen */
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        }
 
-        /* --- 3. OSZLOP: ÉLŐ CHAT --- */
-        .sidebar-live { width: 350px; flex-shrink: 0; display: flex; flex-direction: column; }
-        
-        .live-header { 
-            padding: 20px 16px 12px 16px; 
-            border-bottom: 1px solid var(--glass-border);
+        .card {
+            background-color: var(--bg-surface); border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg); overflow: hidden;
+            display: flex; flex-direction: column; transition: border-color 0.15s, transform 0.15s;
             position: relative;
         }
+        .card:hover { border-color: var(--accent-primary); transform: translateY(-2px); }
+
+        .card-img-wrapper {
+            width: 100%; aspect-ratio: 16 / 9; background-color: var(--bg-body); 
+            border-bottom: 1px solid var(--border-color); position: relative; overflow: hidden;
+        }
+        .card-img-wrapper a { display: block; width: 100%; height: 100%; }
+        .card-img { width: 100%; height: 100%; object-fit: cover; }
         
-        .live-header-content {
+        .card-body { padding: 14px; display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
+        .card-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); font-weight: 600; align-items: center; }
+        .card-tag { font-weight: 800; text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px;} 
+        .card-time { display: flex; align-items: center; gap: 4px; }
+        
+        .card-title { font-size: 15px; font-weight: 700; line-height: 1.4; }
+        .card-title a { color: var(--text-main); text-decoration: none; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .card-title a:hover { text-decoration: underline; text-decoration-color: var(--accent-primary); }
+
+        .card-stats { display: flex; gap: 12px; font-size: 11px; font-weight: 600; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 10px;}
+        .stat-item { display: flex; align-items: center; gap: 4px; }
+        .stat-item.up { color: var(--accent-success); }
+        .stat-item.down { color: var(--accent-danger); }
+
+        .card-actions { display: flex; gap: 8px; margin-top: auto; position: relative; z-index: 10; }
+        .btn-action {
+            flex: 1; background: var(--bg-body); border: 1px solid var(--border-color);
+            color: var(--text-main); padding: 6px; border-radius: var(--radius-sm);
+            font-size: 12px; font-weight: 600; cursor: pointer; text-align: center; transition: 0.15s;
+        }
+        .btn-action:hover { background: var(--bg-surface-hover); }
+        .btn-action.primary { background: var(--accent-primary); color: #fff; border-color: var(--accent-primary); }
+        .btn-action.primary:hover { background: var(--accent-primary-hover); }
+
+        .card-hover-overlay {
+            position: absolute;
+            inset: 0;
+            bottom: 48px; 
+            background: rgba(15, 23, 42, 0.90);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            padding: 16px;
+            color: #f8fafc;
+            opacity: 0;
+            pointer-events: none; 
+            transition: opacity 0.3s ease;
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
-            gap: 10px;
-            width: 100%;
+            text-align: center;
+            z-index: 5;
         }
-
-        .live-title-group {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-weight: 800;
-            font-size: 18px;
-            letter-spacing: 0.5px;
-            width: 100%;
-            position: relative;
-        }
-        .live-pulse { width: 10px; height: 10px; background-color: var(--accent-green); border-radius: 50%; box-shadow: 0 0 12px var(--accent-green); animation: live-glow 1.5s infinite; flex-shrink: 0;}
+        .card:hover .card-hover-overlay { opacity: 1; }
         
-        .live-status-text {
-            position: absolute; right: 0; top: 50%; transform: translateY(-50%);
-            font-size: 11px; color: var(--text-secondary); font-weight: 600;
-        }
-
-        .live-warning-group {
-            display: flex; align-items: center; justify-content: center; gap: 6px;
-            background: rgba(248, 81, 73, 0.05); border: 1px solid rgba(248, 81, 73, 0.15);
-            padding: 6px 10px; border-radius: var(--radius-md); width: 100%;
-        }
-        
-        .age-badge-small {
-            border: 1.5px solid var(--accent-red); background: rgba(248, 81, 73, 0.15);
-            color: var(--accent-red); font-size: 10px; font-weight: 800;
-            padding: 2px 6px; border-radius: 10px; white-space: nowrap; flex-shrink: 0;
-        }
-        .age-warning-text {
-            color: #ff8a8a; font-size: 11px; font-weight: 700; text-align: center; line-height: 1.2;
-        }
-
-        @keyframes live-glow {
-            0% { box-shadow: 0 0 0 0 rgba(63, 185, 80, 0.7); }
-            70% { box-shadow: 0 0 0 8px rgba(63, 185, 80, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(63, 185, 80, 0); }
-        }
-
-        .chat-scroll-wrapper { position: relative; flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .live-feed-container { flex-grow: 1; overflow-y: auto; padding: 12px 8px; scroll-behavior: smooth; }
-        #chat-inner-list { display: flex; flex-direction: column; justify-content: flex-end; min-height: 100%; }
-
-        /* ÚJ ÜZENET LEBEGŐ GOMB */
-        .chat-new-msg-btn {
-            position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%) translateY(60px);
-            background: var(--accent-blue); color: #fff; padding: 6px 14px; border-radius: 20px;
-            font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.5); border: none;
-            opacity: 0; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 10; display: flex; align-items: center; gap: 6px;
-        }
-        .chat-new-msg-btn.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-        .chat-new-msg-btn:hover { background: var(--text-primary); color: #000; }
-
-        /* GPU DETACH A CHAT ÜZENETEKRŐL (TŰÉLES SZÖVEG) */
-        .chat-message { display: flex; gap: 10px; padding: 10px 12px; border-radius: var(--radius-md); margin-bottom: 8px; transition: background-color 0.2s; animation: chatSlideIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; transform: translateY(20px); opacity: 0; }
-        .chat-message:hover { background-color: var(--glass-hover); }
-
-        @keyframes chatSlideIn { 
-            to { transform: none; opacity: 1; } 
-        }
-
-        .chat-message-avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 800; font-size: 13px; color: #fff; box-shadow: inset 0 -2px 4px rgba(0,0,0,0.2), 0 2px 8px rgba(0,0,0,0.15); text-shadow: 0 1px 2px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); }
-        .chat-message-content { display: flex; flex-direction: column; flex-grow: 1; min-width: 0; }
-        .chat-message-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
-        .chat-message-author { font-weight: 800; font-size: 13px; letter-spacing: -0.01em; }
-        .chat-message-time { font-size: 11px; color: var(--text-secondary); font-family: var(--font-mono); font-weight: 600;}
-
-        .chat-message-post-ref {
-            display: block; font-size: 11px; font-weight: 600; color: var(--text-primary);
-            background: rgba(0,0,0,0.2); padding: 6px 10px; border-radius: 6px;
-            margin-bottom: 6px; cursor: pointer; border: 1px solid var(--glass-border-bright);
-            border-left: 3px solid var(--accent-yellow); transition: 0.2s; line-height: 1.4; word-wrap: break-word;
-        }
-        .chat-message-post-ref:hover { background: rgba(210, 153, 34, 0.15); border-color: rgba(210, 153, 34, 0.4); border-left-color: var(--accent-yellow); }
-
-        .chat-message-text { font-size: 14px; font-weight: 500; color: var(--text-primary); line-height: 1.5; word-wrap: break-word; }
-        
-        .comment-inline-image {
-            max-width: 100%;
-            max-height: 350px;
-            border-radius: 8px;
-            margin-top: 8px;
-            border: 1px solid var(--glass-border);
-            object-fit: contain; 
-            background: rgba(0,0,0,0.15);
-            image-rendering: -webkit-optimize-contrast;
-        }
-
-        .chat-parent-quote {
-            border-left: 3px solid var(--accent-purple); 
-            padding-left: 10px; 
-            margin-bottom: 6px; 
-            color: var(--text-secondary);
-            font-size: 12px; 
+        .hover-content-text {
+            font-size: 12px;
+            line-height: 1.5;
             font-weight: 500;
-            display: -webkit-box; 
-            -webkit-line-clamp: 3; 
-            -webkit-box-orient: vertical; 
+            display: -webkit-box;
+            -webkit-line-clamp: 8;
+            -webkit-box-orient: vertical;
             overflow: hidden;
-            background: rgba(138, 43, 226, 0.08); 
-            border-radius: 0 6px 6px 0; 
-            padding: 6px 10px;
-        }
-        .chat-parent-quote .quote-author { 
-            font-weight: 800; 
-            margin-right: 4px; 
-            color: var(--accent-purple); 
-            display: block;
-            margin-bottom: 2px;
-            font-size: 11px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
         }
 
-        /* ÚJ RENDSZERÜZENET / TÁJÉKOZTATÓ DOBOZ */
-        .system-intro-box {
-            background: rgba(255, 69, 0, 0.05); 
-            border: 1px dashed rgba(255, 69, 0, 0.3); 
-            margin-top: 16px;
-            box-shadow: 0 4px 15px rgba(255, 69, 0, 0.05);
-            transition: opacity 0.3s, transform 0.3s;
+        #scroll-sentinel { text-align: center; padding: 40px; color: var(--text-muted); font-family: var(--font-mono); font-size: 13px; }
+
+        .scroll-to-top {
+            position: absolute; bottom: 30px; right: 30px;
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--bg-surface); border: 1px solid var(--border-color);
+            color: var(--text-main); font-size: 18px; font-weight: bold; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s, background 0.15s;
+            z-index: 50; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
         }
-        .system-intro-box:hover { background: rgba(255, 69, 0, 0.08); }
+        .scroll-to-top.show { opacity: 1; pointer-events: auto; }
+        .scroll-to-top:hover { background: var(--accent-primary); color: white; border-color: var(--accent-primary); }
 
-        /* --- GLOBÁLIS MODÁLIS --- */
-        #global-modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 9999; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
-        #global-modal-overlay.active { display: flex; opacity: 1; }
-        .modal-content { background: var(--glass-panel); width: 95vw; max-width: 900px; height: 90vh; border-radius: var(--radius-xl); border: 1px solid var(--glass-border-bright); display: flex; flex-direction: column; overflow: hidden; transform: scale(0.98); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 30px 60px rgba(0,0,0,0.6); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);}
-        #global-modal-overlay.active .modal-content { transform: scale(1); }
+        /* --- 3. JOBB OSZLOP: ÉLŐ CHAT --- */
+        .right-sidebar {
+            width: 320px; /* Keskenyebb méret */
+            flex-shrink: 0;
+            background-color: var(--bg-surface);
+            border-left: 1px solid var(--border-color);
+            display: flex; flex-direction: column; position: relative;
+        }
 
-        .modal-header { background: rgba(0,0,0,0.2); padding: 20px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; gap: 16px; }
-        .modal-header h3 { font-size: 18px; font-weight: 700; line-height: 1.4; margin: 0; }
-        .btn-close { background: var(--glass-card); border: 1px solid var(--glass-border-bright); color: var(--text-primary); padding: 8px 16px; border-radius: var(--radius-sm); font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.2s; flex-shrink: 0; }
-        .btn-close:hover { background: var(--accent-red); border-color: var(--accent-red); color: white; }
-
-        .modal-body { flex-grow: 1; overflow-y: auto; padding: 24px; background: transparent; }
-        .comment-controls { display: flex; gap: 12px; margin-bottom: 24px; }
-        .comment-select { background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border-bright); color: var(--text-primary); padding: 8px 16px; border-radius: var(--radius-sm); font-family: var(--font-ui); font-size: 14px; font-weight: 600; cursor: pointer; flex: 1; outline: none; transition: 0.3s; }
-        .btn-refresh { background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border-bright); color: var(--text-primary); padding: 8px 16px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.2s; }
-        .btn-refresh:hover { border-color: var(--text-primary); background: var(--glass-hover);}
-
-        .comment { background: rgba(0,0,0,0.15); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 16px; margin-bottom: 16px; border-left: 4px solid var(--glass-border-bright); position: relative;}
-        .comment-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap;}
-        .c-author { font-weight: 700; color: var(--text-primary); font-size: 14px; }
-        .c-time { font-size: 12px; color: var(--text-secondary); font-weight: 600; }
-        .c-score { margin-left: auto; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 6px; background: rgba(0,0,0,0.3); color: var(--text-secondary); }
-
-        .comment-body { font-size: 15px; font-weight: 500; color: var(--text-primary); line-height: 1.6; word-wrap: break-word; }
-        .comment-body p { margin-bottom: 12px; }
-        .comment-body p:last-child { margin-bottom: 0; }
-        .comment-body a { color: var(--accent-blue); text-decoration: none; font-weight: 600;}
+        /* KOMPAKT FEJLÉC KIALAKÍTÁS - Chat Layer */
+        .chat-header {
+            padding: 12px 20px; border-bottom: 1px solid var(--border-color);
+            display: flex; flex-direction: row; align-items: center; justify-content: space-between;
+            position: relative; z-index: 15; background: var(--bg-surface);
+        }
+        .chat-title-group {
+            display: flex; align-items: center;
+        }
+        .chat-title { font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 8px; margin: 0; line-height: 1;}
+        .live-dot { width: 8px; height: 8px; background-color: var(--accent-danger); border-radius: 50%; }
         
-        @media (max-width: 1200px) { .main-scroll-area { overflow-x: auto; padding-bottom: 16px; } }
+        .age-circle-transparent {
+            width: 20px; height: 20px; border: 1px solid var(--accent-danger); color: var(--text-main); 
+            background: transparent; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 9px; font-weight: 800; margin-left: 6px;
+        }
+
+        .chat-subtitle { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); margin-left: 8px; }
+
+        /* --- VÉLETLENSZERŰ PATTOGÓ FIGYELMEZTETÉS --- */
+        .chat-warning-popup {
+            position: absolute;
+            top: 55px; /* A vékonyabb fejléc alá igazítva */
+            left: 16px; right: 16px;
+            background: var(--bg-body); border: 1px solid var(--accent-danger); border-left: 4px solid var(--accent-danger);
+            border-radius: var(--radius-md); padding: 12px; color: var(--text-main); font-size: 11px; font-weight: 600;
+            text-align: left; line-height: 1.4; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); z-index: 10;
+            transform-origin: top center; transform: perspective(400px) rotateX(-90deg); opacity: 0; pointer-events: none; 
+        }
+        .chat-warning-popup span.w-title {
+            display: flex; align-items: center; gap: 6px; color: var(--accent-danger); font-weight: 800; font-size: 12px; margin-bottom: 4px;
+        }
+
+        @keyframes bounceFlipDown {
+            0% { opacity: 0; transform: perspective(400px) rotateX(-90deg); }
+            40% { opacity: 1; transform: perspective(400px) rotateX(20deg); }
+            60% { transform: perspective(400px) rotateX(-10deg); }
+            80% { transform: perspective(400px) rotateX(5deg); }
+            100% { opacity: 1; transform: perspective(400px) rotateX(0deg); }
+        }
+        @keyframes flipUpHide {
+            0% { opacity: 1; transform: perspective(400px) rotateX(0deg); }
+            100% { opacity: 0; transform: perspective(400px) rotateX(-90deg); }
+        }
+
+        .chat-warning-popup.show { animation: bounceFlipDown 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .chat-warning-popup.hide { animation: flipUpHide 0.4s ease-in forwards; }
+
+        /* --- CHAT FEED --- */
+        .chat-feed { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+
+        #chat-inner-list {
+            display: flex; flex-direction: column; gap: 12px;
+        }
+
+        .chat-bubble {
+            background-color: var(--bg-body); border: 1px solid var(--border-color);
+            border-radius: var(--radius-md); padding: 10px 12px;
+            max-width: 95%; 
+            align-self: flex-start;
+        }
+        
+        .chat-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 10px; color: var(--text-muted); }
+        
+        .chat-author-wrap { display: flex; align-items: center; }
+        .chat-avatar {
+            width: 18px; height: 18px; border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 9px; font-weight: 800; color: white; margin-right: 6px; flex-shrink: 0;
+        }
+        .chat-author { font-weight: 700; color: var(--accent-primary); font-size: 11px; }
+        
+        .chat-ref {
+            font-size: 10px; font-weight: 600; color: var(--text-muted);
+            background: var(--bg-surface); padding: 4px 6px; border-radius: var(--radius-sm);
+            margin-bottom: 6px; cursor: pointer; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; border: 1px solid var(--border-color);
+        }
+        .chat-ref:hover { border-color: var(--accent-primary); color: var(--text-main); }
+
+        .chat-text { font-size: 12px; line-height: 1.4; color: var(--text-main); word-break: break-word; }
+        .chat-text img { max-width: 100%; border-radius: var(--radius-sm); margin-top: 6px; border: 1px solid var(--border-color); }
+        
+        .chat-quote {
+            border-left: 2px solid var(--border-highlight); padding-left: 6px; margin-bottom: 6px; font-size: 11px; color: var(--text-muted);
+        }
+
+        .new-msg-btn {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: var(--accent-info); color: #fff; padding: 6px 14px; border-radius: 20px;
+            font-size: 11px; font-weight: 700; cursor: pointer; border: none;
+            display: none; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); z-index: 10;
+        }
+        .new-msg-btn.show { display: block; }
+
+        /* --- MODAL --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(15, 23, 42, 0.9); z-index: 9999; display: none; align-items: center; justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: var(--bg-surface); width: 90vw; max-width: 800px; height: 85vh;
+            border-radius: var(--radius-lg); border: 1px solid var(--border-color);
+            display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .modal-header {
+            padding: 16px 20px; background: var(--bg-body); border-bottom: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: flex-start; gap: 20px;
+        }
+        .modal-title { font-size: 16px; font-weight: 700; line-height: 1.3; }
+        .modal-close {
+            background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-main);
+            padding: 6px 12px; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; font-size: 12px;
+        }
+        .modal-close:hover { background: var(--accent-danger); color: white; border-color: var(--accent-danger); }
+        .modal-body { flex: 1; overflow-y: auto; padding: 20px; background: var(--bg-body); }
+        
+        .modal-controls { display: flex; gap: 10px; margin-bottom: 20px; }
+        .modal-controls select, .modal-controls button {
+            background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-main);
+            padding: 6px 12px; border-radius: var(--radius-sm); font-family: var(--font-ui); font-size: 12px; font-weight: 600; cursor: pointer;
+        }
+        .modal-controls select { flex: 1; outline: none; }
+        .modal-controls button:hover { background: var(--bg-surface-hover); }
+
+        .comment-node {
+            background: var(--bg-surface); border: 1px solid var(--border-color);
+            border-radius: var(--radius-md); padding: 14px; margin-bottom: 10px;
+        }
+        .comment-node.highlight { border-color: var(--accent-primary); }
+        .c-meta { display: flex; gap: 12px; margin-bottom: 8px; font-size: 11px; color: var(--text-muted); align-items: center;}
+        .c-author { font-weight: 700; color: var(--text-main); font-size: 12px;}
+        .c-body { font-size: 13px; line-height: 1.6; }
+        .c-body a { color: var(--accent-info); text-decoration: none; }
+
+        /* Animációk */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.3s ease forwards; }
+
+        @keyframes newsFlash {
+            0% { opacity: 0; transform: translateY(-30px) scale(0.98); box-shadow: 0 0 0 rgba(20, 184, 166, 0); border-color: var(--border-color); }
+            15% { opacity: 1; transform: translateY(0) scale(1); box-shadow: 0 8px 25px rgba(20, 184, 166, 0.35); border-color: var(--accent-primary); }
+            100% { opacity: 1; transform: translateY(0) scale(1); box-shadow: 0 0 0 rgba(20, 184, 166, 0); border-color: var(--border-color); }
+        }
+        .news-flash { animation: newsFlash 3.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     </style>
 </head>
 <body>
 
-    <div class="ambient-background">
-        <div class="ambient-glow"></div>
-        <div class="ambient-glow"></div>
-    </div>
-
-    <div class="app-layout">
+    <!-- FELSŐ SÁV -->
+    <header class="top-navbar">
+        <div class="brand-container">
+            <a href="#" class="brand-logo">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="#ff4500">
+                    <circle cx="12" cy="12" r="12" />
+                    <path fill="#ffffff" d="M16.5 12c0-1.65-1.35-3-3-3-.75 0-1.44.28-1.97.74-.9-.45-1.92-.72-3.03-.74l.6-2.82 2.05.43c.04.9.78 1.6 1.68 1.6 1.05 0 1.9-.85 1.9-1.9s-.85-1.9-1.9-1.9c-.83 0-1.53.53-1.8 1.27l-2.22-.47c-.12-.03-.23.05-.26.17l-.7 3.32c-1.15.02-2.2.3-3.15.77-.52-.48-1.23-.78-2.02-.78-1.65 0-3 1.35-3 3 0 1.15.65 2.15 1.6 2.65-.05.23-.08.47-.08.7 0 2.6 3.14 4.7 7 4.7s7-2.1 7-4.7c0-.23-.03-.47-.08-.7.95-.5 1.6-1.5 1.6-2.65zm-8 1.5c.66 0 1.2.54 1.2 1.2 0 .66-.54 1.2-1.2 1.2s-1.2-.54-1.2-1.2c0-.66.54-1.2 1.2-1.2zm4.5 3.38c-1.02.66-2.58.74-3.5.74-.93 0-2.48-.08-3.5-.74-.2-.15-.26-.43-.1-.63.15-.2.43-.26.63-.1.7.47 1.93.57 2.97.57s2.27-.1 2.97-.57c.2-.15.48-.1.63.1.16.2.1.48-.1.63zm-.3-2.18c-.66 0-1.2-.54-1.2-1.2 0-.66.54-1.2 1.2-1.2s1.2.54 1.2 1.2c0 .66-.54 1.2-1.2 1.2z"/>
+                </svg>
+                Reddit
+            </a>
+            <span class="copyright-text">© copyright by Robi <span id="copy-year">2026</span></span>
+        </div>
         
-        <!-- 1. OSZLOP: NAVIGÁCIÓ -->
-        <aside class="sidebar-nav">
-            
-            <div class="bento-module">
-                <a href="https://www.reddit.com/r/hungary/" target="_blank" class="brand">
-                    <div class="brand-header">
-                        <svg viewBox="0 0 24 24" fill="var(--accent-brand)" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.373 0 0 5.373 0 12c0 6.628 5.373 12 12 12s12-5.372 12-12C24 5.373 18.627 0 12 0zm7.152 14.123c-.34.34-.89.34-1.232 0l-1.077-1.077c-1.393.99-3.13 1.577-5.02 1.637v-2.45l1.92-1.365a1.866 1.866 0 0 0 .52-1.928c-.283-.807-1.05-1.34-1.91-1.34H8.76a.87.87 0 1 0 0 1.74h3.593c.27 0 .51.17.6.43.09.256.01.543-.2.7l-1.92 1.36v2.455c-1.89-.06-3.627-.647-5.02-1.637l-1.077 1.077a.872.872 0 1 1-1.233-1.232l1.328-1.328c-1.424-1.744-2.278-3.957-2.278-6.36C2.553 5.438 7.37 1.385 13.565 1.385c6.196 0 11.012 4.053 11.012 9.475 0 2.404-.854 4.617-2.278 6.36l1.328 1.328c.34.34.34.892 0 1.232l-.475-.475zM12 16.5c-2.485 0-4.5-1.567-4.5-3.5h9c0 1.933-2.015 3.5-4.5 3.5zm-3-5.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm6 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg>
-                        <span class="brand-title">Reddit</span>
-                    </div>
-                    <div class="brand-datetime">
-                        <span id="sun-icon">☀️</span>
-                        <span id="clock-date">2026. április 18. szombat</span>
-                        <span style="opacity: 0.4; margin: 0 2px;">|</span>
-                        <span class="clock-time-inline">
-                            <span id="time-hr-min">00:00</span><span class="clock-sec-inline" id="clock-sec">00</span>
-                        </span>
-                    </div>
-                </a>
-            </div>
+        <div class="global-search">
+            <form action="https://www.google.com/search" method="GET" target="_blank">
+                <input type="text" name="q" placeholder="Keresés a weben..." required>
+                <button type="submit">Keresés</button>
+            </form>
+        </div>
 
-            <div class="bento-module">
-                <form class="search-form" action="https://www.google.com/search" method="GET" target="_blank">
-                    <input type="text" name="q" placeholder="Keresés a weben..." required>
-                    <button type="submit">🔍</button>
-                </form>
+        <div class="top-meta">
+            <span id="date-display">Dátum betöltése...</span>
+            <div class="clock" id="clock-display">--:--:--</div>
+        </div>
+    </header>
 
-                <div class="nav-title">Csatornák</div>
-                <div class="nav-menu">
-                    <button class="nav-item active" id="tab-mix" onclick="changeFeed('mix', 'hungary+askhungary+kiszamolo+budapest+hungary2+FostTalicska+talk_hunfluencers', 'Magyar Mix')">🇭🇺 Magyar Mix</button>
-                    <button class="nav-item" id="tab-budapest" onclick="changeFeed('budapest', 'budapest', 'Főváros')">🏙️ Főváros</button>
-                    <button class="nav-item highlight-nav" id="tab-followed" onclick="changeFeed('followed', 'followed', 'Követett Hírek')">⭐ Követett <span id="follow-count"></span></button>
+    <!-- FŐ TARTALOM -->
+    <div class="main-container">
+        
+        <!-- BAL OSZLOP -->
+        <aside class="left-sidebar">
+            <div class="sidebar-section">
+                <div class="section-title">Hírfolyamok</div>
+                <div class="nav-list">
+                    <button class="nav-item active" id="tab-mix" onclick="changeFeed('mix', 'hungary+askhungary+kiszamolo+budapest+hungary2+FostTalicska+talk_hunfluencers', 'Fő Hírek')">
+                        Fő Hírek <span>📰</span>
+                    </button>
+                    <button class="nav-item" id="tab-budapest" onclick="changeFeed('budapest', 'budapest', 'Budapest')">
+                        Budapest <span>🏙️</span>
+                    </button>
+                    <button class="nav-item" id="tab-kiszamolo" onclick="changeFeed('kiszamolo', 'kiszamolo', 'Gazdaság')">
+                        Gazdaság <span>📈</span>
+                    </button>
+                    <button class="nav-item" id="tab-askhungary" onclick="changeFeed('askhungary', 'askhungary', 'Társadalom')">
+                        Társadalom <span>👥</span>
+                    </button>
+                    <button class="nav-item" id="tab-followed" onclick="changeFeed('followed', 'followed', 'Mentett Cikkek')">
+                        Mentett Cikkek <span id="follow-count">⭐</span>
+                    </button>
                 </div>
             </div>
 
-            <div class="bento-module" style="flex-grow: 1;">
-                <div class="nav-title">🔥 Napi Top 3 Téma</div>
-                <div class="trending-list" id="trending-list">
-                    <div class="trending-item"><div class="trending-meta">Betöltés...</div></div>
+            <div class="sidebar-section" style="flex: 1;">
+                <div class="section-title">Napi Trendek (Top 3)</div>
+                <div id="trending-list">
+                    <div class="trending-meta">Betöltés...</div>
                 </div>
-            </div>
-
-            <!-- KOMPAKTabB LÁBLÉC -->
-            <div class="bento-module app-footer">
-                <div class="reddit-attribution">
-                    <span>Forrás:</span>
-                    <div class="reddit-logo-wrap">
-                        <svg viewBox="0 0 24 24" width="20" height="20" fill="#ff4500">
-                            <circle cx="12" cy="12" r="12" />
-                            <path fill="#ffffff" d="M16.5 12c0-1.65-1.35-3-3-3-.75 0-1.44.28-1.97.74-.9-.45-1.92-.72-3.03-.74l.6-2.82 2.05.43c.04.9.78 1.6 1.68 1.6 1.05 0 1.9-.85 1.9-1.9s-.85-1.9-1.9-1.9c-.83 0-1.53.53-1.8 1.27l-2.22-.47c-.12-.03-.23.05-.26.17l-.7 3.32c-1.15.02-2.2.3-3.15.77-.52-.48-1.23-.78-2.02-.78-1.65 0-3 1.35-3 3 0 1.15.65 2.15 1.6 2.65-.05.23-.08.47-.08.7 0 2.6 3.14 4.7 7 4.7s7-2.1 7-4.7c0-.23-.03-.47-.08-.7.95-.5 1.6-1.5 1.6-2.65zm-8 1.5c.66 0 1.2.54 1.2 1.2 0 .66-.54 1.2-1.2 1.2s-1.2-.54-1.2-1.2c0-.66.54-1.2 1.2-1.2zm4.5 3.38c-1.02.66-2.58.74-3.5.74-.93 0-2.48-.08-3.5-.74-.2-.15-.26-.43-.1-.63.15-.2.43-.26.63-.1.7.47 1.93.57 2.97.57s2.27-.1 2.97-.57c.2-.15.48-.1.63.1.16.2.1.48-.1.63zm-.3-2.18c-.66 0-1.2-.54-1.2-1.2 0-.66.54-1.2 1.2-1.2s1.2.54 1.2 1.2c0 .66-.54 1.2-1.2 1.2z"/>
-                        </svg>
-                        <span class="reddit-logo-wordmark">reddit</span>
-                    </div>
-                </div>
-                <div class="footer-credits">Készítette: Robi | &copy; <span id="current-year"></span></div>
             </div>
         </aside>
 
-        <!-- 2. OSZLOP: FŐ TARTALOM (HÍRFOLYAM) -->
-        <main class="bento-panel main-content">
-            <div class="main-scroll-area" id="main-scroll-area">
-                
-                <header class="content-header">
-                    <div class="header-banner">
-                        <div class="header-content">
-                            <h2 class="feed-title" id="current-feed-title">🇭🇺 Magyar Mix</h2>
-                            <div class="feed-subtitle" id="current-feed-subtitle">r/hungary+askhungary+kiszamolo+budapest...</div>
-                        </div>
-                    </div>
-                    
-                    <div class="sort-tabs-container" id="sort-tabs">
-                        <button class="sort-pill active" id="sort-new" onclick="changeSort('new')">⚡ Friss</button>
-                        <button class="sort-pill" id="sort-hot" onclick="changeSort('hot')">🔥 Felkapott</button>
-                        <button class="sort-pill" id="sort-top" onclick="changeSort('top')">🏆 Top</button>
-                        <button class="sort-pill" id="sort-rising" onclick="changeSort('rising')">📈 Trend</button>
-                        <button class="sort-pill" id="sort-controversial" onclick="changeSort('controversial')">💬 Vita</button>
-                        
-                        <div class="pill-divider"></div>
-                        
-                        <button class="sort-pill feed-pill" id="tab-askhungary" onclick="changeFeed('askhungary', 'askhungary', 'Társadalom')">🗣️ r/askhungary</button>
-                        <button class="sort-pill feed-pill" id="tab-kiszamolo" onclick="changeFeed('kiszamolo', 'kiszamolo', 'Pénzügy')">📈 r/kiszamolo</button>
-                    </div>
-                </header>
-
-                <div id="feed"></div>
-                <div id="scroll-sentinel">📡 Archívum betöltése...</div>
+        <!-- KÖZÉPSŐ OSZLOP -->
+        <main class="feed-area" id="main-scroll-area">
+            <div class="feed-header-wrap">
+                <div class="feed-title-block">
+                    <h1 class="feed-title" id="current-feed-title">Fő Hírek</h1>
+                    <div class="feed-subtitle" id="current-feed-subtitle">Aktuális hazai tartalmak</div>
+                </div>
+                <div class="sort-tabs" id="sort-tabs">
+                    <button class="sort-btn active" id="sort-new" onclick="changeSort('new')">Legfrissebb</button>
+                    <button class="sort-btn" id="sort-hot" onclick="changeSort('hot')">Felkapott</button>
+                    <button class="sort-btn" id="sort-top" onclick="changeSort('top')">Napi Top</button>
+                    <button class="sort-btn" id="sort-rising" onclick="changeSort('rising')">Feltörekvő</button>
+                </div>
+                <div class="scroll-progress-bar" id="feed-progress"></div>
             </div>
+
+            <div class="feed-grid" id="feed"></div>
+            <div id="scroll-sentinel">Adatok betöltése...</div>
+
+            <!-- Lebegő felgörgetés gomb -->
+            <button class="scroll-to-top" id="btn-scroll-top" onclick="document.getElementById('main-scroll-area').scrollTo({top:0, behavior:'smooth'})">↑</button>
         </main>
 
-        <!-- 3. OSZLOP: ÉLŐ HOZZÁSZÓLÁSOK -->
-        <aside class="bento-panel sidebar-live" id="sidebar-live-panel">
-            <div class="live-header">
-                <div class="live-header-content">
-                    <div class="live-title-group">
-                        <div class="live-pulse" id="live-pulse-dot"></div>
-                        <span>Élő Chat</span>
-                        <span class="live-status-text" id="live-status-text"></span>
+        <!-- JOBB OSZLOP -->
+        <aside class="right-sidebar">
+            <div class="chat-header">
+                <div class="chat-title-group">
+                    <div class="chat-title">
+                        <div class="live-dot" id="live-pulse"></div>
+                        Reddit Chat
+                        <div class="age-circle-transparent">18</div>
                     </div>
-                    <div class="live-warning-group">
-                        <span class="age-badge-small" title="Korhatáros tartalom!">18+</span>
-                        <span class="age-warning-text">Szókimondó, olykor vulgáris tartalom!</span>
+                </div>
+                <div class="chat-subtitle">Élő interakciók</div>
+            </div>
+
+            <!-- VÉLETLENSZERŰ PATTOGÓ FIGYELMEZTETÉS A CHAT ALATT -->
+            <div id="chat-warning-popup" class="chat-warning-popup">
+                <span class="w-title">⚠️ Figyelem</span>
+                Szókimondó, néha vulgáris tartalom, amely sértheti egyes olvasók ízlését!
+            </div>
+            
+            <div class="chat-feed" id="live-feed-container">
+                <div id="chat-inner-list">
+                    <div id="live-placeholder" style="text-align:center; color:var(--text-muted); font-size:12px; margin-top:20px;">
+                        Kapcsolódás az adatfolyamhoz...
                     </div>
                 </div>
             </div>
 
-            <!-- Wrapper a chat számára és az új üzenet gombnak -->
-            <div class="chat-scroll-wrapper">
-                <div class="live-feed-container" id="live-feed-container">
-                    <div id="chat-inner-list">
-                        <div id="live-placeholder" style="text-align:center; color:var(--text-secondary); font-size:14px; font-weight:600; margin-top:20px; display:none;">
-                            Várakozás az adatokra...
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Új üzenet jelző gomb -->
-                <button class="chat-new-msg-btn" id="new-msg-btn" onclick="scrollToChatBottom()">
-                    Új üzenet érkezett ⬇
-                </button>
-            </div>
+            <button class="new-msg-btn" id="new-msg-btn" onclick="scrollToChatBottom()">Új bejegyzés ↓</button>
         </aside>
 
     </div>
 
-    <!-- GLOBÁLIS MODÁLIS -->
-    <div id="global-modal-overlay">
+    <!-- MODAL -->
+    <div class="modal-overlay" id="global-modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="modal-post-title">Cím betöltése...</h3>
-                <button class="btn-close" onclick="closeGlobalModal()">✕ Bezárás</button>
+                <h2 class="modal-title" id="modal-post-title">Cím betöltése...</h2>
+                <button class="modal-close" onclick="closeGlobalModal()">Bezár</button>
             </div>
             <div class="modal-body" id="modal-scroll-area"></div>
         </div>
     </div>
 
     <script>
+        // === KONFIGURÁCIÓ & ÁLLAPOT ===
         window.postCache = {};
         const loadedCommentsData = {}; 
         
         let currentFeed = 'hungary+askhungary+kiszamolo+budapest+hungary2+FostTalicska+talk_hunfluencers'; 
         let currentSort = 'new'; 
         
-        const fetchLimit = 21; 
+        const fetchLimit = 24; 
         let afterToken = null;
         let isFetching = false;
         let currentRequestId = 0; 
         
         const renderedPostIds = new Set();
-        let modalSyncInterval = null;
 
-        // Változók az élő üzenetek várakoztatásához
         let chatPausedForIntro = false;
         let isProcessingLiveQueue = false;
 
+        // === INICIALIZÁLÁS ===
         document.addEventListener('DOMContentLoaded', () => {
+            initClock();
+            applySimpleTheme(); 
             loadTrendingTopics(); 
             initChatScrollLogic();
+            initMainScrollLogic();
             
-            // Tájékoztató szöveg aktiválása induláskor
             chatPausedForIntro = true;
             showIntroMessage(true);
-            
-            // Azonnali adatletöltés indítása a háttérben, hogy mire letelik az idő, tele legyen az üzenetsor
             pollLiveComments();
+            
+            loadRedditPosts(true); 
+            
+            // Random ablak aktiválása
+            initRandomWarningPopup();
         });
 
-        function stringToColor(str) {
-            let hash = 0;
-            if(!str) return 'hsl(0, 0%, 50%)';
-            for (let i = 0; i < str.length; i++) {
-                hash = str.charCodeAt(i) + ((hash << 5) - hash);
-            }
-            const h = Math.abs(hash) % 360;
-            return `hsl(${h}, 70%, 65%)`; 
+        // === ÓRA, TÉMA ÉS ÉV (Copyright) ===
+        function initClock() {
+            const dateEl = document.getElementById('date-display');
+            const clockEl = document.getElementById('clock-display');
+            const copyYearEl = document.getElementById('copy-year');
+            const days =['vasárnap', 'hétfő', 'kedd', 'szerda', 'csütörtök', 'péntek', 'szombat'];
+            
+            setInterval(() => {
+                const now = new Date();
+                const yyyy = now.getFullYear();
+                
+                // Copyright év frissítése
+                copyYearEl.innerText = yyyy;
+
+                const mm = String(now.getMonth() + 1).padStart(2, '0');
+                const dd = String(now.getDate()).padStart(2, '0');
+                const dayName = days[now.getDay()];
+                dateEl.innerText = `${yyyy}. ${mm}. ${dd}. ${dayName}`;
+                
+                const hr = String(now.getHours()).padStart(2, '0');
+                const min = String(now.getMinutes()).padStart(2, '0');
+                const sec = String(now.getSeconds()).padStart(2, '0');
+                clockEl.innerText = `${hr}:${min}:${sec}`;
+                
+                applySimpleTheme(now.getHours());
+            }, 1000);
         }
 
-        const THEME_PALETTES = {
-            'night_spring':['#05120e', '#0b1c18', '#122b22', '#1a4031'],
-            'day_spring':['#0b1c16', '#122b22', '#1a4031', '#265e48'],
-            'night_summer':['#050e14', '#0a1a24', '#102836', '#183c52'],
-            'day_summer':['#0a1821', '#102433', '#16384d', '#225270'],
-            'night_autumn':['#140b06', '#21130a', '#301c10', '#472a18'],
-            'day_autumn':['#24150d', '#331d12', '#4a2a1a', '#6b3d26'],
-            'night_winter':['#0a0b12', '#0f121a', '#161a26', '#202738'],
-            'day_winter':['#10141b', '#181d26', '#222a36', '#323e52'],
+        function applySimpleTheme(hour = new Date().getHours()) {
+            let bgBody, bgSurface, textMain, border;
             
-            'sunrise':['#210e0e', '#331616', '#4d2121', '#733232'],
-            'sunset':['#260f0a', '#38160e', '#542115', '#7d321f'],
-            'golden':['#1f1608', '#30220c', '#473212', '#6b4c1b'],
-            'twilight_dark':['#0b0812', '#110c1c', '#1a122b', '#2b1e47'],
-            'twilight_light':['#130e24','#1c1436', '#2a1e52', '#422f80']
-        };
-
-        function getNyiregyhazaSunPhase() {
-            const now = new Date();
-            const start = new Date(now.getFullYear(), 0, 0);
-            const diff = now - start;
-            const oneDay = 1000 * 60 * 60 * 24;
-            const dayOfYear = Math.floor(diff / oneDay);
-            
-            const offset = Math.cos((dayOfYear - 172) / 365 * Math.PI * 2);
-            let isDST = false;
-            const jan = new Date(now.getFullYear(), 0, 1).getTimezoneOffset();
-            const jul = new Date(now.getFullYear(), 6, 1).getTimezoneOffset();
-            if (Math.max(jan, jul) !== now.getTimezoneOffset()) isDST = true;
-
-            const rise = 6 - (offset * 1.5) + (isDST ? 1 : 0);
-            const set = 18.25 + (offset * 2.25) + (isDST ? 1 : 0);
-
-            const currentHour = now.getHours() + (now.getMinutes() / 60);
-
-            let phase = 'day';
-            let icon = '☀️';
-
-            if (currentHour < rise - 1.5 || currentHour > set + 1.5) { phase = 'night'; icon = '🌙'; }
-            else if (currentHour < rise - 0.75) { phase = 'predawn'; icon = '✨'; } 
-            else if (currentHour < rise - 0.25) { phase = 'dawn'; icon = '🌅'; } 
-            else if (currentHour < rise + 0.25) { phase = 'sunrise'; icon = '🌄'; } 
-            else if (currentHour < rise + 1.0) { phase = 'morning_golden'; icon = '🌤️'; } 
-            else if (currentHour > set - 1.0 && currentHour <= set - 0.25) { phase = 'evening_golden'; icon = '⛅'; } 
-            else if (currentHour > set - 0.25 && currentHour <= set + 0.25) { phase = 'sunset'; icon = '🌇'; } 
-            else if (currentHour > set + 0.25 && currentHour <= set + 0.75) { phase = 'dusk'; icon = '🌆'; } 
-            else if (currentHour > set + 0.75 && currentHour <= set + 1.5) { phase = 'nightfall'; icon = '🌌'; } 
-
-            const month = now.getMonth();
-            let season = 'winter';
-            if (month >= 2 && month <= 4) season = 'spring';
-            else if (month >= 5 && month <= 7) season = 'summer';
-            else if (month >= 8 && month <= 10) season = 'autumn';
-
-            return { phase, season, icon };
-        }
-
-        function applyDynamicTheme() {
-            const { phase, season } = getNyiregyhazaSunPhase();
-            let colors;
-
-            switch(phase) {
-                case 'night':          colors = THEME_PALETTES[`night_${season}`]; break;
-                case 'day':            colors = THEME_PALETTES[`day_${season}`]; break;
-                case 'sunrise':        colors = THEME_PALETTES['sunrise']; break;
-                case 'sunset':         colors = THEME_PALETTES['sunset']; break;
-                case 'morning_golden':
-                case 'evening_golden': colors = THEME_PALETTES['golden']; break;
-                case 'predawn':
-                case 'nightfall':      colors = THEME_PALETTES['twilight_dark']; break;
-                case 'dawn':
-                case 'dusk':           colors = THEME_PALETTES['twilight_light']; break;
-                default:               colors = THEME_PALETTES['day_winter'];
+            if (hour >= 6 && hour < 18) {
+                bgBody = '#f8fafc'; bgSurface = '#ffffff'; textMain = '#0f172a'; border = '#e2e8f0';
+            } else {
+                bgBody = '#0f172a'; bgSurface = '#1e293b'; textMain = '#f8fafc'; border = '#334155';
             }
 
-            const rootCSS = `
+            document.getElementById('dynamic-theme').innerHTML = `
                 :root {
-                    --bg-base: ${colors[0]};
+                    --bg-body: ${bgBody}; --bg-surface: ${bgSurface};
+                    --text-main: ${textMain}; --border-color: ${border};
                 }
             `;
-            document.getElementById('dynamic-theme').innerHTML = rootCSS;
         }
 
-        async function loadTrendingTopics() {
-            try {
-                let res = await fetch(`https://www.reddit.com/r/hungary+askhungary+kiszamolo+budapest+hungary2+FostTalicska+talk_hunfluencers/top.json?limit=20&t=day`);
-                let json = await res.json();
-                
-                const todayMidnight = new Date();
-                todayMidnight.setHours(0,0,0,0);
-                const midnightSec = todayMidnight.getTime() / 1000;
+        // === RANDOM PATTOGÓ FIGYELMEZTETÉS ===
+        function initRandomWarningPopup() {
+            function scheduleNext() {
+                const minMs = 60000;  // 1 perc
+                const maxMs = 180000; // 3 perc
+                const randomDelay = Math.floor(Math.random() * (maxMs - minMs + 1)) + minMs;
+                setTimeout(showPopup, randomDelay);
+            }
 
-                let todayPosts = json.data.children.filter(child => child.data.created_utc >= midnightSec);
-                
-                let html = '';
-                if (todayPosts.length === 0) {
-                    html = '<div class="trending-item"><div class="trending-meta" style="text-align:center; padding:10px;">Egyelőre nincs mai felkapott poszt.</div></div>';
-                } else {
-                    const medals =[
-                        { icon: '🥇', label: 'Arany' },
-                        { icon: '🥈', label: 'Ezüst' },
-                        { icon: '🥉', label: 'Bronz' }
-                    ];
+            function showPopup() {
+                const popup = document.getElementById('chat-warning-popup');
+                if(popup) {
+                    popup.classList.remove('hide');
+                    popup.classList.add('show');
                     
-                    todayPosts.slice(0, 3).forEach((child, index) => {
-                        let p = child.data;
-                        window.postCache[p.name] = p; 
-                        html += `
-                            <div class="trending-item" onclick="openGlobalModal('${p.permalink}', '${p.name}')">
-                                <div class="trending-medal-container">
-                                    <div class="trending-medal" title="${medals[index].label}">${medals[index].icon}</div>
-                                </div>
-                                <div class="trending-content">
-                                    <div class="trending-meta" title="Pontszám (Upvote) és Kommentek száma">👍 ${p.score} | 💬 ${p.num_comments}</div>
-                                    <div class="trending-title">${p.title}</div>
-                                </div>
-                            </div>
-                        `;
-                    });
+                    // 10 másodperc után visszacsukódik
+                    setTimeout(() => {
+                        popup.classList.remove('show');
+                        popup.classList.add('hide');
+                        scheduleNext(); // Újabb sorsolás
+                    }, 10000); 
                 }
-                document.getElementById('trending-list').innerHTML = html;
-            } catch(e) {
-                document.getElementById('trending-list').innerHTML = '<div class="trending-item"><div class="trending-meta" style="text-align:center; padding:10px;">Nem sikerült betölteni a top témákat.</div></div>';
             }
-        }
-
-        let lastTrendingFetchMinute = -1;
-        function checkTrendingSchedule() {
-            const now = new Date();
-            const m = now.getMinutes();
-            if ((m === 0 || m === 15 || m === 30 || m === 45) && lastTrendingFetchMinute !== m) {
-                loadTrendingTopics();
-                lastTrendingFetchMinute = m;
-            }
-        }
-        setInterval(checkTrendingSchedule, 1000);
-
-        function applySoftPulse(element) {
-            if(!element) return;
-            element.classList.remove('soft-pulse');
-            void element.offsetWidth; 
-            element.classList.add('soft-pulse');
-        }
-
-        function decodeHtml(html) { var txt = document.createElement("textarea"); txt.innerHTML = html; return txt.value; }
-
-        function changeFeed(tabId, feedName, feedDisplayName) {
-            isFetching = false; 
-            currentFeed = feedName;
             
-            document.querySelectorAll('.nav-item, .feed-pill').forEach(tab => tab.classList.remove('active'));
+            scheduleNext();
+        }
+
+        // === SEGÉDFÜGGVÉNYEK ÉS UI EXTRA FUNKCIÓK ===
+        function decodeHtml(html) { var txt = document.createElement("textarea"); txt.innerHTML = html; return txt.value; }
+        
+        function calculateVotes(score, ratio) {
+            if (score === 0 || !ratio) return { ups: 0, downs: 0 };
+            if (score < 0) return { ups: 0, downs: Math.abs(score) }; 
+            if (ratio === 1) return { ups: score, downs: 0 };
+            let total = ratio !== 0.5 ? Math.abs(score / (2 * ratio - 1)) : 0;
+            return { ups: Math.round(total * ratio), downs: Math.round(total - Math.round(total * ratio)) };
+        }
+
+        function getSubredditColor(sub) {
+            const colors = {
+                'hungary': '#ef4444', 
+                'askhungary': '#f59e0b',
+                'kiszamolo': '#10b981', 
+                'budapest': '#3b82f6',
+                'FostTalicska': '#8b5cf6', 
+                'talk_hunfluencers': '#ec4899',
+                'hungary2': '#14b8a6'
+            };
+            return colors[sub] || 'var(--accent-primary)';
+        }
+
+        function getAvatarColor(name) {
+            let hash = 0;
+            for (let i = 0; i < name.length; i++) { hash = name.charCodeAt(i) + ((hash << 5) - hash); }
+            const c = (hash & 0x00FFFFFF).toString(16).toUpperCase();
+            return '#' + '00000'.substring(0, 6 - c.length) + c;
+        }
+
+        function estimateReadingTime(textLength, commentCount) {
+            const words = Math.max(textLength / 6, 10); 
+            const baseTime = Math.ceil(words / 200); 
+            const commentTime = Math.ceil((commentCount || 0) / 20); 
+            const total = baseTime + commentTime;
+            return total === 0 ? 1 : total;
+        }
+
+        function initMainScrollLogic() {
+            const feedArea = document.getElementById('main-scroll-area');
+            const progressBar = document.getElementById('feed-progress');
+            const topBtn = document.getElementById('btn-scroll-top');
+            
+            feedArea.addEventListener('scroll', () => {
+                const winScroll = feedArea.scrollTop;
+                const height = feedArea.scrollHeight - feedArea.clientHeight;
+                const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+                progressBar.style.width = scrolled + "%";
+
+                if (winScroll > 400) { topBtn.classList.add('show'); } 
+                else { topBtn.classList.remove('show'); }
+            }, { passive: true });
+        }
+
+
+        // === NAVIGÁCIÓ ===
+        function changeFeed(tabId, feedName, feedDisplayName) {
+            isFetching = false; currentFeed = feedName;
+            
+            document.querySelectorAll('.nav-item').forEach(tab => tab.classList.remove('active'));
             const activeTab = document.getElementById(`tab-${tabId}`);
             if (activeTab) activeTab.classList.add('active');
 
@@ -824,242 +747,134 @@
             
             if (feedName === 'followed') {
                 sortTabs.style.display = 'none';
-                headerTitle.innerHTML = `⭐ ${feedDisplayName}`;
-                headerSub.innerHTML = `Minden mentett cikked itt található`;
+                headerTitle.innerHTML = feedDisplayName;
+                headerSub.innerHTML = `Helyileg mentett tartalmak.`;
                 let livePh = document.getElementById('live-placeholder');
-                if (livePh) {
-                    livePh.style.display = 'block';
-                    livePh.innerHTML = 'A követett nézetben az élő hírfolyam szünetel.';
-                }
+                if (livePh) livePh.innerHTML = 'Mentett nézetben az élő hírfolyam szünetel.';
             } else {
                 sortTabs.style.display = 'flex';
-                let icon = activeTab ? activeTab.innerText.split(' ')[0] : '📰';
-                let subtext = feedName.includes('+') ? 'r/hungary+askhungary+kiszamolo+budapest...' : `r/${feedName}`;
-                headerTitle.innerHTML = `${icon} ${feedDisplayName}`;
-                headerSub.innerHTML = subtext;
+                headerTitle.innerHTML = feedDisplayName;
+                headerSub.innerHTML = `Forrás: ${feedName.includes('+') ? 'Több csatorna' : feedName}`;
                 let livePh = document.getElementById('live-placeholder');
-                if (livePh && !document.getElementById('system-intro-msg')) {
-                    livePh.style.display = 'block';
-                    livePh.innerHTML = 'Várakozás az adatokra...';
-                }
+                if (livePh && !document.getElementById('system-intro-msg')) livePh.innerHTML = 'Kapcsolódás az adatfolyamhoz...';
             }
-            loadRedditPosts(true, false);
+            loadRedditPosts(true);
         }
 
         function changeSort(sortName) {
-            isFetching = false; 
-            currentSort = sortName;
-            document.querySelectorAll('.sort-pill:not(.feed-pill)').forEach(btn => btn.classList.remove('active'));
+            isFetching = false; currentSort = sortName;
+            document.querySelectorAll('.sort-btn').forEach(btn => btn.classList.remove('active'));
             const activeSortBtn = document.getElementById(`sort-${sortName}`);
             if (activeSortBtn) activeSortBtn.classList.add('active');
-            loadRedditPosts(true, false);
+            loadRedditPosts(true);
         }
 
-        // --- KÖVETÉS ÉS IDŐZÍTÉS LOGIKA ---
-
+        // === KÖVETÉS LOGIKA ===
         function getFollowedPosts() {
-            let followed = JSON.parse(localStorage.getItem('reddit_followed') || '[]');
+            let followed = JSON.parse(localStorage.getItem('nexus_followed') || '[]');
             const now = Date.now();
             const valid = followed.filter(p => p.expiresAt > now);
-            if (valid.length !== followed.length) localStorage.setItem('reddit_followed', JSON.stringify(valid));
+            if (valid.length !== followed.length) localStorage.setItem('nexus_followed', JSON.stringify(valid));
             return valid;
         }
 
         function updateFollowCountUI() {
             const count = getFollowedPosts().length;
             const countSpan = document.getElementById('follow-count');
-            if (countSpan) countSpan.innerText = count > 0 ? `(${count})` : '';
+            if (countSpan) countSpan.innerText = count > 0 ? `⭐ (${count})` : '⭐';
         }
 
         function toggleFollow(postId) {
             let followed = getFollowedPosts();
             const index = followed.findIndex(p => p.id === postId);
 
-            if (index > -1) {
-                if (!confirm("Biztosan törölni szeretnéd a követések közül?")) return;
-                followed.splice(index, 1);
-            } else {
+            if (index > -1) { followed.splice(index, 1); } 
+            else {
                 const postData = window.postCache[postId];
-                if (postData) {
-                    followed.push({ id: postId, data: postData, expiresAt: Date.now() + (24 * 60 * 60 * 1000) });
-                }
+                if (postData) followed.push({ id: postId, data: postData, expiresAt: Date.now() + (48 * 60 * 60 * 1000) });
             }
-            localStorage.setItem('reddit_followed', JSON.stringify(followed));
-            updateFollowCountUI(); 
-            
-            updateCardFollowUI(postId);
-            if (currentFeed === 'followed') {
-                isFetching = false; 
-                loadRedditPosts(true); 
-            }
-        }
-
-        function extendFollow(postId, hours) {
-            let followed = getFollowedPosts();
-            const index = followed.findIndex(p => p.id === postId);
-            if (index > -1) {
-                followed[index].expiresAt += hours * 3600 * 1000;
-                localStorage.setItem('reddit_followed', JSON.stringify(followed));
-                updateCardFollowUI(postId);
-            }
+            localStorage.setItem('nexus_followed', JSON.stringify(followed));
+            updateFollowCountUI(); updateCardFollowUI(postId);
+            if (currentFeed === 'followed') { isFetching = false; loadRedditPosts(true); }
         }
 
         function updateCardFollowUI(postId) {
-            const container = document.getElementById(`follow-controls-${postId}`);
-            if(!container) return;
+            const btn = document.getElementById(`follow-btn-${postId}`);
+            if(!btn) return;
             const followed = getFollowedPosts();
-            const followItem = followed.find(p => p.id === postId);
-            container.innerHTML = getFollowControlsHtml(postId, followItem);
+            const isFollowed = followed.some(p => p.id === postId);
+            if(isFollowed) { btn.innerText = "Mentve ★"; btn.classList.add('primary'); } 
+            else { btn.innerText = "Mentés ☆"; btn.classList.remove('primary'); }
         }
 
-        function getFollowControlsHtml(postId, followItem) {
-            if(followItem) {
-                return `
-                    <button class="btn-follow active" onclick="toggleFollow('${postId}')" title="Követés törlése">
-                        ⭐ <span class="follow-timer" data-expires="${followItem.expiresAt}">00:00:00</span>
-                    </button>
-                    <button class="btn-extend" onclick="extendFollow('${postId}', 12)" title="+12 óra">+12h</button>
-                    <button class="btn-extend" onclick="extendFollow('${postId}', 24)" title="+24 óra">+24h</button>
-                `;
-            } else {
-                return `<button class="btn-follow" onclick="toggleFollow('${postId}')">☆ Követés</button>`;
-            }
-        }
-
-        // Tikktakkoló visszaszámláló a DOM-ban
-        setInterval(() => {
-            const now = Date.now();
-            document.querySelectorAll('.follow-timer').forEach(el => {
-                const expiresAt = parseInt(el.getAttribute('data-expires'));
-                const diff = expiresAt - now;
-                if(diff > 0) {
-                    const h = Math.floor(diff / (1000 * 60 * 60));
-                    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                    const s = Math.floor((diff % (1000 * 60)) / 1000);
-                    el.innerText = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-                } else {
-                    el.innerText = "Lejárt";
-                }
-            });
-        }, 1000);
-
-        setInterval(() => {
-            getFollowedPosts(); 
-            updateFollowCountUI();
-        }, 60000); updateFollowCountUI();
-
-        function updateEnvironment() {
-            const now = new Date(); 
-            document.getElementById('current-year').innerText = now.getFullYear();
-            
-            const days =['vasárnap', 'hétfő', 'kedd', 'szerda', 'csütörtök', 'péntek', 'szombat'];
-            const months =['január', 'február', 'március', 'április', 'május', 'június', 'július', 'augusztus', 'szeptember', 'október', 'november', 'december'];
-            const fullDateStr = `${now.getFullYear()}. ${months[now.getMonth()]} ${now.getDate()}. ${days[now.getDay()]}`;
-            document.getElementById('clock-date').innerText = fullDateStr;
-
-            document.getElementById('time-hr-min').innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-            document.getElementById('clock-sec').innerText = String(now.getSeconds()).padStart(2, '0');
-
-            const { icon } = getNyiregyhazaSunPhase();
-            document.getElementById('sun-icon').innerText = icon;
-            
-            applyDynamicTheme();
-        }
-        setInterval(updateEnvironment, 1000); updateEnvironment(); 
-
-        function calculateVotes(score, ratio) {
-            if (score === 0 || !ratio) return { ups: 0, downs: 0 };
-            if (score < 0) return { ups: 0, downs: Math.abs(score) }; 
-            if (ratio === 1) return { ups: score, downs: 0 };
-            let total = ratio !== 0.5 ? Math.abs(score / (2 * ratio - 1)) : 0;
-            return { ups: Math.round(total * ratio), downs: Math.round(total - Math.round(total * ratio)) };
-        }
-
-        // TÖKÉLETESÍTETT KÉPKINYERŐ RENDSZER (HD/4K fókusszal)
-        function generatePostCardHtml(postData, isFollowed, timeString, extraClass = '') {
+        // === KÁRTYA GENERÁLÓ HOVER RÉTEGGEL ===
+        function generatePostCardHtml(postData, timeString, extraClass = 'fade-in') {
             let imgUrl = null;
-
             if (postData.is_gallery && postData.media_metadata) {
                 const galleryItems = Object.values(postData.media_metadata);
                 for (const item of galleryItems) {
-                    if (item.status === 'valid' && item.s && item.s.u) {
-                        imgUrl = item.s.u.replace(/&amp;/g, '&');
-                        break;
-                    }
+                    if (item.status === 'valid' && item.s && item.s.u) { imgUrl = item.s.u.replace(/&amp;/g, '&'); break; }
                 }
             }
+            if (!imgUrl && postData.media && postData.media.oembed && postData.media.oembed.thumbnail_url) imgUrl = postData.media.oembed.thumbnail_url.replace(/&amp;/g, '&');
+            if (!imgUrl && postData.preview && postData.preview.images && postData.preview.images.length > 0) imgUrl = postData.preview.images[0].source.url.replace(/&amp;/g, '&');
+            if (!imgUrl && postData.url && postData.url.match(/\.(jpeg|jpg|gif|png)$/i)) imgUrl = postData.url;
+            if (!imgUrl && postData.thumbnail && postData.thumbnail.startsWith('http')) imgUrl = postData.thumbnail.replace(/&amp;/g, '&');
 
-            if (!imgUrl && postData.media && postData.media.oembed && postData.media.oembed.thumbnail_url) {
-                imgUrl = postData.media.oembed.thumbnail_url.replace(/&amp;/g, '&');
-            }
-
-            if (!imgUrl && postData.crosspost_parent_list && postData.crosspost_parent_list.length > 0) {
-                const cp = postData.crosspost_parent_list[0];
-                if (cp.preview && cp.preview.images && cp.preview.images.length > 0) {
-                    imgUrl = cp.preview.images[0].source.url.replace(/&amp;/g, '&');
-                } else if (cp.url && cp.url.match(/\.(jpeg|jpg|gif|png)$/i)) {
-                    imgUrl = cp.url;
-                } else if (cp.media && cp.media.oembed && cp.media.oembed.thumbnail_url) {
-                    imgUrl = cp.media.oembed.thumbnail_url.replace(/&amp;/g, '&');
-                }
-            }
-
-            if (!imgUrl && postData.preview && postData.preview.images && postData.preview.images.length > 0) {
-                imgUrl = postData.preview.images[0].source.url.replace(/&amp;/g, '&');
-            } 
-            
-            if (!imgUrl && postData.url && postData.url.match(/\.(jpeg|jpg|gif|png)$/i)) {
-                imgUrl = postData.url;
-            }
-
-            if (!imgUrl && postData.thumbnail && postData.thumbnail.startsWith('http')) {
-                imgUrl = postData.thumbnail.replace(/&amp;/g, '&');
-            }
-
-            const subColor = stringToColor(postData.subreddit);
-            const subBadgeHtml = `<span class="card-sub-badge" style="background: ${subColor}25; color: ${subColor}; border: 1px solid ${subColor}40;">r/${postData.subreddit}</span>`;
+            let redditLink = `https://www.reddit.com${postData.permalink}`;
 
             let imageHtml = imgUrl 
-                ? `<div class="card-img-wrapper"><img src="${imgUrl}" class="card-img" loading="lazy" alt="Thumbnail"></div>` 
-                : `<div class="card-img-wrapper card-img-fallback"><svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12c0 6.628 5.373 12 12 12s12-5.372 12-12C24 5.373 18.627 0 12 0zm7.152 14.123c-.34.34-.89.34-1.232 0l-1.077-1.077c-1.393.99-3.13 1.577-5.02 1.637v-2.45l1.92-1.365a1.866 1.866 0 0 0 .52-1.928c-.283-.807-1.05-1.34-1.91-1.34H8.76a.87.87 0 1 0 0 1.74h3.593c.27 0 .51.17.6.43.09.256.01.543-.2.7l-1.92 1.36v2.455c-1.89-.06-3.627-.647-5.02-1.637l-1.077 1.077a.872.872 0 1 1-1.233-1.232l1.328-1.328c-1.424-1.744-2.278-3.957-2.278-6.36C2.553 5.438 7.37 1.385 13.565 1.385c6.196 0 11.012 4.053 11.012 9.475 0 2.404-.854 4.617-2.278 6.36l1.328 1.328c.34.34.34.892 0 1.232l-.475-.475zM12 16.5c-2.485 0-4.5-1.567-4.5-3.5h9c0 1.933-2.015 3.5-4.5 3.5zm-3-5.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm6 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg></div>`;
+                ? `<div class="card-img-wrapper"><a href="${redditLink}" target="_blank"><img src="${imgUrl}" class="card-img" loading="lazy" alt="Hírkép"></a></div>` 
+                : ``; 
+
+            let cleanText = postData.selftext ? postData.selftext.replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1') : '';
+            cleanText = cleanText.replace(/[\*\_]{1,2}([^\*\_]+)[\*\_]{1,2}/g, '$1');
+            if (cleanText.length > 300) cleanText = cleanText.substring(0, 300) + '...';
+            
+            let hoverHint = cleanText 
+                ? cleanText 
+                : `<strong style="font-size:14px; color:var(--accent-primary)">${postData.title}</strong><br><br>Kattints a kártyára a képekhez és a külső tartalomhoz!`;
+
+            const readTime = estimateReadingTime(cleanText.length, postData.num_comments);
 
             const { ups, downs } = calculateVotes(postData.ups, postData.upvote_ratio);
-            const ratioPct = Math.round(postData.upvote_ratio * 100);
-
             const followedIds = getFollowedPosts();
-            const followItem = followedIds.find(f => f.id === postData.name);
+            const isFollowed = followedIds.some(f => f.id === postData.name);
+            const followBtnClass = isFollowed ? 'primary' : '';
+            const followBtnText = isFollowed ? 'Mentve ★' : 'Mentés ☆';
+
+            const subColor = getSubredditColor(postData.subreddit);
 
             return `
                 <div class="card ${extraClass}" id="card-${postData.name}">
                     ${imageHtml}
+                    
+                    <!-- RÉSZLETES HOVER RÉTEG -->
+                    <div class="card-hover-overlay">
+                        <div class="hover-content-text">${hoverHint}</div>
+                    </div>
+
                     <div class="card-body">
                         <div class="card-meta">
-                            <div class="card-author-row">
-                                ${subBadgeHtml}
-                                <span class="card-author">u/${postData.author}</span>
+                            <div>
+                                <span class="card-tag" style="color: ${subColor}">${postData.subreddit}</span>
+                                <span style="margin-left: 8px;">${timeString}</span>
                             </div>
-                            <div style="display:flex; justify-content: space-between;">
-                                <span>🕒 ${timeString}</span>
-                            </div>
+                            <span class="card-time" title="Becsült olvasási idő">⏱️ ~${readTime}p</span>
                         </div>
-                        <h2 class="card-title"><a href="https://www.reddit.com${postData.permalink}" target="_blank">${postData.title}</a></h2>
+                        <h2 class="card-title">
+                            <a href="${redditLink}" target="_blank">${postData.title}</a>
+                        </h2>
                         
                         <div class="card-stats">
-                            <div class="stat-badge up" id="stat-up-${postData.name}">👍 ${ups}</div>
-                            <div class="stat-badge down" id="stat-down-${postData.name}">👎 ${downs}</div>
-                            <div class="stat-badge ratio" id="stat-ratio-${postData.name}">📊 ${ratioPct}%</div>
+                            <span class="stat-item up">▲ ${ups}</span>
+                            <span class="stat-item down">▼ ${downs}</span>
                         </div>
 
                         <div class="card-actions">
-                            <div class="follow-controls" id="follow-controls-${postData.name}">
-                                ${getFollowControlsHtml(postData.name, followItem)}
-                            </div>
-                            <button class="btn-comment" id="comment-btn-${postData.name}" 
-                                data-total-count="${postData.num_comments}" 
-                                data-seen-count="${postData.num_comments}" 
-                                data-orig="💬 ${postData.num_comments}" 
-                                onclick="openGlobalModal('${postData.permalink}', '${postData.name}')">
-                                💬 ${postData.num_comments}
+                            <button class="btn-action ${followBtnClass}" id="follow-btn-${postData.name}" onclick="toggleFollow('${postData.name}')">${followBtnText}</button>
+                            <button class="btn-action primary" id="comment-btn-${postData.name}" onclick="openGlobalModal('${postData.permalink}', '${postData.name}')">
+                                Olvasás (${postData.num_comments})
                             </button>
                         </div>
                     </div>
@@ -1067,6 +882,7 @@
             `;
         }
 
+        // === ADATLEKÉRÉS (API Hívások) ===
         async function loadRedditPosts(isReset = false) {
             if (isFetching) return;
             isFetching = true;
@@ -1076,71 +892,55 @@
             const sentinel = document.getElementById('scroll-sentinel');
             
             if (isReset) { 
-                feedContainer.innerHTML = ''; 
-                renderedPostIds.clear(); 
-                afterToken = null; 
+                feedContainer.innerHTML = ''; renderedPostIds.clear(); afterToken = null; 
                 document.getElementById('main-scroll-area').scrollTo({ top: 0, behavior: 'smooth' }); 
             }
 
             try {
                 let posts =[];
-
                 if (currentFeed === 'followed') {
                     const followedList = getFollowedPosts();
                     posts = followedList.map(item => ({ data: item.data }));
                     sentinel.style.display = 'none'; 
                     if (posts.length === 0) { 
-                        feedContainer.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 48px; color:var(--text-secondary); font-weight:600;">Még nincs követett tartalom.</div>'; 
-                        return; 
+                        feedContainer.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 40px; color:var(--text-muted);">Nincs mentett tartalom.</div>'; return; 
                     }
                 } else {
-                    sentinel.style.display = 'block'; sentinel.innerText = "📡 ADATOK BETÖLTÉSE...";
+                    sentinel.style.display = 'block'; sentinel.innerText = "Adatok betöltése...";
                     let fetchUrl = `https://www.reddit.com/r/${currentFeed}/${currentSort}.json?limit=${fetchLimit}`;
                     if (currentSort === 'top') fetchUrl += '&t=day'; 
                     if (!isReset && afterToken) fetchUrl += `&after=${afterToken}`;
                     
-                    const response = await fetch(fetchUrl); 
-                    const data = await response.json();
-                    
+                    const response = await fetch(fetchUrl); const data = await response.json();
                     if (reqId !== currentRequestId) return; 
 
-                    if (data && data.data && data.data.children) {
-                        posts = data.data.children; 
-                        afterToken = data.data.after;
-                    } else {
-                        throw new Error("Érvénytelen válasz a szervertől");
-                    }
+                    if (data && data.data && data.data.children) { posts = data.data.children; afterToken = data.data.after; } 
+                    else { throw new Error("API hiba"); }
                 }
-
-                if (reqId !== currentRequestId) return; 
 
                 posts = posts.filter(post => !renderedPostIds.has(post.data.name));
                 if (currentSort === 'new') posts.sort((a, b) => b.data.created_utc - a.data.created_utc);
 
                 let newHtml = ''; 
-
                 posts.forEach(post => {
                     const postData = post.data; window.postCache[postData.name] = postData; 
                     const date = new Date(postData.created_utc * 1000);
                     const timeString = `${date.toLocaleDateString('hu-HU', {month:'short', day:'numeric'})} ${date.toLocaleTimeString('hu-HU', { hour: '2-digit', minute: '2-digit' })}`;
-                    
-                    newHtml += generatePostCardHtml(postData, false, timeString); 
+                    newHtml += generatePostCardHtml(postData, timeString); 
                     renderedPostIds.add(postData.name);
                 });
 
                 if (newHtml !== '') feedContainer.insertAdjacentHTML('beforeend', newHtml);
-                
-                if (currentFeed !== 'followed') {
-                    sentinel.innerHTML = afterToken ? "⬇ Görgess a továbbiakhoz ⬇" : "NINCS TÖBB ARCHÍV ADAT.";
-                }
+                if (currentFeed !== 'followed') { sentinel.innerHTML = afterToken ? "Görgetés a további tartalmakhoz..." : "Nincs több adat."; }
 
             } catch(e) { 
-                if (reqId === currentRequestId) sentinel.innerHTML = "⚠️ KAPCSOLATI HIBA VAGY TÚLTERHELÉS."; 
+                if (reqId === currentRequestId) sentinel.innerHTML = "Hiba történt a letöltés során."; 
             } finally {
                 if (reqId === currentRequestId) isFetching = false;
             }
         }
 
+        // --- AUTOMATIKUS FRISSÍTÉS ---
         async function autoFetchNewPosts() {
             if (currentFeed === 'followed' || currentSort !== 'new') return; 
             const savedFeed = currentFeed;
@@ -1159,9 +959,9 @@
                     newPosts.reverse().forEach(post => {
                         const postData = post.data; window.postCache[postData.name] = postData;
                         const date = new Date(postData.created_utc * 1000);
-                        const timeString = `${date.toLocaleTimeString('hu-HU', { hour: '2-digit', minute: '2-digit' })}`;
+                        const timeString = `${date.toLocaleDateString('hu-HU', {month:'short', day:'numeric'})} ${date.toLocaleTimeString('hu-HU', { hour: '2-digit', minute: '2-digit' })}`;
                         
-                        let postHtml = generatePostCardHtml(postData, false, timeString, 'new-post-anim');
+                        let postHtml = generatePostCardHtml(postData, timeString, 'news-flash');
                         feedContainer.insertAdjacentHTML('afterbegin', postHtml);
                         renderedPostIds.add(postData.name);
                     });
@@ -1170,105 +970,129 @@
         }
         setInterval(autoFetchNewPosts, 60000); 
 
-        async function syncLivePostData() {
-            if (renderedPostIds.size === 0) return;
-            const idsToUpdate = Array.from(renderedPostIds).slice(-30); 
+        // Top 3 lekérés
+        async function loadTrendingTopics() {
             try {
-                const res = await fetch(`https://www.reddit.com/api/info.json?id=${idsToUpdate.join(',')}`); const data = await res.json();
-                let followedList = JSON.parse(localStorage.getItem('reddit_followed') || '[]'); let followedChanged = false;
+                let res = await fetch(`https://www.reddit.com/r/hungary+askhungary+kiszamolo+budapest+hungary2+FostTalicska+talk_hunfluencers/top.json?limit=15&t=day`);
+                let json = await res.json();
+                
+                const todayMidnight = new Date();
+                todayMidnight.setHours(0,0,0,0);
+                const midnightSec = todayMidnight.getTime() / 1000;
 
-                for (const p of data.data.children) {
-                    const postData = p.data; const name = postData.name; window.postCache[name] = postData; 
-                    const followIdx = followedList.findIndex(f => f.id === name);
-                    if (followIdx > -1) { followedList[followIdx].data = postData; followedChanged = true; }
-
-                    const btn = document.getElementById(`comment-btn-${name}`);
-                    if (!btn) continue;
-
-                    const totalCount = postData.num_comments;
-                    const seenCount = parseInt(btn.getAttribute('data-seen-count') || "0");
-
-                    if (totalCount > seenCount) {
-                        const diff = totalCount - seenCount;
-                        btn.setAttribute('data-total-count', totalCount); 
-                        if (currentlyOpenModalPostId !== name) {
-                            btn.setAttribute('data-orig', `💬 ${totalCount} Hozzászólás`);
-                            btn.innerHTML = `💬 ${totalCount} <span style="background:var(--accent-red);color:#fff;border-radius:4px;padding:0 4px;margin-left:4px;">+${diff}</span>`;
-                            applySoftPulse(btn);
-                        }
-                    }
+                let todayPosts = json.data.children.filter(child => child.data.created_utc >= midnightSec);
+                let html = '';
+                if (todayPosts.length > 0) {
+                    todayPosts.slice(0, 3).forEach((child, index) => {
+                        let p = child.data; window.postCache[p.name] = p; 
+                        html += `
+                            <div class="trending-item" onclick="openGlobalModal('${p.permalink}', '${p.name}')">
+                                <div class="trending-meta">#${index+1} • ${p.subreddit} • ${p.num_comments} hozzászólás</div>
+                                <div class="trending-title">${p.title}</div>
+                            </div>
+                        `;
+                    });
                 }
-                if (followedChanged) localStorage.setItem('reddit_followed', JSON.stringify(followedList));
+                document.getElementById('trending-list').innerHTML = html || '<div class="trending-meta">Nincs mai felkapott poszt.</div>';
             } catch(e) {}
         }
-        setInterval(syncLivePostData, 15000); 
 
+        // Infinite Scroll
+        const observer = new IntersectionObserver((entries) => { 
+            if (entries[0].isIntersecting && afterToken && !isFetching && currentFeed !== 'followed') { loadRedditPosts(false); }
+        }, { root: document.getElementById('main-scroll-area'), rootMargin: '300px' });
+        window.addEventListener('DOMContentLoaded', () => { observer.observe(document.getElementById('scroll-sentinel')); });
+
+        // === ÉLŐ CHAT LOGIKA ===
         const liveFeedContainer = document.getElementById('live-feed-container');
         const chatInnerList = document.getElementById('chat-inner-list');
         const newMsgBtn = document.getElementById('new-msg-btn');
+        const livePulse = document.getElementById('live-pulse');
         
         let userIsScrolledUp = false;
         let lastScrollTop = 0;
+        let seenLiveComments = new Set();
+        let liveCommentQueue =[];
+        let isLiveFeedHovered = false;
+
+        document.querySelector('.right-sidebar').addEventListener('mouseenter', () => {
+            isLiveFeedHovered = true; livePulse.style.backgroundColor = 'var(--accent-warning)';
+        });
+        document.querySelector('.right-sidebar').addEventListener('mouseleave', () => {
+            isLiveFeedHovered = false; livePulse.style.backgroundColor = 'var(--accent-danger)';
+        });
 
         function initChatScrollLogic() {
             liveFeedContainer.addEventListener('scroll', () => {
                 let currentScrollTop = liveFeedContainer.scrollTop;
                 let maxScrollTop = liveFeedContainer.scrollHeight - liveFeedContainer.clientHeight;
-                
-                let isNearBottom = (maxScrollTop - currentScrollTop) <= 150;
+                let isNearBottom = (maxScrollTop - currentScrollTop) <= 50;
 
-                if (isNearBottom) {
-                    userIsScrolledUp = false;
-                    newMsgBtn.classList.remove('show');
-                } else {
-                    if (currentScrollTop < lastScrollTop - 5) {
-                        userIsScrolledUp = true;
-                    }
-                }
+                if (isNearBottom) { userIsScrolledUp = false; newMsgBtn.classList.remove('show'); } 
+                else if (currentScrollTop < lastScrollTop - 5) { userIsScrolledUp = true; }
                 lastScrollTop = currentScrollTop;
             }, { passive: true });
 
-            const resizeObserver = new ResizeObserver(() => {
-                if (!userIsScrolledUp) {
-                    liveFeedContainer.scrollTop = liveFeedContainer.scrollHeight;
-                    lastScrollTop = liveFeedContainer.scrollTop; 
-                }
-            });
-            resizeObserver.observe(chatInnerList);
+            new ResizeObserver(() => {
+                if (!userIsScrolledUp) { liveFeedContainer.scrollTop = liveFeedContainer.scrollHeight; lastScrollTop = liveFeedContainer.scrollTop; }
+            }).observe(chatInnerList);
         }
 
         function scrollToChatBottom() {
             liveFeedContainer.scrollTo({ top: liveFeedContainer.scrollHeight, behavior: 'smooth' });
-            newMsgBtn.classList.remove('show');
-            userIsScrolledUp = false;
+            newMsgBtn.classList.remove('show'); userIsScrolledUp = false;
         }
 
-        let seenLiveComments = new Set();
-        let liveCommentQueue =[];
-        let isLiveFeedHovered = false;
-        
-        let lastLiveMessageTime = Date.now();
-        let idleMessageShown = false;
+        function showIntroMessage(isInitial) {
+            let existing = document.getElementById('system-intro-msg');
+            if (existing) existing.remove();
+            let placeholder = document.getElementById('live-placeholder');
+            if (placeholder) placeholder.style.display = 'none';
 
-        const liveSidebarPanel = document.getElementById('sidebar-live-panel');
-        const liveStatusText = document.getElementById('live-status-text');
-        const livePulseDot = document.getElementById('live-pulse-dot');
+            let introHtml = `
+                <div class="chat-bubble" id="system-intro-msg" style="border-color: var(--accent-info); max-width: 100%;">
+                    <div class="chat-meta">
+                        <div class="chat-author-wrap">
+                            <div class="chat-avatar" style="background-color: var(--accent-info)">R</div>
+                            <span class="chat-author" style="color: var(--accent-info)">Rendszer</span>
+                        </div>
+                    </div>
+                    <div class="chat-text">
+                        <strong>Rendszer Aktív.</strong><br>
+                        Ez az oszlop a friss közösségi interakciókat listázza valós időben. A szélesebb felület kényelmesebb olvasást biztosít.
+                    </div>
+                </div>
+            `;
+            chatInnerList.insertAdjacentHTML('beforeend', introHtml);
+            liveFeedContainer.scrollTop = liveFeedContainer.scrollHeight;
 
-        liveSidebarPanel.addEventListener('mouseenter', () => {
-            isLiveFeedHovered = true;
-            liveStatusText.innerText = "⏸️ Olvasás...";
-            livePulseDot.style.animationPlayState = 'paused';
-            livePulseDot.style.backgroundColor = 'var(--text-secondary)';
-            livePulseDot.style.boxShadow = 'none';
-        });
+            if (isInitial) {
+                setTimeout(async () => {
+                    chatPausedForIntro = false;
+                    let existingMsg = document.getElementById('system-intro-msg');
+                    if (existingMsg) existingMsg.remove();
+                    processLiveQueue();
+                }, 10000); 
+            }
+        }
 
-        liveSidebarPanel.addEventListener('mouseleave', () => {
-            isLiveFeedHovered = false;
-            liveStatusText.innerText = "";
-            livePulseDot.style.animationPlayState = 'running';
-            livePulseDot.style.backgroundColor = 'var(--accent-green)';
-            livePulseDot.style.boxShadow = '0 0 12px var(--accent-green)';
-        });
+        async function pollLiveComments() {
+            if (currentFeed === 'followed') return;
+            try {
+                let res = await fetch(`https://www.reddit.com/r/${currentFeed}/comments.json?limit=10`);
+                let json = await res.json();
+                let comments = json.data.children;
+
+                for (let i = comments.length - 1; i >= 0; i--) {
+                    let cData = comments[i].data;
+                    if (!seenLiveComments.has(cData.id)) {
+                        let postId = cData.link_id.replace('t3_', 't3_');
+                        if (window.postCache[postId]) { seenLiveComments.add(cData.id); liveCommentQueue.push(cData); }
+                    }
+                }
+            } catch(e) {}
+        }
+        setInterval(pollLiveComments, 30000); 
 
         async function fetchParentComment(parentId) {
             try {
@@ -1278,204 +1102,74 @@
             } catch(e) {} return null;
         }
 
-        async function pollLiveComments() {
-            if (currentFeed === 'followed') return;
-            const savedFeed = currentFeed;
-            try {
-                let res = await fetch(`https://www.reddit.com/r/${currentFeed}/comments.json?limit=15`);
-                let json = await res.json();
-                if (currentFeed !== savedFeed) return;
-
-                let comments = json.data.children;
-
-                for (let i = comments.length - 1; i >= 0; i--) {
-                    let cData = comments[i].data;
-                    if (!seenLiveComments.has(cData.id)) {
-                        let postId = cData.link_id.replace('t3_', 't3_');
-                        if (window.postCache[postId]) {
-                            seenLiveComments.add(cData.id);
-                            liveCommentQueue.push(cData);
-                        }
-                    }
-                }
-            } catch(e) {}
-        }
-        setInterval(pollLiveComments, 30000); 
-
-        // RENDSZERÜZENET MUTATÁSA (Bevezető / Üresjárat)
-        function showIntroMessage(isInitial) {
-            let existing = document.getElementById('system-intro-msg');
-            if (existing) existing.remove();
-            
-            let placeholder = document.getElementById('live-placeholder');
-            if (placeholder) placeholder.style.display = 'none';
-
-            let introHtml = `
-                <div class="chat-message system-intro-box" id="system-intro-msg">
-                    <div class="chat-message-avatar" style="background-color: var(--accent-brand)">⚠️</div>
-                    <div class="chat-message-content">
-                        <div class="chat-message-header">
-                            <span class="chat-message-author" style="color: var(--accent-brand)">Rendszerüzenet</span>
-                        </div>
-                        <div class="chat-message-text" style="color: var(--text-primary); font-size: 14px; line-height: 1.6;">
-                            <strong>Üdv a PRO Terminálban! 👋</strong><br><br>
-                            Ez az oldal a Reddit legfrissebb magyar tartalmait hozza el neked. Bal oldalt a csatornákat és a napi top témákat találod, középen a hírfolyam pörög, itt jobbra pedig a közösség aktuális pulzusát láthatod élőben.<br><br>
-                            <span style="color: var(--accent-red); font-weight: 800;">FONTOS TÁJÉKOZTATÁS:</span><br>
-                            Ez az élő chat a Reddit kommentek cenzúrázatlan, nyers folyamát mutatja! Szókimondó, olykor vulgáris és 18+ kifejezéseket tartalmazhat, amelyek automatikusan, szűrés nélkül jelennek meg.<br><br>
-                            <em>Jó szórakozást kívánok! 🚀</em>
-                        </div>
-                    </div>
-                </div>
-            `;
-            chatInnerList.insertAdjacentHTML('beforeend', introHtml);
-            liveFeedContainer.scrollTop = liveFeedContainer.scrollHeight;
-
-            if (isInitial) {
-                // 25 másodpercig tartjuk a képernyőn mielőtt ráengedjük az üzeneteket
-                setTimeout(async () => {
-                    chatPausedForIntro = false;
-                    // Ha időközben érkeztek a háttérben üzenetek, azonnal be is vágjuk az elsőt!
-                    if (liveCommentQueue.length > 0) {
-                        isProcessingLiveQueue = true;
-                        const cData = liveCommentQueue.shift(); 
-                        await renderLiveBubble(cData);
-                        
-                        let waitTime = liveCommentQueue.length > 5 ? 1500 : 6000;
-                        setTimeout(() => {
-                            isProcessingLiveQueue = false;
-                            processLiveQueue();
-                        }, waitTime);
-                    } else {
-                        // Ha esetleg nagyon csendes az adatfolyam, szimplán elrejtjük
-                        hideIntroMessage();
-                        processLiveQueue();
-                    }
-                }, 25000);
-            }
-        }
-
-        // RENDSZERÜZENET ELREJTÉSE
-        function hideIntroMessage() {
-            let existing = document.getElementById('system-intro-msg');
-            if (existing) {
-                existing.remove();
-            }
-            idleMessageShown = false;
-        }
-
-        // ÜRESJÁRAT FIGYELŐ (10 PERC UTÁN)
-        setInterval(() => {
-            if (currentFeed === 'followed') return;
-            const now = Date.now();
-            if (now - lastLiveMessageTime > 10 * 60 * 1000 && !idleMessageShown) {
-                showIntroMessage(false);
-                idleMessageShown = true;
-            }
-        }, 60000);
-
         async function processLiveQueue() {
-            // Ha várakoztatjuk az üzeneteket induláskor, megszakítjuk a ciklust
             if (chatPausedForIntro || isProcessingLiveQueue) return;
-            
-            if (isLiveFeedHovered || liveCommentQueue.length === 0) {
-                setTimeout(processLiveQueue, 1000); 
-                return;
-            }
+            if (isLiveFeedHovered || liveCommentQueue.length === 0) { setTimeout(processLiveQueue, 1000); return; }
 
             isProcessingLiveQueue = true;
             const cData = liveCommentQueue.shift(); 
             
-            await renderLiveBubble(cData);
-
-            let waitTime = liveCommentQueue.length > 5 ? 1500 : 6000;
-
-            setTimeout(() => {
-                isProcessingLiveQueue = false;
-                processLiveQueue();
-            }, waitTime); 
-        }
-
-        async function renderLiveBubble(cData) {
-            lastLiveMessageTime = Date.now();
-
             let postId = cData.link_id.replace('t3_', 't3_');
             let post = window.postCache[postId];
-            if(!post) return;
-
-            let parentHtml = '';
-            if (cData.parent_id && cData.parent_id.startsWith('t1_')) {
-                let pData = await fetchParentComment(cData.parent_id);
-                if (pData) {
-                    let pText = pData.body || '';
-                    if (!pText || pText.trim() === '') {
-                        if (pData.media_metadata || (pData.body_html && pData.body_html.includes('img'))) {
-                            pText = '🖼️[Képet vagy GIF-et küldött]';
-                        } else {
-                            pText = '📎[Média tartalom]';
-                        }
-                    } else {
+            if(post) {
+                let parentHtml = '';
+                if (cData.parent_id && cData.parent_id.startsWith('t1_')) {
+                    let pData = await fetchParentComment(cData.parent_id);
+                    if (pData) {
+                        let pText = pData.body || 'Média tartalom';
                         pText = pText.replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1'); 
-                        if(pText.length > 150) pText = pText.substring(0, 150) + '...';
+                        if(pText.length > 80) pText = pText.substring(0, 80) + '...';
+                        parentHtml = `<div class="chat-quote">Válasz: ${pText}</div>`;
                     }
-
-                    parentHtml = `
-                        <div class="chat-parent-quote">
-                            <span class="quote-author">↳ Válasz @${pData.author} kommentjére:</span>
-                            ${pText}
-                        </div>
-                    `;
                 }
-            }
 
-            let postTitle = post.title;
-            let timeStr = new Date(cData.created_utc * 1000).toLocaleTimeString('hu-HU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            
-            let userColor = stringToColor(cData.author);
-            let initial = cData.author.substring(0, 1).toUpperCase();
+                let timeStr = new Date(cData.created_utc * 1000).toLocaleTimeString('hu-HU', { hour: '2-digit', minute: '2-digit' });
+                let wasAtBottom = !userIsScrolledUp;
+                let avatarColor = getAvatarColor(cData.author);
+                let avatarInitial = cData.author ? cData.author.charAt(0).toUpperCase() : '?';
 
-            let wasAtBottom = !userIsScrolledUp;
-
-            let bubbleHtml = `
-                <div class="chat-message" id="live-chat-${cData.id}">
-                    <div class="chat-message-avatar" style="background-color: ${userColor}">${initial}</div>
-                    <div class="chat-message-content">
-                        <div class="chat-message-header">
-                            <span class="chat-message-author" style="color: ${userColor}">u/${cData.author}</span>
-                            <span class="chat-message-time">${timeStr}</span>
+                let bubbleHtml = `
+                    <div class="chat-bubble fade-in">
+                        <div class="chat-meta">
+                            <div class="chat-author-wrap">
+                                <div class="chat-avatar" style="background-color: ${avatarColor}">${avatarInitial}</div>
+                                <span class="chat-author">${cData.author}</span>
+                            </div>
+                            <span>${timeStr}</span>
                         </div>
-                        <div class="chat-message-post-ref" onclick="openGlobalModal('${post.permalink}', '${postId}')" title="Ugrás a poszthoz">
-                            📌 ${postTitle}
-                        </div>
+                        <div class="chat-ref" onclick="openGlobalModal('${post.permalink}', '${postId}')">↳ ${post.title}</div>
                         ${parentHtml}
-                        <div class="chat-message-text">
-                            ${processCommentBody(cData, true)}
-                        </div>
+                        <div class="chat-text">${processCommentBody(cData)}</div>
                     </div>
-                </div>
-            `;
+                `;
 
-            // Közvetlenül a kirajzolás előtt tüntetjük el a tájékoztatót, így abszolút NINCS üresjárat!
-            hideIntroMessage();
+                let placeholder = document.getElementById('live-placeholder');
+                if (placeholder) placeholder.remove();
 
-            let placeholder = document.getElementById('live-placeholder');
-            if (placeholder) placeholder.remove();
+                chatInnerList.insertAdjacentHTML('beforeend', bubbleHtml);
 
-            chatInnerList.insertAdjacentHTML('beforeend', bubbleHtml);
+                if (wasAtBottom) {
+                    liveFeedContainer.scrollTop = liveFeedContainer.scrollHeight;
+                    lastScrollTop = liveFeedContainer.scrollTop;
+                } else { newMsgBtn.classList.add('show'); }
 
-            if (wasAtBottom) {
-                liveFeedContainer.scrollTop = liveFeedContainer.scrollHeight;
-                lastScrollTop = liveFeedContainer.scrollTop;
-            } else {
-                newMsgBtn.classList.add('show');
+                while(chatInnerList.children.length > 30) chatInnerList.firstElementChild.remove();
             }
 
-            while(chatInnerList.children.length > 40) {
-                if (chatInnerList.firstElementChild && chatInnerList.firstElementChild.id !== 'live-placeholder') {
-                    chatInnerList.firstElementChild.remove();
-                }
-            }
+            setTimeout(() => { isProcessingLiveQueue = false; processLiveQueue(); }, 2000); 
         }
 
+        function processCommentBody(cData) {
+            let html = '';
+            if (cData.body_html) {
+                html = decodeHtml(cData.body_html);
+                html = html.replace(/<a /g, '<a target="_blank" rel="noopener noreferrer" ');
+                html = html.replace(/<a[^>]*href=["'](https?:\/\/(?:preview\.redd\.it|i\.redd\.it)[^"']+)["'][^>]*>.*?<\/a>/gi, `<img src="$1" loading="lazy">`);
+            } else { html = cData.body || ''; }
+            return html;
+        }
+
+        // === MODAL OLVASÓ LOGIKA ===
         function flattenComments(commentsArr, level = 0, sortOrder = 'desc') {
             let result =[];
             let validComments = commentsArr.filter(c => c.kind === 't1' && c.data && (c.data.body || c.data.body_html));
@@ -1492,73 +1186,30 @@
             return result;
         }
 
-        function processCommentBody(cData, isLiveChat = false) {
-            let html = '';
-            let lazyAttr = isLiveChat ? '' : 'loading="lazy"'; 
-
-            if (cData.body_html) {
-                html = decodeHtml(cData.body_html);
-                html = html.replace(/<a /g, '<a target="_blank" rel="noopener noreferrer" ');
-                html = html.replace(/<a[^>]*href=["'](https?:\/\/(?:preview\.redd\.it|i\.redd\.it)[^"']+)["'][^>]*>.*?<\/a>/gi, `<img src="$1" ${lazyAttr} class="comment-inline-image">`);
-                html = html.replace(/<a[^>]*href=["']https?:\/\/(?:www\.)?giphy\.com\/gifs\/(?:[a-zA-Z0-9-]+-)?([a-zA-Z0-9]+)["'][^>]*>.*?<\/a>/gi, `<a href="https://giphy.com/gifs/$1" target="_blank"><img src="https://media.giphy.com/media/$1/giphy.gif" ${lazyAttr} class="comment-inline-image"></a>`);
-                html = html.replace(/<a[^>]*href=["'](https?:\/\/[^"']+\.(?:jpg|jpeg|png|gif)(?:\?[^"']*)?)["'][^>]*>.*?<\/a>/gi, `<a href="$1" target="_blank"><img src="$1" ${lazyAttr} class="comment-inline-image"></a>`);
-            } else {
-                html = cData.body || ''; 
-                html = html.replace(/(https?:\/\/(?:preview\.redd\.it|i\.redd\.it)[^\s]+)/gi, `<img src="$1" ${lazyAttr} class="comment-inline-image">`);
-            }
-
-            if (cData.media_metadata) {
-                for (let key in cData.media_metadata) {
-                    let media = cData.media_metadata[key];
-                    if (media.status === 'valid' && (media.e === 'Image' || media.e === 'AnimatedImage')) {
-                        let imgUrl = media.s.u ? media.s.u.replace(/&amp;/g, '&') : (media.s.gif ? media.s.gif.replace(/&amp;/g, '&') : null);
-                        if (imgUrl) html += `<br><img src="${imgUrl}" ${lazyAttr} class="comment-inline-image">`;
-                    }
-                }
-            } return html;
-        }
-
         async function fetchPostAndComments(permalink) {
             const res = await fetch(`https://www.reddit.com${permalink}.json`);
             const data = await res.json();
             return { postData: data[0].data.children[0].data, rawComments: data[1].data.children };
         }
 
-        let currentlyOpenModalPostId = null; let currentModalPermalink = null;
+        let currentlyOpenModalPostId = null; 
 
         function closeGlobalModal() {
-            if (!currentlyOpenModalPostId) return;
             document.getElementById('global-modal-overlay').classList.remove('active'); document.body.classList.remove('modal-open');
-            const btn = document.getElementById(`comment-btn-${currentlyOpenModalPostId}`);
-            if(btn) { btn.innerHTML = btn.getAttribute('data-orig'); btn.classList.remove('soft-pulse'); }
-            if(loadedCommentsData[currentModalPermalink]) loadedCommentsData[currentModalPermalink].highlightIds.clear();
-            currentlyOpenModalPostId = null; currentModalPermalink = null;
-            
-            if (modalSyncInterval) { clearInterval(modalSyncInterval); modalSyncInterval = null; }
-            setTimeout(() => { document.getElementById('modal-scroll-area').innerHTML = ''; }, 300);
+            currentlyOpenModalPostId = null; 
+            setTimeout(() => { document.getElementById('modal-scroll-area').innerHTML = ''; }, 200);
         }
 
         document.getElementById('global-modal-overlay').addEventListener('click', function(e) { if(e.target === this) closeGlobalModal(); });
 
         async function openGlobalModal(permalink, postId) {
-            const button = document.getElementById(`comment-btn-${postId}`);
             if (currentlyOpenModalPostId === postId) return;
-            
-            if(button) {
-                button.setAttribute('data-seen-count', button.getAttribute('data-total-count'));
-                button.classList.remove('soft-pulse'); 
-                button.innerHTML = '⏳ Töltés...';
-            }
+            const btn = document.getElementById(`comment-btn-${postId}`);
+            if(btn) btn.innerText = "Töltés...";
 
             try {
                 const fetched = await fetchPostAndComments(permalink);
-                
-                if(button) {
-                    button.setAttribute('data-total-count', fetched.postData.num_comments); 
-                    button.setAttribute('data-seen-count', fetched.postData.num_comments);
-                    button.setAttribute('data-orig', `💬 ${fetched.postData.num_comments} Hozzászólás`);
-                    button.innerHTML = `Megnyitva`; 
-                }
+                if(btn) btn.innerText = `Olvasás (${fetched.postData.num_comments})`;
 
                 const isFirstLoad = !loadedCommentsData[permalink];
                 const sortOrder = isFirstLoad ? 'desc' : loadedCommentsData[permalink].sortOrder;
@@ -1577,12 +1228,12 @@
 
                 const scrollArea = document.getElementById('modal-scroll-area');
                 scrollArea.innerHTML = `
-                    <div class="comment-controls">
-                        <select class="comment-select" onchange="changeCommentSort('${permalink}', this.value)">
-                            <option value="desc" ${loadedCommentsData[permalink].sortOrder === 'desc' ? 'selected' : ''}>Újabbak elöl</option>
-                            <option value="asc" ${loadedCommentsData[permalink].sortOrder === 'asc' ? 'selected' : ''}>Régebbiek elöl</option>
+                    <div class="modal-controls">
+                        <select onchange="changeCommentSort('${permalink}', this.value)">
+                            <option value="desc" ${loadedCommentsData[permalink].sortOrder === 'desc' ? 'selected' : ''}>Legújabb elöl</option>
+                            <option value="asc" ${loadedCommentsData[permalink].sortOrder === 'asc' ? 'selected' : ''}>Legrégebbi elöl</option>
                         </select>
-                        <button class="btn-refresh" onclick="manualCommentRefresh('${permalink}', this)">🔄 Frissítés</button>
+                        <button onclick="manualCommentRefresh('${permalink}', this)">Frissítés</button>
                     </div>
                     <div id="modal-comment-list"></div>
                 `;
@@ -1593,56 +1244,10 @@
                 };
 
                 renderNextCommentBatch(permalink, document.getElementById('modal-comment-list'));
-                currentlyOpenModalPostId = postId; currentModalPermalink = permalink;
+                currentlyOpenModalPostId = postId; 
                 document.body.classList.add('modal-open'); document.getElementById('global-modal-overlay').classList.add('active');
 
-                if (modalSyncInterval) clearInterval(modalSyncInterval);
-                modalSyncInterval = setInterval(() => {
-                    if (currentModalPermalink) {
-                        autoInjectNewComments(currentModalPermalink);
-                    }
-                }, 15000);
-
-            } catch (error) { 
-                if(button) { button.innerHTML = '❌ Hiba'; setTimeout(()=>{button.innerHTML = button.getAttribute('data-orig')},2000); }
-            }
-        }
-
-        async function autoInjectNewComments(permalink) {
-            if (permalink !== currentModalPermalink) return; 
-            try {
-                const fetched = await fetchPostAndComments(permalink);
-                const dataObj = loadedCommentsData[permalink];
-                if (!dataObj) return;
-
-                const currentSort = dataObj.sortOrder || 'desc';
-                const flatComments = flattenComments(fetched.rawComments, 0, currentSort);
-                const currentIds = flatComments.map(c => c.id);
-
-                const trulyNewIds = currentIds.filter(id => !dataObj.seenIds.has(id));
-                if (trulyNewIds.length === 0) return;
-
-                trulyNewIds.forEach(id => { dataObj.highlightIds.add(id); dataObj.seenIds.add(id); });
-                dataObj.raw = fetched.rawComments; dataObj.all = flatComments;
-
-                const listContainer = document.getElementById('modal-comment-list');
-                const scrollContainer = document.getElementById('modal-scroll-area');
-                const oldScrollTop = scrollContainer.scrollTop; const oldScrollHeight = listContainer.scrollHeight;
-
-                const previouslyRendered = dataObj.renderedCount;
-                dataObj.renderedCount = 0; listContainer.innerHTML = '';
-                const targetRenderCount = Math.max(previouslyRendered + trulyNewIds.length, 15);
-                while (dataObj.renderedCount < targetRenderCount && dataObj.renderedCount < dataObj.all.length) { renderNextCommentBatch(permalink, listContainer); }
-
-                trulyNewIds.forEach(id => {
-                    let cElement = document.getElementById(`comment-${id}`);
-                    if(cElement) applySoftPulse(cElement);
-                });
-
-                if (currentSort === 'desc' && oldScrollTop > 30) {
-                    const newScrollHeight = listContainer.scrollHeight; scrollContainer.scrollTop = oldScrollTop + (newScrollHeight - oldScrollHeight);
-                }
-            } catch(e) {}
+            } catch (error) { if(btn) btn.innerText = "Hiba történt"; }
         }
 
         function renderNextCommentBatch(permalink, listContainer) {
@@ -1651,60 +1256,48 @@
             const startIndex = dataObj.renderedCount; const batchSize = 15;
 
             if (startIndex >= comments.length) {
-                if(startIndex === 0) { listContainer.innerHTML = `<div style="text-align:center; padding: 24px; color:var(--text-secondary); font-weight:600;">Még nincs hozzászólás.</div>`; } 
-                else {
-                    const existingEnd = listContainer.querySelector('.end-of-comments'); if (existingEnd) existingEnd.remove();
-                    listContainer.insertAdjacentHTML('beforeend', `<div class="end-of-comments" style="text-align:center; margin-top:20px; color:var(--text-secondary); font-weight:600;">--- Vége a beszélgetésnek ---</div>`);
-                } return;
+                if(startIndex === 0) listContainer.innerHTML = `<div style="text-align:center; padding: 24px; color:var(--text-muted);">Nincs hozzászólás.</div>`;
+                return;
             }
 
             let htmlChunk = '';
             for (let i = startIndex; i < startIndex + batchSize && i < comments.length; i++) {
-                const cData = comments[i]; const cDate = new Date(cData.created_utc * 1000);
+                const cData = comments[i]; 
+                const cDate = new Date(cData.created_utc * 1000);
                 const cDateString = `${cDate.toLocaleTimeString('hu-HU', { hour: '2-digit', minute: '2-digit' })}`;
                 
-                let extraClass = dataObj.highlightIds.has(cData.id) ? 'soft-pulse' : '';
-
-                let scoreHtml = cData.score_hidden ? `<span class="c-score">⏳ Rejtett</span>` : `<span class="c-score">${cData.ups < 0 ? '👎' : '👍'} ${Math.abs(cData.ups)}</span>`;
+                let extraClass = dataObj.highlightIds.has(cData.id) ? 'highlight' : '';
                 const level = cData.level || 0; const indent = Math.min(level, 4) * 20; 
-                const replyIcon = level > 0 ? `<span style="color:var(--text-secondary); margin-right:6px;">↳</span>` : '';
                 
+                let avatarColor = getAvatarColor(cData.author);
+                let avatarInitial = cData.author ? cData.author.charAt(0).toUpperCase() : '?';
+
                 htmlChunk += `
-                    <div id="comment-${cData.id}" class="comment ${extraClass}" style="margin-left: ${indent}px;">
-                        <div class="comment-meta">
-                            ${replyIcon}
-                            <span class="c-author">u/${cData.author}</span>
-                            ${scoreHtml}
-                            <span class="c-time">${cDateString}</span>
+                    <div id="comment-${cData.id}" class="comment-node ${extraClass}" style="margin-left: ${indent}px;">
+                        <div class="c-meta">
+                            <div class="chat-author-wrap">
+                                <div class="chat-avatar" style="background-color: ${avatarColor}; margin-right: 6px;">${avatarInitial}</div>
+                                <span class="c-author">${cData.author}</span>
+                            </div>
+                            <span>${cDateString}</span>
+                            <span>Pont: ${cData.ups}</span>
                         </div>
-                        <div class="comment-body">${processCommentBody(cData, false)}</div>
+                        <div class="c-body">${processCommentBody(cData)}</div>
                     </div>
                 `;
             }
             dataObj.renderedCount += batchSize; listContainer.insertAdjacentHTML('beforeend', htmlChunk);
-            if (dataObj.renderedCount >= comments.length) renderNextCommentBatch(permalink, listContainer);
         }
 
         function changeCommentSort(permalink, newSort) {
             const listContainer = document.getElementById('modal-comment-list'); const dataObj = loadedCommentsData[permalink];
             dataObj.sortOrder = newSort; dataObj.all = flattenComments(dataObj.raw, 0, newSort); dataObj.renderedCount = 0; listContainer.innerHTML = ''; renderNextCommentBatch(permalink, listContainer);
         }
-        async function manualCommentRefresh(permalink, btnElement) {
-            const oldText = btnElement.innerText; btnElement.innerText = '⏳';
-            await autoInjectNewComments(permalink); btnElement.innerText = oldText;
-        }
-
-        const observer = new IntersectionObserver((entries) => { 
-            if (entries[0].isIntersecting && afterToken && !isFetching && currentFeed !== 'followed') {
-                loadRedditPosts(false); 
-            }
-        }, { root: document.getElementById('main-scroll-area'), rootMargin: '300px' });
         
-        window.addEventListener('DOMContentLoaded', () => {
-            observer.observe(document.getElementById('scroll-sentinel'));
-            loadRedditPosts(true); 
-        });
-
+        async function manualCommentRefresh(permalink, btnElement) {
+            btnElement.innerText = 'Töltés...';
+            await openGlobalModal(permalink, currentlyOpenModalPostId); 
+        }
     </script>
 </body>
 </html>
